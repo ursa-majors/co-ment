@@ -6,8 +6,8 @@
 
 ## Nav
 
-* [API structure](tentative-api-structure)
-* [Client Views](client-views)
+* [API structure](#tentative-api-structure)
+* [Client Views](#client-views)
 
 ## Tentative API structure
 
