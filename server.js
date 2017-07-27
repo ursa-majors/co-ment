@@ -21,7 +21,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const mongoose      = require('mongoose');
 
 // db models
-//const User          = require('./models/user');
+const User          = require('./models/user');
 //const Post          = require('./models/post');
 
 // routes
