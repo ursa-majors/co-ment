@@ -20,9 +20,15 @@ const userSchema = new mongoose.Schema({
         unique : true
     },
     
-    hash : String,
+    pref_lang  : String,
     
-    salt : String
+    certs      : [String],
+    
+    time_zone  : String,
+    
+    hash       : String,
+    
+    salt       : String
     
 });
 
