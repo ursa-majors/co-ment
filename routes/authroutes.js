@@ -1,11 +1,13 @@
 /* jshint esversion:6, node: true */
 
-/*
-   non-secured routes to handle user signup and login
+/* non-secured routes to handle user signup and login
    
-   POST >> /api/register  >> store user in db, return JWT, redirect home
-   POST >> /api/login     >> return JWT, redirect home
-   
+   ========================== Route Descriptions ======================
+   VERB      URL                       DESCRIPTION
+   --------------------------------------------------------------------
+   POST      /api/register             Save user, return JWT
+   POST      /api/login                Authenticate user, return JWT
+
 */
 
 /* ================================= SETUP ================================= */
@@ -14,8 +16,8 @@ const routes   = require('express').Router();
 const User     = require('../models/user');
 const passport = require('passport');
 
-/* ================================ ROUTES ================================= */
 
+/* ================================ ROUTES ================================= */
 
 /* Route to handle new user signup.
    Returns fail status + message -or- success status + JWT
@@ -94,6 +96,7 @@ routes.post('api/login', (req, res, next) => {
     })(req, res, next);
     
 });
+
 
 /* ================================ EXPORT ================================= */
 
