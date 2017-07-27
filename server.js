@@ -22,7 +22,7 @@ const mongoose      = require('mongoose');
 
 // db models
 const User          = require('./models/user');
-//const Post          = require('./models/post');
+const Post          = require('./models/post');
 
 // routes
 //const apiRoutes     = require('./routes/apiroutes');
@@ -46,7 +46,7 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
 /* =============================== PASSPORT ================================ */
 
-// TBD
+// auth TBD
 
 
 /* ================================ ROUTES ================================= */
