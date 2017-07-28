@@ -1,0 +1,149 @@
+.splash {
+  color: #FFFFFF;
+  text-align: center;
+  font-family: 'Alegreya Sans', sans-serif;
+  background: #6B559D;
+  background: -webkit-linear-gradient(to top, #6B559D, #151741);
+  background: linear-gradient(to top, #6B559D, #151741);
+
+  &__image {
+      height: 125vh;
+      background: url(./img/splash.svg) no-repeat top center;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+
+      @include for-tablet-portrait-up {
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+    }
+
+    @include for-desktop-up {
+      background: url(./img/splash_wide.svg) no-repeat top center;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+    }
+
+  }
+  &__wrapper {
+    width: 100%;
+    position: absolute;
+    top: 35%;
+
+    @include for-tablet-portrait-up {
+      top: 27%;
+    }
+    @include for-desktop-up {
+      top: 25%;
+    }
+
+  }
+  &__text-wrap {
+
+  }
+  &__headline {
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.63);
+    font-weight: 100;
+    font-size: 20vw;
+    margin: 0 auto;
+    @include for-desktop-up {
+      font-size: 200px;
+    }
+    @include for-big-desktop-up {
+      font-size: 250px;
+    }
+
+
+  }
+  &__subhead {
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.63);
+    font-weight: 100;
+    font-size: 5vw;
+    letter-spacing: 2px;
+    margin: -3vw auto;
+    @include for-tablet-landscape-up {
+      margin: -30px auto;
+    }
+    @include for-desktop-up {
+      margin: -55px auto;
+      font-size: 75px;
+    }
+  }
+  &__button-wrap {
+    width: 100vw;
+    margin: 10vh auto;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    @include for-tablet-portrait-up{
+      flex-wrap: nowrap;
+    }
+
+    @include for-desktop-up {
+      top: 72%;
+    }
+    @include for-big-desktop-up {
+      top: 65%;
+    }
+  }
+  &__button {
+    color: white;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    font-size: 16px;
+    text-decoration: none;
+    margin-right: 3vw;
+    font-weight: 100;
+    border-radius: 50px;
+    padding: 10px;
+    border: 1px solid white;
+
+    @include for-tablet-portrait-up {
+      padding: 20px;
+      border: 2px solid white;
+      font-size: 20px;
+    }
+
+    &:hover, &:active, &:focus {
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+
+      @include for-desktop-up {
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    }
+    }
+  }
+
+  &__overlay {
+      position: relative;
+      top: -300px;
+      height: 100vh;
+      text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+      background: rgba(13,17,56,.4);
+      background: -webkit-linear-gradient(top, rgba(13,17,56,.4), rgba(13,17,56,0));
+      background: linear-gradient(to bottom, rgba(13,17,56,.4), rgba(13,17,56,0));
+      padding-top: 10px;
+      @include for-tablet-landscape-up {
+      top: -200px;
+    }
+
+    }
+
+    &__body {
+      font-family: 'Alegreya Sans SC', sans-serif;
+      text-transform: lowercase;
+      font-weight: 100;
+      font-size: 1.5em;
+      width: 80%;
+      margin: 50px auto;
+      @include for-tablet-portrait-up {
+      font-size: 2em;
+    }
+    }
+}
