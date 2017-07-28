@@ -25,7 +25,7 @@ const User          = require('./models/user');
 const Post          = require('./models/post');
 
 // routes
-//const apiRoutes     = require('./routes/apiroutes');
+const apiRoutes     = require('./routes/apiroutes');
 const authRoutes    = require('./routes/authroutes');
 const staticRoutes  = require('./routes/staticroutes');
 
@@ -52,7 +52,7 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 /* ================================ ROUTES ================================= */
 
 app.use(authRoutes);
-//app.use(apiRoutes);
+app.use(apiRoutes);
 app.use(staticRoutes);
 
 
