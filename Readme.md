@@ -1,4 +1,4 @@
-# Chingu Summery Voyage Build.To.Learn: Co/Ment API
+# Chingu Summer Voyage Build.To.Learn: Co/Ment API
 
 **(c) 2017 - The Ursa Majors**
 

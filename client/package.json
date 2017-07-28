@@ -1,0 +1,46 @@
+{
+  "name": "co-ment",
+  "version": "1.0.0",
+  "description": "react, react-router, sass, font-awesome",
+  "main": "index.js",
+  "author": "The Ursa Majors",
+  "license": "MIT",
+  "scripts": {
+    "start": "NODE_ENV=development webpack-dev-server --inline --content-base . --history-api-fallback",
+    "build": "NODE_ENV=production webpack -p",
+    "test": "eslint src --ext .jsx,.js --fix"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.0.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.5.1",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.3",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^15.0.1",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-jsx-a11y": "^5.0.3",
+    "eslint-plugin-react": "^7.0.1",
+    "file-loader": "^0.11.2",
+    "font-awesome": "^4.7.0",
+    "html-webpack-plugin": "^2.28.0",
+    "node-sass": "^4.5.3",
+    "pre-commit": "^1.2.2",
+    "sass-loader": "^6.0.5",
+    "style-loader": "^0.18.1",
+    "url-loader": "^0.5.8",
+    "webpack": "^2.6.1",
+    "webpack-dev-server": "^2.4.5"
+  },
+  "dependencies": {
+    "font-awesome": "^4.7.0",
+    "prop-types": "^15.5.10",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-hot-loader": "3.0.0-beta.6",
+    "react-router": "^4.1.1",
+    "react-router-dom": "^4.1.1"
+  }
+}

@@ -1,0 +1,58 @@
+/* MEDIA QUERIES */
+
+@mixin for-phone-landscape-up {
+  @media (min-width: 480px) {
+    @content;
+  }
+}
+
+@mixin for-phone-landscape-only {
+  @media (min-width: 480px) and (max-width: 599px) {
+    @content;
+  }
+}
+
+@mixin for-tablet-portrait-up {
+  @media (min-width: 600px) {
+    @content;
+  }
+}
+
+@mixin for-tablet-portait-only {
+  @media (min-width: 600px) and (max-width: 909px) {
+    @content;
+  }
+}
+
+@mixin for-tablet-landscape-up {
+  @media (min-width: 910px) {
+    @content;
+  }
+}
+
+@mixin for-tablet-landscape-only {
+  @media (min-width: 910px) and (max-width: 1199px) {
+    @content;
+  }
+}
+
+@mixin for-desktop-up {
+  @media (min-width: 1200px) {
+    @content;
+  }
+}
+
+@mixin for-desktop-only {
+  @media (min-width: 1200px) and (max-width: 1799px) {
+    @content;
+  }
+}
+
+@mixin for-big-desktop-up {
+  @media (min-width: 1800px) {
+    @content;
+  }
+}
+
+$color_gray_text: #7a7a7a;
+$color_gray_lighter: lighten($color_gray_text,35%);
