@@ -6,8 +6,14 @@
 
 ## Nav
 
+* [Notes and Resources](#notes-and-resources)
 * [API structure](#tentative-api-structure)
 * [Client Views](#client-views)
+
+## Notes And Resources
+
+[Express Router](http://expressjs.com/en/api.html#router)
+
 
 ## Tentative API structure
 
