@@ -1,11 +1,11 @@
-/* jshint esversion:6, node: true */
-
 /* secured routes to handle database queries
    
    ========================== Route Descriptions ======================
    VERB      URL                       DESCRIPTION
    --------------------------------------------------------------------
    GET       /api/profile/:id          Get a user's profile
+   PUT       /api/profile/:id          Update user's own profile
+   DELETE    /api/profile/:id          Delete user's own profile
    
    GET       /api/posts                Get all posts
    GET       /api/posts?role=          Get all mentor OR mentee posts

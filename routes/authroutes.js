@@ -1,5 +1,3 @@
-/* jshint esversion:6, node: true */
-
 /* non-secured routes to handle user signup and login
    
    ========================== Route Descriptions ======================
