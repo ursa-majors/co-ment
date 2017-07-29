@@ -1,5 +1,3 @@
-/* jshint esversion:6, node:true */
-
 /* Co/Ment API
      (c) 2017 - The Ursa Majors
      https://github.com/ursa-majors/co-ment
@@ -17,7 +15,7 @@ const passport      = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 // db
-//const db            = require('./db');
+const db            = require('./db');
 const mongoose      = require('mongoose');
 
 // db models
@@ -46,7 +44,42 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
 /* =============================== PASSPORT ================================ */
 
-// auth TBD
+app.use(passport.initialize());
+
+passport.use(new LocalStrategy(
+
+    // Authenticate users by username & password
+    function(username, password, done) {
+        User.findOne(
+            // query - find by username
+            { username : username },
+            // projection - select only username, salt and hash
+            { username : 1, salt : 1, hash : 1},
+            // callback - gets error & result of query
+            (err, user) => {
+                
+                // denial
+                if (err) {
+                    return done(err);
+                }
+                
+                // anger
+                if (!user) {
+                    return done(null, false, { message : 'Invalid User Name'});
+                }
+                
+                // bargaining
+                if (!user.validatePassword(password)) {
+                    return done(null, false, { message: 'Invalid Password'});
+                }
+                
+                // acceptance!
+                return done(null, user);
+                
+            });
+    }
+    
+));
 
 
 /* ================================ ROUTES ================================= */
@@ -66,8 +99,16 @@ app.use( (err, req, res, next) => {
 
 /* ============================= CONNECT TO DB ============================= */
 
+// new Mongo ( >= 4.11.0 ) connection logic:
+mongoose.connect(db.getDbConnectionString(), {
+    useMongoClient: true
+});
+
+// old Mongo connection logic (may be needed for Heroku):
 //mongoose.connect(db.getDbConnectionString());
-//mongoose.Promise = global.Promise;
+
+// tell Mongoose to use Node global es6 Promises
+mongoose.Promise = global.Promise;
 
 
 /* ================================ STARTUP ================================ */
