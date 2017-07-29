@@ -1,6 +1,3 @@
-/* jshint esversion:6, node: true */
-
-
 /* ================================= SETUP ================================= */
 
 const detenv    = require('dotenv').config();

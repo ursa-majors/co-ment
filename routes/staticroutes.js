@@ -1,4 +1,4 @@
-/* jshint esversion:6, node:true*/
+/* non-secured routes to serve static client front-end files */
 
 /* ================================= SETUP ================================= */
 
