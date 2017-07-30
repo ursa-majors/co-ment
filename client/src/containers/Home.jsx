@@ -35,6 +35,10 @@ const Home = () => (
           </p>
       <div className="splash__bracket--r" />
     </div>
+    <div className="splash__button-wrap--2">
+          <Link to="/register" className="splash__button">Register</Link>
+          <Link to="/login" className="splash__button">Login</Link>
+      </div>
   </div>
     );
 //   }
