@@ -43,10 +43,11 @@ routes.post('/api/register', (req, res) => {
             
         } else {
             let user = new User();
-            user.username  = req.body.username;
-            user.pref_lang = req.body.pref_lang;
-            user.certs     = req.body.certs;
-            user.time_zone = req.body.time_zone;
+            user.username   = req.body.username;
+            user.avatar_url = req.body.avatar_url;
+            user.pref_lang  = req.body.pref_lang;
+            user.certs      = req.body.certs;
+            user.time_zone  = req.body.time_zone;
             user.hashPassword(req.body.password);
             
             user.save( err => {
