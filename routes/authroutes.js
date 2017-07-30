@@ -15,15 +15,16 @@ const User     = require('../models/user');
 const passport = require('passport');
 
 
+
 /* ================================ ROUTES ================================= */
 
 /* Route to handle new user signup.
    Returns fail status + message -or- success status + JWT
 */
-routes.post('/api/signup', (req, res) => {
+routes.post('/api/register', (req, res) => {
     
     // fail if missing required inputs
-    if (!req.username || !req.password) {
+    if (!req.body.username || !req.body.password) {
         return res
             .status(400)
             .json({ 'message': 'Please complete all required fields.'});
@@ -42,7 +43,10 @@ routes.post('/api/signup', (req, res) => {
             
         } else {
             let user = new User();
-            user.username = req.body.username;
+            user.username  = req.body.username;
+            user.pref_lang = req.body.pref_lang;
+            user.certs     = req.body.certs;
+            user.time_zone = req.body.time_zone;
             user.hashPassword(req.body.password);
             
             user.save( err => {
@@ -63,10 +67,10 @@ routes.post('/api/signup', (req, res) => {
 /* Route to handle user login.
    Returns fail status + info -or- success status + JWT
 */
-routes.post('api/login', (req, res, next) => {
+routes.post('/api/login', (req, res, next) => {
     
     // fail if missing required inputs
-    if (!req.username || !req.password) {
+    if (!req.body.username || !req.body.password) {
         return res
             .status(400)
             .json({ 'message': 'Please complete all required fields.'});

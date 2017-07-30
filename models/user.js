@@ -43,6 +43,14 @@ userSchema.methods.hashPassword = function (pwd) {
 };
 
 
+// hash and compare submitted passwords to stored hashes in db.
+// return 'true' if match
+userSchema.methods.validatePassword = function (pwd) {
+    const hash = crypto.pbkdf2Sync(pwd, this.salt, 10000, 512, 'sha512').toString('hex');
+    return this.hash === hash;
+};
+
+
 // Generate and return signed JWT based on 'this' user object
 userSchema.methods.generateJWT = function () {
     
