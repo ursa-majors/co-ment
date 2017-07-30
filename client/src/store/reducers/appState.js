@@ -1,19 +1,17 @@
-import {LOGIN} from '../actions'
+import { LOGIN } from '../actions';
 
 const INITIAL_STATE = {
-  loggedIn: false
-}
+  loggedIn: false,
+};
 
-function appState(state=INITIAL_STATE, action){
-
-  switch(action.type){
+function appState(state = INITIAL_STATE, action) {
+  switch (action.type) {
     case LOGIN:
-      return Object.assign({}, state, {loggedIn: true})
-      break;
+      return Object.assign({}, state, { loggedIn: true });
 
     default:
-      return state
+      return state;
   }
 }
 
-export default appState
+export default appState;
