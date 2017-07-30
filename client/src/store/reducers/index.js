@@ -1,9 +1,9 @@
-import {combineReducers} from 'redux'
-import appState from '../reducers/appState'
+import { combineReducers } from 'redux';
+import appState from '../reducers/appState';
 
 
 const rootReducer = combineReducers({
-  appState: appState,
-})
+  appState,
+});
 
-export default rootReducer
+export default rootReducer;

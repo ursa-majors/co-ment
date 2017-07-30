@@ -8,9 +8,8 @@ const INITIAL_STATE = {
   regConfirmPwd: ''
 }
 
-function appState(state=INITIAL_STATE, action){
-
-  switch(action.type){
+function appState(state = INITIAL_STATE, action) {
+  switch (action.type) {
     case LOGIN:
       return Object.assign({}, state, {loggedIn: true, authToken: action.payload})
       break;
@@ -32,8 +31,8 @@ function appState(state=INITIAL_STATE, action){
       break;
 
     default:
-      return state
+      return state;
   }
 }
 
-export default appState
+export default appState;
