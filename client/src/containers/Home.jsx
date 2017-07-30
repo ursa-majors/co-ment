@@ -10,7 +10,6 @@ class Home extends React.Component{
   }
 
   render(){
-    console.log(this.props.appState)
     return(
       <div className="splash">
         <div className="splash__image" />
@@ -23,11 +22,16 @@ class Home extends React.Component{
     	    <Link to="/mentors" className="splash__button">Find a Mentor</Link>
     	    <Link to="/mentees" className="splash__button">Be a Mentor</Link>
         </div>
+
         </div>
         <div className="splash__overlay">
     	    <p className="splash__body">
     	    co/ment: a unique matchmaking service for mentors and mentees.<br/>Find the perfect guide for your coding journey.
     	    </p>
+        </div>
+        <div className="splash__button-wrap">
+          <Link to="/register" className="splash__button">Register</Link>
+          <Link to="/login" className="splash__button">Login</Link>
         </div>
       </div>
     )
