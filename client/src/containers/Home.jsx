@@ -34,11 +34,11 @@ const Home = () => (
         <span className="splash__body--spaced">co/ment:</span> a unique matchmaking service for mentors and mentees. Find the perfect guide for your coding journey.
           </p>
       <div className="splash__bracket--r" />
-      <div className="splash__button-wrap">
+    </div>
+    <div className="splash__button-wrap--2">
           <Link to="/register" className="splash__button">Register</Link>
           <Link to="/login" className="splash__button">Login</Link>
       </div>
-    </div>
   </div>
     );
 //   }

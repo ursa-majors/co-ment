@@ -75,6 +75,11 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    &--2 {
+      padding: 5vh auto;
+      margin-top: 5vh;
+      height: 10vh;
+    }
     @include for-tablet-portrait-up{
       flex-wrap: nowrap;
     }
