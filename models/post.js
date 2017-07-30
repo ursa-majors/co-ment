@@ -7,6 +7,11 @@ const mongoose  = require('mongoose');
 
 const postSchema = new mongoose.Schema({
     
+    active : {
+        type     : Boolean,
+        default  : true
+    },
+    
     author : {
         type     : String,
         required : true
@@ -15,6 +20,19 @@ const postSchema = new mongoose.Schema({
     author_id : {
         type     : String,
         required : true
+    },
+    
+    availability : String,
+    
+    body : {
+        type     : String,
+        required : true,
+        trim     : true
+    },
+    
+    keywords : {
+        type     : [String],  // array of strings
+        required : true       // at least 1 element required
     },
     
     role : {
@@ -28,19 +46,6 @@ const postSchema = new mongoose.Schema({
         required : true,
         trim     : true
     },
-    
-    body : {
-        type     : String,
-        required : true,
-        trim     : true
-    },
-    
-    keywords : {
-        type     : [String],  // array of strings
-        required : true       // at least 1 element required
-    },
-    
-    availability : String,
     
     updated : {
         type     : Date,

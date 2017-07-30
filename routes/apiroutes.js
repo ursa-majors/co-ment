@@ -74,9 +74,10 @@ routes.put('/api/profile/:id', auth, (req, res) => {
         
     // build updated user object from request body
     const updates = {
-        pref_lang : req.body.pref_lang,
-        certs     : req.body.certs,
-        time_zone : req.body.time_zone
+        avatar_url : req.body.avatar_url,
+        pref_lang  : req.body.pref_lang,
+        certs      : req.body.certs,
+        time_zone  : req.body.time_zone
     };
     
     const options = {
@@ -264,6 +265,7 @@ routes.put('/api/posts/:id', auth, (req, res) => {
     
     // build new post object from request body and parsed token
     const updates = {
+        active       : req.body.active,
         author       : req.body.author,
         author_id    : req.token._id,
         role         : req.body.role,
