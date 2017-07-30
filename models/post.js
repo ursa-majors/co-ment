@@ -12,6 +12,11 @@ const postSchema = new mongoose.Schema({
         required : true
     },
     
+    author_id : {
+        type     : String,
+        required : true
+    },
+    
     role : {
         type     : String,
         enum     : ['mentor', 'mentee'],
