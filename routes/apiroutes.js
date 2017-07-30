@@ -1,18 +1,18 @@
 /* secured routes to handle database queries
    
    ========================== Route Descriptions ==============================
-   VERB      URL                       DESCRIPTION                        DONE
+   VERB      URL                       DESCRIPTION
    ----------------------------------------------------------------------------
-   GET       /api/profile/:id          Get a user's profile                Y
+   GET       /api/profile/:id          Get a user's profile
    PUT       /api/profile/:id          Update user's own profile
    DELETE    /api/profile/:id          Delete user's own profile
    
-   GET       /api/posts                Get all posts                       Y
-   GET       /api/posts?role=          Get all mentor OR mentee posts      Y
-   GET       /api/posts?id=            Get single post                     Y
+   GET       /api/posts                Get all posts
+   GET       /api/posts?role=          Get all mentor OR mentee posts
+   GET       /api/posts?id=            Get single post
    
-   POST      /api/posts                Create new post                     Y
-   PUT       /api/posts/:id            Update single post                  Y
+   POST      /api/posts                Create new post
+   PUT       /api/posts/:id            Update single post
    DELETE    /api/posts/:id            Delete single post
 
 */
@@ -30,7 +30,7 @@ const auth     = jwt({ secret: secret, requestProperty: 'token' });
 /* ================================ ROUTES ================================= */
 
 /* Get a user's profile. Secured route - valid JWT required
-   Returns JSON user profile object.
+   Returns JSON user profile object on success.
    Example: GET > `/api/profile/597dccac7017890bd8d13cc7`
 */
 routes.get('/api/profile/:id', auth, (req, res) => {
@@ -54,8 +54,108 @@ routes.get('/api/profile/:id', auth, (req, res) => {
 });
 
 
+/* Update a user's profile. Secured route - valid JWT required
+   Returns updated JSON user profile object on success.
+   Example: PUT > `/api/profile/597dccac7017890bd8d13cc7`
+*/
+routes.put('/api/profile/:id', auth, (req, res) => {
+    
+    const target = {
+        _id      : req.params.id,
+        username : req.token.username
+    };
+    
+    // make sure the requesting user ID and target user ID match
+    if (target._id !== req.token._id) {
+        return res
+            .status(400)
+            .json({ message: 'Error: user ID mismatch.'});
+    }
+        
+    // build updated user object from request body
+    const updates = {
+        pref_lang : req.body.pref_lang,
+        certs     : req.body.certs,
+        time_zone : req.body.time_zone
+    };
+    
+    const options = {
+        // 'new' returns the updated document rather than the original
+        new: true
+    };
+    
+    User.findOneAndUpdate(target, updates, options)
+        .exec()
+        .then( user => {
+        
+            if (!user) {
+                
+                return res
+                    .status(404)
+                    .json({message: 'User not found!'});
+                
+            } else {
+                
+                return res
+                    .status(200)
+                    .json({
+                        message : 'User updated!',
+                        post    : user
+                    });
+
+            }
+    })
+    .catch( err => console.log('Error!!!', err));
+    
+});
+
+
+/* Delete a user. Secured route - valid JWT required
+   Returns deleted user profile on success.
+   Example: DELETE > /api/profile/597e3dca8167330add4be737
+*/
+routes.delete('/api/profile/:id', auth, (req, res) => {
+    
+    const target = {
+        _id      : req.params.id,
+        username : req.token.username
+    };
+    
+    // make sure the requesting user ID and target user ID match
+    if (target._id !== req.token._id) {
+        return res
+            .status(400)
+            .json({ message: 'Error: user ID mismatch.'});
+    }
+    
+    User.findOneAndRemove(target)
+        .exec()
+        .then( user => {
+            
+            if (!user) {
+                
+                return res
+                    .status(404)
+                    .json({message: 'User not found!'});
+                
+            } else {
+                
+                return res
+                    .status(200)
+                    .json({
+                        message : 'User profile deleted!',
+                        post    : user
+                    });
+
+            }
+        
+        });
+    
+});
+
+
 /* Get posts. Secured route - valid JWT required
-   Returns JSON array of 'post' objects.
+   Returns JSON array of 'post' objects on success.
    Query params for filtering requests:
      'role'   Return only 'mentor' or 'mentee' wanted posts
      'id'     Return single specific post object '_id'
@@ -96,8 +196,8 @@ routes.get('/api/posts', auth, (req, res) => {
 
 /* Create a new post. Secured route - valid JWT required
    Grabs 'author_id' from JWT token parsed by 'auth' middleware.
-   Returns JSON acknowledgement.
-   Example: POST > /api/posts
+   Returns new post object on success.
+   Example: POST > `/api/posts`
 */
 routes.post('/api/posts', auth, (req, res) => {
     
@@ -150,8 +250,8 @@ routes.post('/api/posts', auth, (req, res) => {
 
 
 /* Update a post. Secured route - valid JWT required
-   Returns JSON acknowledgement.
-   Example: PUT /api/posts/597dd8665229970e99c6ab55
+   Returns updated post on success.
+   Example: PUT `/api/posts/597dd8665229970e99c6ab55`
 */
 routes.put('/api/posts/:id', auth, (req, res) => {
     
@@ -204,8 +304,8 @@ routes.put('/api/posts/:id', auth, (req, res) => {
 });
 
 
-/* Update a post. Secured route - valid JWT required
-   Returns JSON acknowledgement.
+/* Delete a post. Secured route - valid JWT required
+   Returns deleted post on success.
    Example: DELETE > /api/posts/597dd8665229970e99c6ab55
 */
 routes.delete('/api/posts/:id', auth, (req, res) => {
