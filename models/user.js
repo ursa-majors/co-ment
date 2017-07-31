@@ -17,7 +17,9 @@ const userSchema = new mongoose.Schema({
         unique : true
     },
     
-    avatar_url : String,
+    github     : String,
+    
+    ghProfile  : String,
     
     pref_lang  : String,
     

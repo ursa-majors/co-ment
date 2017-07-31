@@ -3,7 +3,7 @@
    ========================== Route Descriptions ======================
    VERB      URL                       DESCRIPTION
    --------------------------------------------------------------------
-   POST      /api/register             Save user, return JWT
+   POST      /api/register             Save new user, return JWT
    POST      /api/login                Authenticate user, return JWT
 
 */
@@ -12,8 +12,66 @@
 
 const routes   = require('express').Router();
 const User     = require('../models/user');
+const request  = require('request');
 const passport = require('passport');
 
+
+/* =============================== UTILITIES =============================== */
+
+/** Get user's GitHub profile
+    @params    [object]   req   [the express route's request object]
+    @returns   [object]         [GitHub profile JSON if found, else undefined]
+*/
+function getGithubProfile(req) {
+
+    const options = {
+        url : `https://api.github.com/users/${req.body.github}`,
+        headers : {
+            'Accept'     : 'application/vnd.github.v3+json',
+            'User-Agent' : 'request'
+        }
+    };
+
+    return new Promise( (resolve, reject) => {
+
+        request.get(options, (error, response, body) => {
+            if (!error && response.statusCode === 200) {
+                resolve(JSON.parse(body));
+            } else {
+                resolve(undefined);
+            }
+        });                
+
+    });
+}
+
+
+/** Check if user already exists
+    If 'user', reject promise. Else return undefined.
+    @params    [object]   user   [user object if found in db]
+    @returns                     [Promise rejection if user, else undefined]
+*/
+function rejectOnUserExists(user) {
+    return user ? Promise.reject('Username already taken.') : undefined;
+}
+
+
+/** Assemble new user object from request
+    @params    [object]   ghProfile   [user's GitHub profile if found]
+    @params    [object]   req         [the expres route's request object]
+    @returns   [object]               [assembled user ready for save to db]
+*/
+function buildNewUser(ghProfile, req) {
+    let user = new User();
+    user.username  = req.body.username;
+    user.github    = req.body.github;
+    user.ghProfile = JSON.stringify(ghProfile);
+    user.pref_lang = req.body.pref_lang;
+    user.certs     = req.body.certs;
+    user.time_zone = req.body.time_zone;
+    user.hashPassword(req.body.password);
+    return user;
+}
 
 
 /* ================================ ROUTES ================================= */
@@ -30,38 +88,30 @@ routes.post('/api/register', (req, res) => {
             .json({ 'message': 'Please complete all required fields.'});
     }
     
-    // check if user already in database
-    User.findOne({ username: req.body.username}, (err, user) => {
-        
-        if (err) { throw err; }
-        
-        // if user already in db, return error. Else create user
-        if (user) {
-            return res
-                .status(400)
-                .json({ 'message': 'Username already taken.'});
-            
-        } else {
-            let user = new User();
-            user.username   = req.body.username;
-            user.avatar_url = req.body.avatar_url;
-            user.pref_lang  = req.body.pref_lang;
-            user.certs      = req.body.certs;
-            user.time_zone  = req.body.time_zone;
-            user.hashPassword(req.body.password);
-            
+    User.findOne({ username: req.body.username})
+        .exec()
+        .then( rejectOnUserExists )
+        .then( () => getGithubProfile(req) )
+        .then( ghProfile => buildNewUser(ghProfile, req))
+        .then( user => {
             user.save( err => {
                 if (err) { throw err; }
-                
+
                 // generate and respond with JWT
                 const token = user.generateJWT();
                 return res
-                    .status(201)
+                    .status(200)
                     .json({ 'token' : token });
-                
+
             });
-        }
-    });
+        })
+        .catch( err => {
+            console.log('Error!!!', err);
+            return res
+                .status(400)
+                .json({ message: err});
+        });
+
 });
 
 
