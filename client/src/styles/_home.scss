@@ -14,13 +14,6 @@
       -o-background-size: cover;
       background-size: cover;
 
-      @include for-tablet-portrait-up {
-      -webkit-background-size: cover;
-      -moz-background-size: cover;
-      -o-background-size: cover;
-      background-size: cover;
-    }
-
     @include for-desktop-up {
       background: url(./img/splash_wide.svg) no-repeat top center;
       -webkit-background-size: cover;
@@ -46,6 +39,7 @@
   &__text-wrap {
 
   }
+
   &__headline {
     text-shadow: 0 0 20px rgba(0, 0, 0, 0.63);
     font-weight: 100;
@@ -76,11 +70,16 @@
     }
   }
   &__button-wrap {
-    width: 100vw;
+    width: 100%;
     margin: 10vh auto;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    &--2 {
+      padding: 5vh auto;
+      margin-top: 5vh;
+      height: 10vh;
+    }
     @include for-tablet-portrait-up{
       flex-wrap: nowrap;
     }
@@ -112,38 +111,59 @@
     }
 
     &:hover, &:active, &:focus {
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+      background: rgba(255, 255, 255, 0.2);
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-
-      @include for-desktop-up {
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-    }
+      transition: all 300ms ease-in-out;
     }
   }
 
   &__overlay {
       position: relative;
-      top: -300px;
-      height: 100vh;
+      display: flex;
+      justify-content: center;
       text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-      background: rgba(13,17,56,.4);
-      background: -webkit-linear-gradient(top, rgba(13,17,56,.4), rgba(13,17,56,0));
-      background: linear-gradient(to bottom, rgba(13,17,56,.4), rgba(13,17,56,0));
-      padding-top: 10px;
-      @include for-tablet-landscape-up {
-      top: -200px;
-    }
+      background: #0e76bc;
+      background: -webkit-linear-gradient(top, #0e76bc, #5ebcab);
+      background: linear-gradient(to bottom, #0e76bc, #5ebcab);
+      padding: 30px 0;
+      min-height: 25vh;
 
     }
 
-    &__body {
-      font-family: 'Alegreya Sans SC', sans-serif;
-      text-transform: lowercase;
-      font-weight: 100;
-      font-size: 1.5em;
+  &__body {
+    width: 150%;
+    height: auto;
+    margin: auto;
+    font-weight: 100;
+    &--spaced {
+      letter-spacing: 2.5px;
+    }
+    @include for-phone-landscape-up {
+      font-size: 1.2em;
       width: 80%;
-      margin: 50px auto;
-      @include for-tablet-portrait-up {
+    }
+    @include for-tablet-landscape-up {
       font-size: 2em;
+      width: 80%;
     }
+    @include for-desktop-up {
+      max-width: 50%;
     }
+
+  }
+
+  &__bracket--l {
+      background: url(./img/bracket.svg) no-repeat right top;
+      width: 100%;
+    }
+
+  &__bracket--r {
+    transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    -ms-transform: scaleX(-1);
+    background: url(./img/bracket.svg) no-repeat right top;
+    width: 100%;
+    }
+
 }
