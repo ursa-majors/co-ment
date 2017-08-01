@@ -37,7 +37,7 @@ class Registration extends React.Component {
     } else if (password !== confPwd) {
       this.props.actions.setRegError('Passwords do not match');
     } else {
-      this.props.actions.setRegError('Please complete the form')
+      this.props.actions.setRegError('Please complete the form');
     }
   }
 
@@ -65,25 +65,25 @@ class Registration extends React.Component {
   render() {
     return (
       <div className="container form">
-        <div className="form-body">
-          <div className="form-header">Register</div>
-          <div className="form-input-group">
-            <input className="form-input" type="text" placeholder="Username" id="username" onChange={event => this.handleInput(event)} />
+        <div className="form__body">
+          <div className="form__header">Create account</div>
+          <div className="form__input-group">
+            <input className="form__input" type="text" placeholder="Username" id="username" onChange={event => this.handleInput(event)} />
           </div>
-          <div className="form-input-group">
-            <input className="form-input" type="password" placeholder="Password" id="password" onChange={event => this.handleInput(event)} />
+          <div className="form__input-group">
+            <input className="form__input" type="password" placeholder="Password" id="password" onChange={event => this.handleInput(event)} />
           </div>
-          <div className="form-input-group">
-            <input className="form-input" type="password" placeholder="Confirm Password" id="confirm-password" onChange={event => this.handleInput(event)} />
+          <div className="form__input-group">
+            <input className="form__input" type="password" placeholder="Confirm Password" id="confirm-password" onChange={event => this.handleInput(event)} />
           </div>
-          <div className="form-input-group">
-            <div className="form-error">{this.props.register.regErrorMsg}</div>
+          <div className="form__input-group">
+            <div className="form__error">{this.props.register.regErrorMsg}</div>
           </div>
-          <div className="form-input-group">
-            <span className="splash__button-wrap">
-              <button className="splash__button pointer" id="btn-register" onClick={event => this.handleRegister(event)} >Register</button>
-              <Link to="/login"><button className="splash__button pointer" id="btn-login">Sign In</button></Link>
-            </span>
+        </div>
+        <div className="form__input-group">
+          <div className="form__button-wrap">
+            <button className="splash__button pointer" id="btn-register" onClick={event => this.handleRegister(event)} >Register</button>
+            <Link to="/login"><button className="splash__button pointer" id="btn-login">Sign In</button></Link>
           </div>
         </div>
       </div>
