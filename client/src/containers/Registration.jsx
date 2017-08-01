@@ -17,11 +17,11 @@ class Registration extends React.Component {
   handleRegister() {
     // clear previous errors
     this.props.actions.setRegError('');
-    const username = this.props.appState.regUsername;
-    const password = this.props.appState.regPassword;
-    const confPwd = this.props.appState.regConfirmPwd;
+    const username = this.props.register.regUsername;
+    const password = this.props.register.regPassword;
+    const confPwd = this.props.register.regConfirmPwd;
 
-    if (username !== '' && (password === confPwd)) {
+    if (username && (password === confPwd)) {
       axios.post('https://co-ment.glitch.me/api/register', { username, password })
         .then((result) => {
           // TODO: Handle errors such as duplicate user
@@ -30,11 +30,14 @@ class Registration extends React.Component {
           this.props.history.push('/');
         })
         .catch((error) => {
-          console.log(error.response.data.message)
           this.props.actions.setRegError(error.response.data.message);
         });
+    } else if (!username) {
+      this.props.actions.setRegError('Username cannot be blank');
+    } else if (password !== confPwd) {
+      this.props.actions.setRegError('Passwords do not match');
     } else {
-      // TODO: Handle basic validation failure
+      this.props.actions.setRegError('Please complete the form')
     }
   }
 
@@ -74,7 +77,7 @@ class Registration extends React.Component {
             <input className="form-input" type="password" placeholder="Confirm Password" id="confirm-password" onChange={event => this.handleInput(event)} />
           </div>
           <div className="form-input-group">
-            <div className="form-error">{this.props.appState.regErrorMsg}</div>
+            <div className="form-error">{this.props.register.regErrorMsg}</div>
           </div>
           <div className="form-input-group">
             <span className="splash__button-wrap">
@@ -89,7 +92,7 @@ class Registration extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  appState: state.appState,
+  register: state.register,
 });
 
 
