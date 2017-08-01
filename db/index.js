@@ -14,7 +14,7 @@ const dbPwd   = process.env.DB_PWD;
 module.exports = {
     
     getDbConnectionString: function() {
-        return `mongodb://${dbUname}:${dbPwd}@ds127963.mlab.com:27963/co-ment`;
+        return `mongodb://${dbUname}:${dbPwd}@ds127983.mlab.com:27983/co-ment`;
     }
     
 };
