@@ -1,4 +1,3 @@
-// placeholder file for actions
 export const LOGIN = 'LOGIN';
 export const SET_REG_USER = 'SET_REG_USER';
 export const SET_REG_PWD = 'SET_REG_PWD';
