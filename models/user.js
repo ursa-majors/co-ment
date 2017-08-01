@@ -17,9 +17,9 @@ const userSchema = new mongoose.Schema({
         unique : true
     },
     
-    github     : String,
+    ghUserName : String,
     
-    ghProfile  : String,
+    ghProfile  : Object,
     
     pref_lang  : String,
     
