@@ -7,6 +7,7 @@ import FooterNav from './containers/FooterNav';
 import About from './containers/About';
 import Login from './containers/Login';
 import Registration from './containers/Registration';
+import Profile from './containers/Profile';
 
 const App = () => (
   <BrowserRouter>
@@ -18,6 +19,7 @@ const App = () => (
           <Route path="/register" component={Registration} />
           <Route path="/login" component={Login} />
           <Route path="/about" component={About} />
+          <Route path="/profile/:id" component={Profile} />
         </Switch>
       </main>
       <FooterNav />
