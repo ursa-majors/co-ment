@@ -28,7 +28,7 @@ const authRoutes    = require('./routes/authroutes');
 const staticRoutes  = require('./routes/staticroutes');
 
 // port
-const port          = process.env.PORT || 3000;
+const port          = process.env.PORT || 3001;
 
 
 /* ============================= CONFIGURATION ============================= */
@@ -56,28 +56,28 @@ passport.use(new LocalStrategy(
             { username : 1, salt : 1, hash : 1},
             // callback - gets error & result of query
             (err, user) => {
-                
+
                 // denial
                 if (err) {
                     return done(err);
                 }
-                
+
                 // anger
                 if (!user) {
                     return done(null, false, { message : 'Invalid User Name'});
                 }
-                
+
                 // bargaining
                 if (!user.validatePassword(password)) {
                     return done(null, false, { message: 'Invalid Password'});
                 }
-                
+
                 // acceptance!
                 return done(null, user);
-                
+
             });
     }
-    
+
 ));
 
 
