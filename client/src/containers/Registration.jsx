@@ -15,12 +15,14 @@ class Registration extends React.Component {
   * , return to Home
   */
   handleRegister() {
-    const username = this.props.appState.regUsername;
-    const password = this.props.appState.regPassword;
-    const confPwd = this.props.appState.regConfirmPwd;
+    // clear previous errors
+    this.props.actions.setRegError('');
+    const username = this.props.register.regUsername;
+    const password = this.props.register.regPassword;
+    const confPwd = this.props.register.regConfirmPwd;
 
-    if (username !== '' && (password === confPwd)) {
-      axios.post('http://localhost:3001/api/register', { username, password })
+    if (username && (password === confPwd)) {
+      axios.post('https://co-ment.glitch.me/api/register', { username, password })
         .then((result) => {
           // TODO: Handle errors such as duplicate user
           this.props.actions.login(result.data.token);
@@ -28,10 +30,14 @@ class Registration extends React.Component {
           this.props.history.push('/');
         })
         .catch((error) => {
-          console.log(error);
+          this.props.actions.setRegError(error.response.data.message);
         });
+    } else if (!username) {
+      this.props.actions.setRegError('Username cannot be blank');
+    } else if (password !== confPwd) {
+      this.props.actions.setRegError('Passwords do not match');
     } else {
-      // TODO: Handle basic validation failure
+      this.props.actions.setRegError('Please complete the form')
     }
   }
 
@@ -71,6 +77,9 @@ class Registration extends React.Component {
             <input className="form-input" type="password" placeholder="Confirm Password" id="confirm-password" onChange={event => this.handleInput(event)} />
           </div>
           <div className="form-input-group">
+            <div className="form-error">{this.props.register.regErrorMsg}</div>
+          </div>
+          <div className="form-input-group">
             <span className="splash__button-wrap">
               <button className="splash__button pointer" id="btn-register" onClick={event => this.handleRegister(event)} >Register</button>
               <Link to="/login"><button className="splash__button pointer" id="btn-login">Sign In</button></Link>
@@ -83,7 +92,7 @@ class Registration extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  appState: state.appState,
+  register: state.register,
 });
 
 
