@@ -12,66 +12,7 @@
 
 const routes   = require('express').Router();
 const User     = require('../models/user');
-const request  = require('request');
 const passport = require('passport');
-
-
-/* =============================== UTILITIES =============================== */
-
-/** Get user's GitHub profile
-    @params    [object]   req   [the express route's request object]
-    @returns   [object]         [GitHub profile JSON if found, else undefined]
-*/
-function getGithubProfile(req) {
-
-    const options = {
-        url : `https://api.github.com/users/${req.body.github}`,
-        headers : {
-            'Accept'     : 'application/vnd.github.v3+json',
-            'User-Agent' : 'request'
-        }
-    };
-
-    return new Promise( (resolve, reject) => {
-
-        request.get(options, (error, response, body) => {
-            if (!error && response.statusCode === 200) {
-                resolve(JSON.parse(body));
-            } else {
-                resolve(undefined);
-            }
-        });                
-
-    });
-}
-
-
-/** Check if user already exists
-    If 'user', reject promise. Else return undefined.
-    @params    [object]   user   [user object if found in db]
-    @returns                     [Promise rejection if user, else undefined]
-*/
-function rejectOnUserExists(user) {
-    return user ? Promise.reject('Username already taken.') : undefined;
-}
-
-
-/** Assemble new user object from request
-    @params    [object]   ghProfile   [user's GitHub profile if found]
-    @params    [object]   req         [the expres route's request object]
-    @returns   [object]               [assembled user ready for save to db]
-*/
-function buildNewUser(ghProfile, req) {
-    let user = new User();
-    user.username  = req.body.username;
-    user.github    = req.body.github;
-    user.ghProfile = JSON.stringify(ghProfile);
-    user.pref_lang = req.body.pref_lang;
-    user.certs     = req.body.certs;
-    user.time_zone = req.body.time_zone;
-    user.hashPassword(req.body.password);
-    return user;
-}
 
 
 /* ================================ ROUTES ================================= */
@@ -85,15 +26,23 @@ routes.post('/api/register', (req, res) => {
     if (!req.body.username || !req.body.password) {
         return res
             .status(400)
-            .json({ 'message': 'Please complete all required fields.'});
+            .json({ 'message': 'Please complete all required fields.' });
     }
     
     User.findOne({ username: req.body.username})
         .exec()
-        .then( rejectOnUserExists )
-        .then( () => getGithubProfile(req) )
-        .then( ghProfile => buildNewUser(ghProfile, req))
         .then( user => {
+            // finding a user is bad - reject --> catch block
+            return user ? Promise.reject('Username already taken.') : undefined;
+        })
+        .then( () => {
+            
+            // no user found, let's build a new one
+            const user = new User();
+            
+            user.username   = req.body.username;
+            user.hashPassword(req.body.password);
+            
             user.save( err => {
                 if (err) { throw err; }
 
