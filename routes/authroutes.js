@@ -27,7 +27,7 @@ routes.post('/api/register', (req, res) => {
             .status(400)
             .json({ 'message': 'Please complete all required fields.' });
     }
-   
+
     User.findOne({ username: req.body.username})
         .exec()
         .then( user => {
@@ -35,13 +35,13 @@ routes.post('/api/register', (req, res) => {
             return user ? Promise.reject('Username already taken.') : undefined;
         })
         .then( () => {
-            
+
             // no user found, let's build a new one
             const user = new User();
-            
+
             user.username   = req.body.username;
             user.hashPassword(req.body.password);
-            
+
             user.save( err => {
                 if (err) { throw err; }
 
