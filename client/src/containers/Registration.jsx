@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import * as Actions from '../store/actions';
 
@@ -57,19 +58,24 @@ class Registration extends React.Component {
 
   render() {
     return (
-      <div className="form">
-        <div className="form-header">Register</div>
-        <div className="form-input-group">
-          <input className="form-input" type="text" placeholder="Username" id="username" onChange={event => this.handleInput(event)} />
-        </div>
-        <div className="form-input-group">
-          <input className="form-input" type="password" placeholder="Password" id="password" onChange={event => this.handleInput(event)} />
-        </div>
-        <div className="form-input-group">
-          <input className="form-input" type="password" placeholder="Confirm Password" id="confirm-password" onChange={event => this.handleInput(event)} />
-        </div>
-        <div className="form-input-group">
-          <button className="form-button" id="btn-register" onClick={event => this.handleRegister(event)} >Register</button>
+      <div className="container form">
+        <div className="form-body">
+          <div className="form-header">Register</div>
+          <div className="form-input-group">
+            <input className="form-input" type="text" placeholder="Username" id="username" onChange={event => this.handleInput(event)} />
+          </div>
+          <div className="form-input-group">
+            <input className="form-input" type="password" placeholder="Password" id="password" onChange={event => this.handleInput(event)} />
+          </div>
+          <div className="form-input-group">
+            <input className="form-input" type="password" placeholder="Confirm Password" id="confirm-password" onChange={event => this.handleInput(event)} />
+          </div>
+          <div className="form-input-group">
+            <span className="splash__button-wrap">
+              <button className="splash__button pointer" id="btn-register" onClick={event => this.handleRegister(event)} >Register</button>
+              <Link to="/login"><button className="splash__button pointer" id="btn-login">Sign In</button></Link>
+            </span>
+          </div>
         </div>
       </div>
     );

@@ -1,17 +1,36 @@
+.pointer{
+  cursor: pointer;
+}
 .form{
-  width: 50vh;
-  margin: auto;
+  font-family: 'Alegreya Sans', sans-serif;
+  flex-direction: column;
+}
+.form-body{
+  width: 60%;
+  margin: 0 auto;
+  border: 3px solid #eee;
+  border-radius: 6px;
+  padding: 10px;
+  text-align: center;
 }
 .form-header{
-  background-color: #ccc;
+  font-size: 30px;
+  color: #eee;
 }
 .form-input-group{
-
   width: 100%;
 }
 .form-input{
+  line-height: 4em;
+  height: 4em;
   width: 100%;
+  border-radius: 6px;
+  width: 90%;
+  margin: 5px 0;
 }
 .form-button{
+  line-height: 3em;
+  height: 3em;
+  border-radius: 6px;
 
 }
