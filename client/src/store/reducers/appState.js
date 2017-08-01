@@ -3,6 +3,7 @@ import { LOGIN } from '../actions';
 const INITIAL_STATE = {
   loggedIn: false,
   authToken: {},
+  userID: '5980d7397f59c400656f5bf3',
 };
 
 function appState(state = INITIAL_STATE, action) {
