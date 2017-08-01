@@ -15,12 +15,14 @@ class Registration extends React.Component {
   * , return to Home
   */
   handleRegister() {
+    // clear previous errors
+    this.props.actions.setRegError('');
     const username = this.props.appState.regUsername;
     const password = this.props.appState.regPassword;
     const confPwd = this.props.appState.regConfirmPwd;
 
     if (username !== '' && (password === confPwd)) {
-      axios.post('http://localhost:3001/api/register', { username, password })
+      axios.post('https://co-ment.glitch.me/api/register', { username, password })
         .then((result) => {
           // TODO: Handle errors such as duplicate user
           this.props.actions.login(result.data.token);
@@ -28,7 +30,8 @@ class Registration extends React.Component {
           this.props.history.push('/');
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error.response.data.message)
+          this.props.actions.setRegError(error.response.data.message);
         });
     } else {
       // TODO: Handle basic validation failure
@@ -69,6 +72,9 @@ class Registration extends React.Component {
           </div>
           <div className="form-input-group">
             <input className="form-input" type="password" placeholder="Confirm Password" id="confirm-password" onChange={event => this.handleInput(event)} />
+          </div>
+          <div className="form-input-group">
+            <div className="form-error">{this.props.appState.regErrorMsg}</div>
           </div>
           <div className="form-input-group">
             <span className="splash__button-wrap">

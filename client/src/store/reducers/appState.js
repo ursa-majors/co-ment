@@ -1,4 +1,4 @@
-import { LOGIN, SET_REG_USER, SET_REG_PWD, SET_REG_CONF_PWD, CLEAR_PWD } from '../actions';
+import { LOGIN, SET_REG_USER, SET_REG_PWD, SET_REG_CONF_PWD, CLEAR_PWD, SET_REG_ERROR } from '../actions';
 
 const INITIAL_STATE = {
   loggedIn: false,
@@ -6,6 +6,7 @@ const INITIAL_STATE = {
   regUsername: '',
   regPassword: '',
   regConfirmPwd: '',
+  regErrorMsg: '',
 };
 
 function appState(state = INITIAL_STATE, action) {
@@ -24,6 +25,9 @@ function appState(state = INITIAL_STATE, action) {
 
     case CLEAR_PWD:
       return Object.assign({}, state, { regPassword: '', regConfirmPwd: '' });
+
+    case SET_REG_ERROR:
+      return Object.assign({}, state, { regErrorMsg: action.payload });
 
     default:
       return state;

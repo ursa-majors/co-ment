@@ -3,6 +3,7 @@ export const SET_REG_USER = 'SET_REG_USER';
 export const SET_REG_PWD = 'SET_REG_PWD';
 export const SET_REG_CONF_PWD = 'SET_REG_CONF_PWD';
 export const CLEAR_PWD = 'CLEAR_PWD';
+export const SET_REG_ERROR = 'SET_REG_ERROR';
 
 export function login(token) {
   return ({
@@ -35,5 +36,12 @@ export function setRegConfPwd(password) {
 export function clearPwd() {
   return ({
     type: CLEAR_PWD,
+  });
+}
+
+export function setRegError(msg) {
+  return ({
+    type: SET_REG_ERROR,
+    payload: msg,
   });
 }
