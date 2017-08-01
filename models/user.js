@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
         unique : true
     },
     
+    ghUserName : String,
+    
+    ghProfile  : Object,
+    
     pref_lang  : String,
     
     certs      : [String],

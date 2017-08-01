@@ -19,12 +19,45 @@
 
 /* ================================= SETUP ================================= */
 
-const routes   = require('express').Router();
-const User     = require('../models/user');
-const Post     = require('../models/post');
-const jwt      = require('express-jwt');
-const secret   = process.env.JWT_SECRET;
-const auth     = jwt({ secret: secret, requestProperty: 'token' });
+const routes  = require('express').Router();
+const User    = require('../models/user');
+const Post    = require('../models/post');
+const jwt     = require('express-jwt');
+const request = require('request');
+const secret  = process.env.JWT_SECRET;
+const auth    = jwt({ secret: secret, requestProperty: 'token' });
+
+
+/* ============================ UTILITY METHODS ============================ */
+
+/** Get user's GitHub profile
+    @params    [string]   ghUserName   [GitHub username from request object]
+    @returns   [object]                [found GitHub profile, else undefined]
+*/
+function getGithubProfile(ghUserName) {
+    
+    if (!ghUserName) { ghUserName = ''; }
+    
+    const options = {
+        url : 'https://api.github.com/users/' + ghUserName,
+        headers : {
+            'Accept'     : 'application/vnd.github.v3+json',
+            'User-Agent' : 'request'
+        }
+    };
+
+    return new Promise( (resolve, reject) => {
+
+        request.get(options, (error, response, body) => {
+            if (!error && response.statusCode === 200) {
+                resolve(JSON.parse(body));
+            } else {
+                resolve(undefined);
+            }
+        });                
+
+    });
+}
 
 
 /* ================================ ROUTES ================================= */
@@ -64,49 +97,63 @@ routes.put('/api/profile/:id', auth, (req, res) => {
         _id      : req.params.id,
         username : req.token.username
     };
-    
-    // make sure the requesting user ID and target user ID match
-    if (target._id !== req.token._id) {
+
+    // kick off promise chain
+    new Promise( (resolve, reject) => {
+
+        // make sure the requesting user ID and target user ID match
+        if (target._id === req.token._id) {
+            resolve(target);
+        } else {
+            reject('Error: user ID mismatch.');
+        }
+
+    })
+    .then( () => getGithubProfile(req.body.ghUserName) )
+    .then( (ghProfile) => {
+
+        const options = {
+            new: true  // return updated document rather than the original
+        };
+
+        const updates = {
+            ghUserName : req.body.ghUserName,
+            ghProfile  : ghProfile,
+            pref_lang  : req.body.pref_lang,
+            certs      : req.body.certs,
+            time_zone  : req.body.time_zone
+        };
+
+        User.findOneAndUpdate(target, updates, options)
+            .exec()
+            .then( user => {
+
+                if (!user) {
+
+                    return res
+                        .status(404)
+                        .json({message: 'User not found!'});
+
+                } else {
+
+                    return res
+                        .status(200)
+                        .json({
+                            message : 'User updated!',
+                            user    : user
+                        });
+
+                }
+        });
+        
+    })
+    .catch( err => {
+        console.log('Error!!!', err);
         return res
             .status(400)
-            .json({ message: 'Error: user ID mismatch.'});
-    }
-        
-    // build updated user object from request body
-    const updates = {
-        pref_lang : req.body.pref_lang,
-        certs     : req.body.certs,
-        time_zone : req.body.time_zone
-    };
-    
-    const options = {
-        // 'new' returns the updated document rather than the original
-        new: true
-    };
-    
-    User.findOneAndUpdate(target, updates, options)
-        .exec()
-        .then( user => {
-        
-            if (!user) {
-                
-                return res
-                    .status(404)
-                    .json({message: 'User not found!'});
-                
-            } else {
-                
-                return res
-                    .status(200)
-                    .json({
-                        message : 'User updated!',
-                        post    : user
-                    });
+            .json({ message: err});
+    });
 
-            }
-    })
-    .catch( err => console.log('Error!!!', err));
-    
 });
 
 
@@ -149,6 +196,12 @@ routes.delete('/api/profile/:id', auth, (req, res) => {
 
             }
         
+        })
+        .catch( err => {
+            console.log('Error!!!', err);
+            return res
+                .status(400)
+                .json({ message: err});
         });
     
 });
@@ -223,14 +276,14 @@ routes.post('/api/posts', auth, (req, res) => {
         .then( post => {
             
             if (post) {
-                
+
                 // post already exists, fail
                 return res
                     .status(400)
                     .json({ message: 'Error - same/similar post already exists!'});
-                
+
             } else {
-                
+
                 // save new post to database
                 Post.create(inputPost, (err, newPost) => {
                     return res
@@ -240,11 +293,16 @@ routes.post('/api/posts', auth, (req, res) => {
                             post    : newPost
                         });
                 });
-                
+
             }
-        
+
         })
-        .catch( err => console.log('Error!!!', err));
+        .catch( err => {
+            console.log('Error!!!', err);
+            return res
+                .status(400)
+                .json({ message: err});
+        });
     
 });
 
@@ -254,16 +312,17 @@ routes.post('/api/posts', auth, (req, res) => {
    Example: PUT `/api/posts/597dd8665229970e99c6ab55`
 */
 routes.put('/api/posts/:id', auth, (req, res) => {
-    
+
     // target post by post '_id' and post 'author_id'.
     // this way, users can only update their own posts.
     const target = {
         _id       : req.params.id,
         author_id : req.token._id
     };
-    
+
     // build new post object from request body and parsed token
     const updates = {
+        active       : req.body.active,
         author       : req.body.author,
         author_id    : req.token._id,
         role         : req.body.role,
@@ -272,24 +331,24 @@ routes.put('/api/posts/:id', auth, (req, res) => {
         keywords     : req.body.keywords,
         availability : req.body.availability
     };
-    
+
     const options = {
         // 'new' returns the updated document rather than the original
         new: true
     };
-    
+
     Post.findOneAndUpdate(target, updates, options)
         .exec()
         .then( post => {
-        
+
             if (!post) {
-                
+
                 return res
                     .status(404)
                     .json({message: 'Post not found!'});
-                
+
             } else {
-                
+
                 return res
                     .status(200)
                     .json({
@@ -299,8 +358,13 @@ routes.put('/api/posts/:id', auth, (req, res) => {
 
             }
     })
-    .catch( err => console.log('Error!!!', err));
-    
+    .catch( err => {
+        console.log('Error!!!', err);
+            return res
+                .status(400)
+                .json({ message: err});
+    });
+
 });
 
 
@@ -309,26 +373,26 @@ routes.put('/api/posts/:id', auth, (req, res) => {
    Example: DELETE > /api/posts/597dd8665229970e99c6ab55
 */
 routes.delete('/api/posts/:id', auth, (req, res) => {
-    
+
     // target post by post '_id' and post 'author_id'.
     // this way, users can only delete their own posts.
     const target = {
         _id       : req.params.id,
         author_id : req.token._id
     };
-    
+
     Post.findOneAndRemove(target)
         .exec()
         .then( post => {
-            
+
             if (!post) {
-                
+
                 return res
                     .status(404)
                     .json({message: 'Post not found!'});
-                
+
             } else {
-                
+
                 return res
                     .status(200)
                     .json({
@@ -337,9 +401,15 @@ routes.delete('/api/posts/:id', auth, (req, res) => {
                     });
 
             }
-        
+
+        })
+        .catch( err => {
+            console.log('Error!!!', err);
+            return res
+                .status(400)
+                .json({ message: err});
         });
-    
+
 });
 
 

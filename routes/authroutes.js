@@ -3,7 +3,7 @@
    ========================== Route Descriptions ======================
    VERB      URL                       DESCRIPTION
    --------------------------------------------------------------------
-   POST      /api/register             Save user, return JWT
+   POST      /api/register             Save new user, return JWT
    POST      /api/login                Authenticate user, return JWT
 */
 
@@ -12,7 +12,6 @@
 const routes   = require('express').Router();
 const User     = require('../models/user');
 const passport = require('passport');
-
 
 
 /* ================================ ROUTES ================================= */
@@ -26,26 +25,21 @@ routes.post('/api/register', (req, res) => {
     if (!req.body.username || !req.body.password) {
         return res
             .status(400)
-            .json({ 'message': 'Please complete all required fields.'});
+            .json({ 'message': 'Please complete all required fields.' });
     }
 
-    // check if user already in database
-    User.findOne({ username: req.body.username}, (err, user) => {
+    User.findOne({ username: req.body.username})
+        .exec()
+        .then( user => {
+            // finding a user is bad - reject --> catch block
+            return user ? Promise.reject('Username already taken.') : undefined;
+        })
+        .then( () => {
 
-        if (err) { throw err; }
+            // no user found, let's build a new one
+            const user = new User();
 
-        // if user already in db, return error. Else create user
-        if (user) {
-            return res
-                .status(400)
-                .json({ 'message': 'Username already taken.'});
-
-        } else {
-            let user = new User();
-            user.username  = req.body.username;
-            user.pref_lang = req.body.pref_lang;
-            user.certs     = req.body.certs;
-            user.time_zone = req.body.time_zone;
+            user.username   = req.body.username;
             user.hashPassword(req.body.password);
 
             user.save( err => {
@@ -54,12 +48,18 @@ routes.post('/api/register', (req, res) => {
                 // generate and respond with JWT
                 const token = user.generateJWT();
                 return res
-                    .status(201)
+                    .status(200)
                     .json({ 'token' : token });
 
             });
-        }
-    });
+        })
+        .catch( err => {
+            console.log('Error!!!', err);
+            return res
+                .status(400)
+                .json({ message: err});
+        });
+
 });
 
 
