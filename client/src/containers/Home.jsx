@@ -4,17 +4,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as Actions from '../store/actions';
 
-
-// eslint freaks out about "useless constructors" and won't let me commit...
-// so i'm commenting out the constructor out until we add some state to this thing
-
-// class Home extends React.Component {
-//   constructor(props) {
-//     super(props);
-//   }
-// render() {
-//     console.log(this.props.appState);
-    // return (
 const Home = () => (
   <div className="splash">
     <div className="splash__image" />
@@ -24,8 +13,8 @@ const Home = () => (
         <h2 className="splash__subhead">find your guiding star</h2>
       </div>
       <div className="splash__button-wrap">
-        <Link to="/mentors" className="splash__button">Find a Mentor</Link>
-        <Link to="/mentees" className="splash__button">Be a Mentor</Link>
+        <Link to="/register"className="splash__button">Find a Mentor</Link>
+        <Link to="/register" className="splash__button">Be a Mentor</Link>
       </div>
     </div>
     <div className="splash__overlay">
@@ -35,10 +24,6 @@ const Home = () => (
           </p>
       <div className="splash__bracket--r" />
     </div>
-    <div className="splash__button-wrap--2">
-          <Link to="/register" className="splash__button">Register</Link>
-          <Link to="/login" className="splash__button">Login</Link>
-      </div>
   </div>
     );
 //   }
