@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -23,7 +24,7 @@ class Home extends React.Component {
         .then((response) => {
           this.props.actions.login(token, response.data);
         })
-        .catch((error) => {
+        .catch(() => {
           this.props.actions.logout();
         });
       }
@@ -71,8 +72,16 @@ class Home extends React.Component {
     );
   }
 }
-//   }
-// }
+
+Home.propTypes = {
+  actions: PropTypes.Object(PropTypes.shape({
+    login: PropTypes.function.isRequired,
+    logout: PropTypes.function.isRequired,
+  })).isRequired,
+  appState: PropTypes.Object(PropTypes.shape({
+    loggedIn: PropTypes.boolean.isRequired,
+  })).isRequired,
+};
 
 const mapStateToProps = state => ({
   appState: state.appState,
