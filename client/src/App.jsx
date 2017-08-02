@@ -9,6 +9,7 @@ import About from './containers/About';
 import Login from './containers/Login';
 import Registration from './containers/Registration';
 import Profile from './containers/Profile';
+import Logout from './containers/Logout';
 
 class App extends React.Component {
 
@@ -25,6 +26,7 @@ class App extends React.Component {
               <Route path="/login" component={Login} />
               <Route path="/about" component={About} />
               <Route path="/profile" component={Profile} />
+              <Route path="/logout" component={Logout} />
             </Switch>
           </main>
           <FooterNav />
