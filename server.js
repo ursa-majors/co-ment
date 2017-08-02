@@ -52,27 +52,23 @@ passport.use(new LocalStrategy(
         User.findOne(
             // query - find by username
             { username : username },
-            // projection - select only username, salt and hash
-            { username : 1, salt : 1, hash : 1},
+            // projection - select fields to return
+            'username salt hash ghUserName ghProfile pref_lang certs time_zone',
             // callback - gets error & result of query
             (err, user) => {
 
-                // denial
                 if (err) {
                     return done(err);
                 }
 
-                // anger
                 if (!user) {
                     return done(null, false, { message : 'Invalid User Name'});
                 }
 
-                // bargaining
                 if (!user.validatePassword(password)) {
                     return done(null, false, { message: 'Invalid Password'});
                 }
 
-                // acceptance!
                 return done(null, user);
 
             });
@@ -91,7 +87,7 @@ app.use(staticRoutes);
 /* ============================= ERROR HANDLER ============================= */
 
 app.use( (err, req, res, next) => {
-    console.log('Error\n', err.stack);
+    console.log('Error\n', err);
     res.status(500).send('Something broke...');
 });
 
