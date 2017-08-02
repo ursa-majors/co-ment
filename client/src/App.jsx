@@ -9,15 +9,16 @@ import About from './containers/About';
 import Login from './containers/Login';
 import Registration from './containers/Registration';
 import Profile from './containers/Profile';
+import Logout from './containers/Logout';
 
 class App extends React.Component {
 
   render() {
-    const link = (this.props.appState.loggedIn ? 'profile' : 'login');
+    const links = (this.props.appState.loggedIn ? ['posts','profile','logout'] : ['login']);
     return (
       <BrowserRouter>
         <div>
-          <HeaderNav link={link} />
+          <HeaderNav links={links} />
           <main className="main">
             <Switch>
               <Route exact path="/" component={Home} />
@@ -25,6 +26,7 @@ class App extends React.Component {
               <Route path="/login" component={Login} />
               <Route path="/about" component={About} />
               <Route path="/profile" component={Profile} />
+              <Route path="/logout" component={Logout} />
             </Switch>
           </main>
           <FooterNav />
