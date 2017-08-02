@@ -16,19 +16,19 @@ const passport = require('passport');
 
 /* =============================== UTILITIES =============================== */
 
-/* Generate user profile on auth success, less salt, hash and mongo doc ver
+/* Generate user profile on auth success, less salt & hash
  *
  * @params    [object]   user   [the whole user profile returned from db]
- * @returns   [object]          [user profile without salt, hash & __ver]
+ * @returns   [object]          [user profile without salt & hash]
 */
 function makeUserProfile(user) {
-    
-	const filtered = {};
-    
+
+    const filtered = {};
+
     Object.keys(user)
         .filter( k => (k !== 'salt' && k !== 'hash'))
         .forEach( k => filtered[k] = user[k]);
-    
+
     return filtered;
 
 }

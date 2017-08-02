@@ -57,18 +57,22 @@ passport.use(new LocalStrategy(
             // callback - gets error & result of query
             (err, user) => {
 
+                // denial
                 if (err) {
                     return done(err);
                 }
 
+                // anger
                 if (!user) {
                     return done(null, false, { message : 'Invalid User Name'});
                 }
 
+                // bargaining
                 if (!user.validatePassword(password)) {
                     return done(null, false, { message: 'Invalid Password'});
                 }
 
+                // acceptance!
                 return done(null, user);
 
             });
