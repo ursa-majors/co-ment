@@ -27,6 +27,9 @@ const apiRoutes     = require('./routes/apiroutes');
 const authRoutes    = require('./routes/authroutes');
 const staticRoutes  = require('./routes/staticroutes');
 
+// error handler
+const errorHandler  = require('./utils/errorhandler');
+
 // port
 const port          = process.env.PORT || 3001;
 
@@ -39,6 +42,15 @@ app.use(morgan('dev'));
 // enable http request body parsing
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended : true }));
+
+
+/* ================================= CORS ================================= */
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    next();
+});
 
 
 /* =============================== PASSPORT ================================ */
@@ -90,10 +102,7 @@ app.use(staticRoutes);
 
 /* ============================= ERROR HANDLER ============================= */
 
-app.use( (err, req, res, next) => {
-    console.log('Error\n', err);
-    res.status(500).send('Something broke...');
-});
+app.use(errorHandler);
 
 
 /* ============================= CONNECT TO DB ============================= */
