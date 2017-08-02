@@ -24,14 +24,14 @@ class Registration extends React.Component {
     if (username && (password === confPwd)) {
       axios.post('https://co-ment.glitch.me/api/register', { username, password })
         .then((result) => {
-          console.log(result)
+          console.log(result);
           // TODO: Handle errors such as duplicate user
           this.props.actions.login(result.data.token);
           this.props.actions.clearPwd();
           this.props.history.push('/');
         })
         .catch((error) => {
-          console.log('error!:', error)
+          console.log('error!:', error);
           this.props.actions.setRegError(error.response.data.message);
         });
     } else if (!username) {
