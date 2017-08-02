@@ -9,12 +9,13 @@ import About from './containers/About';
 import Login from './containers/Login';
 import Registration from './containers/Registration';
 import Profile from './containers/Profile';
+import Posts from './containers/Posts';
 import Logout from './containers/Logout';
 
 class App extends React.Component {
 
   render() {
-    const links = (this.props.appState.loggedIn ? ['posts','profile','logout'] : ['login']);
+    const links = (this.props.appState.loggedIn ? ['posts', 'profile', 'logout'] : ['login']);
     return (
       <BrowserRouter>
         <div>
@@ -26,6 +27,7 @@ class App extends React.Component {
               <Route path="/login" component={Login} />
               <Route path="/about" component={About} />
               <Route path="/profile" component={Profile} />
+              <Route path="/posts" component={Posts} />
               <Route path="/logout" component={Logout} />
             </Switch>
           </main>
