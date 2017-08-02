@@ -73,16 +73,6 @@ class Home extends React.Component {
   }
 }
 
-Home.propTypes = {
-  actions: PropTypes.Object(PropTypes.shape({
-    login: PropTypes.function.isRequired,
-    logout: PropTypes.function.isRequired,
-  })).isRequired,
-  appState: PropTypes.Object(PropTypes.shape({
-    loggedIn: PropTypes.boolean.isRequired,
-  })).isRequired,
-};
-
 const mapStateToProps = state => ({
   appState: state.appState,
 });
