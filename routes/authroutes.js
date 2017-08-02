@@ -14,6 +14,26 @@ const User     = require('../models/user');
 const passport = require('passport');
 
 
+/* =============================== UTILITIES =============================== */
+
+/* Generate user profile on auth success, less salt & hash
+ *
+ * @params    [object]   user   [the whole user profile returned from db]
+ * @returns   [object]          [user profile without salt & hash]
+*/
+function makeUserProfile(user) {
+
+    const filtered = {};
+
+    Object.keys(user)
+        .filter( k => (k !== 'salt' && k !== 'hash'))
+        .forEach( k => filtered[k] = user[k]);
+
+    return filtered;
+
+}
+
+
 /* ================================ ROUTES ================================= */
 
 /* Route to handle new user signup.
@@ -44,12 +64,20 @@ routes.post('/api/register', (req, res) => {
 
             user.save( err => {
                 if (err) { throw err; }
+                
+                const profile = {
+                    username : user.username,
+                    _id      : user._id
+                };
 
-                // generate and respond with JWT
+                // generate token, respond with profile & JWT
                 const token = user.generateJWT();
                 return res
                     .status(200)
-                    .json({ 'token' : token });
+                    .json({
+                        'profile' : profile,
+                        'token'   : token
+                    });
 
             });
         })
@@ -85,12 +113,17 @@ routes.post('/api/login', (req, res, next) => {
                 .json(info);
 
         } else {
+            
+            const profile = makeUserProfile(user._doc);
 
-            // generate and respond with JWT
+            // generate token, respond with profile & JWT
             const token = user.generateJWT();
             return res
                 .status(200)
-                .json({ 'token' : token });
+                .json({
+                    'profile' : profile,
+                    'token'   : token
+                });
 
         }
 
