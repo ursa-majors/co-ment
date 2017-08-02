@@ -19,7 +19,7 @@ const App = () => (
           <Route path="/register" component={Registration} />
           <Route path="/login" component={Login} />
           <Route path="/about" component={About} />
-          <Route path="/profile/:id" component={Profile} />
+          <Route path="/profile" component={Profile} />
         </Switch>
       </main>
       <FooterNav />
