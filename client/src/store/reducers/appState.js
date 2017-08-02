@@ -10,8 +10,8 @@ const INITIAL_STATE = {
 function appState(state = INITIAL_STATE, action) {
   switch (action.type) {
     case LOGIN: {
-      console.log(typeof action.token);
       window.localStorage.setItem('authToken', JSON.stringify(action.token));
+      window.localStorage.setItem('userId', JSON.stringify(action.profile._id));
       const newState = update(state,
         { profile: { $set: action.profile },
           authToken: { $set: action.token },
@@ -23,6 +23,7 @@ function appState(state = INITIAL_STATE, action) {
 
     case LOGOUT:
       window.localStorage.removeItem('authToken');
+      window.localStorage.removeItem('userId');
       return Object.assign({}, state, { loggedIn: false, authToken: {} });
     default:
       return state;
