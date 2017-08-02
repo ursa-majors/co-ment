@@ -23,6 +23,7 @@ class Login extends React.Component {
     if (username && password) {
       axios.post('https://co-ment.glitch.me/api/login', { username, password })
         .then((result) => {
+          console.log(typeof result.data.token)
           this.props.actions.login(result.data.token, result.data.profile);
           this.props.actions.clearLoginPwd();
           this.props.history.push('/');
@@ -56,7 +57,6 @@ class Login extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     return (
       <div className="container form">
         <div className="form__body">

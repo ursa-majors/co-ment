@@ -10,11 +10,14 @@ class Profile extends React.Component {
     console.log(this.props);
     axios.get(`https://co-ment.glitch.me/api/profile/${this.props.appState.profile._id}`, {
       headers: {
-        Authentication: `Bearer ${this.props.appState.authToken}`,
+        Authorization: `Bearer ${this.props.appState.authToken}`,
       },
     })
     .then((response) => {
       console.log('response', response);
+    })
+    .catch((error) => {
+      console.log('profile error:', error);
     });
   }
 

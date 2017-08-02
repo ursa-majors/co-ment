@@ -10,7 +10,7 @@ const INITIAL_STATE = {
 function appState(state = INITIAL_STATE, action) {
   switch (action.type) {
     case LOGIN: {
-      console.log(action);
+      console.log(typeof action.token);
       window.localStorage.setItem('authToken', JSON.stringify(action.token));
       const newState = update(state,
         { profile: { $set: action.profile },
@@ -18,7 +18,6 @@ function appState(state = INITIAL_STATE, action) {
           loggedIn: { $set: true },
         },
       );
-      console.log('newState:', newState);
       return newState;
     }
 
