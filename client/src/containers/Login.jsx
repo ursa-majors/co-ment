@@ -62,21 +62,21 @@ class Login extends React.Component {
   render() {
     return (
       <div className="container form">
-        <div className="form-body">
-          <div className="form-header">Sign In</div>
-          <div className="form-input-group">
-            <input className="form-input" type="text" placeholder="Username" id="username" onChange={event => this.handleInput(event)} />
+        <div className="form__body">
+          <div className="form__header">Sign In</div>
+          <div className="form__input-group">
+            <input className="form__input" type="text" placeholder="Username" id="username" onChange={event => this.handleInput(event)} />
           </div>
-          <div className="form-input-group">
-            <input className="form-input" type="password" placeholder="Password" id="password" onChange={event => this.handleInput(event)} />
+          <div className="form__input-group">
+            <input className="form__input" type="password" placeholder="Password" id="password" onChange={event => this.handleInput(event)} />
           </div>
-          <div className="form-input-group">
-            <div className="form-error">{this.props.login.errorMsg}</div>
+          <div className="form__input-group">
+            <div className="form__error">{this.props.login.errorMsg}</div>
           </div>
-          <div className="form-input-group">
-            <span className="splash__button-wrap">
-              <button className="splash__button pointer" id="btn-login" onClick={() => this.handleLogin()}>Sign In</button>
-            </span>
+        </div>
+        <div className="form__input-group">
+          <div className="form__button-wrap">
+            <button className="splash__button pointer" id="btn-login" onClick={() => this.handleLogin()}>Sign In</button>
           </div>
         </div>
       </div>
