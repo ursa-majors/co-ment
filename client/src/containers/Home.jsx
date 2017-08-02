@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -11,18 +12,19 @@ class Home extends React.Component {
     // If we're not logged in, check local storage for authToken
     // if it doesn't exist, it returns the string "undefined"
     if (!this.props.appState.loggedIn) {
-      const token = window.localStorage.getItem('authToken');
+      let token = window.localStorage.getItem('authToken');
       if (token && token !== 'undefined') {
-        const user = window.localStorage.getItem('userId');
-        axios.get(`https://co-ment.glith.me/api/profile/${user}`, {
+        token = JSON.parse(token);
+        const user = JSON.parse(window.localStorage.getItem('userId'));
+        axios.get(`https://co-ment.glitch.me/api/profile/${user}`, {
           headers: {
-            Authorization: `Bearer ${this.props.appState.authToken}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((response) => {
-          this.props.actions.login(response.data.token, response.data.profile);
+          this.props.actions.login(token, response.data);
         })
-        .catch((error) => {
+        .catch(() => {
           this.props.actions.logout();
         });
       }
@@ -70,8 +72,16 @@ class Home extends React.Component {
     );
   }
 }
-//   }
-// }
+
+Home.propTypes = {
+  actions: PropTypes.Object(PropTypes.shape({
+    login: PropTypes.function.isRequired,
+    logout: PropTypes.function.isRequired,
+  })).isRequired,
+  appState: PropTypes.Object(PropTypes.shape({
+    loggedIn: PropTypes.boolean.isRequired,
+  })).isRequired,
+};
 
 const mapStateToProps = state => ({
   appState: state.appState,
