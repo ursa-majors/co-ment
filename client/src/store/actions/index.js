@@ -9,6 +9,7 @@ export const SET_LOGIN_USER = 'SET_LOGIN_USER';
 export const SET_LOGIN_PWD = 'SET_LOGIN_PWD';
 export const SET_LOGIN_ERROR = 'SET_LOGIN_ERROR';
 export const CLEAR_LOGIN_PWD = 'CLEAR_LOGIN_PWD';
+export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 
 export function login(token, profile) {
   return ({
@@ -82,5 +83,12 @@ export function setLoginError(msg) {
 export function clearLoginPwd() {
   return ({
     type: CLEAR_LOGIN_PWD,
+  });
+}
+
+export function updateProfile(profile) {
+  return ({
+    type: UPDATE_PROFILE,
+    payload: profile,
   });
 }
