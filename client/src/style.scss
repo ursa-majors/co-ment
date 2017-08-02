@@ -7,7 +7,9 @@ $fa-font-path: "~font-awesome/fonts";
 @import 'styles/nav';
 
 
-body {
+* {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }

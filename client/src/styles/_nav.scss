@@ -50,7 +50,7 @@
   position: fixed;
   bottom: 0;
   right: 0;
-  padding: 0 20px 10px 10px;
+  padding: 10px 20px;
   margin: 0;
   z-index: 5;
   width: 100%;
@@ -59,7 +59,6 @@
   display: flex;
   justify-content: center;
   background: rgba(0, 0, 0, .3);
-  height: 30px;
   list-style: none;
 
   &__item {

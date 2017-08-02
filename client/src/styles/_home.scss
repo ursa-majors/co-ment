@@ -103,6 +103,7 @@
     border-radius: 50px;
     padding: 10px;
     border: 1px solid white;
+    background: transparent;
 
     @include for-tablet-portrait-up {
       padding: 20px;
