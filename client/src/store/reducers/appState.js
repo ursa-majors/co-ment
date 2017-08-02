@@ -1,5 +1,5 @@
 import update from 'immutability-helper';
-import { LOGIN, LOGOUT } from '../actions';
+import { LOGIN, LOGOUT, UPDATE_PROFILE } from '../actions';
 
 const INITIAL_STATE = {
   loggedIn: false,
@@ -10,20 +10,22 @@ const INITIAL_STATE = {
 function appState(state = INITIAL_STATE, action) {
   switch (action.type) {
     case LOGIN: {
-      console.log(typeof action.token);
       window.localStorage.setItem('authToken', JSON.stringify(action.token));
-      const newState = update(state,
+      return update(state,
         { profile: { $set: action.profile },
           authToken: { $set: action.token },
           loggedIn: { $set: true },
         },
       );
-      return newState;
     }
 
     case LOGOUT:
       window.localStorage.removeItem('authToken');
       return Object.assign({}, state, { loggedIn: false, authToken: {} });
+
+    case UPDATE_PROFILE:
+      return update(state, { profile: { $set: action.profile } });
+
     default:
       return state;
   }
