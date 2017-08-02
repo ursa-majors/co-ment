@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import axios from 'axios';
 import * as Actions from '../store/actions';
 
 class Home extends React.Component {
@@ -12,7 +13,18 @@ class Home extends React.Component {
     if (!this.props.appState.loggedIn) {
       const token = window.localStorage.getItem('authToken');
       if (token && token !== 'undefined') {
-        this.props.actions.login(token);
+        const user = window.localStorage.getItem('userId');
+        axios.get(`https://co-ment.glith.me/api/profile/${user}`, {
+          headers: {
+            Authorization: `Bearer ${this.props.appState.authToken}`,
+          },
+        })
+        .then((response) => {
+          this.props.actions.login(response.data.token, response.data.profile);
+        })
+        .catch((error) => {
+          this.props.actions.logout();
+        });
       }
     }
   }
