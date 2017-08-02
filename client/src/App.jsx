@@ -13,11 +13,11 @@ import Profile from './containers/Profile';
 class App extends React.Component {
 
   render() {
-    const link = (this.props.appState.loggedIn ? 'profile' : 'login');
+    const links = (this.props.appState.loggedIn ? ['posts','profile','logout'] : ['login']);
     return (
       <BrowserRouter>
         <div>
-          <HeaderNav link={link} />
+          <HeaderNav links={links} />
           <main className="main">
             <Switch>
               <Route exact path="/" component={Home} />
