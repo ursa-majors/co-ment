@@ -1,4 +1,4 @@
-import { LOGIN } from '../actions';
+import { LOGIN, LOGOUT } from '../actions';
 
 const INITIAL_STATE = {
   loggedIn: false,
@@ -12,6 +12,9 @@ function appState(state = INITIAL_STATE, action) {
       window.localStorage.setItem('authToken', JSON.stringify(action.payload));
       return Object.assign({}, state, { loggedIn: true, authToken: action.payload });
 
+    case LOGOUT:
+      window.localStorage.removeItem('authToken');
+      return Object.assign({}, state, { loggedIn: false, authToken: {} });
     default:
       return state;
   }
