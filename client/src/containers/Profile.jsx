@@ -7,7 +7,7 @@ import * as Actions from '../store/actions';
 class Profile extends React.Component {
 
   componentWillMount() {
-    axios.get(`/api/profile/${this.props.appState.userID}`, {
+    axios.get(`https://co-ment.glitch.me/api/profile/${this.props.appState.userID}`, {
       headers: {
         Authentication: `Bearer ${this.props.appState.authToken}`,
       },

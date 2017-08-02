@@ -10,10 +10,11 @@ export const SET_LOGIN_PWD = 'SET_LOGIN_PWD';
 export const SET_LOGIN_ERROR = 'SET_LOGIN_ERROR';
 export const CLEAR_LOGIN_PWD = 'CLEAR_LOGIN_PWD';
 
-export function login(token) {
+export function login(token, profile) {
   return ({
     type: LOGIN,
-    payload: token,
+    token,
+    profile,
   });
 }
 

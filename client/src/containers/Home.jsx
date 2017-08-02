@@ -7,10 +7,11 @@ import * as Actions from '../store/actions';
 class Home extends React.Component {
 
   componentWillMount() {
-    // check local storage for authToken
-    const token = JSON.parse(window.localStorage.getItem('authToken'));
-    if (token) {
-      this.props.actions.login(token);
+    // check local storage for authToken - if it doesn't exist, it returns the string "undefined"
+    const localToken = window.localStorage.getItem('authToken');
+    if (localToken && localToken !== "undefined") {
+      const token = JSON.parse(localToken);
+      this.props.actions.login(token, {});
     }
   }
 
