@@ -1,0 +1,25 @@
+.posts {
+  font-family: 'Alegreya Sans', sans-serif;
+  padding-top: 50px;
+  flex-direction: column;
+  color: white;
+
+  &__header {
+    color: white;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    font-size: 30px;
+    padding: 30px;
+    text-align: center;
+    @include for-tablet-portrait-up {
+      font-size: 45px;
+    }
+  }
+}
+.row{
+  display: flex;
+}
+.column{
+  flex: 1 1 auto;
+}
