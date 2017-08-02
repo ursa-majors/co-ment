@@ -21,9 +21,10 @@ function appState(state = INITIAL_STATE, action) {
     }
 
     case LOGOUT:
+      console.log(action);
       window.localStorage.removeItem('authToken');
       window.localStorage.removeItem('userId');
-      return Object.assign({}, state, { loggedIn: false, authToken: {} });
+      return INITIAL_STATE;
 
     case UPDATE_PROFILE:
       return update(state, { profile: { $set: action.profile } });
