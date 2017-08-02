@@ -9,6 +9,7 @@ const INITIAL_STATE = {
 function appState(state = INITIAL_STATE, action) {
   switch (action.type) {
     case LOGIN:
+      window.localStorage.setItem('authToken', JSON.stringify(action.payload));
       return Object.assign({}, state, { loggedIn: true, authToken: action.payload });
 
     default:
