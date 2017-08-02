@@ -4,7 +4,7 @@ import register from '../reducers/register';
 import login from '../reducers/login';
 
 const rootReducer = combineReducers({
-  appState, register, login
+  appState, register, login,
 });
 
 export default rootReducer;

@@ -6,12 +6,16 @@ import * as Actions from '../store/actions';
 
 class Home extends React.Component {
 
-  componentWillMount() {
-    // check local storage for authToken - if it doesn't exist, it returns the string "undefined"
-    const localToken = window.localStorage.getItem('authToken');
-    if (localToken && localToken !== "undefined") {
-      const token = JSON.parse(localToken);
-      this.props.actions.login(token, {});
+  componentDidMount() {
+    // If we're not logged in, check local storage for authToken
+    // if it doesn't exist, it returns the string "undefined"
+    if (!this.props.appState.loggedIn) {
+      const localToken = window.localStorage.getItem('authToken');
+      if (localToken && localToken !== 'undefined') {
+        const token = JSON.parse(localToken);
+        //Here we should check whether this token is valid
+        this.props.actions.login(token, {});
+      }
     }
   }
 

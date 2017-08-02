@@ -6,8 +6,9 @@ import * as Actions from '../store/actions';
 
 class Profile extends React.Component {
 
-  componentWillMount() {
-    axios.get(`https://co-ment.glitch.me/api/profile/${this.props.appState.userID}`, {
+  componentDidMount() {
+    console.log(this.props);
+    axios.get(`https://co-ment.glitch.me/api/profile/${this.props.appState.profile._id}`, {
       headers: {
         Authentication: `Bearer ${this.props.appState.authToken}`,
       },
@@ -28,7 +29,6 @@ class Profile extends React.Component {
 
 const mapStateToProps = state => ({
   appState: state.appState,
-  profile: state.profile,
 });
 
 const mapDispatchToProps = dispatch => ({

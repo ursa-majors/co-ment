@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import * as Actions from '../store/actions';
 // Placeholder component for login //
@@ -24,14 +23,11 @@ class Login extends React.Component {
     if (username && password) {
       axios.post('https://co-ment.glitch.me/api/login', { username, password })
         .then((result) => {
-          console.log(result);
-          // TODO: Handle errors such as duplicate user
-          this.props.actions.login(result.data.token);
+          this.props.actions.login(result.data.token, result.data.profile);
           this.props.actions.clearLoginPwd();
           this.props.history.push('/');
         })
         .catch((error) => {
-          console.log('error!:', error);
           this.props.actions.setLoginError(error.response.data.message);
         });
     } else if (!username) {
@@ -60,6 +56,7 @@ class Login extends React.Component {
   }
 
   render() {
+    console.log(this.props)
     return (
       <div className="container form">
         <div className="form__body">
