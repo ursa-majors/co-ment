@@ -37,7 +37,7 @@ class Home extends React.Component {
       links = (
         <div className="splash__button-wrap">
           <Link to="/about"className="splash__button">Find a Mentor</Link>
-          <Link to="/about" className="splash__button">Be a Mentor</Link>
+          <Link to="/mentorpath" className="splash__button">Be a Mentor</Link>
         </div>
       );
     } else {

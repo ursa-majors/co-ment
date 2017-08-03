@@ -111,7 +111,7 @@
       font-size: 20px;
     }
 
-    &:hover, &:active, &:focus {
+    &:hover, &:active, &:focus, &-done {
       text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
       background: rgba(255, 255, 255, 0.2);
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);

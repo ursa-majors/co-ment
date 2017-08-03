@@ -7,11 +7,10 @@ import * as Actions from '../store/actions';
 
 class Login extends React.Component {
 
-  /* Function handleRegister - Perform basic validation:
+  /* Function handleLogin - Perform basic validation:
   * - username is at least 1 char
   * - password is at least 1 char
-  * - password confirmation matches
-  * If valid, call the register route; store token in redux, clear password from state
+  * If valid, call the loign route; store token in redux, clear password from state
   * , return to Home
   */
   handleLogin() {
@@ -53,6 +52,9 @@ class Login extends React.Component {
       default:
         break;
     }
+    if (event.which === 13) {
+      this.handleLogin();
+    }
   }
 
   render() {
@@ -61,10 +63,23 @@ class Login extends React.Component {
         <div className="form__body">
           <div className="form__header">Sign In</div>
           <div className="form__input-group">
-            <input className="form__input" type="text" placeholder="Username" id="username" onChange={event => this.handleInput(event)} />
+            <input
+              className="form__input"
+              type="text"
+              placeholder="Username"
+              id="username"
+              onChange={event => this.handleInput(event)}
+            />
           </div>
           <div className="form__input-group">
-            <input className="form__input" type="password" placeholder="Password" id="password" onChange={event => this.handleInput(event)} />
+            <input
+              className="form__input"
+              type="password"
+              placeholder="Password"
+              id="password"
+              onChange={event => this.handleInput(event)}
+              onKeyUp={event => this.handleInput(event)}
+            />
           </div>
           <div className="form__input-group">
             <div className="form__error">{this.props.login.errorMsg}</div>

@@ -21,7 +21,6 @@ function appState(state = INITIAL_STATE, action) {
     }
 
     case LOGOUT:
-      console.log(action);
       window.localStorage.removeItem('authToken');
       window.localStorage.removeItem('userId');
       return INITIAL_STATE;
