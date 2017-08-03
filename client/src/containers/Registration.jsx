@@ -25,14 +25,12 @@ class Registration extends React.Component {
     if (username && (password === confPwd)) {
       axios.post('https://co-ment.glitch.me/api/register', { username, password })
         .then((result) => {
-          console.log(result);
           // TODO: Handle errors such as duplicate user
-          this.props.actions.login(result.data.token);
+          this.props.actions.login(result.data.token, result.data.profile);
           this.props.actions.clearPwd();
           this.props.history.push('/');
         })
         .catch((error) => {
-          console.log('error!:', error);
           this.props.actions.setRegError(error.response.data.message);
         });
     } else if (!username) {
@@ -63,6 +61,9 @@ class Registration extends React.Component {
       default:
         break;
     }
+    if (event.which === 13) {
+      this.handleRegister();
+    }
   }
 
   render() {
@@ -74,10 +75,24 @@ class Registration extends React.Component {
             <input className="form__input" type="text" placeholder="Username" id="username" onChange={event => this.handleInput(event)} />
           </div>
           <div className="form__input-group">
-            <input className="form__input" type="password" placeholder="Password" id="password" onChange={event => this.handleInput(event)} />
+            <input
+              className="form__input"
+              type="password"
+              placeholder="Password"
+              id="password"
+              onChange={event => this.handleInput(event)}
+              onKeyUp={event => this.handleInput(event)}
+            />
           </div>
           <div className="form__input-group">
-            <input className="form__input" type="password" placeholder="Confirm Password" id="confirm-password" onChange={event => this.handleInput(event)} />
+            <input
+              className="form__input"
+              type="password"
+              placeholder="Confirm Password"
+              id="confirm-password"
+              onChange={event => this.handleInput(event)}
+              onKeyUp={event => this.handleInput(event)}
+            />
           </div>
           <div className="form__input-group">
             <div className="form__error">{this.props.register.regErrorMsg}</div>
@@ -86,7 +101,9 @@ class Registration extends React.Component {
         <div className="form__input-group">
           <div className="form__button-wrap">
             <button className="splash__button pointer" id="btn-register" onClick={event => this.handleRegister(event)} >Register</button>
-            <Link to="/login"><button className="splash__button pointer" id="btn-login">Sign In</button></Link>
+            <Link to="/login">
+              <button className="splash__button pointer" id="btn-login">Sign In</button>
+            </Link>
           </div>
         </div>
       </div>
