@@ -16,10 +16,19 @@
       font-size: 45px;
     }
   }
+  &__input-label{
+    display: flex;
+  }
 }
 .row{
   display: flex;
 }
 .column{
   flex: 1 1 auto;
+}
+.bubble{
+  border: 1px solid #000;
+  border-radius: 20px;
+  padding: 3px 5px;
+  margin: 5px;
 }

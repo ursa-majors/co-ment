@@ -10,7 +10,6 @@ const INITIAL_STATE = {
 function appState(state = INITIAL_STATE, action) {
   switch (action.type) {
     case LOGIN: {
-      console.log('here')
       window.localStorage.setItem('authToken', JSON.stringify(action.token));
       window.localStorage.setItem('userId', JSON.stringify(action.profile._id));
       return update(state,
