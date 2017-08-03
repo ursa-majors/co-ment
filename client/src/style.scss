@@ -6,6 +6,7 @@ $fa-font-path: "~font-awesome/fonts";
 @import 'styles/registration';
 @import 'styles/nav';
 @import 'styles/logout';
+@import 'styles/profile';
 @import 'styles/posts';
 
 
@@ -35,4 +36,15 @@ $fa-font-path: "~font-awesome/fonts";
   margin: auto;
   font-family: 'Alegreya Sans SC', sans-serif;
   text-transform: lowercase;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
 }
