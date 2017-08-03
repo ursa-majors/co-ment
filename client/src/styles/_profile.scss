@@ -1,0 +1,60 @@
+.skill-value {
+  color: #545454;
+  display: inline-block;
+  font-size: 0.9em;
+  line-height: 1.4;
+  background-color: #ebf5ff;
+  background-color: rgba(255, 255, 255, 0.24);
+  border-radius: 2px;
+  border: 1px solid #545454;
+  border: 1px solid rgba(84, 84, 84, 0.24);
+  margin-left: 5px;
+  margin-top: 5px;
+  vertical-align: top;
+
+  &__label {
+    border-bottom-right-radius: 2px;
+    border-top-right-radius: 2px;
+    cursor: default;
+    padding: 2px 5px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  &__icon {
+    display: inline-block;
+    cursor: pointer;
+    border-bottom-left-radius: 2px;
+    border-top-left-radius: 2px;
+    border-right: 1px solid #c2e0ff;
+    border-right: 1px solid rgba(0, 126, 255, 0.24);
+    padding: 1px 5px 3px;
+  }
+
+  &__wrapper {
+    padding: 0 20px 5px 20px;
+    display: flex;
+    flex-direction: flex-start;
+    flex-wrap: wrap;
+  }
+
+  &__button {
+    color: white;
+    letter-spacing: 2px;
+    font-size: 16px;
+    text-decoration: none;
+    margin-right: 3vw;
+    font-weight: 100;
+    border-radius: 50px;
+    background: transparent;
+
+    &:hover, &:active, &:focus {
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+      transition: all 300ms ease-in-out;
+    }
+  }
+}
+
+
