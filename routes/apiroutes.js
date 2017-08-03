@@ -19,13 +19,14 @@
 
 /* ================================= SETUP ================================= */
 
-const routes  = require('express').Router();
-const User    = require('../models/user');
-const Post    = require('../models/post');
-const jwt     = require('express-jwt');
-const request = require('request');
-const secret  = process.env.JWT_SECRET;
-const auth    = jwt({ secret: secret, requestProperty: 'token' });
+const routes     = require('express').Router();
+const User       = require('../models/user');
+const Post       = require('../models/post');
+const jwt        = require('express-jwt');
+const request    = require('request');
+const parseSKill = require('../utils/skillsparser');
+const secret     = process.env.JWT_SECRET;
+const auth       = jwt({ secret: secret, requestProperty: 'token' });
 
 
 /* ============================ UTILITY METHODS ============================ */
@@ -120,7 +121,7 @@ routes.put('/api/profile/:id', auth, (req, res) => {
             ghUserName : req.body.ghUserName,
             ghProfile  : ghProfile,
             pref_lang  : req.body.pref_lang,
-            certs      : req.body.certs,
+            certs      : (req.body.certs).map( skill => parseSKill(skill) ),
             time_zone  : req.body.time_zone
         };
 
