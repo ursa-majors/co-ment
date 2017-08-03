@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+
 import * as Actions from '../store/actions';
 
 class Registration extends React.Component {

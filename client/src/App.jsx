@@ -14,7 +14,7 @@ import Logout from './containers/Logout';
 class App extends React.Component {
 
   render() {
-    const links = (this.props.appState.loggedIn ? ['posts','profile','logout'] : ['login']);
+    const links = (this.props.appState.loggedIn ? ['posts', 'profile', 'logout'] : ['login']);
     return (
       <BrowserRouter>
         <div>
