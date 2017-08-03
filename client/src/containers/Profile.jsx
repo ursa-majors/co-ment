@@ -46,7 +46,6 @@ class Profile extends React.Component {
     const languageList = languages.map(i => (<option key={i}>{i}</option>));
     const skillsList = skills.map(i => (<option key={i}>{i}</option>));
     const tzList = timezones.map(i => (
-      i[0] === '+0' ? <option key={i[1]} selected>{`(UTC ${i[0]}) ${i[1]}`}</option> :
       <option key={i[1]}>{`(UTC ${i[0]}) ${i[1]}`}</option>
       ));
 
@@ -89,11 +88,12 @@ class Profile extends React.Component {
           <div className="form__input-group">
             <label htmlFor="timezone" className="sr-only">Time Zone:</label>
             <select
-              className="form__input"
+              className="form__input form__input--select"
               id="timezone"
               value={this.props.appState.profile.time_zone}
               onChange={e => this.handleInput(e)}
             >
+            <option selected disabled>Choose your timezone</option>
               {tzList}
             </select>
           </div>
