@@ -17,11 +17,23 @@ import MentorPath from './containers/MentorPath';
 class App extends React.Component {
 
   render() {
-    const links = (this.props.appState.loggedIn ? ['posts', 'profile', 'logout'] : ['login']);
+
+    // Create the nav header links
+    let links;
+    let startingClass = '';
+    if (this.props.appState.loggedIn === undefined) {
+      links = ['authenticating'];
+      startingClass = 'h-nav-starting';
+    } else if (this.props.appState.loggedIn) {
+      links = ['posts', 'profile', 'logout'];
+    } else {
+      links = ['login'];
+    }
+
     return (
       <BrowserRouter>
         <div>
-          <HeaderNav links={links} />
+          <HeaderNav links={links} css={startingClass} />
           <main className="main">
             <Switch>
               <Route exact path="/" component={Home} />
