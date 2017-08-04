@@ -76,14 +76,13 @@ class Profile extends React.Component {
     if (this.state.skill !== '') {
        this.addSkill();
      }
-     console.log('70', this.state.profile);
-    this.props.actions.updateProfile(this.state.profile, () => {
-      console.log('72', this.props.appState.profile);
-    });
+     console.log('70', this.state.profile.skills);
+    this.props.actions.updateProfile(this.state.profile);
+    console.log('72 appState', this.props.appState.profile);
 
     axios.defaults.baseURL = 'https://co-ment.glitch.me';
     axios.defaults.headers.common['Authorization'] = `Bearer ${this.props.appState.authToken}`;
-    console.log('77', this.state.profile);
+    console.log('77 localState', this.state.profile, this.state.profile.skills);
 
     axios.put(`/api/profile/${this.props.appState.profile._id}`,
       {
@@ -93,12 +92,12 @@ class Profile extends React.Component {
         ghUserName: this.state.profile.ghUserName,
       })
     .then((response) => {
-      console.log(response.data);
-       this.props.actions.updateProfile(response.data.user);
-       this.setState({
+      console.log('96', response.data.user);
+       this.props.actions.updateProfile(response.data.user, ()=> {
+        this.setState({
         profile: {
           skill: '',
-          skills: this.props.appState.profile.skills || [],
+          skills: this.props.appState.profile.skills,
           gender: this.props.appState.profile.gender || '',
           pref_lang: this.props.appState.profile.pref_lang || '',
           time_zone: this.props.appState.profile.time_zone || 'Choose your timezone',
@@ -106,7 +105,11 @@ class Profile extends React.Component {
           ghUserName: this.props.appState.profile.ghUserName || '',
           avatarUrl: this.props.appState.profile.ghProfile.avatar_url || '',
        }
+       }, () => {
+        console.log('110',this.state.profile.skills);
        });
+      });
+
      })
      .catch((error) => {
        console.log(error);
@@ -175,13 +178,13 @@ if(e.charCode === 13 || e.which === 13) {
     const languageList = languages.map(i => (<option key={i}>{i}</option>));
     const skillsList = skills.map(i => (<option key={i}>{i}</option>));
     const tzList = timezones.map(i => (
-      <option key={i[1]}>{`(UTC ${i[0]}) ${i[1]}`}</option>
+      <option key={i[1]} value={`UTC ${i[0]}`}>{`(UTC ${i[0]}) ${i[1]}`}</option>
       ));
     const skillsDisp = this.state.profile.skills.map(i => (
-      <li key={i}>{i}, </li>) );
+      <li className="preview__skill-item" key={i}>{i}, </li>) );
 
     return (
-      <div className="container form">
+      <div className="profile">
         <div className="preview">
           <div className="preview__image-wrap">
           {this.state.profile.avatarUrl ?
@@ -192,10 +195,18 @@ if(e.charCode === 13 || e.which === 13) {
           <div className="preview__text-wrap">
             <div className="preview__username">{this.props.appState.profile.username}</div>
             <div className="preview__text">{this.state.profile.name}</div>
-            <div className="preview__text">Language: {this.state.profile.pref_lang}</div>
-            <div className="preview__text">Skills:
-              <ul>{skillsDisp}</ul>
-              </div>
+            <div className="preview__text">
+              <span className="preview__text--bold">Language: &nbsp;</span>
+               {this.state.profile.pref_lang}
+            </div>
+            <div className="preview__text">
+              <span className="preview__text--bold">Time zone: &nbsp;</span>
+               {this.state.profile.time_zone}
+            </div>
+            <div className="preview__text">
+              <span className="preview__text--bold">Skills: &nbsp;</span>
+              <ul className="preview__skill-list">{skillsDisp}</ul>
+            </div>
 
           </div>
         </div>
