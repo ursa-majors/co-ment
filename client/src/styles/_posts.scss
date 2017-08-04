@@ -1,8 +1,10 @@
 .posts {
   font-family: 'Alegreya Sans', sans-serif;
-  padding-top: 50px;
   flex-direction: column;
-  color: white;
+  padding: 60px 0;
+  background: #22c1c3;
+  background: -webkit-linear-gradient(to bottom, #22c1c3, #fdbb2d);
+  background: linear-gradient(to bottom, #22c1c3, #fdbb2d);
 
   &__header {
     color: white;
@@ -16,8 +18,11 @@
       font-size: 45px;
     }
   }
-  &__input-label{
+  &__input-label {
     display: flex;
+  }
+  &__hidden {
+    display: none;
   }
 }
 .row{

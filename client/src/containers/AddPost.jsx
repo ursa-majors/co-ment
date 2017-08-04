@@ -14,8 +14,17 @@ class AddPost extends React.Component {
       keywords: [],
       keyword: '',
       role: 'mentor',
-      body: '',
+      content: '',
+      hideErr: 'form__hidden',
+      errMsg: '',
     };
+  }
+
+  handleKeyPressAdd(e) {
+    if (e.charCode === 44 || e.which === 44 || e.charCode === 13 || e.which === 13) {
+      e.preventDefault();
+      this.addKeyword();
+    }
   }
 
   // event handler for form inputs...sets the state value based on element id
@@ -30,8 +39,8 @@ class AddPost extends React.Component {
         this.setState({ keyword: event.target.value });
         break;
 
-      case 'body':
-        this.setState({ body: event.target.value });
+      case 'content':
+        this.setState({ content: event.target.value });
         break;
 
       case 'role':
@@ -47,7 +56,7 @@ class AddPost extends React.Component {
   // into the array that goes to the DB. Ignore dupes.
   addKeyword() {
     const newWord = this.state.keyword;
-    for (let i=0; i<this.state.keywords.length; i += 1) {
+    for (let i = 0; i < this.state.keywords.length; i += 1) {
       if (this.state.keywords[i] === newWord) {
         this.setState({ keyword: '' });
         return;
@@ -57,6 +66,13 @@ class AddPost extends React.Component {
       keyword: '',
       keywords: this.state.keywords.concat(newWord),
     });
+  }
+
+  // remove keyword with keyboard
+  handleKeyPressRemove(event) {
+    if (event.charCode === 13 || event.which === 13) {
+      this.removeKeyword(event);
+    }
   }
 
   // allow user to remove the keywords
@@ -74,13 +90,16 @@ class AddPost extends React.Component {
   validateInputs() {
     let msg = '';
     if (this.state.title === '') {
-      msg = 'Title is required. ';
+      msg = 'Title is required.  ';
     }
-    if (this.state.body === '') {
-      msg += 'Post content is required';
+    if (this.state.content === '') {
+      msg += 'Post content is required. ';
+    }
+    if (this.state.keywords.length === 0) {
+      msg += 'At least 1 keyword is requried.';
     }
     if (msg.length > 0) {
-      this.props.actions.setPostError(msg);
+      this.setState({ errMsg: msg, hideErr: '' });
       return false;
     }
     return true;
@@ -88,7 +107,7 @@ class AddPost extends React.Component {
 
   addPost() {
     // clear previous errors
-    this.props.actions.setPostError('');
+    this.setState({ errMsg: '', hideErr: 'posts__hidden' });
 
     // if user has entered a keyword, but not added it to the array, add it now
     if (this.state.keyword !== '') {
@@ -131,45 +150,82 @@ class AddPost extends React.Component {
   }
 
   render() {
+
     return (
-      <div className="container form">
+      <div className="posts">
         <div className="form__body">
-          <div className="form__header">Place an Ad</div>
+          <div className="form__header">Create an Ad</div>
           <div className="form__input-group">
-            <label className="posts__input-label" htmlFor="language">Title:
-              <input className="form__input" type="text" id="title" value={this.state.title} onChange={event => this.handleChange(event)} />
+            <label htmlFor="ghUserName" className="form__label">Title
             </label>
+            <input
+              className="form__input"
+              type="text"
+              id="title"
+              name="ghUserName"
+              value={this.state.title}
+              onChange={e => this.handleChange(e)}
+              placeholder="Title"
+            />
           </div>
           <div className="form__input-group">
-            <label className="posts__input-label" htmlFor="timezone">Role:
-              <select value={this.state.role} id="role" onChange={event => this.handleChange(event)} >
-                <option value="mentor" id="mentor">Mentor</option>
-                <option value="mentee" id="mentee">Mentee</option>
-              </select>
+            <label htmlFor="role" className="form__label">Role
             </label>
+            <select value={this.state.role} id="role" onChange={event => this.handleChange(event)} >
+              <option value="mentor" id="mentor">Mentor</option>
+              <option value="mentee" id="mentee">Mentee</option>
+            </select>
           </div>
           <div className="form__input-group">
+            <label htmlFor="keyword" className="form__label">Keywords
+            </label>
+            <input
+              className="form__input"
+              type="text"
+              id="keyword"
+              name="keyword"
+              value={this.state.keyword}
+              onChange={e => this.handleChange(e)}
+              onKeyPress={e => this.handleKeyPressAdd(e)}
+              placeholder="Add Keywords"
+            />
             {this.state.keywords.map((item) => {
-              return (<span className="h-nav__item-link" key={item}>{item}
-                <span>
-                  <i className="fa fa-times" id={item} role="button" tabIndex="0" onClick={event => this.removeKeyword(event)} />
+              return (
+                <span className="skill-value" key={item}>
+                  <span className="skill-value__icon" aria-hidden="true">
+                    <span
+                      id={item}
+                      role="button"
+                      tabIndex="0"
+                      onClick={e => this.removeKeyword(e)}
+                      onKeyPress={e => this.handleKeyPressRemove(e)}
+                    >
+                      &times;
+                    </span>
+                  </span>
+                  <span className="skill-value__label" role="option" aria-selected="true">
+                    {item}
+                    <span className="skill-aria-only">&nbsp;</span>
+                  </span>
                 </span>
-              </span>);
+              );
             })}
-            <label className="posts__input-label" htmlFor="certs">Keywords:
-              <input className="form__input" type="text" id="keyword" value={this.state.keyword} onChange={event => this.handleChange(event)} />
-              <button className="splash__button pointer" id="btn-login" onClick={() => this.addKeyword()}>
-                <i className="fa fa-plus-square-o" />
-              </button>
-            </label>
           </div>
           <div className="form__input-group">
-            <label className="posts__input-label" htmlFor="timezone">Post Content:
-              <textarea className="form__input" id="body" value={this.state.body} onChange={event => this.handleChange(event)} />
+            <label htmlFor="content" className="form__label">Post Body
             </label>
+            <textarea
+              className="form__input"
+              id="content"
+              name="content"
+              value={this.state.content}
+              onChange={e => this.handleChange(e)}
+              placeholder="Add post content"
+            />
           </div>
+
           <div className="form__input-group">
-            <div className="form__error">{this.props.posts.postErrorMsg}</div>
+            <div className={`form__error ${this.state.hideErr}`}>{this.state.errMsg}</div>
           </div>
         </div>
         <div className="form__input-group">
