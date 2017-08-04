@@ -150,7 +150,6 @@ class AddPost extends React.Component {
   }
 
   render() {
-
     return (
       <div className="posts">
         <div className="form__body">
