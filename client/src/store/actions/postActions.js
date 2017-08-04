@@ -15,10 +15,3 @@ export function addPost(post) {
     payload: post,
   });
 }
-
-export function setPostError(msg) {
-  return ({
-    type: SET_POST_ERROR,
-    payload: msg,
-  });
-}

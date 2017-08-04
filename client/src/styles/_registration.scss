@@ -92,12 +92,12 @@
   justify-content: center;
   flex-wrap: wrap;
 
-  @include for-tablet-portrait-up{
-    flex-wrap: nowrap;
+    @include for-tablet-portrait-up{
+      flex-wrap: nowrap;
+    }
   }
-}
 
-&__button {
+  &__button {
     color: white;
     font-family: 'Alegreya Sans SC', sans-serif;
     text-transform: lowercase;
@@ -124,6 +124,11 @@
       transition: all 300ms ease-in-out;
     }
   }
+
+  &__hidden {
+    display: none;
+  }
+  
 }
 
 ::-webkit-input-placeholder {
@@ -190,4 +195,3 @@
     color: #545454;
 
  }
-
