@@ -6,28 +6,38 @@ import axios from 'axios';
 import * as Actions from '../store/actions';
 import { languages, skills, timezones } from '../utils';
 
+let name;
+let avatarUrl;
+
 class Profile extends React.Component {
 
   constructor(props) {
      super(props);
+
      this.state = {
       profile: {
           skill: '',
-          skills: props.appState.profile.skills || [],
-          gender: props.appState.profile.gender || '',
-          pref_lang: props.appState.profile.pref_lang || '',
-          time_zone: props.appState.profile.time_zone || 'Choose your timezone',
-          firstName: props.appState.profile.firstName || '',
-          lastName: props.appState.profile.lastName || '',
-          ghUserName: props.appState.profile.ghUserName || '',
-          avatarUrl: props.appState.profile.avatarUrl || '',
+          skills: this.props.appState.profile.certs || [],
+          gender: this.props.appState.profile.gender || '',
+          pref_lang: this.props.appState.profile.pref_lang || '',
+          time_zone: this.props.appState.profile.time_zone || 'Choose your timezone',
+          name: '',
+          ghUserName: this.props.appState.profile.ghUserName || '',
+          avatarUrl: '',
         }
       }
     }
 
-    componentDidMount(){
-
-    }
+  componentWillMount(){
+    const profile = Object.assign({}, this.state.profile);
+    if (this.props.appState.profile.ghProfile) {
+    profile.name = this.props.appState.profile.ghProfile.name;
+    profile.avatarUrl = this.props.appState.profile.ghProfile.avatar_url;
+    this.setState({profile}, ()=>{
+      console.log('38',this.state.profile.skills);
+    });
+  }
+}
 
   getProfile() {
     axios.get(`https://co-ment.glitch.me/api/profile/${this.props.appState.profile._id}`, {
@@ -36,17 +46,23 @@ class Profile extends React.Component {
       },
     })
     .then((response) => {
-       this.props.actions.updateProfile([response.data]);
+      console.log('39',this.props.appState);
+       this.props.actions.updateProfile(response.data.user, () => {
+        console.log('41',this.props.appState);
+       });
        this.setState({
-         firstName: props.appState.profile.firstName || '',
-         lastName: props.appState.profile.lastName || '',
-         ghUserName: props.appState.profile.ghUserName || '',
-         avatarUrl: props.appState.profile.avatarUrl || '',
-         skills: props.appState.profile.skills || [],
-         skill: '',
-         gender: props.appState.profile.gender || '',
-         pref_lang: props.appState.profile.pref_lang || '',
-         time_zone: props.appState.profile.time_zone || 'Choose your timezone',
+        profile: {
+          skill: '',
+          skills: this.props.appState.profile.certs || [],
+          gender: this.props.appState.profile.gender || '',
+          pref_lang: this.props.appState.profile.pref_lang || '',
+          time_zone: this.props.appState.profile.time_zone || 'Choose your timezone',
+          name: this.props.appState.profile.ghProfile.name ? this.props.appState.profile.ghProfile.name : '',
+          ghUserName: this.props.appState.profile.ghUserName || '',
+          avatarUrl: this.props.appState.profile.ghProfile.avatar_url ? this.props.appState.profile.ghProfile.avatar_url : '',
+       }
+       }, ()=> {
+        console.log(this.state.profile)
        });
        this.props.history.push('/posts');
      })
@@ -60,28 +76,36 @@ class Profile extends React.Component {
     if (this.state.skill !== '') {
        this.addSkill();
      }
+     console.log('70', this.state.profile);
+    this.props.actions.updateProfile(this.state.profile, () => {
+      console.log('72', this.props.appState.profile);
+    });
 
     axios.defaults.baseURL = 'https://co-ment.glitch.me';
     axios.defaults.headers.common['Authorization'] = `Bearer ${this.props.appState.authToken}`;
+    console.log('77', this.state.profile);
 
-    axios.post(`/api/profile/${this.props.appState.profile._id}`,
+    axios.put(`/api/profile/${this.props.appState.profile._id}`,
       {
-        pref_lang: this.props.appState.profile.pref_lang,
-        certs: this.props.appState.profile.certs,
-        time_zone: this.props.appState.profile.time_zone,
+        pref_lang: this.state.profile.pref_lang,
+        certs: this.state.profile.skills,
+        time_zone: this.state.profile.time_zone,
+        ghUserName: this.state.profile.ghUserName,
       })
     .then((response) => {
-       this.props.actions.updateProfile([response.data]);
+      console.log(response.data);
+       this.props.actions.updateProfile(response.data.user);
        this.setState({
-         firstName: props.appState.profile.firstName || '',
-         lastName: props.appState.profile.lastName || '',
-         ghUserName: props.appState.profile.ghUserName || '',
-         avatarUrl: props.appState.profile.avatarUrl || '',
-         skills: props.appState.profile.skills || [],
-         skill: '',
-         gender: props.appState.profile.gender || '',
-         pref_lang: props.appState.profile.pref_lang || '',
-         time_zone: props.appState.profile.time_zone || 'Choose your timezone',
+        profile: {
+          skill: '',
+          skills: this.props.appState.profile.skills || [],
+          gender: this.props.appState.profile.gender || '',
+          pref_lang: this.props.appState.profile.pref_lang || '',
+          time_zone: this.props.appState.profile.time_zone || 'Choose your timezone',
+          name: this.props.appState.profile.ghProfile.name || '',
+          ghUserName: this.props.appState.profile.ghUserName || '',
+          avatarUrl: this.props.appState.profile.ghProfile.avatar_url || '',
+       }
        });
      })
      .catch((error) => {
@@ -153,13 +177,45 @@ if(e.charCode === 13 || e.which === 13) {
     const tzList = timezones.map(i => (
       <option key={i[1]}>{`(UTC ${i[0]}) ${i[1]}`}</option>
       ));
+    const skillsDisp = this.state.profile.skills.map(i => (
+      <li key={i}>{i}, </li>) );
 
     return (
       <div className="container form">
+        <div className="preview">
+          <div className="preview__image-wrap">
+          {this.state.profile.avatarUrl ?
+            <img className="preview__image" src={this.state.profile.avatarUrl} alt={this.state.profile.username}/> :
+            <i className="fa fa-user-circle fa-5x preview__icon" aria-hidden="true"></i>
+          }
+          </div>
+          <div className="preview__text-wrap">
+            <div className="preview__username">{this.props.appState.profile.username}</div>
+            <div className="preview__text">{this.state.profile.name}</div>
+            <div className="preview__text">Language: {this.state.profile.pref_lang}</div>
+            <div className="preview__text">Skills:
+              <ul>{skillsDisp}</ul>
+              </div>
+
+          </div>
+        </div>
         <div className="form__body">
-          <div className="form__header">{this.props.appState.profile.username && this.props.appState.profile.username}&apos;s Profile</div>
+          <div className="form__header">Update Profile</div>
           <div className="form__input-group">
-            <label htmlFor="language" className="sr-only">Preferred Language
+            <label htmlFor="ghUserName" className="form__label">GitHub User Name
+            </label>
+            <input
+              className="form__input"
+              type="text"
+              id="ghUserName"
+              name="ghUserName"
+              value={this.state.profile.ghUserName}
+              onChange={e => this.handleInput(e)}
+              placeholder="GitHub User Name"
+            />
+          </div>
+          <div className="form__input-group">
+            <label htmlFor="language" className="form__label">Preferred Language
             </label>
             <input
               className="form__input"
@@ -177,8 +233,7 @@ if(e.charCode === 13 || e.which === 13) {
           </div>
 
           <div className="form__input-group">
-          <label className="sr-only" htmlFor="skills">Skills</label>
-          </div>
+          <label className="form__label" htmlFor="skills">Skills</label>
            <div className="skill-value__wrapper">
              {this.state.profile.skills.map((skill) => {
                return (
@@ -211,13 +266,14 @@ if(e.charCode === 13 || e.which === 13) {
             value={this.state.profile.skill}
             onChange={e => this.handleInput(e)}
             onKeyPress={e => this.handleKeyPressAdd(e)}
-            placeholder="Skills, separated by commas"
+            placeholder="Add skills"
           />
           <datalist id="skillsList">
           {skillsList}
           </datalist>
+          </div>
           <div className="form__input-group">
-            <label htmlFor="timezone" className="sr-only">Time Zone:</label>
+            <label htmlFor="timezone" className="form__label">Time Zone</label>
             <select
               className="form__input form__input--select"
               id="time_zone"
