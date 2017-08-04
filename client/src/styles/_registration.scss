@@ -11,6 +11,7 @@
   background: rgba(255,255,255,.3);
   padding: 10px 10px 40px 10px;
   text-align: center;
+  border-radius: 4px;
 
   @include for-tablet-portrait-up {
       width: 60%;
@@ -29,17 +30,22 @@
   }
   &__input-group {
     width: 100%;
+    text-align: left;
+    padding: 0 20px;
   }
   &__input {
-    width: 90%;
+    width: 100%;
     border-radius: 3px;
-    width: 90%;
-    margin: 5px 0;
+    margin: 5px auto;
     border: 1px solid white;
-    padding: 20px;
-    font-size: 1.2em;
+    padding: 15px;
+    font-size: .9em;
     font-weight: 100;
     color: #545454;
+    @include for-tablet-portrait-up {
+      font-size: 1.2em;
+      padding: 20px;
+    }
 
     &--select {
       -webkit-appearance: button;
@@ -54,6 +60,16 @@
        white-space: nowrap;
     }
 
+  }
+
+  &__label {
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-transform: lowercase;
+    font-size: 1.2em;
+    width: 100%;
+    margin-top: 10px;
+    position: relative;
+    top: 6px;
   }
 
   &__error {
