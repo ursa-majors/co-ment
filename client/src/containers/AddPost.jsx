@@ -170,7 +170,7 @@ class AddPost extends React.Component {
           <div className="form__input-group">
             <label htmlFor="role" className="form__label">Role
             </label>
-            <select value={this.state.role} id="role" onChange={event => this.handleChange(event)} >
+            <select className="form__input form__input--select" value={this.state.role} id="role" onChange={event => this.handleChange(event)} >
               <option value="mentor" id="mentor">Mentor</option>
               <option value="mentee" id="mentee">Mentee</option>
             </select>
