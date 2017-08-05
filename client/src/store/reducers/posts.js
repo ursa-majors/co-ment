@@ -1,5 +1,5 @@
 import update from 'immutability-helper';
-import { SET_POSTS, ADD_POST, SET_CURRENT_POST } from '../actions/postActions';
+import { SET_POSTS, SAVE_POST, SET_CURRENT_POST } from '../actions/postActions';
 
 const INITIAL_STATE = {
   entries: [],
@@ -21,7 +21,7 @@ function posts(state = INITIAL_STATE, action) {
     case SET_POSTS:
       return Object.assign({}, state, { entries: action.payload });
 
-    case ADD_POST:
+    case SAVE_POST:
       return update(state, { entries: { $push: action.payload } });
 
     case SET_CURRENT_POST:
