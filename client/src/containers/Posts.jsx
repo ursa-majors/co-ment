@@ -27,7 +27,7 @@ class Posts extends React.Component {
         <div className="posts__header">
           Posts
           <span className="form__button-wrap">
-            <Link to="/addpost">
+            <Link to="/editpost">
               <button className="splash__button pointer" id="btn-login">
                 <i className="fa fa-plus-square-o" />
               </button>
