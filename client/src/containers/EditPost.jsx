@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import * as Actions from '../store/actions/postActions';
 
-class AddPost extends React.Component {
+class EditPost extends React.Component {
 
   // use local state for form inputs
   constructor(props) {
@@ -18,9 +17,29 @@ class AddPost extends React.Component {
       content: '',
       hideErr: 'form__hidden',
       errMsg: '',
+      update: false,
     };
   }
 
+  // For a URL with a specific ID param
+  componentDidMount() {
+    if (this.props.match.params.id) {
+      // axios default headers
+      axios.defaults.baseURL = 'https://co-ment.glitch.me';
+      axios.defaults.headers.common['Authorization'] = `Bearer ${this.props.appState.authToken}`;
+      axios.get(`/api/posts?id=${this.props.match.params.id}`)
+        .then((response) => {
+          this.setState({
+            title: response.data[0].title,
+            keywords: response.data[0].keywords,
+            role: response.data[0].role,
+            content: response.data[0].body,
+            update: true,
+            id: this.props.match.params.id,
+          });
+        });
+    }
+  }
   handleKeyPressAdd(e) {
     if (e.charCode === 44 || e.which === 44 || e.charCode === 13 || e.which === 13) {
       e.preventDefault();
@@ -106,7 +125,7 @@ class AddPost extends React.Component {
     return true;
   }
 
-  addPost() {
+  savePost() {
     // clear previous errors
     this.setState({ errMsg: '', hideErr: 'posts__hidden' });
 
@@ -122,8 +141,7 @@ class AddPost extends React.Component {
     // otherwise we have issues with the Authorization header
     axios.defaults.baseURL = 'https://co-ment.glitch.me';
     axios.defaults.headers.common['Authorization'] = `Bearer ${this.props.appState.authToken}`;
-
-    axios.post('/api/posts', {
+    const body = {
       author: this.props.appState.profile.username,
       author_id: this.props.appState.profile._id,
       role: this.state.role,
@@ -131,24 +149,42 @@ class AddPost extends React.Component {
       body: this.state.content,
       keywords: this.state.keywords,
       availability: '',
-    })
+    };
 
-    // push the post to state and reset the form fields
-    .then((response) => {
-      this.props.actions.addPost([response.data]);
-      this.setState({
-        title: '',
-        keywords: [],
-        keyword: '',
-        role: 'mentor',
-        body: '',
+    if (this.state.update) {
+      axios.put(`/api/posts/${this.state.id}`, body)
+      .then((response) => {
+        this.props.actions.savePost([response.data]);
+        this.setState({
+          title: '',
+          keywords: [],
+          keyword: '',
+          role: 'mentor',
+          body: '',
+        });
+        this.props.history.push('/posts');
+      })
+      .catch((error) => {
+        this.setState({ errMsg: error.response.data.message, hideErr: ''})
       });
-      this.props.history.push('/posts');
-    })
-
-    .catch((error) => {
-      console.log(error);
-    });
+    } else {
+      axios.post('/api/posts', body)
+      // push the post to state and reset the form fields
+      .then((response) => {
+        this.props.actions.savePost([response.data]);
+        this.setState({
+          title: '',
+          keywords: [],
+          keyword: '',
+          role: 'mentor',
+          body: '',
+        });
+        this.props.history.push('/posts');
+      })
+      .catch((error) => {
+        this.setState({ errMsg: error.response.data.message, hideErr: ''})
+      });
+    }
   }
 
   render() {
@@ -231,7 +267,7 @@ class AddPost extends React.Component {
         </div>
         <div className="form__input-group">
           <div className="form__button-wrap">
-            <button className="splash__button pointer" id="btn-add" onClick={() => this.addPost()}>&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;</button>
+            <button className="splash__button pointer" id="btn-add" onClick={() => this.savePost()}>&nbsp;Save&nbsp;</button>
           </div>
         </div>
       </div>
@@ -248,4 +284,4 @@ const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(Actions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddPost);
+export default connect(mapStateToProps, mapDispatchToProps)(EditPost);

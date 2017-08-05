@@ -18,7 +18,7 @@ class ViewPost extends React.Component {
         this.props.actions.setCurrentPost(result.data[0]);
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
       });
   }
 
@@ -33,17 +33,24 @@ class ViewPost extends React.Component {
       body: '',
       role: 'mentor',
       updated: Date.now(),
-    })
+    });
   }
 
   render() {
-    console.log(this.props.posts.currentPost)
-    const roleText = (this.props.posts.currentPost.role === 'mentor' ? ' Available' : ' Wanted')
+    let editable = '';
+    if (this.props.appState.profile._id === this.props.posts.currentPost.author_id) {
+      editable = (
+        <Link to={`/editpost/${this.props.posts.currentPost._id}`}>
+          <i className="fa fa-edit preview___icon pointer" />
+        </Link>
+      );
+    }
+    const roleText = (this.props.posts.currentPost.role === 'mentor' ? ' Available' : ' Wanted');
     return (
       <div className="posts">
         <div className="preview">
           <div className="preview__text-wrap">
-            <div className="preview__username">{`${this.props.posts.currentPost.role} ${roleText}`}</div>
+            <div className="preview__username">{`Mentor ${roleText}`}</div>
             <div className="preview__text preview__title">
               {this.props.posts.currentPost.title}
             </div>
@@ -55,17 +62,18 @@ class ViewPost extends React.Component {
             </div>
             <div className="preview__text">
               <span className="preview__text--bold">Keywords: </span>
-                {
-                  this.props.posts.currentPost.keywords.map(i => (
-                   <li className="preview__skill-item" key={i}>{i}, </li>) )
-                }
+              {
+                this.props.posts.currentPost.keywords.map(i => (
+                  <li className="preview__skill-item" key={i}>{i}, </li>))
+              }
             </div>
             <div className="preview__text preview__text--body">
               {`${this.props.posts.currentPost.body}`}
             </div>
             <div className="preview__text preview_text-bottom">
-              <span className="preview__text--bold">Last Updated: </span>
+              <span className="preview__text--bold">Updated: </span>
               {new Date(this.props.posts.currentPost.updated).toUTCString()}
+              {editable}
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 export const SET_POSTS = 'SET_POSTS';
-export const ADD_POST = 'ADD_POST';
+export const SAVE_POST = 'SAVE_POST';
 export const SET_POST_ERROR = 'SET_POST_ERROR';
 export const SET_CURRENT_POST = 'SET_CURRENT_POST';
 
@@ -10,9 +10,9 @@ export function setPosts(posts) {
   });
 }
 
-export function addPost(post) {
+export function savePost(post) {
   return ({
-    type: ADD_POST,
+    type: SAVE_POST,
     payload: post,
   });
 }

@@ -10,7 +10,7 @@ import Login from './containers/Login';
 import Registration from './containers/Registration';
 import Profile from './containers/Profile';
 import Posts from './containers/Posts';
-import AddPost from './containers/AddPost';
+import EditPost from './containers/EditPost';
 import Logout from './containers/Logout';
 import MentorPath from './containers/MentorPath';
 import ViewPost from './containers/ViewPost';
@@ -33,7 +33,7 @@ class App extends React.Component {
               <Route path="/posts" component={Posts} />
               <Route path="/logout" component={Logout} />
               <Route path="/viewpost/:id" component={ViewPost} />
-              <Route path="/addpost" component={AddPost} />
+              <Route path="/editpost/:id" component={EditPost} />
               <Route path="/mentorpath" component={MentorPath} />
             </Switch>
           </main>
