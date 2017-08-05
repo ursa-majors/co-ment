@@ -33,7 +33,7 @@ class App extends React.Component {
               <Route path="/posts" component={Posts} />
               <Route path="/logout" component={Logout} />
               <Route path="/viewpost/:id" component={ViewPost} />
-              <Route path="/editpost/:id" component={EditPost} />
+              <Route path="/editpost/:id?" component={EditPost} />
               <Route path="/mentorpath" component={MentorPath} />
             </Switch>
           </main>
