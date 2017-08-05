@@ -45,7 +45,9 @@ class Posts extends React.Component {
               return (
                 <div className="row" key={item._id}>
                   <div className="column">{item.author}</div>
-                  <div className="column">{item.title}</div>
+                  <Link to={`/viewpost/${item._id}`}>
+                    <div className="column">{item.title}</div>
+                  </Link>
                   <div className="column">{item.updated}</div>
                 </div>
               );
