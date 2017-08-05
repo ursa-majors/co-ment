@@ -13,7 +13,9 @@ class Home extends React.Component {
     // if it doesn't exist, it returns the string "undefined"
     if (!this.props.appState.loggedIn) {
       let token = window.localStorage.getItem('authToken');
-      if (token && token !== 'undefined') {
+      if (token === 'undefined') {
+        this.props.actions.logout();
+      } else {
         token = JSON.parse(token);
         const user = JSON.parse(window.localStorage.getItem('userId'));
         axios.get(`https://co-ment.glitch.me/api/profile/${user}`, {

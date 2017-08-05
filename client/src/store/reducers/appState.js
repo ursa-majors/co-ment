@@ -2,7 +2,7 @@ import update from 'immutability-helper';
 import { LOGIN, LOGOUT, UPDATE_PROFILE } from '../actions';
 
 const INITIAL_STATE = {
-  loggedIn: false,
+  loggedIn: undefined,
   authToken: {},
   profile: {},
 };
@@ -23,7 +23,7 @@ function appState(state = INITIAL_STATE, action) {
     case LOGOUT:
       window.localStorage.removeItem('authToken');
       window.localStorage.removeItem('userId');
-      return INITIAL_STATE;
+      return Object.assign({}, state, { loggedIn: false, authToken: {}, profile: {} });
 
     case UPDATE_PROFILE:
       return update(state, { profile: { $set: action.payload } })

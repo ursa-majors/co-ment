@@ -44,6 +44,24 @@
       transition: box-shadow 300ms ease-in-out;
     }
   }
+
+  &-starting {
+     -webkit-animation: pls 1s linear 1s infinite alternate;
+     animation: pls 1s linear 1s infinite alternate;
+  }
+
+  @-webkit-keyframes pls {
+   0%   { color: rgba(255,255,255,1);}
+   50%  { color: rgba(255,255,255,.66);}
+   100% { color: rgba(255,255,255,.33);}
+  }
+
+  @keyframes pls {
+    0%   { color: rgba(255,255,255,1);}
+    50%  { color: rgba(255,255,255,.66);}
+    100% { color: rgba(255,255,255,.33);}
+  }
+
 }
 
 .f-nav {
