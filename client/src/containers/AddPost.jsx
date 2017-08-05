@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import * as Actions from '../store/actions/postActions';
 
@@ -127,10 +128,11 @@ class AddPost extends React.Component {
       author_id: this.props.appState.profile._id,
       role: this.state.role,
       title: this.state.title,
-      body: this.state.title,
+      body: this.state.content,
       keywords: this.state.keywords,
       availability: '',
     })
+
     // push the post to state and reset the form fields
     .then((response) => {
       this.props.actions.addPost([response.data]);
