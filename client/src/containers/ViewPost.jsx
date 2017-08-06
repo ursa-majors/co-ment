@@ -36,13 +36,34 @@ class ViewPost extends React.Component {
     });
   }
 
+  deletePost() {
+    axios.defaults.baseURL = 'https://co-ment.glitch.me';
+    axios.defaults.headers.common['Authorization'] = `Bearer ${this.props.appState.authToken}`;
+
+    axios.delete(`/api/posts/${this.props.posts.currentPost._id}`)
+      .then((result) => {
+        this.props.history.push('/posts');
+      })
+      .catch((error) => {
+        // TODO: Handle error here?
+        console.log(error);
+      });
+  }
   render() {
     let editable = '';
     if (this.props.appState.profile._id === this.props.posts.currentPost.author_id) {
       editable = (
-        <Link to={`/editpost/${this.props.posts.currentPost._id}`}>
-          <i className="fa fa-edit preview___icon pointer" />
-        </Link>
+        <div>
+          <Link className="f-nav__icon-link" to={`/editpost/${this.props.posts.currentPost._id}`}>Edit
+          </Link>
+          <span
+            className="f-nav__icon-link pointer"
+            to={`/editpost/${this.props.posts.currentPost._id}`}
+            onClick={()=>this.deletePost()}
+          >
+            Delete
+          </span>
+        </div>
       );
     }
     const roleText = (this.props.posts.currentPost.role === 'mentor' ? ' Available' : ' Wanted');
@@ -73,8 +94,8 @@ class ViewPost extends React.Component {
             <div className="preview__text preview_text-bottom">
               <span className="preview__text--bold">Updated: </span>
               {new Date(this.props.posts.currentPost.updated).toUTCString()}
-              {editable}
             </div>
+            {editable}
           </div>
         </div>
       </div>
