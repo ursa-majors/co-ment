@@ -91,4 +91,24 @@
       transition: box-shadow 300ms ease-in-out;
     }
   }
+  &__icon-link {
+    color: rgba(0, 0, 0, 0.85);
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-transform: lowercase;
+    font-size: 18px;
+    text-decoration: none;
+    margin-bottom: 5px;
+    margin-right: 20px;
+    padding: 5px 2px 2px 2px;
+    letter-spacing: 2px;
+    position: relative;
+    bottom: -20px;
+
+    &:hover, &:active, &:focus {
+      color: rgba(0, 0, 0, 0.85);
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+      border-bottom: 1px dotted white;
+      transition: box-shadow 300ms ease-in-out;
+    }
+ }
 }
