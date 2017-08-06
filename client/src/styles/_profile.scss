@@ -123,6 +123,18 @@
     }
   }
 
+  &__text--body {
+    padding: 10px 0 30px 0;
+    white-space: pre-wrap;
+    font-size: 1.5em;
+  }
+
+  &__title {
+    font-weight: 400;
+    font-size: 1.8em;
+    padding: 15px 0;
+  }
+
   &__skill-list {
     list-style-type: none;
     display: inline;
@@ -140,5 +152,3 @@
     background: -webkit-linear-gradient(to bottom, #22c1c3, #fdbb2d);
     background: linear-gradient(to bottom, #22c1c3, #fdbb2d);
   }
-
-

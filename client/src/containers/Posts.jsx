@@ -67,7 +67,7 @@ class Posts extends React.Component {
         Cell: props =>
           <div className="posts__cell">
         {/* ///// THIS WILL LINK TO THE INDIVIDUAL POST VIEW ONCE THAT COMPONENT IS SET UP ///// */}
-            <Link className="posts__title" to={`/post/${props.original._id}`}>
+            <Link className="posts__title" to={`/viewpost/${props.original._id}`}>
             {props.original.title}
            </Link>
             </div> },
@@ -115,7 +115,7 @@ class Posts extends React.Component {
         <div className="posts__header">
           Posts
           <span className="posts__button-wrap">
-            <Link to="/addpost">
+            <Link to="/editpost">
               <button className="posts__button pointer" >
                 New Post
               </button>
@@ -144,9 +144,6 @@ class Posts extends React.Component {
                     row[filter.id].includes(filter.value)}
             />
           </div>}
-
-
-
       </div>
     );
   }

@@ -1,8 +1,11 @@
 .posts {
   font-family: 'Alegreya Sans', sans-serif;
-  padding-top: 50px;
+  min-height: 100vh;
   flex-direction: column;
-  color: white;
+  padding: 60px 0;
+  background: #22c1c3;
+  background: -webkit-linear-gradient(to bottom, #22c1c3, #fdbb2d);
+  background: linear-gradient(to bottom, #22c1c3, #fdbb2d);
 
   &__header {
     color: white;
@@ -16,10 +19,9 @@
       font-size: 45px;
     }
   }
-  &__input-label{
+  &__input-label {
     display: flex;
   }
-
   &__container {
     width: 100%;
     max-width: 900px;
@@ -158,7 +160,9 @@
       transition: all 300ms ease-in-out;
     }
   }
-
+  &__hidden {
+    display: none;
+  }
 }
 .row{
   display: flex;
