@@ -18,7 +18,6 @@ class Posts extends React.Component {
     })
     .then((response) => {
       this.props.actions.setPosts(response.data);
-      console.log(this.props.posts.entries);
     })
     .catch((error) => {
       console.log(error);

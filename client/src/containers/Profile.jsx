@@ -46,9 +46,8 @@ class Profile extends React.Component {
       },
     })
     .then((response) => {
-      console.log('39',this.props.appState);
        this.props.actions.updateProfile(response.data.user, () => {
-        console.log('41',this.props.appState);
+        // console.log('41',this.props.appState);
        });
        this.setState({
         profile: {
@@ -124,17 +123,17 @@ class Profile extends React.Component {
     });
     }
 
-// comma or enter in skill field triggers addSkill
+// comma or enter or tab in skill field triggers addSkill
   handleKeyPressAdd(e) {
-    if(e.charCode === 44 || e.which === 44 || e.charCode === 13 || e.which === 13) {
+    if(e.charCode === 44 || e.which === 44 || e.charCode === 13 || e.which === 13 || e.charCode === 9 || e.which === 9 ) {
       e.preventDefault();
       this.addSkill();
          }
     }
 
-// enter triggers removeSkill on icon/button focus
+// enter or delete triggers removeSkill on icon/button focus
   handleKeyPressRemove(e) {
-if(e.charCode === 13 || e.which === 13) {
+if(e.charCode === 13 || e.which === 13 || e.charCode === 8 || e.which === 8) {
   this.removeSkill(e);
      }
 }

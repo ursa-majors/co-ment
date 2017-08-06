@@ -10,6 +10,7 @@ export const SET_LOGIN_PWD = 'SET_LOGIN_PWD';
 export const SET_LOGIN_ERROR = 'SET_LOGIN_ERROR';
 export const CLEAR_LOGIN_PWD = 'CLEAR_LOGIN_PWD';
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
+export const SET_PROFILE_VIEW = 'SET_PROFILE_VIEW';
 
 export function login(token, profile) {
   return ({

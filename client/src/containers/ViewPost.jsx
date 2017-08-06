@@ -77,7 +77,7 @@ class ViewPost extends React.Component {
             </div>
             <div className="preview__text">
               <span className="preview__text--bold">Author: </span>
-              <Link to={`/profile/${this.props.posts.currentPost.author_id}`}>
+              <Link to={`/viewprofile/${this.props.posts.currentPost.author_id}`}>
                 {this.props.posts.currentPost.author}
               </Link>
             </div>

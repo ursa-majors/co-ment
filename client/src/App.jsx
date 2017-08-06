@@ -14,6 +14,7 @@ import EditPost from './containers/EditPost';
 import Logout from './containers/Logout';
 import MentorPath from './containers/MentorPath';
 import ViewPost from './containers/ViewPost';
+import ViewProfile from './containers/ViewProfile';
 
 class App extends React.Component {
 
@@ -33,6 +34,7 @@ class App extends React.Component {
               <Route path="/posts" component={Posts} />
               <Route path="/logout" component={Logout} />
               <Route path="/viewpost/:id" component={ViewPost} />
+              <Route path="/viewprofile/:id" component={ViewProfile} />
               <Route path="/editpost/:id?" component={EditPost} />
               <Route path="/mentorpath" component={MentorPath} />
             </Switch>
