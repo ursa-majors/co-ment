@@ -49,15 +49,15 @@
 
     &--select {
       -webkit-appearance: button;
-       -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
-       -webkit-user-select: none;
-       // background-image: url(http://i62.tinypic.com/15xvbd5.png);
-       background-position: 97% center;
-       background-repeat: no-repeat;
-       // border: 1px solid #AAA;
-       overflow: hidden;
-       text-overflow: ellipsis;
-       white-space: nowrap;
+      -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+      -webkit-user-select: none;
+      background: white url('https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_keyboard_arrow_down_48px-128.png') no-repeat;
+      background-position:  right 10px center;
+      background-repeat: no-repeat;
+      background-size: 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
   }
@@ -128,7 +128,7 @@
   &__hidden {
     display: none;
   }
-  
+
 }
 
 ::-webkit-input-placeholder {

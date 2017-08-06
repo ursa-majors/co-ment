@@ -26,7 +26,7 @@ class EditPost extends React.Component {
     if (this.props.match.params.id) {
       // axios default headers
       axios.defaults.baseURL = 'https://co-ment.glitch.me';
-      axios.defaults.headers.common['Authorization'] = `Bearer ${this.props.appState.authToken}`;
+      axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
       axios.get(`/api/posts?id=${this.props.match.params.id}`)
         .then((response) => {
           this.setState({
@@ -97,7 +97,7 @@ class EditPost extends React.Component {
 
   // allow user to remove the keywords
   removeKeyword(event) {
-    let newArray = this.state.keywords;
+    const newArray = this.state.keywords;
     for (let i = 0; i < this.state.keywords.length; i += 1) {
       if (this.state.keywords[i] === event.target.id) {
         newArray.splice(i, 1);
@@ -140,7 +140,7 @@ class EditPost extends React.Component {
     // set axios headers - this appears to be needed for CORS preflight options call
     // otherwise we have issues with the Authorization header
     axios.defaults.baseURL = 'https://co-ment.glitch.me';
-    axios.defaults.headers.common['Authorization'] = `Bearer ${this.props.appState.authToken}`;
+    axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
     const body = {
       author: this.props.appState.profile.username,
       author_id: this.props.appState.profile._id,
@@ -165,7 +165,7 @@ class EditPost extends React.Component {
         this.props.history.push('/posts');
       })
       .catch((error) => {
-        this.setState({ errMsg: error.response.data.message, hideErr: ''})
+        this.setState({ errMsg: error.response.data.message, hideErr: '' });
       });
     } else {
       axios.post('/api/posts', body)
@@ -182,7 +182,7 @@ class EditPost extends React.Component {
         this.props.history.push('/posts');
       })
       .catch((error) => {
-        this.setState({ errMsg: error.response.data.message, hideErr: ''})
+        this.setState({ errMsg: error.response.data.message, hideErr: '' });
       });
     }
   }
@@ -226,27 +226,25 @@ class EditPost extends React.Component {
               onKeyPress={e => this.handleKeyPressAdd(e)}
               placeholder="Add Keywords"
             />
-            {this.state.keywords.map((item) => {
-              return (
-                <span className="skill-value" key={item}>
-                  <span className="skill-value__icon" aria-hidden="true">
-                    <span
-                      id={item}
-                      role="button"
-                      tabIndex="0"
-                      onClick={e => this.removeKeyword(e)}
-                      onKeyPress={e => this.handleKeyPressRemove(e)}
-                    >
+            {this.state.keywords.map(item => (
+              <span className="skill-value" key={item}>
+                <span className="skill-value__icon" aria-hidden="true">
+                  <span
+                    id={item}
+                    role="button"
+                    tabIndex="0"
+                    onClick={e => this.removeKeyword(e)}
+                    onKeyPress={e => this.handleKeyPressRemove(e)}
+                  >
                       &times;
                     </span>
-                  </span>
-                  <span className="skill-value__label" role="option" aria-selected="true">
-                    {item}
-                    <span className="skill-aria-only">&nbsp;</span>
-                  </span>
                 </span>
-              );
-            })}
+                <span className="skill-value__label" role="option" aria-selected="true">
+                  {item}
+                  <span className="skill-aria-only">&nbsp;</span>
+                </span>
+              </span>
+              ))}
           </div>
           <div className="form__input-group">
             <label htmlFor="content" className="form__label">Post Body

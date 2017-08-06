@@ -36,9 +36,6 @@
     display: flex;
     flex-direction: flex-start;
     flex-wrap: wrap;
-    @include for-tablet-portrait-up {
-      padding: 0 20px;
-    }
   }
 
   &__button {
@@ -151,4 +148,6 @@
     background: #22c1c3;
     background: -webkit-linear-gradient(to bottom, #22c1c3, #fdbb2d);
     background: linear-gradient(to bottom, #22c1c3, #fdbb2d);
+    height: 100%;
+    min-height: 100vh;
   }

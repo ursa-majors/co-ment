@@ -10,9 +10,9 @@ class ViewPost extends React.Component {
 
   componentDidMount() {
     const postId = this.props.match.params.id;
-    //axios default headers
+    // axios default headers
     axios.defaults.baseURL = 'https://co-ment.glitch.me';
-    axios.defaults.headers.common['Authorization'] = `Bearer ${this.props.appState.authToken}`;
+    axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
     axios.get(`/api/posts?id=${postId}`)
       .then((result) => {
         this.props.actions.setCurrentPost(result.data[0]);
@@ -38,7 +38,7 @@ class ViewPost extends React.Component {
 
   deletePost() {
     axios.defaults.baseURL = 'https://co-ment.glitch.me';
-    axios.defaults.headers.common['Authorization'] = `Bearer ${this.props.appState.authToken}`;
+    axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
 
     axios.delete(`/api/posts/${this.props.posts.currentPost._id}`)
       .then((result) => {
@@ -59,7 +59,7 @@ class ViewPost extends React.Component {
           <span
             className="f-nav__icon-link pointer"
             to={`/editpost/${this.props.posts.currentPost._id}`}
-            onClick={()=>this.deletePost()}
+            onClick={() => this.deletePost()}
           >
             Delete
           </span>
@@ -77,7 +77,7 @@ class ViewPost extends React.Component {
             </div>
             <div className="preview__text">
               <span className="preview__text--bold">Author: </span>
-              <Link to={`/profile/${this.props.posts.currentPost.author_id}`}>
+              <Link to={`/viewprofile/${this.props.posts.currentPost.author_id}`}>
                 {this.props.posts.currentPost.author}
               </Link>
             </div>
