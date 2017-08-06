@@ -8,6 +8,7 @@ $fa-font-path: "~font-awesome/fonts";
 @import 'styles/logout';
 @import 'styles/profile';
 @import 'styles/posts';
+@import 'styles/react-table';
 
 
 * {
@@ -24,6 +25,7 @@ $fa-font-path: "~font-awesome/fonts";
 	background: -webkit-linear-gradient(to bottom, #22c1c3, #fdbb2d);
 	background: linear-gradient(to bottom, #22c1c3, #fdbb2d);
 	height: 100vh;
+  padding: 60px 0;
 }
 
 .title {

@@ -22,6 +22,144 @@
   &__input-label {
     display: flex;
   }
+  &__container {
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto;
+  }
+
+  &__table-cont {
+    overflow-x:auto;
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto;
+    background: rgba(255,255,255,.7);
+    color: #545454;
+    border-radius: 4px;
+  }
+
+  &__grid {
+    border-collapse: collapse;
+  }
+
+  &__tableHead {
+    font-weight: 300;
+    font-size: 1.2em;
+    padding: 15px;
+  }
+
+  &__cell {
+    padding: 15px;
+  }
+
+  &__thumb {
+    margin: auto;
+    width: 50px;
+    height: auto;
+  }
+
+  &__title {
+    padding: 15px;
+  }
+
+  &__meta {
+    padding: 15px 30px;
+  }
+
+  &__icon-container {
+        padding: 15px 30px;
+      }
+      &__icon {
+        opacity: .5;
+        font-size: 1.5em;
+        border: none;
+        background: none;
+
+        &--edit {
+          @extend .fa;
+          @extend .fa-pencil;
+
+          &:hover {
+          opacity: 1;
+          }
+
+        }
+        &--delete {
+          @extend .fa;
+          @extend .fa-trash;
+
+          &:hover {
+          opacity: 1;
+          }
+        }
+
+      }
+
+  &__keyword-wrapper {
+    padding: 0;
+    display: flex;
+    flex-direction: flex-start;
+    flex-wrap: wrap;
+  }
+
+  &__keyword-value {
+    color: #545454;
+    display: inline-block;
+    font-size: 0.9em;
+    line-height: 1.4;
+    background-color: #ebf5ff;
+    background-color: rgba(255, 255, 255, 0.24);
+    border-radius: 2px;
+    border: 1px solid #545454;
+    border: 1px solid rgba(84, 84, 84, 0.24);
+    margin-right: 5px;
+    margin-top: 5px;
+    vertical-align: top;
+  }
+
+  &__keyword-label {
+    border-bottom-right-radius: 2px;
+    border-top-right-radius: 2px;
+    cursor: default;
+    padding: 2px 5px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  &__button-wrap {
+    width: 100%;
+    margin: 40px auto 0 auto;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+
+  &__button {
+    color: white;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: 100;
+    border-radius: 50px;
+    padding: 10px;
+    border: 1px solid white;
+    background: transparent;
+
+    @include for-tablet-portrait-up {
+      padding: 20px;
+      border: 2px solid white;
+      font-size: 20px;
+    }
+
+    &:hover, &:active, &:focus, &-done {
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+      transition: all 300ms ease-in-out;
+    }
+  }
   &__hidden {
     display: none;
   }
