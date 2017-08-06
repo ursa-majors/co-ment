@@ -17,13 +17,25 @@ const userSchema = new mongoose.Schema({
         unique : true
     },
     
+    name       : String,
+    
     ghUserName : String,
     
     ghProfile  : Object,
     
-    pref_lang  : String,
+    avatarUrl  : String,
     
-    certs      : [String],
+    location   : String,
+    
+    about      : String,
+    
+    gender     : String,
+    
+    pref_lang  : [String],  // array of strings
+    
+    certs      : [String],  // array of strings
+    
+    skills     : [String],  // array of strings
     
     time_zone  : String,
     
