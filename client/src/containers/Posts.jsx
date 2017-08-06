@@ -25,7 +25,6 @@ class Posts extends React.Component {
   }
 
   render() {
-
     // const makePlaceholderFilter = (placeholder) => {
     //   return ({filter, onFilterChange}) => (
     //       <input type='text'
@@ -45,9 +44,9 @@ class Posts extends React.Component {
         minWidth: 40,
         filterable: true,
         Cell: props =>
-          <div className="posts__cell">
-          {props.original.role}
-          </div>,
+          (<div className="posts__cell">
+            {props.original.role}
+          </div>),
     //     Filter: ({filter, onFilterChange}) => (
     //   <select
     //     onChange={event => onFilterChange(event.target.value)}
@@ -64,24 +63,24 @@ class Posts extends React.Component {
         accessor: 'title',
         minWidth: 120,
         Cell: props =>
-          <div className="posts__cell">
-        {/* ///// THIS WILL LINK TO THE INDIVIDUAL POST VIEW ONCE THAT COMPONENT IS SET UP ///// */}
+          (<div className="posts__cell">
+            {/* ///// THIS WILL LINK TO THE INDIVIDUAL POST VIEW ONCE THAT COMPONENT IS SET UP ///// */}
             <Link className="posts__title" to={`/viewpost/${props.original._id}`}>
-            {props.original.title}
-           </Link>
-            </div> },
+              {props.original.title}
+            </Link>
+          </div>) },
       { Header: () => <div className="posts__tableHead">Author</div>,
         accessor: 'delete',
         minWidth: 40,
         filterable: true,
-        Cell: props => <div className="posts__cell">
-      {/* ///// add a second API call to get the author's user profile to pull down the avatar url. OR, maybe better to just store the avatar with the original post data? ///// */}
-      {/*}  <img
+        Cell: props => (<div className="posts__cell">
+          {/* ///// add a second API call to get the author's user profile to pull down the avatar url. OR, maybe better to just store the avatar with the original post data? ///// */}
+          {/* }  <img
               className="posts__thumb"
               src={props.original.author.ghProfile.avatar_url}
               alt={props.original.author}
             /> */}
-            {props.original.author}</div>,
+          {props.original.author}</div>),
       //   Filter: ({filter, onChange}) => (
       //     <input
       //       onChange={event => onChange(event.target.value)}
@@ -98,9 +97,9 @@ class Posts extends React.Component {
         minWidth: 80,
         filterable: true,
         Cell: props =>
-          <div className="posts__cell">
+          (<div className="posts__cell">
             {props.original.keywords.join(', ')}
-              </div> },
+          </div>) },
       { Header: () => <div className="posts__tableHead">Date</div>,
         accessor: 'date',
         minWidth: 40,
@@ -123,8 +122,10 @@ class Posts extends React.Component {
         </div>
         {(!this.props.posts.entries)
           ? <Loading />
-          : <div ref={(ref) => { this.componentRef = ref; }}
-            className="posts__table-cont">
+          : <div
+            ref={(ref) => { this.componentRef = ref; }}
+            className="posts__table-cont"
+          >
             <ReactTable
               className="posts__grid -striped"
               data={this.props.posts.entries}
@@ -134,9 +135,9 @@ class Posts extends React.Component {
               showPageSizeOptions={false}
               defaultSorted={[
                 {
-                  id: "date",
+                  id: 'date',
                   desc: true,
-                }
+                },
               ]}
               filterable
               defaultFilterMethod={(filter, row) =>

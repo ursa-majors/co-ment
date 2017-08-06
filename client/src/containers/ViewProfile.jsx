@@ -8,22 +8,21 @@ import * as Actions from '../store/actions';
 class ViewProfile extends React.Component {
 
   constructor(props) {
-     super(props);
-     this.state = {
-      profile: {}
-      }
-    }
+    super(props);
+    this.state = {
+      profile: {},
+    };
+  }
 
-  componentDidMount(){
+  componentDidMount() {
     const profileId = this.props.match.params.id;
-    console.log(profileId);
-    //axios default headers
+    // axios default headers
     axios.defaults.baseURL = 'https://co-ment.glitch.me';
-    axios.defaults.headers.common['Authorization'] = `Bearer ${this.props.appState.authToken}`;
+    axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
     axios.get(`/api/profile/${profileId}`)
       .then((result) => {
         this.setState({ profile: result.data });
-       })
+      })
       .catch((error) => {
         console.log(error);
       });
@@ -38,9 +37,9 @@ class ViewProfile extends React.Component {
       <div className="profile">
         <div className="preview">
           <div className="preview__image-wrap">
-          {this.state.profile.ghProfile && this.state.profile.ghProfile.avatar_url ?
-            <img className="preview__image" src={this.state.profile.ghProfile.avatar_url } alt={this.state.profile.ghProfile.name}/> :
-            <i className="fa fa-user-circle fa-5x preview__icon" aria-hidden="true"></i>
+            {this.state.profile.ghProfile && this.state.profile.ghProfile.avatar_url ?
+              <img className="preview__image" src={this.state.profile.ghProfile.avatar_url} alt={this.state.profile.ghProfile.name} /> :
+              <i className="fa fa-user-circle fa-5x preview__icon" aria-hidden="true" />
           }
           </div>
           <div className="preview__text-wrap">
@@ -48,11 +47,11 @@ class ViewProfile extends React.Component {
             {this.state.profile.ghProfile && <div className="preview__text">{this.state.profile.ghProfile.name}</div> }
             <div className="preview__text">
               <span className="preview__text--bold">Language: &nbsp;</span>
-               {this.state.profile.pref_lang}
+              {this.state.profile.pref_lang}
             </div>
             <div className="preview__text">
               <span className="preview__text--bold">Time zone: &nbsp;</span>
-               {this.state.profile.time_zone}
+              {this.state.profile.time_zone}
             </div>
             <div className="preview__text">
               <span className="preview__text--bold">Skills: &nbsp;</span>
@@ -61,7 +60,7 @@ class ViewProfile extends React.Component {
 
           </div>
         </div>
-        </div>
+      </div>
 
     );
   }

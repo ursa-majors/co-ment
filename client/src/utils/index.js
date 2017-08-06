@@ -38,6 +38,23 @@ export const timezones = [
 ['+12', 'Auckland, Wellington, Fiji, Kamchatka'],
 ];
 
+const tzList = timezones.map(i =>
+	`(UTC ${i[0]}) ${i[1]}`
+      );
+
+let split = new Date().toString().split(" ");
+let tzOffset = split[split.length - 2];
+let numericOffset = tzOffset.substr(tzOffset.length - 5)/100;
+console.log('numericOffset: ' + numericOffset);
+let tzVal = numericOffset < 0 ? `(UTC ${numericOffset})` : `(UTC + ${numericOffset})`;
+const filterList = (q) => {
+  return tzList.filter((i) => {
+      return i.indexOf(q) > -1;
+  });
+}
+export const tzGuess = filterList(tzVal)[0];
+
+
 export const formatDate = (date) => {
   const monthNames = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
