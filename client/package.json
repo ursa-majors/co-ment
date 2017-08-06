@@ -46,6 +46,7 @@
     "react-redux": "^5.0.5",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
+    "react-table": "^6.5.3",
     "redux": "^3.7.2"
   }
 }

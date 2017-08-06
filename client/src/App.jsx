@@ -13,6 +13,7 @@ import Posts from './containers/Posts';
 import AddPost from './containers/AddPost';
 import Logout from './containers/Logout';
 import MentorPath from './containers/MentorPath';
+import Post from './containers/Post';
 
 class App extends React.Component {
 
@@ -33,6 +34,7 @@ class App extends React.Component {
               <Route path="/logout" component={Logout} />
               <Route path="/addpost" component={AddPost} />
               <Route path="/mentorpath" component={MentorPath} />
+              <Route path="/post/:id" component={Post} />
             </Switch>
           </main>
           <FooterNav />

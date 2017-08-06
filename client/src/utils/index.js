@@ -37,3 +37,15 @@ export const timezones = [
 ['+11', 'Magadan, Solomon Islands, New Caledonia'],
 ['+12', 'Auckland, Wellington, Fiji, Kamchatka'],
 ];
+
+export const formatDate = (date) => {
+  const monthNames = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  ];
+
+  const day = date.getDate();
+  const monthIndex = date.getMonth();
+  const year = date.getFullYear();
+
+  return `${day} ${monthNames[monthIndex]} ${year}`;
+};
