@@ -254,18 +254,7 @@ routes.get('/api/posts', auth, (req, res) => {
    Example: POST > `/api/posts`
 */
 routes.post('/api/posts', auth, (req, res) => {
-    
-    // build new post object from request body and token
-    const inputPost = {
-        author       : req.body.author,
-        author_id    : req.token._id,
-        role         : req.body.role,
-        title        : req.body.title,
-        body         : req.body.body,
-        keywords     : req.body.keywords,
-        availability : req.body.availability
-    };
-    
+        
     // Check if post with same author_id, role & title already exists
     Post
         .findOne({
@@ -284,9 +273,23 @@ routes.post('/api/posts', auth, (req, res) => {
                     .json({ message: 'Error - same/similar post already exists!'});
 
             } else {
+                
+                // create new post
+                const myPost = new Post();
+                
+                // build new post from request body and token
+                myPost.author       = req.body.author;
+                myPost.author_id    = req.body.author_id;
+                myPost.role         = req.body.role;
+                myPost.title        = req.body.title;
+                myPost.body         = req.body.body;
+                myPost.keywords     = req.body.keywords;
+                myPost.availability = req.body.availability;
 
                 // save new post to database
-                Post.create(inputPost, (err, newPost) => {
+                myPost.save( (err, newPost) => {
+                    if (err) { throw err; }
+                    
                     return res
                         .status(200)
                         .json({
