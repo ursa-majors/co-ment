@@ -23,19 +23,37 @@ const userSchema = new mongoose.Schema({
         required : true
     },
     
-    name       : String,
+    name       : {
+        type     : String,
+        trim     : true
+    },
     
-    ghUserName : String,
+    ghUserName : {
+        type     : String,
+        trim     : true
+    },
     
     ghProfile  : Object,
     
-    avatarUrl  : String,
+    avatarUrl  : {
+        type     : String,
+        trim     : true
+    },
     
-    location   : String,
+    location   : {
+        type     : String,
+        trim     : true
+    },
     
-    about      : String,
+    about      : {
+        type     : String,
+        trim     : true
+    },
     
-    gender     : String,
+    gender     : {
+        type     : String,
+        trim     : true
+    },
     
     pref_lang  : [String],  // array of strings
     
@@ -43,12 +61,18 @@ const userSchema = new mongoose.Schema({
     
     skills     : [String],  // array of strings
     
-    time_zone  : String,
+    time_zone  : {
+        type     : String,
+        trim     : true
+    },
     
     hash       : String,
     
     salt       : String
     
+},
+{
+    timestamps : true
 });
 
 userSchema.plugin(passportLocalMongoose);
