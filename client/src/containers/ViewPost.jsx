@@ -93,7 +93,7 @@ class ViewPost extends React.Component {
             </div>
             <div className="preview__text preview_text-bottom">
               <span className="preview__text--bold">Updated: </span>
-              {new Date(this.props.posts.currentPost.updated).toUTCString()}
+              {new Date(this.props.posts.currentPost.updatedAt).toUTCString()}
             </div>
             {editable}
           </div>
