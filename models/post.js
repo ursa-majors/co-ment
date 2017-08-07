@@ -22,7 +22,10 @@ const postSchema = new mongoose.Schema({
         required : true
     },
     
-    availability : String,
+    availability : {
+        type     : String,
+        trim     : true
+    },
     
     body : {
         type     : String,
@@ -38,20 +41,19 @@ const postSchema = new mongoose.Schema({
     role : {
         type     : String,
         enum     : ['mentor', 'mentee'],
-        default  : 'mentee'
+        default  : 'mentee',
+        trim     : true
     },
     
     title : {
         type     : String,
         required : true,
         trim     : true
-    },
-    
-    updated : {
-        type     : Date,
-        default  : Date.now
-    }
-    
+    }    
+
+},
+{
+    timestamps : true
 });
 
 

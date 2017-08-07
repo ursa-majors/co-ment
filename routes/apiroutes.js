@@ -282,7 +282,7 @@ routes.post('/api/posts', auth, (req, res) => {
                 
                 // build new post from request body and token
                 myPost.author       = req.body.author;
-                myPost.author_id    = req.body.author_id;
+                myPost.author_id    = req.token._id;
                 myPost.role         = req.body.role;
                 myPost.title        = req.body.title;
                 myPost.body         = req.body.body;
