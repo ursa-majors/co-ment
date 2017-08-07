@@ -4,10 +4,22 @@ import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-import * as Actions from '../store/actions';
+import * as Actions from '../store/actions/regActions';
+import { login } from '../store/actions';
 
 class Registration extends React.Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      username: '',
+      email: '',
+      password: '',
+      confirmPwd: '',
+      error: false,
+    };
+  }
   /* Function handleRegister - Perform basic validation:
   * - username is at least 1 char
   * - password is at least 1 char
@@ -15,30 +27,38 @@ class Registration extends React.Component {
   * If valid, call the register route; store token in redux, clear password from state
   * , return to Home
   */
-  handleRegister() {
+  handleRegister(e) {
+    e.preventDefault();
     // clear previous errors
-    this.props.actions.setRegError('');
-    const username = this.props.register.regUsername;
-    const password = this.props.register.regPassword;
-    const confPwd = this.props.register.regConfirmPwd;
+    this.setState({ error: false });
+    const username = this.state.username;
+    const email = this.state.email;
+    const password = this.state.password;
+    const confPwd = this.state.confirmPwd;
 
-    if (username && (password === confPwd)) {
-      axios.post('https://co-ment.glitch.me/api/register', { username, password })
+    if (username && email && (password === confPwd)) {
+      axios.post('https://co-ment.glitch.me/api/register', { username, password, email })
         .then((result) => {
           // TODO: Handle errors such as duplicate user
-          this.props.actions.login(result.data.token, result.data.profile);
-          this.props.actions.clearPwd();
+          this.props.login(result.data.token, result.data.profile);
           this.props.history.push('/');
         })
         .catch((error) => {
           this.props.actions.setRegError(error.response.data.message);
+          this.setState({ error: true });
         });
     } else if (!username) {
       this.props.actions.setRegError('Username cannot be blank');
+      this.setState({ error: true });
+    } else if (!email) {
+      this.props.actions.setRegError('Email cannot be blank');
+      this.setState({ error: true });
     } else if (password !== confPwd) {
       this.props.actions.setRegError('Passwords do not match');
+      this.setState({ error: true });
     } else {
       this.props.actions.setRegError('Please complete the form');
+      this.setState({ error: true });
     }
   }
 
@@ -48,31 +68,25 @@ class Registration extends React.Component {
   *   use this handler; trigger the proper action based on the input ID
   */
   handleInput(event) {
-    switch (event.target.id) {
-      case 'username':
-        this.props.actions.setRegUser(event.target.value);
-        break;
-      case 'password':
-        this.props.actions.setRegPwd(event.target.value);
-        break;
-      case 'confirm-password':
-        this.props.actions.setRegConfPwd(event.target.value);
-        break;
-      default:
-        break;
-    }
+    this.setState({ [event.target.id]: event.target.value, error: false });
     if (event.which === 13) {
       this.handleRegister();
     }
   }
 
   render() {
+    const showError = (this.state.error ? '' : 'form__hidden');
     return (
       <div className="container form">
-        <div className="form__body">
-          <div className="form__header">Create account</div>
+        <form className="form__body">
+          <div className="form__header">
+            Create account
+          </div>
           <div className="form__input-group">
-            <input className="form__input" type="text" placeholder="Username" id="username" onChange={event => this.handleInput(event)} />
+            <input className="form__input" type="text" placeholder="Username" id="username" onChange={event => this.handleInput(event)} required />
+          </div>
+          <div className="form__input-group">
+            <input className="form__input" type="email" placeholder="Email" id="email" onChange={event => this.handleInput(event)} required />
           </div>
           <div className="form__input-group">
             <input
@@ -82,6 +96,7 @@ class Registration extends React.Component {
               id="password"
               onChange={event => this.handleInput(event)}
               onKeyUp={event => this.handleInput(event)}
+              required
             />
           </div>
           <div className="form__input-group">
@@ -89,23 +104,24 @@ class Registration extends React.Component {
               className="form__input"
               type="password"
               placeholder="Confirm Password"
-              id="confirm-password"
+              id="confirmPwd"
               onChange={event => this.handleInput(event)}
               onKeyUp={event => this.handleInput(event)}
+              required
             />
           </div>
           <div className="form__input-group">
-            <div className="form__error">{this.props.register.regErrorMsg}</div>
+            <div className={`form__error ${showError}`}>{this.props.register.regErrorMsg}</div>
           </div>
-        </div>
-        <div className="form__input-group">
-          <div className="form__button-wrap">
-            <button className="splash__button pointer" id="btn-register" onClick={event => this.handleRegister(event)} >Register</button>
-            <Link to="/login">
-              <button className="splash__button pointer" id="btn-login">Sign In</button>
-            </Link>
+          <div className="form__input-group">
+            <div className="form__button-wrap">
+              <button className="splash__button pointer" type="submit" id="btn-register" onClick={event => this.handleRegister(event)} >Register</button>
+              <Link to="/login">
+                <button className="splash__button pointer" id="btn-login">Sign In</button>
+              </Link>
+            </div>
           </div>
-        </div>
+        </form>
       </div>
     );
   }
@@ -118,6 +134,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(Actions, dispatch),
+  login: bindActionCreators(login, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Registration);
