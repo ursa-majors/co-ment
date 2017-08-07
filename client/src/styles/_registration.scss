@@ -9,8 +9,8 @@
   width: 100%;
   margin: 0 auto;
   background: rgba(255,255,255,.3);
-  padding: 10px 10px 40px 10px;
   text-align: center;
+  padding: 10px 10px 0 10px;
   border-radius: 4px;
 
   @include for-tablet-portrait-up {
@@ -77,12 +77,10 @@
     // background-color: #f2dede;
     font-size: 1.2em;
     font-weight: 500;
-    padding: 15px;
     margin: 15px auto;
     // border: 1px solid #ebccd1;
     border-radius: 3px;
     transition: opacity .15s linear;
-    width: 90%;
   }
 
   &__button-wrap {
