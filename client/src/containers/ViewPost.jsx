@@ -37,7 +37,8 @@ class ViewPost extends React.Component {
     });
   }
 
-  deletePost() {
+  deletePost = (event) => {
+    event.preventDefault();
     axios.defaults.baseURL = 'https://co-ment.glitch.me';
     axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
 
@@ -50,9 +51,18 @@ class ViewPost extends React.Component {
         console.log(error);
       });
   }
+
   render() {
     const owner = (this.props.appState.profile._id === this.props.posts.currentPost.author_id);
-
+    let actions;
+    if (owner) {
+      actions = (<div>
+        <PostActions name="Edit" link={`/editpost/${this.props.posts.currentPost._id}`} clickHandler="" />
+        <PostActions name="Delete" link="/posts" clickHandler={this.deletePost} />
+        </div>);
+    } else {
+      actions = (<PostActions name="Request Connection" link="/connections" />)
+    }
     const roleText = (this.props.posts.currentPost.role === 'mentor' ? ' Available' : ' Wanted');
     return (
       <div className="posts">
@@ -82,7 +92,7 @@ class ViewPost extends React.Component {
               <span className="preview__text--bold">Updated: </span>
               {new Date(this.props.posts.currentPost.updatedAt).toUTCString()}
             </div>
-            <PostActions postOwner={owner} post={this.props.posts.currentPost} deleteHandle={this.deletePost}/>
+            { actions }
           </div>
         </div>
       </div>
