@@ -18,6 +18,7 @@ class Posts extends React.Component {
     })
     .then((response) => {
       this.props.actions.setPosts(response.data);
+      console.log(response.data);
     })
     .catch((error) => {
       console.log(error);
@@ -98,7 +99,7 @@ class Posts extends React.Component {
         filterable: true,
         Cell: props =>
           (<div className="posts__cell">
-            {props.original.keywords.join(', ')}
+            {props.original.keywords && props.original.keywords.join(', ')}
           </div>) },
       { Header: () => <div className="posts__tableHead">Date</div>,
         accessor: 'date',
