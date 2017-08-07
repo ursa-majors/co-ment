@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import * as Actions from '../store/actions/postActions';
+import PostActions from '../containers/PostActions';
 
 
 class ViewPost extends React.Component {
@@ -50,22 +51,8 @@ class ViewPost extends React.Component {
       });
   }
   render() {
-    let editable = '';
-    if (this.props.appState.profile._id === this.props.posts.currentPost.author_id) {
-      editable = (
-        <div>
-          <Link className="f-nav__icon-link" to={`/editpost/${this.props.posts.currentPost._id}`}>Edit
-          </Link>
-          <span
-            className="f-nav__icon-link pointer"
-            to={`/editpost/${this.props.posts.currentPost._id}`}
-            onClick={() => this.deletePost()}
-          >
-            Delete
-          </span>
-        </div>
-      );
-    }
+    const owner = (this.props.appState.profile._id === this.props.posts.currentPost.author_id);
+
     const roleText = (this.props.posts.currentPost.role === 'mentor' ? ' Available' : ' Wanted');
     return (
       <div className="posts">
@@ -95,7 +82,7 @@ class ViewPost extends React.Component {
               <span className="preview__text--bold">Updated: </span>
               {new Date(this.props.posts.currentPost.updatedAt).toUTCString()}
             </div>
-            {editable}
+            <PostActions postOwner={owner} post={this.props.posts.currentPost} deleteHandle={this.deletePost}/>
           </div>
         </div>
       </div>
