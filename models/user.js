@@ -1,11 +1,11 @@
 /* ================================= SETUP ================================= */
 
-const detenv    = require('dotenv').config();
-const mongoose  = require('mongoose');
+const detenv   = require('dotenv').config();
+const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
-const jwt       = require('jsonwebtoken');
-const crypto    = require('crypto');
-const secret    = process.env.JWT_SECRET;
+const jwt      = require('jsonwebtoken');
+const crypto   = require('crypto');
+const secret   = process.env.JWT_SECRET;
 
 
 /* ================================ SCHEMA ================================= */
@@ -55,6 +55,17 @@ const userSchema = new mongoose.Schema({
         trim     : true
     },
     
+    signupKey  : {
+        key    : String,
+        ts     : String,
+        exp    : String
+    },
+    
+    validated  : {
+        type     : Boolean,
+        default  : false
+    },
+    
     pref_lang  : [String],  // array of strings
     
     certs      : [String],  // array of strings
@@ -101,8 +112,9 @@ userSchema.methods.validatePassword = function (pwd) {
 userSchema.methods.generateJWT = function () {
     
     const payload = {
-        _id      : this._id,
-        username : this.username
+        _id       : this._id,
+        username  : this.username,
+        validated : this.validated
     };
     const options = {
         expiresIn : '7d'
