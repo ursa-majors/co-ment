@@ -7,13 +7,13 @@ import Loading from '../containers/Loading';
 class ConnectionResult extends React.Component {
 
   render() {
-    if (this.props.connection.loading) {
+    if (this.props.connection.contact_loading) {
       return (
         <div className="container logout">
           <Loading text="Sending Email" />
         </div>
       );
-    } else if (!this.props.connection.loading && !this.props.connection.error) {
+    } else if (!this.props.connection.contact_loading && !this.props.connection.contact_error) {
       return (
         <div className="container logout">
           <div className="logout__header">Email Sent</div>

@@ -16,3 +16,20 @@ export function contact(token, msg, recipient) {
     },
   };
 }
+
+export const CONNECTION_REQUEST = 'CONNECTION_REQUEST';
+export const CONNECTION_SUCCESS = 'CONNECTION_SUCCESS';
+export const CONNECTION_FAILURE = 'CONNECTION_FAILURE';
+
+export function connect(token, details) {
+  return {
+    [CALL_API]: {
+      endpoint: 'https://co-ment.glitch.me/api/connect',
+      method: 'POST',
+      types: [CONNECTION_REQUEST, CONNECTION_SUCCESS, CONNECTION_FAILURE],
+      headers: { Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json' },
+      body: JSON.stringify(details),
+    },
+  };
+}
