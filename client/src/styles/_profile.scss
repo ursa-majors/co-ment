@@ -12,6 +12,12 @@
   margin-top: 5px;
   vertical-align: top;
 
+  &:hover {
+      border: 1px solid #e7e7e7;
+      border: 1px solid rgba(84, 84, 84, 0.6);
+    }
+
+
   &__label {
     border-bottom-right-radius: 2px;
     border-top-right-radius: 2px;
@@ -29,6 +35,10 @@
     border-right: 1px solid #c2e0ff;
     border-right: 1px solid rgba(0, 126, 255, 0.24);
     padding: 1px 5px 3px;
+
+    &:hover {
+      // color: red;
+    }
   }
 
   &__wrapper {

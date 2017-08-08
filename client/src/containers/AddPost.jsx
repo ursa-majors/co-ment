@@ -47,7 +47,7 @@ class AddPost extends React.Component {
   // into the array that goes to the DB. Ignore dupes.
   addKeyword() {
     const newWord = this.state.keyword;
-    for (let i=0; i<this.state.keywords.length; i += 1) {
+    for (let i = 0; i < this.state.keywords.length; i += 1) {
       if (this.state.keywords[i] === newWord) {
         this.setState({ keyword: '' });
         return;
@@ -61,7 +61,7 @@ class AddPost extends React.Component {
 
   // allow user to remove the keywords
   removeKeyword(event) {
-    let newArray = this.state.keywords;
+    const newArray = this.state.keywords;
     for (let i = 0; i < this.state.keywords.length; i += 1) {
       if (this.state.keywords[i] === event.target.id) {
         newArray.splice(i, 1);
@@ -101,7 +101,7 @@ class AddPost extends React.Component {
     // set axios headers - this appears to be needed for CORS preflight options call
     // otherwise we have issues with the Authorization header
     axios.defaults.baseURL = 'https://co-ment.glitch.me';
-    axios.defaults.headers.common['Authorization'] = `Bearer ${this.props.appState.authToken}`;
+    axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
 
     axios.post('/api/posts', {
       author: this.props.appState.profile.username,
@@ -149,13 +149,11 @@ class AddPost extends React.Component {
             </label>
           </div>
           <div className="form__input-group">
-            {this.state.keywords.map((item) => {
-              return (<span className="h-nav__item-link" key={item}>{item}
-                <span>
-                  <i className="fa fa-times" id={item} role="button" tabIndex="0" onClick={event => this.removeKeyword(event)} />
-                </span>
-              </span>);
-            })}
+            {this.state.keywords.map(item => (<span className="h-nav__item-link" key={item}>{item}
+              <span>
+                <i className="fa fa-times" id={item} role="button" tabIndex="0" onClick={event => this.removeKeyword(event)} />
+              </span>
+            </span>))}
             <label className="posts__input-label" htmlFor="certs">Keywords:
               <input className="form__input" type="text" id="keyword" value={this.state.keyword} onChange={event => this.handleChange(event)} />
               <button className="splash__button pointer" id="btn-login" onClick={() => this.addKeyword()}>

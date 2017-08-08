@@ -65,7 +65,6 @@ class Posts extends React.Component {
         minWidth: 120,
         Cell: props =>
           (<div className="posts__cell">
-            {/* ///// THIS WILL LINK TO THE INDIVIDUAL POST VIEW ONCE THAT COMPONENT IS SET UP ///// */}
             <Link className="posts__title" to={`/viewpost/${props.original._id}`}>
               {props.original.title}
             </Link>
