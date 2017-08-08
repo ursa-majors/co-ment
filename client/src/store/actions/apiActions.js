@@ -33,3 +33,18 @@ export function connect(token, details) {
     },
   };
 }
+
+export const GET_CONNECTION_REQUEST = 'GET_CONNECTION_REQUEST';
+export const GET_CONNECTION_SUCCESS = 'GET_CONNECTION_SUCCESS';
+export const GET_CONNECTION_FAILURE = 'GET_CONNECTION_FAILURE';
+
+export function getConnections(token, id) {
+  return {
+    [CALL_API]: {
+      endpoint: `https://co-ment.glitch.me/api/connections/${id}`,
+      method: 'GET',
+      types: [GET_CONNECTION_REQUEST, GET_CONNECTION_SUCCESS, GET_CONNECTION_FAILURE],
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  };
+}
