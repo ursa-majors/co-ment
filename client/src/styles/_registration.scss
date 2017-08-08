@@ -28,6 +28,20 @@
       font-size: 45px;
     }
   }
+  &__connection-header {
+    color: white;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    font-size: 29px;
+    padding: 30px 30px 0 30px;
+    @include for-tablet-portrait-up {
+      font-size: 29px;
+    }
+    @include for-tablet-landscape-up {
+      font-size: 45px;
+    }
+  }
   &__input-group {
     width: 100%;
     text-align: left;
@@ -61,7 +75,9 @@
     }
 
   }
-
+  &__connection-input {
+    padding: 12px;
+  }
   &__label {
     font-family: 'Alegreya Sans SC', sans-serif;
     text-transform: lowercase;

@@ -15,10 +15,13 @@ import Logout from './containers/Logout';
 import MentorPath from './containers/MentorPath';
 import ViewPost from './containers/ViewPost';
 import ViewProfile from './containers/ViewProfile';
+import Connection from './containers/Connection';
+import ConnectionResult from './containers/ConnectionResult';
 
 class App extends React.Component {
 
   render() {
+    console.log(this.props)
     const links = (this.props.appState.loggedIn ? ['posts', 'profile', 'logout'] : ['login']);
     return (
       <BrowserRouter>
@@ -37,6 +40,8 @@ class App extends React.Component {
               <Route path="/viewprofile/:id" component={ViewProfile} />
               <Route path="/editpost/:id?" component={EditPost} />
               <Route path="/mentorpath" component={MentorPath} />
+              <Route path="/connection" component={Connection} />
+              <Route path="/connectionresult" component={ConnectionResult} />
             </Switch>
           </main>
           <FooterNav />
