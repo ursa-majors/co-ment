@@ -15,6 +15,7 @@ class ViewPost extends React.Component {
     axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
     axios.get(`/api/posts?id=${postId}`)
       .then((result) => {
+        console.log(result.data[0])
         this.props.actions.setCurrentPost(result.data[0]);
       })
       .catch((error) => {
@@ -22,21 +23,9 @@ class ViewPost extends React.Component {
       });
   }
 
-  // remove currentPost to prevent flash of old post on navigation
-  componentWillUnmount() {
-    this.props.actions.setCurrentPost({
-      active: '',
-      author: '',
-      author_id: '',
-      availability: '',
-      keywords: [],
-      body: '',
-      role: 'mentor',
-      updated: Date.now(),
-    });
-  }
-
-  deletePost() {
+  deletePost = (event) => {
+    //event.preventDefault();
+    //event.stopPropagation();
     axios.defaults.baseURL = 'https://co-ment.glitch.me';
     axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
 
@@ -49,24 +38,32 @@ class ViewPost extends React.Component {
         console.log(error);
       });
   }
+
   render() {
-    let editable = '';
-    if (this.props.appState.profile._id === this.props.posts.currentPost.author_id) {
-      editable = (
+    const roleText = (this.props.posts.currentPost.role === 'mentor' ? ' Available' : ' Wanted');
+    const owner = (this.props.appState.profile._id === this.props.posts.currentPost.author_id);
+    let actions;
+    if (owner) {
+      actions = (
         <div>
-          <Link className="f-nav__icon-link" to={`/editpost/${this.props.posts.currentPost._id}`}>Edit
-          </Link>
-          <span
-            className="f-nav__icon-link pointer"
-            to={`/editpost/${this.props.posts.currentPost._id}`}
-            onClick={() => this.deletePost()}
-          >
+          <span className="f-nav__icon-link pointer" onClick={() => this.props.history.push(`/editpost/${this.props.posts.currentPost._id}`)}>
+            Edit
+          </span>
+          <span className="f-nav__icon-link pointer" onClick={() => this.deletePost()}>
             Delete
           </span>
         </div>
       );
+    } else {
+      actions = (
+        <div>
+          <span className="f-nav__icon-link pointer" onClick={() => this.props.history.push('/connection')}>
+            Request Connection
+          </span>
+        </div>
+      );
     }
-    const roleText = (this.props.posts.currentPost.role === 'mentor' ? ' Available' : ' Wanted');
+
     return (
       <div className="posts">
         <div className="preview">
@@ -93,9 +90,9 @@ class ViewPost extends React.Component {
             </div>
             <div className="preview__text preview_text-bottom">
               <span className="preview__text--bold">Updated: </span>
-              {new Date(this.props.posts.currentPost.updated).toUTCString()}
+              {new Date(this.props.posts.currentPost.updatedAt).toUTCString()}
             </div>
-            {editable}
+            { actions }
           </div>
         </div>
       </div>

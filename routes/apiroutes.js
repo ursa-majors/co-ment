@@ -1,22 +1,25 @@
 /* secured routes to handle database queries
-   
+
    ========================== Route Descriptions ==============================
    VERB      URL                       DESCRIPTION
    ----------------------------------------------------------------------------
    GET       /api/profile/:id          Get a user's profile
    PUT       /api/profile/:id          Update user's own profile
    DELETE    /api/profile/:id          Delete user's own profile
-   
+
    GET       /api/posts                Get all posts
    GET       /api/posts?role=          Get all mentor OR mentee posts
    GET       /api/posts?id=            Get single post
-   
+
    POST      /api/posts                Create new post
    PUT       /api/posts/:id            Update single post
    DELETE    /api/posts/:id            Delete single post
-   
+
    POST      /api/contact/:user_id     Contact a mentor/mentee
 
+   POST      /api/connect              Create a mentor/mentee connection
+
+   GET       /api/connections/:id      Get all connections where ID is either mentor or mentee
 */
 
 /* ================================= SETUP ================================= */
@@ -24,6 +27,7 @@
 const routes     = require('express').Router();
 const User       = require('../models/user');
 const Post       = require('../models/post');
+const Connection = require('../models/connection');
 const jwt        = require('express-jwt');
 const request    = require('request');
 const parseSKill = require('../utils/skillsparser');
@@ -39,9 +43,9 @@ const auth       = jwt({ secret: secret, requestProperty: 'token' });
     @returns   [object]                [found GitHub profile, else undefined]
 */
 function getGithubProfile(ghUserName) {
-    
+
     if (!ghUserName) { ghUserName = ''; }
-    
+
     const options = {
         url : 'https://api.github.com/users/' + ghUserName,
         headers : {
@@ -58,7 +62,7 @@ function getGithubProfile(ghUserName) {
             } else {
                 resolve(undefined);
             }
-        });                
+        });
 
     });
 }
@@ -71,23 +75,23 @@ function getGithubProfile(ghUserName) {
    Example: GET > `/api/profile/597dccac7017890bd8d13cc7`
 */
 routes.get('/api/profile/:id', auth, (req, res) => {
-    
+
     const target = req.params.id;
-    
+
     User.findOne({_id: target}, (err, profile) => {
-        
+
         if (!profile) {
             return res
                 .status(404)
                 .json({ message : 'User profile not found!'});
         }
-        
+
         return res
             .status(200)
             .json(profile);
-        
+
     });
-    
+
 });
 
 
@@ -96,7 +100,7 @@ routes.get('/api/profile/:id', auth, (req, res) => {
    Example: PUT > `/api/profile/597dccac7017890bd8d13cc7`
 */
 routes.put('/api/profile/:id', auth, (req, res) => {
-    
+
     const target = {
         _id      : req.params.id,
         username : req.token.username
@@ -149,7 +153,7 @@ routes.put('/api/profile/:id', auth, (req, res) => {
 
                 }
         });
-        
+
     })
     .catch( err => {
         console.log('Error!!!', err);
@@ -166,31 +170,31 @@ routes.put('/api/profile/:id', auth, (req, res) => {
    Example: DELETE > /api/profile/597e3dca8167330add4be737
 */
 routes.delete('/api/profile/:id', auth, (req, res) => {
-    
+
     const target = {
         _id      : req.params.id,
         username : req.token.username
     };
-    
+
     // make sure the requesting user ID and target user ID match
     if (target._id !== req.token._id) {
         return res
             .status(400)
             .json({ message: 'Error: user ID mismatch.'});
     }
-    
+
     User.findOneAndRemove(target)
         .exec()
         .then( user => {
-            
+
             if (!user) {
-                
+
                 return res
                     .status(404)
                     .json({message: 'User not found!'});
-                
+
             } else {
-                
+
                 return res
                     .status(200)
                     .json({
@@ -199,7 +203,7 @@ routes.delete('/api/profile/:id', auth, (req, res) => {
                     });
 
             }
-        
+
         })
         .catch( err => {
             console.log('Error!!!', err);
@@ -207,7 +211,7 @@ routes.delete('/api/profile/:id', auth, (req, res) => {
                 .status(400)
                 .json({ message: err});
         });
-    
+
 });
 
 
@@ -219,35 +223,35 @@ routes.delete('/api/profile/:id', auth, (req, res) => {
    Example: GET > `/api/posts?role=mentor&id=12345689`
 */
 routes.get('/api/posts', auth, (req, res) => {
-    
+
     const query = {};
-    
+
     // check for 'id' query param & add to 'query' map
     if (req.query.hasOwnProperty('id')) {
         query._id = req.query.id;
     }
-    
+
     // check for 'role', accept only 'mentor' or 'mentee' values
     if (req.query.hasOwnProperty('role') &&
        (req.query.role === 'mentor' || req.query.role === 'mentee')) {
-        
+
         query.role = req.query.role;
     }
-    
+
     Post.find(query, (err, posts) => {
-        
+
         if (!posts || !posts.length) {
             return res
                 .status(404)
                 .json({ message : 'No posts found!'});
         }
-        
+
         return res
             .status(200)
             .json(posts);
-        
+
     });
-    
+
 });
 
 
@@ -257,7 +261,7 @@ routes.get('/api/posts', auth, (req, res) => {
    Example: POST > `/api/posts`
 */
 routes.post('/api/posts', auth, (req, res) => {
-        
+
     // Check if post with same author_id, role & title already exists
     Post
         .findOne({
@@ -267,7 +271,7 @@ routes.post('/api/posts', auth, (req, res) => {
         })
         .exec()
         .then( post => {
-            
+
             if (post) {
 
                 // post already exists, fail
@@ -276,10 +280,10 @@ routes.post('/api/posts', auth, (req, res) => {
                     .json({ message: 'Error - same/similar post already exists!'});
 
             } else {
-                
+
                 // create new post
                 const myPost = new Post();
-                
+
                 // build new post from request body and token
                 myPost.author       = req.body.author;
                 myPost.author_id    = req.token._id;
@@ -292,7 +296,7 @@ routes.post('/api/posts', auth, (req, res) => {
                 // save new post to database
                 myPost.save( (err, newPost) => {
                     if (err) { throw err; }
-                    
+
                     return res
                         .status(200)
                         .json({
@@ -310,7 +314,7 @@ routes.post('/api/posts', auth, (req, res) => {
                 .status(400)
                 .json({ message: err});
         });
-    
+
 });
 
 
@@ -426,22 +430,22 @@ routes.delete('/api/posts/:id', auth, (req, res) => {
    Example: POST > /api/contact/597dd8665229970e99c6ab55
 */
 routes.post('/api/contact/:id', auth, (req, res) => {
-    
+
     // prohibit users from contacing themselves
     if (req.token._id === req.params.id) {
         return res
             .status(400)
             .json({ message : 'You cannot contact yourself!'});
     }
-    
+
     const target = req.params.id;
     const sender = req.token._id;
-    
+
     // find the target recipient
     User.findOne({_id: target})
         .exec()
         .then(recipient => {
-        
+
             if (!recipient) {
                 return res
                     .status(404)
@@ -451,12 +455,12 @@ routes.post('/api/contact/:id', auth, (req, res) => {
             }
         })
         .then(recipient => {
-        
+
             // find the sender (we need their email address)
             User.findOne({_id: sender}, (err, sender) => {
-                
+
                 if (err) { throw err; }
-                
+
                 // what do we want to include in the message? Hmm ...
                 const bodyText = req.body.bodyText;
 
@@ -478,14 +482,67 @@ routes.post('/api/contact/:id', auth, (req, res) => {
                         .status(400)
                         .json({ message : 'Error: Message not sent.'});
                 }
-                
+
+
+
             });
-        
+
         });
-        
-    
+
+
 });
 
+routes.get('/api/connections/:id', auth, (req, res) => {
+  const target = req.params.id
+  Connection.find({$or: [
+    {mentor: target},
+    {mentee: target}
+]})
+    .exec()
+    .then((conns) => {
+      return res
+        .status(200)
+        .json({ connections: conns });
+    })
+    .catch((error) => {
+      console.log(`Error: $(error)`);
+      return res
+          .status(400)
+          .json({ message : 'Error: Cannot get connections'});
+    });
+});
+/* Create a connection record in mongoDB
+   Secured route - valid JWT required
+   Expects post body:
+   {
+     mentor: id,
+     mentee: id,
+     mentorName: string,
+     menteeName: string,
+     initiator: id,
+     status: 'pending'
+   }
+   Returns success message on success.
+   Example: POST > /api/connect
+*/
+routes.post('/api/connect', auth, (req, res) => {
+
+  let newConn = new Connection(req.body);
+  newConn.dateStarted = Date.now();
+  newConn.save((err, conn) => {
+    if (err) { throw err }
+
+    return res
+      .status(200)
+      .json({ message: "Connection created" })
+  })
+  .catch( err => {
+      console.log('Error!!!', err);
+      return res
+          .status(400)
+          .json({ message: err});
+  });
+});
 
 /* ================================ EXPORT ================================= */
 

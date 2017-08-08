@@ -73,14 +73,19 @@ class Posts extends React.Component {
         accessor: 'delete',
         minWidth: 40,
         filterable: true,
-        Cell: props => (<div className="posts__cell">
+        Cell: props => {
+          const url = (this.props.appState.profile._id === props.original.author_id ? '/profile' : `/viewprofile/${props.original.author_id}`)
+          return (<div className="posts__cell">
           {/* ///// add a second API call to get the author's user profile to pull down the avatar url. OR, maybe better to just store the avatar with the original post data? ///// */}
-          {/* }  <img
+          {/*  <img
               className="posts__thumb"
               src={props.original.author.ghProfile.avatar_url}
               alt={props.original.author}
             /> */}
-          {props.original.author}</div>),
+          <Link to={`${url}`}>
+            {props.original.author}
+          </Link>
+        </div>)},
       //   Filter: ({filter, onChange}) => (
       //     <input
       //       onChange={event => onChange(event.target.value)}

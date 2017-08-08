@@ -59,4 +59,4 @@ Loading.defaultProps = {
 };
 
 
-module.exports = Loading;
+export default Loading;

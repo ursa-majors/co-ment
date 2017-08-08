@@ -8,8 +8,7 @@
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server --inline --content-base . --history-api-fallback",
     "build": "NODE_ENV=production webpack -p",
-    "test": "eslint src --ext .jsx,.js --fix",
-    "precommit": "npm run test -q"
+    "test": "eslint src --ext .jsx,.js --fix"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
@@ -18,6 +17,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.5.1",
     "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
     "css-loader": "^0.28.3",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.0.1",
