@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import * as Actions from '../store/actions/postActions';
-import PostActions from '../containers/PostActions';
 
 
 class ViewPost extends React.Component {
@@ -38,7 +37,8 @@ class ViewPost extends React.Component {
   }
 
   deletePost = (event) => {
-    event.preventDefault();
+    //event.preventDefault();
+    //event.stopPropagation();
     axios.defaults.baseURL = 'https://co-ment.glitch.me';
     axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
 
@@ -53,17 +53,30 @@ class ViewPost extends React.Component {
   }
 
   render() {
+    const roleText = (this.props.posts.currentPost.role === 'mentor' ? ' Available' : ' Wanted');
     const owner = (this.props.appState.profile._id === this.props.posts.currentPost.author_id);
     let actions;
     if (owner) {
-      actions = (<div>
-        <PostActions name="Edit" link={`/editpost/${this.props.posts.currentPost._id}`} clickHandler="" />
-        <PostActions name="Delete" link="/posts" clickHandler={this.deletePost} />
-        </div>);
+      actions = (
+        <div>
+          <span className="f-nav__icon-link pointer" onClick={() => this.props.history.push(`/editpost/${this.props.posts.currentPost._id}`)}>
+            Edit
+          </span>
+          <span className="f-nav__icon-link pointer" onClick={() => this.deletePost()}>
+            Delete
+          </span>
+        </div>
+      );
     } else {
-      actions = (<PostActions name="Request Connection" link="/connections" />)
+      actions = (
+        <div>
+          <span className="f-nav__icon-link pointer" onClick={() => this.props.history.push('/connection')}>
+            Request Connection
+          </span>
+        </div>
+      );
     }
-    const roleText = (this.props.posts.currentPost.role === 'mentor' ? ' Available' : ' Wanted');
+
     return (
       <div className="posts">
         <div className="preview">
