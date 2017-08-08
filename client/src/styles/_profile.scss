@@ -97,6 +97,12 @@
     padding: 10px;
   }
 
+  &__header-wrap {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+  }
+
   &__username {
     color: white;
     font-family: 'Alegreya Sans SC', sans-serif;

@@ -18,6 +18,8 @@
    POST      /api/contact/:user_id     Contact a mentor/mentee
 
    POST      /api/connect              Create a mentor/mentee connection
+
+   GET       /api/connections/:id      Get all connections where ID is either mentor or mentee
 */
 
 /* ================================= SETUP ================================= */
@@ -490,12 +492,33 @@ routes.post('/api/contact/:id', auth, (req, res) => {
 
 });
 
+routes.get('/api/connections/:id', auth, (req, res) => {
+  const target = req.params.id
+  Connection.find({$or: [
+    {mentor: target},
+    {mentee: target}
+]})
+    .exec()
+    .then((conns) => {
+      return res
+        .status(200)
+        .json({ connections: conns });
+    })
+    .catch((error) => {
+      console.log(`Error: $(error)`);
+      return res
+          .status(400)
+          .json({ message : 'Error: Cannot get connections'});
+    });
+});
 /* Create a connection record in mongoDB
    Secured route - valid JWT required
    Expects post body:
    {
      mentor: id,
      mentee: id,
+     mentorName: string,
+     menteeName: string,
      initiator: id,
      status: 'pending'
    }

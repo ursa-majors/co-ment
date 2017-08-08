@@ -27,6 +27,8 @@ class Connection extends React.Component {
     const connection = {
       mentor: (this.state.role === 'mentor' ? this.props.appState.profile._id : this.props.posts.currentPost.author_id ),
       mentee: (this.state.role === 'mentee' ? this.props.appState.profile._id : this.props.posts.currentPost.author_id ),
+      mentorName: (this.state.role === 'mentor' ? this.props.appState.profile.username : this.props.posts.currentPost.author ),
+      menteeName: (this.state.role === 'mentee' ? this.props.appState.profile.username : this.props.posts.currentPost.author ),
       initiator: this.props.appState.profile._id,
       status: 'pending',
     };
