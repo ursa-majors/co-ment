@@ -15,6 +15,16 @@ const connectionSchema = new mongoose.Schema({
         required : true
     },
 
+    mentorName: {
+        type     : String,
+        required : true
+    },
+
+    menteeName: {
+        type     : String,
+        required : true
+    },
+
     initiator : {
         type     : String,
         required : true
@@ -25,6 +35,14 @@ const connectionSchema = new mongoose.Schema({
     },
 
     dateEnded : {
+        type     : Date,
+    },
+
+    dateAccepted: {
+        type     : Date,
+    },
+
+    dateDeclined: {
         type     : Date,
     },
 
