@@ -15,25 +15,12 @@ class ViewPost extends React.Component {
     axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
     axios.get(`/api/posts?id=${postId}`)
       .then((result) => {
+        console.log(result.data[0])
         this.props.actions.setCurrentPost(result.data[0]);
       })
       .catch((error) => {
         console.log(error);
       });
-  }
-
-  // remove currentPost to prevent flash of old post on navigation
-  componentWillUnmount() {
-    this.props.actions.setCurrentPost({
-      active: '',
-      author: '',
-      author_id: '',
-      availability: '',
-      keywords: [],
-      body: '',
-      role: 'mentor',
-      updated: Date.now(),
-    });
   }
 
   deletePost = (event) => {
