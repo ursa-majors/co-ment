@@ -7,10 +7,12 @@ class Connection extends React.Component {
 
   constructor(props) {
     super(props);
+    const desiredRole = (this.props.posts.currentPost.role.toLowerCase() === 'mentor' ? 'mentee' : 'mentor');
     this.state = {
       recipient: this.props.posts.currentPost.author,
       sender: this.props.appState.profile.username,
       subject: `co/ment - Contact Request from ${this.props.appState.profile.username}`,
+      role: desiredRole,
       body: '',
       formError: '',
     };
@@ -21,7 +23,15 @@ class Connection extends React.Component {
   }
 
   sendMsg = () => {
-    this.props.api.contact(this.props.appState.authToken, { bodyText: this.state.body }, this.props.posts.currentPost.author_id);
+    const token = this.props.appState.authToken;
+    const connection = {
+      mentor: (this.state.role === 'mentor' ? this.props.appState.profile._id : this.props.posts.currentPost.author_id ),
+      mentee: (this.state.role === 'mentee' ? this.props.appState.profile._id : this.props.posts.currentPost.author_id ),
+      initiator: this.props.appState.profile._id,
+      status: 'pending',
+    };
+    this.props.api.contact(token, { bodyText: this.state.body }, this.props.posts.currentPost.author_id);
+    this.props.api.connect(token, connection);
     this.props.history.push('/connectionresult');
   }
   render() {
@@ -40,12 +50,20 @@ class Connection extends React.Component {
             <input className="form__input form__connection-input" type="text" id="sender" value={this.state.sender} onChange={event => this.handleChange(event)} disabled />
           </div>
           <div className="form__input-group">
-            <label className="form__label" htmlFor="sender">Subject:
+            <label className="form__label" htmlFor="subject">Subject:
             </label>
             <input className="form__input form__connection-input" type="text" id="subject" value={this.state.subject} onChange={event => this.handleChange(event)} disabled />
           </div>
           <div className="form__input-group">
-            <label className="form__label" htmlFor="timezone">Body:
+            <label className="form__label" htmlFor="role">Your Role:
+            </label>
+            <select className="form__input form__input--select" value={this.state.role} id="role" onChange={event => this.handleChange(event)} >
+              <option value="mentor" id="mentor">Mentor</option>
+              <option value="mentee" id="mentee">Mentee</option>
+            </select>
+          </div>
+          <div className="form__input-group">
+            <label className="form__label" htmlFor="body">Body:
             </label>
             <textarea className="form__input form__connection-input" id="body" value={this.state.body} onChange={event => this.handleChange(event)} />
           </div>
