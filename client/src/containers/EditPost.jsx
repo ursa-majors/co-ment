@@ -67,7 +67,7 @@ class EditPost extends React.Component {
       msg += 'Post content is required. ';
     }
     if (this.props.posts.editForm.keywords.length === 0) {
-      msg += 'At least 1 keyword is requried.';
+      msg += 'At least 1 keyword is required.';
     }
     if (msg.length > 0) {
       this.props.actions.setFormField( 'errMsg', msg);
