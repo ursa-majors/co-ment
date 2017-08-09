@@ -173,7 +173,8 @@
     background: -webkit-linear-gradient(to bottom, #22c1c3, #fdbb2d);
     background: linear-gradient(to bottom, #22c1c3, #fdbb2d);
     height: 100%;
-    min-height: 100vh;
+    height: calc(100vh - 59px);
+    overflow-y: scroll;
 
   @include for-tablet-landscape-up {
     display: flex;
