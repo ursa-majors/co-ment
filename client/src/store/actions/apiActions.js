@@ -48,3 +48,52 @@ export function getConnections(token, id) {
     },
   };
 }
+
+export const GET_POST_REQUEST = 'GET_POST_REQUEST';
+export const GET_POST_SUCCESS = 'GET_POST_SUCCESS';
+export const GET_POST_FAILURE = 'GET_POST_FAILURE';
+
+export function getPost(token, postId) {
+  return {
+    [CALL_API]: {
+      endpoint: `https://co-ment.glitch.me/api/post/${postId}`,
+      method: 'GET',
+      types: [GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE],
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  };
+}
+
+export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
+export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
+export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
+
+export function addPost(token, body) {
+  return {
+    [CALL_API]: {
+      endpoint: 'https://co-ment.glitch.me/api/post',
+      method: 'POST',
+      types: [ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE],
+      headers: { Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    },
+  };
+}
+
+export const MODIFY_POST_REQUEST = 'MODIFY_POST_REQUEST';
+export const MODIFY_POST_SUCCESS = 'MODIFY_POST_SUCCESS';
+export const MODIFY_POST_FAILURE = 'MODIFY_POST_FAILURE';
+
+export function modifyPost(token, postId, body) {
+  return {
+    [CALL_API]: {
+      endpoint: `https://co-ment.glitch.me/api/posts/${postId}`,
+      method: 'PUT',
+      types: [MODIFY_POST_REQUEST, MODIFY_POST_SUCCESS, MODIFY_POST_FAILURE],
+      headers: { Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    },
+  };
+}
