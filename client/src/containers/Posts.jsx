@@ -119,8 +119,9 @@ class Posts extends React.Component {
           Posts
           <span className="posts__button-wrap">
             <Link to="/editpost">
-              <button className="posts__button pointer" >
-                New Post
+              <button className="posts__button pointer" aria-label="New Post" >
+                <span className="posts__btn--big">New Post</span>
+                <span className="posts__btn--sm">+</span>
               </button>
             </Link>
           </span>
