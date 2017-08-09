@@ -10,13 +10,13 @@
     border-radius: 3px;
     margin: 5px auto;
     border: 1px solid #d6d6d6;
-    padding: 15px;
+    padding: 12px;
     font-size: .9em;
     font-weight: 100;
     color: #545454;
-    @include for-tablet-portrait-up {
+    @include for-big-desktop-up {
+      padding: 15px;
       font-size: 1.2em;
-      padding: 20px;
     }
 
     &--focused {

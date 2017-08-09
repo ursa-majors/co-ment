@@ -85,6 +85,21 @@
       width: 60%;
     }
 
+  &__msg {
+    width: 100%;
+    height: 2em;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    font-size: 1.2em;
+    font-weight: 100;
+    color: white;
+    padding-top: 20px;
+    border-top: 1px white dotted;
+    margin-top: 20px;
+    text-align: center;
+  }
+
   &__image {
     border-radius: 100%;
     width: 130px;

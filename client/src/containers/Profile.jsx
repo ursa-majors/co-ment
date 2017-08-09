@@ -24,11 +24,13 @@ class Profile extends React.Component {
         languages: this.props.appState.profile.languages || [],
         time_zone: this.props.appState.profile.time_zone || 'Choose your timezone',
         name: '',
+        gender: '',
         ghUserName: this.props.appState.profile.ghUserName || '',
         avatarUrl: '',
       },
       suggestions: [],
       value: '',
+      message: '',
     };
 
     this.handleInput = this.handleInput.bind(this);
@@ -42,7 +44,12 @@ class Profile extends React.Component {
     const profile = Object.assign({}, this.state.profile);
     if (this.props.appState.profile.ghProfile) {
       profile.name = this.props.appState.profile.ghProfile.name;
-      profile.avatarUrl = this.props.appState.profile.ghProfile.avatar_url;
+      if (!this.props.appState.profile.avatarUrl) {
+        profile.avatarUrl = this.props.appState.profile.ghProfile.avatar_url;
+      }
+      if (!this.props.appState.profile.name) {
+        profile.name = this.props.appState.profile.ghProfile.name;
+      }
       this.setState({ profile }, () => {
       });
     }
@@ -66,9 +73,11 @@ class Profile extends React.Component {
           languages: this.props.appState.profile.languages || [],
           time_zone: this.props.appState.profile.time_zone || 'Choose your timezone',
           name: this.props.appState.profile.ghProfile.name ? this.props.appState.profile.ghProfile.name : '',
+          gender: '',
           ghUserName: this.props.appState.profile.ghUserName || '',
           avatarUrl: this.props.appState.profile.ghProfile.avatar_url ? this.props.appState.profile.ghProfile.avatar_url : '',
         },
+        message: '',
       }, () => {
       });
       this.props.history.push('/posts');
@@ -79,6 +88,7 @@ class Profile extends React.Component {
   }
 
   handleSubmit() {
+    console.log('91: update');
     if (this.state.skill !== '') {
       this.addTag('skill');
     }
@@ -97,25 +107,29 @@ class Profile extends React.Component {
         certs: this.state.profile.skills,
         time_zone: this.state.profile.time_zone,
         ghUserName: this.state.profile.ghUserName,
+        gender: this.state.profile.gender,
+        avatarUrl: this.state.profile.avatarUrl,
+        name: this.state.profile.name,
       })
     .then((response) => {
-      this.props.actions.updateProfile(response.data.user, () => {
+      this.props.actions.updateProfile(response.data.user);
+        console.log('116: update');
         this.setState({
           profile: {
             skill: '',
             language: '',
             skills: this.props.appState.profile.skills,
-            gender: this.props.appState.profile.gender || '',
             languages: this.props.appState.profile.languages || '',
             time_zone: this.props.appState.profile.time_zone || 'Choose your timezone',
             name: this.props.appState.profile.ghProfile.name || '',
+            gender: this.props.appState.profile.gender || '',
             ghUserName: this.props.appState.profile.ghUserName || '',
             avatarUrl: this.props.appState.profile.ghProfile.avatar_url || '',
+            name: this.props.appState.profile.ghProfile.name || '',
           },
-        }, () => {
-        });
-      });
-    })
+          message: 'Profile updated',
+        }, ()=>{console.log('130: update');});
+      })
      .catch((error) => {
        console.log(error);
      });
@@ -124,6 +138,13 @@ class Profile extends React.Component {
   handleInput(e) {
     const profile = Object.assign({}, this.state.profile);
     profile[e.target.name] = e.target.value;
+    this.setState({ profile }, () => {
+    });
+  }
+
+  handleSelectChange(e) {
+    const profile = Object.assign({}, this.state.profile);
+    profile.gender = e.target.value;
     this.setState({ profile }, () => {
     });
   }
@@ -205,14 +226,12 @@ class Profile extends React.Component {
     const tzList = timezones.map(i => (
       <option key={i[1]} value={`UTC ${i[0]}`}>{`(UTC ${i[0]}) ${i[1]}`}</option>
       ));
-    const skillsDisp = this.state.profile.skills.map(i => (
-      <li className="preview__skill-item" key={i}>{i}, </li>));
-    const langDisp = this.state.profile.languages.map(i => (
-      <li className="preview__skill-item" key={i}>{i}, </li>));
+    const skillsDisp = this.state.profile.skills.join(', ');
+    const langDisp = this.state.profile.languages.join(', ');
 
 
     return (
-      <div className="container">
+      <div className="container profile">
         <div className="preview">
           <div className="preview__image-wrap">
             {this.state.profile.avatarUrl ?
@@ -232,9 +251,16 @@ class Profile extends React.Component {
               {this.state.profile.time_zone}
             </div>
             <div className="preview__text">
+              <span className="preview__text--bold">Gender: &nbsp;</span>
+              {this.state.profile.gender}
+            </div>
+            <div className="preview__text">
               <span className="preview__text--bold">Skills: &nbsp;</span>
               <ul className="preview__skill-list">{skillsDisp}</ul>
             </div>
+            {this.state.message !== '' &&
+              <div className="preview__msg">{this.state.message}</div>
+            }
 
           </div>
         </div>
@@ -251,6 +277,19 @@ class Profile extends React.Component {
               value={this.state.profile.ghUserName}
               onChange={e => this.handleInput(e)}
               placeholder="GitHub User Name"
+            />
+          </div>
+          <div className="form__input-group">
+            <label htmlFor="name" className="form__label">Full name
+            </label>
+            <input
+              className="form__input"
+              type="text"
+              id="name"
+              name="name"
+              value={this.state.profile.name}
+              onChange={e => this.handleInput(e)}
+              placeholder="Full name"
             />
           </div>
           <div className="form__input-group">
@@ -340,6 +379,30 @@ class Profile extends React.Component {
               <option disabled>Choose your timezone</option>
               {tzList}
             </select>
+          </div>
+          <div className="form__input-group" onChange={(e) => this.handleSelectChange(e)}>
+            <label htmlFor="gender" className="form__label">Gender</label>
+            <div className="form__input--radio-group">
+              <input className="form__input--radio" type="radio" name="gender" value="Male" />
+              <span className="form__input--radio-label">Male</span>
+              <input className="form__input--radio" type="radio" name="gender" value="Female" />
+              <span className="form__input--radio-label">Female</span>
+              <input className="form__input--radio" type="radio" name="gender" value="Other" />
+              <span className="form__input--radio-label">Other</span>
+            </div>
+          </div>
+          <div className="form__input-group">
+            <label htmlFor="name" className="form__label">Link to profile image
+            </label>
+            <input
+              className="form__input"
+              type="text"
+              id="avatarUrl"
+              name="avatarUrl"
+              value={this.state.profile.avatarUrl}
+              onChange={e => this.handleInput(e)}
+              placeholder="Paste URL here"
+            />
           </div>
           <div className="form__input-group">
           <div className="form__button-wrap">
