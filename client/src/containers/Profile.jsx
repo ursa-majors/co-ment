@@ -212,7 +212,7 @@ class Profile extends React.Component {
 
 
     return (
-      <div className="profile">
+      <div className="container">
         <div className="preview">
           <div className="preview__image-wrap">
             {this.state.profile.avatarUrl ?
