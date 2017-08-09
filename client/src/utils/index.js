@@ -1,5 +1,21 @@
 import React from 'react';
 
+const handleFirstTab = (e) => {
+  if (e.keyCode === 9) {
+    document.body.classList.add('user-is-tabbing');
+    window.removeEventListener('keydown', handleFirstTab);
+    window.addEventListener('mousedown', handleMouseDownOnce);
+  }
+}
+
+const handleMouseDownOnce = () => {
+  document.body.classList.remove('user-is-tabbing');
+  window.removeEventListener('mousedown', handleMouseDownOnce);
+  window.addEventListener('keydown', handleFirstTab);
+}
+
+window.addEventListener('keydown', handleFirstTab);
+
 export const languages = ['Afrikaans', 'Albanian', 'Amharic', 'Arabic', 'Armenian', 'Azerbaijani', 'Basque', 'Belarusian', 'Bengali', 'Bosnian', 'Bulgarian', 'Catalan', 'Cebuano', 'Chichewa', 'Chinese', 'Corsican', 'Croatian', 'Czech', 'Danish', 'Dutch', 'English', 'Esperanto', 'Estonian', 'Filipino', 'Finnish', 'French', 'Frisian', 'Galician', 'Georgian', 'German', 'Greek', 'Gujarati', 'Haitian Creole', 'Hausa', 'Hawaiian', 'Hebrew', 'Hindi', 'Hmong', 'Hungarian', 'Icelandic', 'Igbo', 'Indonesian', 'Irish', 'Italian', 'Japanese', 'Javanese', 'Kannada', 'Kazakh', 'Khmer', 'Korean', 'Kurdish (Kurmanji)', 'Kyrgyz', 'Lao', 'Latin', 'Latvian', 'Lithuanian', 'Luxembourgish', 'Macedonian', 'Malagasy', 'Malay', 'Malayalam', 'Maltese', 'Maori', 'Marathi', 'Mongolian', 'Myanmar (Burmese)', 'Nepali', 'Norwegian', 'Pashto', 'Persian', 'Polish', 'Portuguese', 'Punjabi', 'Romanian', 'Russian', 'Samoan', 'Scots Gaelic', 'Serbian', 'Sesotho', 'Shona', 'Sindhi', 'Sinhala', 'Slovak', 'Slovenian', 'Somali', 'Spanish', 'Sundanese', 'Swahili', 'Swedish', 'Tajik', 'Tamil', 'Telugu', 'Thai', 'Turkish', 'Ukrainian', 'Urdu', 'Uzbek', 'Vietnamese', 'Welsh', 'Xhosa', 'Yiddish', 'Yoruba', 'Zulu'];
 
 export const skills = ['.htaccess', '.net', 'ajax', 'algorithm', 'android', 'angular', 'angularjs', 'apache', 'api', 'arrays', 'asp.net', 'asp.net-mvc', 'bash', 'c', 'c#', 'c++', 'class', 'codeigniter', 'cordova', 'css', 'css3', 'database', 'django', 'eclipse', 'entity-framework', 'excel', 'excel-vba', 'facebook', 'file', 'forms', 'function', 'git', 'google-chrome', 'google-maps', 'hibernate', 'html', 'html5', 'image', 'ios', 'iphone', 'java', 'javascript', 'jquery', 'json', 'laravel', 'linq', 'linux', 'list', 'loops', 'matlab', 'maven', 'mongodb', 'multithreading', 'mysql', 'node.js', 'objective-c', 'oracle', 'osx', 'performance', 'perl', 'php', 'postgresql', 'powershell', 'python', 'python-2.7', 'python-3.x', 'qt', 'r', 'reactjs', 'regex', 'rest', 'ruby', 'ruby-on-rails', 'ruby-on-rails-3', 'scala', 'shell', 'sockets', 'spring', 'sql', 'sql-server', 'sql-server-2008', 'sqlite', 'string', 'swift', 'swing', 'symfony', 'twitter-bootstrap', 'uitableview', 'unit-testing', 'validation', 'vb.net', 'vba', 'visual-studio', 'web-services', 'windows', 'winforms', 'wordpress', 'wpf', 'xcode', 'xml'];

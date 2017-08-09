@@ -1,6 +1,7 @@
 .skill-value {
   color: #545454;
   display: inline-block;
+  font-family: 'Alegreya Sans', sans-serif;
   font-size: 0.9em;
   line-height: 1.4;
   background-color: #ebf5ff;
@@ -70,7 +71,7 @@
 .preview {
   width: 100%;
   margin: 0 auto;
-  padding: 10px 10px 20px 10px;
+  padding: 20px;
   display: flex;
   font-family: 'Alegreya Sans', sans-serif;
   color: white;
@@ -78,7 +79,9 @@
   border-radius: 4px;
   margin-bottom: 20px;
 
-  @include for-tablet-portrait-up {
+  @include for-tablet-landscape-up {
+      margin-right: 20px;
+      margin-bottom: 0;
       width: 60%;
     }
 
@@ -131,6 +134,11 @@
     font-weight: 100;
     padding-left: 3px;
 
+    @include for-tablet-landscape-up {
+      font-size: 1.4em;
+      margin: 10px 0;
+    }
+
     &--bold {
       font-weight: 400;
     }
@@ -160,10 +168,17 @@
   }
 
   .profile {
-    padding: 60px 0;
+    padding: 60px 0 80px 0;
     background: #22c1c3;
     background: -webkit-linear-gradient(to bottom, #22c1c3, #fdbb2d);
     background: linear-gradient(to bottom, #22c1c3, #fdbb2d);
     height: 100%;
     min-height: 100vh;
+
+  @include for-tablet-landscape-up {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 60px 20px 80px 20px;
+  }
   }

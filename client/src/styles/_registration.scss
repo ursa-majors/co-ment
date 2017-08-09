@@ -10,7 +10,7 @@
   margin: 0 auto;
   background: rgba(255,255,255,.3);
   text-align: center;
-  padding: 10px 10px 0 10px;
+  padding: 20px;
   border-radius: 4px;
 
   @include for-tablet-portrait-up {
@@ -23,7 +23,7 @@
     text-transform: lowercase;
     letter-spacing: 2px;
     font-size: 30px;
-    padding: 30px;
+    padding: 0px 20px 10px 20px;
     @include for-tablet-portrait-up {
       font-size: 45px;
     }
@@ -45,7 +45,7 @@
   &__input-group {
     width: 100%;
     text-align: left;
-    padding: 0 20px;
+    padding: 0;
   }
   &__input {
     width: 100%;
@@ -101,7 +101,7 @@
 
   &__button-wrap {
   width: 100%;
-  margin: 2vh auto;
+  margin: 20px auto 0 auto;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;

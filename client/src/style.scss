@@ -12,12 +12,32 @@ $fa-font-path: "~font-awesome/fonts";
 @import 'styles/autosuggest';
 @import 'styles/connectionresult';
 @import 'styles/connections';
+@import 'styles/post-view';
 
 * {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  outline: 0;
+}
+
+/* a subtle focus style for keyboard-input elements */
+input:focus {
+  border: 1px solid #aaa;
+}
+
+/* no focus style for non-keyboard-inputs elements */
+button:focus,
+select:focus {
+  outline: none;
+}
+
+/* and for keyboard users, override everything with
+   a Big Blue Border when focused on any element */
+body.user-is-tabbing *:focus {
+  border: 2px solid #7AACFE !important; /* for non-webkit browsers */
+  border: 5px auto -webkit-focus-ring-color !important;
 }
 
 .container {

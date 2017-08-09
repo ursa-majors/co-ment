@@ -341,11 +341,11 @@ class Profile extends React.Component {
               {tzList}
             </select>
           </div>
-        </div>
-        <div className="form__input-group">
+          <div className="form__input-group">
           <div className="form__button-wrap">
             <button className="form__button pointer" id="btn-edit" onClick={() => this.handleSubmit()}>Save</button>
           </div>
+        </div>
         </div>
       </div>
     );
