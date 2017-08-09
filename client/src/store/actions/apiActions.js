@@ -64,6 +64,21 @@ export function getPost(token, postId) {
   };
 }
 
+export const GET_ALL_POSTS_REQUEST = 'GET_ALL_POSTS_REQUEST';
+export const GET_ALL_POSTS_SUCCESS = 'GET_ALL_POSTS_SUCCESS';
+export const GET_ALL_POSTS_FAILURE = 'GET_ALL_POSTS_FAILURE';
+
+export function getAllPosts(token) {
+  return {
+    [CALL_API]: {
+      endpoint: 'https://co-ment.glitch.me/api/posts/',
+      method: 'GET',
+      types: [GET_ALL_POSTS_REQUEST, GET_ALL_POSTS_SUCCESS, GET_ALL_POSTS_FAILURE],
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  };
+}
+
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';

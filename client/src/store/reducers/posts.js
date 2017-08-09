@@ -4,6 +4,7 @@ import { SET_POSTS, SAVE_POST, SET_CURRENT_POST, SET_EDIT_POST, SET_FORM_FIELD,
 import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE,
   ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE,
   MODIFY_POST_REQUEST, MODIFY_POST_SUCCESS, MODIFY_POST_FAILURE,
+  GET_ALL_POSTS_REQUEST, GET_ALL_POSTS_SUCCESS, GET_ALL_POSTS_FAILURE,
 } from '../actions/apiActions';
 
 const defaultForm = {
@@ -37,6 +38,8 @@ const INITIAL_STATE = {
   addError: null,
   savingPost: false,
   saveError: null,
+  gettingAllPosts: false,
+  gettingAllPostsErr: null,
 };
 
 function posts(state = INITIAL_STATE, action) {
@@ -104,6 +107,23 @@ function posts(state = INITIAL_STATE, action) {
     case GET_POST_FAILURE:
       error = action.payload.data || { message: action.payload.message };
       return Object.assign({}, state, { gettingPost: false, getError: error });
+
+    case GET_ALL_POSTS_REQUEST:
+      return Object.assign({}, state, { gettingAllPosts: true, gettingAllPostsErr: null });
+
+    case GET_ALL_POSTS_SUCCESS:
+      return update(
+        state,
+        {
+          gettingAllPosts: { $set: false },
+          gettingAllPostsErr: { $set: null },
+          entries: { $set: action.payload },
+        },
+      );
+
+    case GET_ALL_POSTS_FAILURE:
+      error = action.payload.data || { message: action.payload.message };
+      return Object.assign({}, state, { gettingAllPosts: false, gettingAllPostsErr: error });
 
     case ADD_POST_REQUEST:
       return Object.assign({}, state, { addingPost: true, addError: null });
