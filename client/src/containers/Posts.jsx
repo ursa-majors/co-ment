@@ -31,7 +31,7 @@ class Posts extends React.Component {
   render() {
     if (this.props.posts.addingPost || this.props.posts.savingPost || this.props.posts.gettingAllPosts ) {
       return (
-        <div className="container posts">
+        <div className="container">
           <div className="posts__header">
             Posts
             <span className="posts__button-wrap">
