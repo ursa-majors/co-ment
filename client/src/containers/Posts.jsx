@@ -2,16 +2,18 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import ReactTable from 'react-table';
 
 import * as Actions from '../store/actions/postActions';
+import * as apiActions from '../store/actions/apiActions';
 import { formatDate } from '../utils/';
+import Loading from '../containers/Loading';
 
 class Posts extends React.Component {
 
   componentDidMount() {
-    axios.get('https://co-ment.glitch.me/api/posts', {
+    this.props.api.getAllPosts(this.props.appState.authToken);
+    /*axios.get('https://co-ment.glitch.me/api/posts', {
       headers: {
         Authorization: `Bearer ${this.props.appState.authToken}`,
       },
@@ -23,23 +25,41 @@ class Posts extends React.Component {
     .catch((error) => {
       console.log(error);
     });
+    */
   }
 
   render() {
-    // const makePlaceholderFilter = (placeholder) => {
-    //   return ({filter, onFilterChange}) => (
-    //       <input type='text'
-    //         placeholder={placeholder}
-    //         style={{
-    //           width: '100%'
-    //         }}
-    //         value={filter ? filter.value : ''}
-    //         onChange={(event) => onFilterChange(event.target.value)}
-    //       />
-    //     )
-    // }
+    if (this.props.posts.addingPost || this.props.posts.savingPost || this.props.posts.gettingAllPosts ) {
+      return (
+        <div className="container posts">
+          <div className="posts__header">
+            Posts
+            <span className="posts__button-wrap">
+              <Link to="/editpost">
+                <button className="posts__button pointer" >
+                  New Post
+                </button>
+              </Link>
+            </span>
+          </div>
+          <Loading text="Fetching Posts" />
+        </div>
+      );
+    }
+      // const makePlaceholderFilter = (placeholder) => {
+      //   return ({filter, onFilterChange}) => (
+      //       <input type='text'
+      //         placeholder={placeholder}
+      //         style={{
+      //           width: '100%'
+      //         }}
+      //         value={filter ? filter.value : ''}
+      //         onChange={(event) => onFilterChange(event.target.value)}
+      //       />
+      //     )
+      // }
 
-    const tableColumns = [
+const tableColumns = [
       { Header: () => <div className="posts__tableHead">Role</div>,
         accessor: 'role',
         minWidth: 40,
@@ -162,6 +182,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(Actions, dispatch),
+  api: bindActionCreators(apiActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Posts);
