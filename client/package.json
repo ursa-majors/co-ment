@@ -40,6 +40,7 @@
     "font-awesome": "^4.7.0",
     "husky": "^0.14.3",
     "immutability-helper": "^2.3.0",
+    "p-map": "^1.1.1",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-autosuggest": "^9.3.2",
@@ -49,6 +50,7 @@
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
     "react-table": "^6.5.3",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "redux-api-middleware": "^1.0.3"
   }
 }

@@ -45,56 +45,62 @@ class ViewPost extends React.Component {
     let actions;
     if (owner) {
       actions = (
-        <div>
-          <span className="f-nav__icon-link pointer" onClick={() => this.props.history.push(`/editpost/${this.props.posts.currentPost._id}`)}>
-            Edit
-          </span>
-          <span className="f-nav__icon-link pointer" onClick={() => this.deletePost()}>
-            Delete
-          </span>
-        </div>
+        <ul className="post-nav">
+          <li className="post-nav__item" >
+            <span className="post-nav__item-link pointer" onClick={() => this.props.history.push(`/editpost/${this.props.posts.currentPost._id}`)}>
+              Edit
+            </span>
+          </li>
+          <li className="post-nav__item" >
+            <span className="post-nav__item-link pointer" onClick={() => this.deletePost()}>
+              Delete
+            </span>
+          </li>
+        </ul>
       );
     } else {
       actions = (
-        <div>
-          <span className="f-nav__icon-link pointer" onClick={() => this.props.history.push('/connection')}>
-            Request Connection
-          </span>
-        </div>
+        <ul className="post-nav">
+          <li className="post-nav__item" >
+            <span className="post-nav__item-link pointer" onClick={() => this.props.history.push('/connection')}>
+              Request Connection
+            </span>
+          </li>
+        </ul>
       );
     }
 
     return (
-      <div className="posts">
-        <div className="preview">
-          <div className="preview__text-wrap">
-            <div className="preview__username">{`Mentor ${roleText}`}</div>
-            <div className="preview__text preview__title">
+      <div className="post-view">
+        <div className="single-post">
+            <div className="single-post__username">{`Mentor ${roleText}`}</div>
+            <div className="single-post__text preview__title">
               {this.props.posts.currentPost.title}
             </div>
-            <div className="preview__text">
-              <span className="preview__text--bold">Author: </span>
+            <div className="single-post__text">
+              <span className="single-post__text--bold">Author: </span>
               <Link to={`/viewprofile/${this.props.posts.currentPost.author_id}`}>
                 {this.props.posts.currentPost.author}
               </Link>
             </div>
-            <div className="preview__text">
-              <span className="preview__text--bold">Keywords: </span>
+            <div className="single-post__text">
+              <span className="single-post__text--bold">Keywords: </span>
               {
                 this.props.posts.currentPost.keywords.map(i => (
-                  <li className="preview__skill-item" key={i}>{i}, </li>))
+                  <li className="single-post__skill-item" key={i}>{i}, </li>))
               }
             </div>
-            <div className="preview__text preview__text--body">
+            <div className="single-post__text single-post__text--body">
               {`${this.props.posts.currentPost.body}`}
             </div>
-            <div className="preview__text preview_text-bottom">
-              <span className="preview__text--bold">Updated: </span>
+            <div className="single-post__text single-post_text-bottom">
+              <span className="single-post__text--bold">Updated: </span>
               {new Date(this.props.posts.currentPost.updatedAt).toUTCString()}
+              <div className="single-post__button-wrap">
+              { actions }
+              </div>
             </div>
-            { actions }
           </div>
-        </div>
       </div>
     );
   }
