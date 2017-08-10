@@ -94,7 +94,7 @@ class Profile extends React.Component {
     axios.put(`/api/profile/${this.props.appState.profile._id}`,
       {
         languages: this.state.profile.languages,
-        certs: this.state.profile.skills,
+        skills: this.state.profile.skills,
         time_zone: this.state.profile.time_zone,
         ghUserName: this.state.profile.ghUserName,
       })
