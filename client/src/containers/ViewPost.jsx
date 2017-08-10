@@ -74,7 +74,7 @@ class ViewPost extends React.Component {
       <div className="post-view">
         <div className="single-post">
             <div className="single-post__username">{`Mentor ${roleText}`}</div>
-            <div className="single-post__text preview__title">
+            <div className="preview__title">
               {this.props.posts.currentPost.title}
             </div>
             <div className="single-post__text">
