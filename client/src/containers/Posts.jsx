@@ -129,7 +129,7 @@ const tableColumns = [
         accessor: 'date',
         minWidth: 40,
         filterable: false,
-        Cell: props => <div className="posts__cell center"> {formatDate(new Date(props.original.updated))}</div>,
+        Cell: props => <div className="posts__cell center"> {formatDate(new Date(props.original.updatedAt))}</div>,
       },
     ];
 
