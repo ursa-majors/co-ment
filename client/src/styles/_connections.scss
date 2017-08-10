@@ -9,10 +9,12 @@
   margin-bottom: 20px;
 
   @include for-tablet-portrait-up {
-      width: 60%;
+      width: 80%;
     }
-}
- .content {
+
+  @include for-tablet-landscape-up {
+    width: 60%;
+  }
 
   &__image {
     border-radius: 100%;
@@ -45,8 +47,23 @@
     padding: 10px;
   }
   &__header {
-    flex: 0 0 auto;
+    font-size: 1.2em;
+    flex: 1 0 auto;
     width: 25%
+  }
+  &__title {
+    color: white;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-align: center;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    font-size: 2.5em;
+    padding: 0px 20px 10px 20px;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.6);
+
+    @include for-tablet-portrait-up {
+      font-size: 45px;
+    }
   }
 
   &__username {
@@ -63,11 +80,12 @@
   }
 
   &__text {
-    flex: 0 0 auto;
+    flex: 1 0 auto;
     width: 25%;
-    font-size: 1.2em;
+    font-size: 1.1em;
     font-weight: 100;
     padding-left: 3px;
+
 
     &--bold {
       font-weight: 400;
@@ -80,12 +98,11 @@
     font-size: 1.5em;
   }
 
-  &__title {
-    display: block;
-    text-align: center;
-    width: 100%;
-    font-weight: 400;
-    font-size: 1.8em;
-    padding: 15px 0;
+  &__hide-for-small {
+    display: none;
+    @include for-phone-portrait-up {
+      display: block;
+    }
   }
+
 }
