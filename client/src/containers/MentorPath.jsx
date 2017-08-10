@@ -3,25 +3,18 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import axios from 'axios';
-import * as Actions from '../store/actions';
+import * as apiActions from '../store/actions/apiActions';
 
 class MentorPath extends React.Component {
 
   componentDidMount() {
-    axios.get('/api/posts')
-      .then((response) => {
-        // future use
-      })
-      .catch((error) => {
-        throw (error);
-      });
+    this.props.api.getPost( this.props.appState.authToken, this.props.appState.profile._id, 'mentor')
   }
 
   profileComplete() {
     let valid = false;
-    if (this.props.appState.profile.pref_lang !== '' && this.props.appState.profile.time_zone !== '' &&
-      this.props.appState.profile.certs.length > 0) {
+    if (this.props.appState.profile.languages.length > 0 && this.props.appState.profile.time_zone !== '' &&
+      this.props.appState.profile.skills.length > 0  && this.props.appState.profile.validated) {
       valid = true;
     }
     return valid;
@@ -30,22 +23,36 @@ class MentorPath extends React.Component {
   render() {
     // See if user has filled out required profile fields
     let profileDone = '';
+    let postDone = '';
+    let menteeFound = '';
+
     if (this.profileComplete()) {
-      profileDone = ' splash__button-done';
+      profileDone = 'mentor__button-done';
+    }
+    // ComponentDidMount tried to load a mentor post.  If found, this is true
+    if (this.props.posts.searchPost) {
+      postDone = 'mentor__button-done';
     }
 
     return (
       <div className="splash">
         <div className="splash__image" />
-        <div className="splash__wrapper">
+        <div className="mentor__mentor-path">
           <h1 className="splash__headline" />
           <h2 className="splash__subhead">Become a guiding star</h2>
 
-          <div className="splash__button-wrap">
-            <Link to="/profile"className={`splash__button ${profileDone}`}>Build Profile</Link>
-            <Link to="/editpost" className="splash__button">Create Ad</Link>
-            <Link to="/posts" className="splash__button">Find Mentee</Link>
+          <div className="mentor__button-wrap">
+            <Link to="/profile"className={`mentor__button ${profileDone}`}>
+              Build Profile
+            </Link>
+            <Link to="/editpost" className={`mentor__button ${postDone}`}>
+              Create Ad
+            </Link>
+            <Link to="/posts" className={`mentor__button ${menteeFound}`}>
+              Find Mentee
+            </Link>
           </div>
+
         </div>
       </div>
     );
@@ -54,9 +61,10 @@ class MentorPath extends React.Component {
 
 const mapStateToProps = state => ({
   appState: state.appState,
+  posts: state.posts,
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(Actions, dispatch),
+  api: bindActionCreators(apiActions, dispatch),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(MentorPath);
