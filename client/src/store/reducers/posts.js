@@ -33,6 +33,7 @@ const INITIAL_STATE = {
   },
   gettingPost: false,
   getError: null,
+  searchPost: null,
   editForm: defaultForm,
   addingPost: false,
   addError: null,
@@ -91,22 +92,24 @@ function posts(state = INITIAL_STATE, action) {
       return Object.assign(
         {},
         state,
-        { gettingPost: true, postError: null },
+        { gettingPost: true, postError: null, searchPost: null },
       );
 
     case GET_POST_SUCCESS:
+    console.log(action);
       return update(
         state,
         {
-          gettingPost: false,
-          getError: null,
-          editForm: { $set: defaultForm },
+          gettingPost: { $set: false },
+          getError: { $set: null },
+          searchPost: { $set: action.payload },
         },
       );
 
     case GET_POST_FAILURE:
+    console.log(action)
       error = action.payload.data || { message: action.payload.message };
-      return Object.assign({}, state, { gettingPost: false, getError: error });
+      return Object.assign({}, state, { gettingPost: false, getError: error, searchPost: null });
 
     case GET_ALL_POSTS_REQUEST:
       return Object.assign({}, state, { gettingAllPosts: true, gettingAllPostsErr: null });
@@ -136,7 +139,7 @@ function posts(state = INITIAL_STATE, action) {
           addError: { $set: null },
           editForm: { $set: defaultForm },
           currentPost: { $set: {} },
-          entries: { $push: action.payload.data },
+          entries: { $push: [action.payload] },
         },
       );
 
