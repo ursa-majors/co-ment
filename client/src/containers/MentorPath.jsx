@@ -4,6 +4,14 @@ import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as apiActions from '../store/actions/apiActions';
+import * as Actions from '../store/actions/postActions';
+
+const searchObj = {
+  role: 'mentee',
+  title: '',
+  author: '',
+  keywords: [],
+};
 
 class MentorPath extends React.Component {
 
@@ -42,13 +50,23 @@ class MentorPath extends React.Component {
           <h2 className="splash__subhead">Become a guiding star</h2>
 
           <div className="mentor__button-wrap">
-            <Link to="/profile"className={`mentor__button ${profileDone}`}>
+            <Link
+              to="/profile"
+              className={`mentor__button ${profileDone}`}
+            >
               Build Profile
             </Link>
-            <Link to="/editpost" className={`mentor__button ${postDone}`}>
+            <Link
+              to="/editpost"
+              className={`mentor__button ${postDone}`}
+            >
               Create Ad
             </Link>
-            <Link to="/posts" className={`mentor__button ${menteeFound}`}>
+            <Link
+              to="/posts"
+              className={`mentor__button ${menteeFound}`}
+              onClick={() => { this.props.actions.setSearchCriteria(searchObj); }}
+            >
               Find Mentee
             </Link>
           </div>
@@ -65,6 +83,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(Actions, dispatch),
   api: bindActionCreators(apiActions, dispatch),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(MentorPath);

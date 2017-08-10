@@ -1,6 +1,6 @@
 import update from 'immutability-helper';
 import { SET_POSTS, SAVE_POST, SET_CURRENT_POST, SET_EDIT_POST, SET_FORM_FIELD,
-  ADD_KEYWORD, REMOVE_KEYWORD } from '../actions/postActions';
+  ADD_KEYWORD, REMOVE_KEYWORD, SET_SEARCH_CRITERIA, CLEAR_SEARCH_CRITERIA } from '../actions/postActions';
 import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE,
   ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE,
   MODIFY_POST_REQUEST, MODIFY_POST_SUCCESS, MODIFY_POST_FAILURE,
@@ -30,6 +30,12 @@ const INITIAL_STATE = {
     body: '',
     role: 'mentor',
     updated: Date.now(),
+  },
+  searchCriteria: {
+    role: '',
+    title: '',
+    author: '',
+    keywords: '',
   },
   gettingPost: false,
   getError: null,
@@ -96,7 +102,6 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case GET_POST_SUCCESS:
-    console.log(action);
       return update(
         state,
         {
@@ -107,7 +112,6 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case GET_POST_FAILURE:
-    console.log(action)
       error = action.payload.data || { message: action.payload.message };
       return Object.assign({}, state, { gettingPost: false, getError: error, searchPost: null });
 
@@ -170,6 +174,23 @@ function posts(state = INITIAL_STATE, action) {
     case MODIFY_POST_FAILURE:
       error = action.payload.data || { message: action.payload.message };
       return Object.assign({}, state, { savingPost: false, saveError: error });
+
+    case SET_SEARCH_CRITERIA:
+    console.log(action)
+      return update(state, { searchCriteria: { $set: action.payload } });
+
+    case CLEAR_SEARCH_CRITERIA:
+      return update(
+        state,
+        {
+          searchCriteria: {
+            role: { $set: '' },
+            title: { $set: '' },
+            author: { $set: '' },
+            keywords: { $set: [] },
+          },
+        },
+      );
 
     default:
       return state;

@@ -6,6 +6,8 @@ export const SET_EDIT_POST = 'SET_EDIT_POST';
 export const SET_FORM_FIELD = 'SET_FORM_FIELD';
 export const ADD_KEYWORD = 'ADD_KEYWORD';
 export const REMOVE_KEYWORD = 'REMOVE_KEYWORD';
+export const SET_SEARCH_CRITERIA = 'SET_SEARCH_CRITERIA';
+export const CLEAR_SEARCH_CRITERIA = 'CLEAR_SEARCH_CRITERIA';
 
 export function setPosts(posts) {
   return ({
@@ -54,5 +56,18 @@ export function removeKeyword(word) {
   return ({
     type: REMOVE_KEYWORD,
     payload: word,
+  });
+}
+
+export function setSearchCriteria(searchObj) {
+  return ({
+    type: SET_SEARCH_CRITERIA,
+    payload: searchObj,
+  });
+}
+
+export function clearSearchCriteria() {
+  return ({
+    type: CLEAR_SEARCH_CRITERIA,
   });
 }
