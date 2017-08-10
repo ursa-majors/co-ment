@@ -22,12 +22,15 @@
   font-family: 'Alegreya Sans SC', sans-serif;
   text-transform: lowercase;
   letter-spacing: 2px;
-  font-size: 16px;
+  font-size: 13px;
   text-decoration: none;
-  padding: 5px 10px;
   border-radius: 25px;
   border: 1px solid transparent;
 
+  @include for-phone-landscape-up {
+    padding: 5px 10px;
+    font-size: 16px;
+  }
     &--login {
 
       & :before {
