@@ -8,6 +8,10 @@ export const ADD_KEYWORD = 'ADD_KEYWORD';
 export const REMOVE_KEYWORD = 'REMOVE_KEYWORD';
 export const SET_SEARCH_CRITERIA = 'SET_SEARCH_CRITERIA';
 export const CLEAR_SEARCH_CRITERIA = 'CLEAR_SEARCH_CRITERIA';
+export const SHOW_VIEW_POST_SPINNER = 'SHOW_VIEW_POST_SPINNER';
+export const HIDE_VIEW_POST_SPINNER = 'HIDE_VIEW_POST_SPINNER';
+export const SET_MODAL_TEXT = 'SET_MODAL_TEXT';
+export const SET_MODAL_CLASS = 'SET_MODAL_CLASS';
 
 export function setPosts(posts) {
   return ({
@@ -69,5 +73,31 @@ export function setSearchCriteria(searchObj) {
 export function clearSearchCriteria() {
   return ({
     type: CLEAR_SEARCH_CRITERIA,
+  });
+}
+
+export function showViewPostSpinner() {
+  return ({
+    type: SHOW_VIEW_POST_SPINNER,
+  });
+}
+
+export function hideViewPostSpinner() {
+  return ({
+    type: HIDE_VIEW_POST_SPINNER,
+  });
+}
+
+export function setModalClass(modalClass) {
+  return ({
+    type: SET_MODAL_CLASS,
+    payload: modalClass,
+  });
+}
+
+export function setModalText(text) {
+  return ({
+    type: SET_MODAL_TEXT,
+    payload: text,
   });
 }
