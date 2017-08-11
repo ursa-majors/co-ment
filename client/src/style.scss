@@ -80,3 +80,31 @@ body.user-is-tabbing *:focus {
     clip: rect(0,0,0,0);
     border: 0;
 }
+
+.error {
+    font-family: 'Alegreya Sans', sans-serif;
+    color: #a94442;
+    background-color: #f2dede;
+    font-size: 1.2em;
+    font-weight: 100;
+    margin: 15px auto;
+    border: 1px solid #a94442;
+    padding: 7px;
+    border-radius: 3px;
+    transition: opacity .15s linear;
+    text-align: center;
+  }
+
+.success {
+    font-family: 'Alegreya Sans', sans-serif;
+    color: #3c763d;
+    background-color: #dff0d8;
+    font-size: 1.2em;
+    font-weight: 100;
+    margin: 15px auto;
+    border: 1px solid #3c763d;
+    padding: 7px;
+    border-radius: 3px;
+    transition: opacity .15s linear;
+    text-align: center;
+  }

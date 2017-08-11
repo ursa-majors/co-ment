@@ -58,6 +58,7 @@ class Login extends React.Component {
   }
 
   render() {
+    const errorClass = this.props.login.errorMsg ? 'error' : 'hidden';
     return (
       <div className="container form">
         <div className="form__body">
@@ -82,7 +83,7 @@ class Login extends React.Component {
             />
           </div>
           <div className="form__input-group">
-            <div className="form__error">{this.props.login.errorMsg}</div>
+            <div className={errorClass}>{this.props.login.errorMsg}</div>
           </div>
         </div>
         <div className="form__input-group">

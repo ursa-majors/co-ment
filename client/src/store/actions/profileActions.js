@@ -1,5 +1,4 @@
 export const SAVE_PROFILE = 'SAVE_PROFILE';
-export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 export const SET_CURRENT_PROFILE = 'SET_CURRENT_PROFILE';
 export const SET_EDIT_PROFILE = 'SET_EDIT_PROFILE';
 export const SET_FORM_FIELD = 'SET_FORM_FIELD';
@@ -12,13 +11,6 @@ export const REMOVE_LANGUAGE = 'REMOVE_LANGUAGE';
 export function saveProfile(profile) {
   return ({
     type: SAVE_PROFILE,
-    payload: profile,
-  });
-}
-
-export function updateProfile(profile) {
-  return ({
-    type: UPDATE_PROFILE,
     payload: profile,
   });
 }

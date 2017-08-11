@@ -190,11 +190,26 @@
     height: 100%;
     height: calc(100vh - 59px);
     overflow-y: scroll;
+    flex-wrap: wrap;
 
   @include for-tablet-landscape-up {
     display: flex;
     flex-direction: row;
     justify-content: center;
     padding: 60px 20px 80px 20px;
+    flex-wrap: nowrap;
+  }
+    &__body {
+      width: 100%;
+      margin: 0 auto;
+      background: rgba(255,255,255,.3);
+      text-align: center;
+      padding: 20px;
+      border-radius: 4px;
+      align-self: flex-start;
+
+      @include for-tablet-portrait-up {
+
+        }
   }
   }

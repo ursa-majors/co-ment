@@ -1,7 +1,6 @@
 import update from 'immutability-helper';
-import { SAVE_PROFILE, UPDATE_PROFILE, SET_CURRENT_PROFILE, SET_EDIT_PROFILE, SET_FORM_FIELD, ADD_LANGUAGE, ADD_SKILL, REMOVE_LANGUAGE, REMOVE_SKILL } from '../actions/profileActions';
+import { SAVE_PROFILE, SET_CURRENT_PROFILE, SET_EDIT_PROFILE, SET_FORM_FIELD, ADD_LANGUAGE, ADD_SKILL, REMOVE_LANGUAGE, REMOVE_SKILL } from '../actions/profileActions';
 import { GET_PROFILE_REQUEST, GET_PROFILE_SUCCESS, GET_PROFILE_FAILURE,
-  ADD_PROFILE_REQUEST, ADD_PROFILE_SUCCESS, ADD_PROFILE_FAILURE,
   MODIFY_PROFILE_REQUEST, MODIFY_PROFILE_SUCCESS, MODIFY_PROFILE_FAILURE,
 } from '../actions/apiActions';
 
@@ -21,7 +20,6 @@ const defaultForm = {
 };
 
 const INITIAL_STATE = {
-  profileErrorMsg: '',
   currentProfile: {
     skill: '',
     language: '',
@@ -40,8 +38,6 @@ const INITIAL_STATE = {
   addError: null,
   savingProfile: false,
   saveError: null,
-  gettingAllProfiles: false,
-  gettingAllProfilesErr: null,
 };
 
 function profiles(state = INITIAL_STATE, action) {
@@ -54,16 +50,10 @@ function profiles(state = INITIAL_STATE, action) {
     case SAVE_PROFILE:
       return update(state, { profile: { $set: action.payload } });
 
-    case UPDATE_PROFILE:
-      return update(state, { profile: { $set: action.payload } });
-
     case SET_CURRENT_PROFILE:
       return update(state, { currentProfile: { $set: action.payload } });
 
     case SET_EDIT_PROFILE:
-    name = action.payload.name || action.payload.ghProfile.name;
-    avatar_url = action.payload.avatarUrl || action.payload.ghProfile.avatar_url;
-    time_zone = action.payload.time_zone || 'Choose your time zone';
       return update(
         state,
         {
@@ -73,10 +63,10 @@ function profiles(state = INITIAL_STATE, action) {
             skills: { $set: action.payload.skills },
             gender: { $set: action.payload.gender },
             languages: { $set: action.payload.languages },
-            time_zone: { $set: time_zone },
-            name: { $set: name },
+            time_zone: { $set: action.payload.time_zone || 'Choose your time zone' },
+            name: { $set: action.payload.name },
             ghUserName: { $set: action.payload.ghUserName },
-            avatarUrl: { $set: avatar_url },
+            avatarUrl: { $set: action.payload.avatar_url },
             hideErr: { $set: 'form__hidden' },
             errMsg: { $set: '' },
             update: { $set: true },
@@ -119,58 +109,51 @@ function profiles(state = INITIAL_STATE, action) {
       return Object.assign(
         {},
         state,
-        { gettingProfile: true, profileError: null },
+        { gettingProfile: true, profileError: null, getError: null, getSuccess: null },
       );
 
     case GET_PROFILE_SUCCESS:
+    let profile = Object.assign({}, action.payload);
+    console.log('121', profile);
       return update(
         state,
         {
-          gettingProfile: false,
-          getError: null,
-          editForm: { $set: defaultForm },
+          gettingProfile: { $set: false },
+          getError: { $set: null },
+          getSuccess: { $set: true },
+          currentProfile: { $set: profile },
+          editForm: { $set: profile },
+          profile: { $set: profile },
         },
       );
 
     case GET_PROFILE_FAILURE:
       error = action.payload.data || { message: action.payload.message };
-      return Object.assign({}, state, { gettingProfile: false, getError: error });
-
-    case ADD_PROFILE_REQUEST:
-      return Object.assign({}, state, { addingProfile: true, addError: null });
-
-    case ADD_PROFILE_SUCCESS:
-      return update(
-        state,
-        {
-          addingProfile: { $set: false },
-          addError: { $set: null },
-          editForm: { $set: defaultForm },
-          currentProfile: { $set: {} },
-        },
-      );
-
-    case ADD_PROFILE_FAILURE:
-      error = action.payload.data || { message: action.payload.message };
-      return Object.assign({}, state, { addingProfile: false, addError: error });
+      return Object.assign({}, state, { gettingProfile: false, getError: error, getSuccess: false, });
 
     case MODIFY_PROFILE_REQUEST:
-      return Object.assign({}, state, { savingProfile: true, saveError: null });
+    console.log('request modify profile');
+      return Object.assign({}, state, { savingProfile: true, saveError: null, saveSuccess: null, });
 
     case MODIFY_PROFILE_SUCCESS:
+    console.log('success modify profile');
+    profile = Object.assign({}, action.payload);
           return update(
             state,
             {
               savingProfile: { $set: false },
               saveError: { $set: null },
               editForm: { $set: defaultForm },
-              currentProfile: { $set: {} },
+              currentProfile: { $set: profile },
+              profile: { $set: profile },
+              saveSuccess: { $set: true },
             },
           );
 
     case MODIFY_PROFILE_FAILURE:
+    console.log('failure modify profile');
       error = action.payload.data || { message: action.payload.message };
-      return Object.assign({}, state, { savingProfile: false, saveError: error });
+      return Object.assign({}, state, { savingProfile: false, saveError: error, saveSuccess: false, });
 
     default:
       return state;
