@@ -1,0 +1,14 @@
+.spinner {
+  color: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  &__hide {
+    display: none;
+  }
+  &__show {
+    display: block;
+  }
+}
