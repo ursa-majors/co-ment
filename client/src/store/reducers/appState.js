@@ -25,9 +25,6 @@ function appState(state = INITIAL_STATE, action) {
       window.localStorage.removeItem('userId');
       return INITIAL_STATE;
 
-    case UPDATE_PROFILE:
-      return update(state, { profile: { $set: action.payload } });
-
     default:
       return state;
   }

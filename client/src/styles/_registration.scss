@@ -106,14 +106,18 @@
   }
 
   &__error {
+    font-family: 'Alegreya Sans', sans-serif;
     color: #a94442;
-    // background-color: #f2dede;
+    background-color: #f2dede;
     font-size: 1.2em;
-    font-weight: 500;
+    font-weight: 100;
     margin: 15px auto;
-    // border: 1px solid #ebccd1;
+    border: 1px solid #a94442;
+    padding: 7px;
     border-radius: 3px;
     transition: opacity .15s linear;
+    text-align: center;
+
   }
 
   &__button-wrap {
