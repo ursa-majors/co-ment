@@ -4,7 +4,8 @@ import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import * as Actions from '../store/actions/postActions';
-
+import Spinner from '../containers/Spinner';
+import Modal from '../containers/Modal';
 
 class ViewPost extends React.Component {
 
@@ -15,6 +16,7 @@ class ViewPost extends React.Component {
     axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
     axios.get(`/api/posts?id=${postId}`)
       .then((result) => {
+        console.log(result.data[0])
         this.props.actions.setCurrentPost(result.data[0]);
       })
       .catch((error) => {
@@ -22,21 +24,9 @@ class ViewPost extends React.Component {
       });
   }
 
-  // remove currentPost to prevent flash of old post on navigation
-  componentWillUnmount() {
-    this.props.actions.setCurrentPost({
-      active: '',
-      author: '',
-      author_id: '',
-      availability: '',
-      keywords: [],
-      body: '',
-      role: 'mentor',
-      updated: Date.now(),
-    });
-  }
-
-  deletePost() {
+  deletePost = (event) => {
+    //event.preventDefault();
+    //event.stopPropagation();
     axios.defaults.baseURL = 'https://co-ment.glitch.me';
     axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
 
@@ -49,55 +39,95 @@ class ViewPost extends React.Component {
         console.log(error);
       });
   }
+
+  /**
+  *  Check to see if there is already a similar connection between the user and poster
+  **/
+  checkConnectionRequest = () => {
+    const connections = this.props.connection.connections;
+    if (connections.length > 0) {
+      for (let i = 0; i < connections.length; i += 1) {
+        if (connections[i].initiator === this.props.appState.profile._id &&
+          connections[i][this.props.posts.currentPost.role] === this.props.posts.currentPost.author_id) {
+          this.props.actions.setModalText('You already have a connection to this poster');
+          this.props.actions.setModalClass('modal__show');
+          return;
+        }
+      }
+    } else {
+      // TODO: go get connections, then test them as above
+    }
+    this.props.history.push('/connection');
+  }
+
   render() {
-    let editable = '';
-    if (this.props.appState.profile._id === this.props.posts.currentPost.author_id) {
-      editable = (
-        <div>
-          <Link className="f-nav__icon-link" to={`/editpost/${this.props.posts.currentPost._id}`}>Edit
-          </Link>
-          <span
-            className="f-nav__icon-link pointer"
-            to={`/editpost/${this.props.posts.currentPost._id}`}
-            onClick={() => this.deletePost()}
-          >
-            Delete
-          </span>
-        </div>
+    const roleText = (this.props.posts.currentPost.role === 'mentor' ? ' Available' : ' Wanted');
+    const owner = (this.props.appState.profile._id === this.props.posts.currentPost.author_id);
+    let actions;
+    if (owner) {
+      actions = (
+        <ul className="post-nav">
+          <li className="post-nav__item" >
+            <span className="post-nav__item-link pointer" onClick={() => this.props.history.push(`/editpost/${this.props.posts.currentPost._id}`)}>
+              Edit
+            </span>
+          </li>
+          <li className="post-nav__item" >
+            <span className="post-nav__item-link pointer" onClick={() => this.deletePost()}>
+              Delete
+            </span>
+          </li>
+        </ul>
+      );
+    } else {
+      actions = (
+        <ul className="post-nav">
+          <li className="post-nav__item" >
+            <span className="post-nav__item-link pointer" onClick={this.checkConnectionRequest}>
+              Request Connection
+            </span>
+          </li>
+        </ul>
       );
     }
-    const roleText = (this.props.posts.currentPost.role === 'mentor' ? ' Available' : ' Wanted');
+
     return (
-      <div className="posts">
-        <div className="preview">
-          <div className="preview__text-wrap">
-            <div className="preview__username">{`Mentor ${roleText}`}</div>
-            <div className="preview__text preview__title">
+      <div className="post-view">
+        <Spinner cssClass={this.props.posts.viewPostSpinnerClass} />
+        <Modal
+          modalClass={this.props.posts.viewPostModalClass}
+          modalText={this.props.posts.viewPostModalText}
+          dismiss={() => { this.props.actions.setModalText(''); this.props.actions.setModalClass('modal__hide'); }}
+        />
+        <div className="single-post">
+            <div className="single-post__username">{`Mentor ${roleText}`}</div>
+            <div className="preview__title">
               {this.props.posts.currentPost.title}
             </div>
-            <div className="preview__text">
-              <span className="preview__text--bold">Author: </span>
+            <div className="single-post__text">
+              <span className="single-post__text--bold">Author: </span>
               <Link to={`/viewprofile/${this.props.posts.currentPost.author_id}`}>
                 {this.props.posts.currentPost.author}
               </Link>
             </div>
-            <div className="preview__text">
-              <span className="preview__text--bold">Keywords: </span>
+            <div className="single-post__text">
+              <span className="single-post__text--bold">Keywords: </span>
               {
                 this.props.posts.currentPost.keywords.map(i => (
-                  <li className="preview__skill-item" key={i}>{i}, </li>))
+                  <li className="single-post__skill-item" key={i}>{i}, </li>))
               }
             </div>
-            <div className="preview__text preview__text--body">
+            <div className="single-post__text single-post__text--body">
               {`${this.props.posts.currentPost.body}`}
             </div>
-            <div className="preview__text preview_text-bottom">
-              <span className="preview__text--bold">Updated: </span>
-              {new Date(this.props.posts.currentPost.updated).toUTCString()}
+            <div className="single-post__text single-post_text-bottom">
+              <span className="single-post__text--bold">Updated: </span>
+              {new Date(this.props.posts.currentPost.updatedAt).toUTCString()}
+              <div className="single-post__button-wrap">
+              { actions }
+              </div>
             </div>
-            {editable}
           </div>
-        </div>
       </div>
     );
   }
@@ -106,6 +136,7 @@ class ViewPost extends React.Component {
 const mapStateToProps = state => ({
   appState: state.appState,
   posts: state.posts,
+  connection: state.connection,
 });
 
 const mapDispatchToProps = dispatch => ({

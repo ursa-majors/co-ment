@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import axios from 'axios';
 
+import InputAutosuggest from './InputAutosuggest';
 import * as Actions from '../store/actions';
-import { languages, skills, timezones } from '../utils';
+import {languages, skills, timezones } from '../utils';
 
 let name;
 let avatarUrl;
@@ -17,15 +18,24 @@ class Profile extends React.Component {
     this.state = {
       profile: {
         skill: '',
+        language: '',
         skills: this.props.appState.profile.certs || [],
         gender: this.props.appState.profile.gender || '',
-        pref_lang: this.props.appState.profile.pref_lang || '',
+        languages: this.props.appState.profile.languages || [],
         time_zone: this.props.appState.profile.time_zone || 'Choose your timezone',
         name: '',
         ghUserName: this.props.appState.profile.ghUserName || '',
         avatarUrl: '',
       },
+      suggestions: [],
+      value: '',
     };
+
+    this.handleInput = this.handleInput.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.addTag = this.addTag.bind(this);
+    this.removeTag = this.removeTag.bind(this);
+
   }
 
   componentWillMount() {
@@ -50,9 +60,10 @@ class Profile extends React.Component {
       this.setState({
         profile: {
           skill: '',
+          language: '',
           skills: this.props.appState.profile.certs || [],
           gender: this.props.appState.profile.gender || '',
-          pref_lang: this.props.appState.profile.pref_lang || '',
+          languages: this.props.appState.profile.languages || [],
           time_zone: this.props.appState.profile.time_zone || 'Choose your timezone',
           name: this.props.appState.profile.ghProfile.name ? this.props.appState.profile.ghProfile.name : '',
           ghUserName: this.props.appState.profile.ghUserName || '',
@@ -69,8 +80,12 @@ class Profile extends React.Component {
 
   handleSubmit() {
     if (this.state.skill !== '') {
-      this.addSkill();
+      this.addTag('skill');
     }
+    if (this.state.language !== '') {
+      this.addTag('language');
+    }
+
     this.props.actions.updateProfile(this.state.profile);
 
     axios.defaults.baseURL = 'https://co-ment.glitch.me';
@@ -78,8 +93,8 @@ class Profile extends React.Component {
 
     axios.put(`/api/profile/${this.props.appState.profile._id}`,
       {
-        pref_lang: this.state.profile.pref_lang,
-        certs: this.state.profile.skills,
+        languages: this.state.profile.languages,
+        skills: this.state.profile.skills,
         time_zone: this.state.profile.time_zone,
         ghUserName: this.state.profile.ghUserName,
       })
@@ -88,9 +103,10 @@ class Profile extends React.Component {
         this.setState({
           profile: {
             skill: '',
+            language: '',
             skills: this.props.appState.profile.skills,
             gender: this.props.appState.profile.gender || '',
-            pref_lang: this.props.appState.profile.pref_lang || '',
+            languages: this.props.appState.profile.languages || '',
             time_zone: this.props.appState.profile.time_zone || 'Choose your timezone',
             name: this.props.appState.profile.ghProfile.name || '',
             ghUserName: this.props.appState.profile.ghUserName || '',
@@ -112,55 +128,78 @@ class Profile extends React.Component {
     });
   }
 
-// comma or enter or tab in skill field triggers addSkill
+
+// comma or enter or tab in skill field triggers addTag
   handleKeyPressAdd(e) {
     if (e.charCode === 44 || e.which === 44 || e.charCode === 13 || e.which === 13 || e.charCode === 9 || e.which === 9) {
       e.preventDefault();
-      this.addSkill();
-    }
-  }
-
-// enter or delete triggers removeSkill on icon/button focus
-  handleKeyPressRemove(e) {
-    if (e.charCode === 13 || e.which === 13 || e.charCode === 8 || e.which === 8) {
-      this.removeSkill(e);
-    }
-  }
-
-  addSkill() {
-    const profile = { ...this.state.profile };
-    const newSkill = profile.skill;
-    if (newSkill !== '') {
-      for (let i = 0; i < profile.skills.length; i++) {
-        if (profile.skills[i] === newSkill) {
-          profile.skill = '';
-          this.setState({ profile }, () => {
-          });
-          return;
-        }
-      }
+      this.addTag(e.target.id);
+      const profile = Object.assign({}, this.state.profile);
       profile.skill = '';
-      profile.skills = profile.skills.concat(newSkill);
+      profile.language = '';
       this.setState({ profile }, () => {
       });
     }
   }
 
-  removeSkill(e) {
+// enter or delete triggers removeTag on icon/button focus
+  handleKeyPressRemove(e) {
+    if (e.charCode === 13 || e.which === 13 || e.charCode === 8 || e.which === 8) {
+      this.removeTag(e);
+    }
+  }
+
+  addTag(type) {
     const profile = { ...this.state.profile };
-    const newSkills = profile.skills;
-    for (let i = 0; i < profile.skills.length; i++) {
-      if (profile.skills[i] === e.target.id) {
-        newSkills.splice(i, 1);
-        profile.skills = newSkills;
+    const newTag = profile[type];
+    const list = `${type}s`;
+    const inputRef = `${type}Input`;
+    if (newTag !== '') {
+      for (let i = 0; i < profile[list].length; i++) {
+        if (profile[list][i] === newTag) {
+          profile[type] = '';
+          this.setState({ profile }, () => {
+          });
+          return;
+        }
+      }
+      profile[list] = profile[list].concat(newTag);
+      this.setState({ profile }, () => {
+        // console.log(this.state.profile[type]);
+      });
+    }
+    this[inputRef].onSuggestionSelected();
+    profile[type] = '';
+    this.setState({ profile }, () => {
+        // console.log(this.state.profile[type]);
+      });
+  }
+
+  removeTag(e) {
+    const profile = { ...this.state.profile };
+    const list = `${e.target.classList[0]}s`
+    const newTags = profile[list];
+    for (let i = 0; i < profile[list].length; i++) {
+      if (profile[list][i] === e.target.id) {
+        newTags.splice(i, 1);
+        profile[list] = newTags;
         this.setState({ profile });
         break;
       }
     }
   }
 
-  render() {
+  ////// autosuggest functions ///////
 
+   onChange(id, newValue) {
+    const profile = Object.assign({}, this.state.profile);
+    profile[id] = newValue;
+    this.setState({ profile }, () => {
+      // console.log('186', this.state.profile[id]);
+    });
+  }
+
+  render() {
     const languageList = languages.map(i => (<option key={i}>{i}</option>));
     const skillsList = skills.map(i => (<option key={i}>{i}</option>));
     const tzList = timezones.map(i => (
@@ -168,9 +207,12 @@ class Profile extends React.Component {
       ));
     const skillsDisp = this.state.profile.skills.map(i => (
       <li className="preview__skill-item" key={i}>{i}, </li>));
+    const langDisp = this.state.profile.languages.map(i => (
+      <li className="preview__skill-item" key={i}>{i}, </li>));
+
 
     return (
-      <div className="profile">
+      <div className="container">
         <div className="preview">
           <div className="preview__image-wrap">
             {this.state.profile.avatarUrl ?
@@ -182,8 +224,8 @@ class Profile extends React.Component {
             <div className="preview__username">{this.props.appState.profile.username}</div>
             <div className="preview__text">{this.state.profile.name}</div>
             <div className="preview__text">
-              <span className="preview__text--bold">Language: &nbsp;</span>
-              {this.state.profile.pref_lang}
+              <span className="preview__text--bold">Languages: &nbsp;</span>
+              {langDisp}
             </div>
             <div className="preview__text">
               <span className="preview__text--bold">Time zone: &nbsp;</span>
@@ -212,52 +254,79 @@ class Profile extends React.Component {
             />
           </div>
           <div className="form__input-group">
-            <label htmlFor="language" className="form__label">Preferred Language
+            <label htmlFor="language" className="form__label">Languages you speak fluently
             </label>
-            <input
-              className="form__input"
-              type="text"
-              id="pref_lang"
-              name="pref_lang"
-              value={this.state.profile.pref_lang}
-              onChange={e => this.handleInput(e)}
-              placeholder="Preferred language"
-            />
-          </div>
-
-          <div className="form__input-group">
-            <label className="form__label" htmlFor="skills">Skills</label>
-            <input
-              className="form__input"
-              type="text"
-              id="skill"
-              name="skill"
-              value={this.state.profile.skill}
-              onChange={e => this.handleInput(e)}
-              onKeyPress={e => this.handleKeyPressAdd(e)}
-              placeholder="Add skills"
-            />
-            <div className="skill-value__wrapper">
-              {this.state.profile.skills.map(skill => (
-                <span className="skill-value" key={skill}>
+          <div className="skill-value__wrapper">
+              {this.state.profile.languages.map(lang => (
+                <span className="skill-value" key={lang}>
                   <span className="skill-value__icon" aria-hidden="true">
                     <span
-                      id={skill}
+                      className="language"
+                      id={lang}
                       role="button"
                       tabIndex="0"
-                      onClick={e => this.removeSkill(e)}
+                      onClick={this.removeTag}
                       onKeyPress={e => this.handleKeyPressRemove(e)}
                     >
                        &times;
                       </span>
                   </span>
                   <span className="skill-value__label" role="option" aria-selected="true">
-                    {skill}
+                    {lang}
                     <span className="skill-aria-only">&nbsp;</span>
                   </span>
                 </span>
                ))}
             </div>
+            <InputAutosuggest
+              id="language"
+              name="language"
+              placeholder="Add Languages"
+              onChange={this.onChange}
+              list={languages}
+              onKeyPress={(e) => this.handleKeyPressAdd(e)}
+              value={this.state.profile.language}
+              addTag={this.addTag}
+              removeTag={this.removeTag}
+              ref={instance => { this.languageInput = instance; }}
+            />
+          </div>
+          <div className="form__input-group">
+            <label className="form__label" htmlFor="skills">Skills</label>
+            <div className="skill-value__wrapper">
+            {this.state.profile.skills.map(skill => (
+              <span className="skill-value" key={skill}>
+                <span className="skill-value__icon" aria-hidden="true">
+                  <span
+                    className="skill"
+                    id={skill}
+                    role="button"
+                    tabIndex="0"
+                    onClick={e => this.removeTag(e)}
+                    onKeyPress={e => this.handleKeyPressRemove(e)}
+                  >
+                     &times;
+                  </span>
+                </span>
+                <span className="skill-value__label" role="option" aria-selected="true">
+                  {skill}
+                  <span className="skill-aria-only">&nbsp;</span>
+                </span>
+              </span>
+             ))}
+            </div>
+            <InputAutosuggest
+              id="skill"
+              name="skill"
+              placeholder="Add Skills"
+              onChange={this.onChange}
+              list={skills}
+              onKeyPress={e => this.handleKeyPressAdd(e)}
+              value={this.state.skill}
+              addTag={this.addTag}
+              removeTag={this.removeTag}
+              ref={instance => { this.skillInput = instance; }}
+            />
           </div>
           <div className="form__input-group">
             <label htmlFor="timezone" className="form__label">Time Zone</label>
@@ -272,11 +341,11 @@ class Profile extends React.Component {
               {tzList}
             </select>
           </div>
-        </div>
-        <div className="form__input-group">
+          <div className="form__input-group">
           <div className="form__button-wrap">
             <button className="form__button pointer" id="btn-edit" onClick={() => this.handleSubmit()}>Save</button>
           </div>
+        </div>
         </div>
       </div>
     );

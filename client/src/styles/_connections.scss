@@ -1,0 +1,108 @@
+.conn-preview {
+  width: 100%;
+  margin: 0 auto;
+  padding: 10px 10px 20px 10px;
+  font-family: 'Alegreya Sans', sans-serif;
+  color: white;
+  background: rgba(255,255,255,.3);
+  border-radius: 4px;
+  margin-bottom: 20px;
+
+  @include for-tablet-portrait-up {
+      width: 80%;
+    }
+
+  @include for-tablet-landscape-up {
+    width: 60%;
+  }
+
+  &__image {
+    border-radius: 100%;
+    width: 130px;
+    max-width: 100%;
+    height: auto;
+    border: 1px solid rgba(255,255,255,.5);
+  }
+
+  &__icon {
+    height: 100%;
+    width: auto;
+    color: rgba(255,255,255,.4);
+  }
+
+  &__image-wrap {
+    width: 130px;
+    height: 130px;
+  }
+
+  &__text-wrap {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  &__header-wrap {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+  }
+  &__header {
+    font-size: 1.2em;
+    flex: 1 0 auto;
+    width: 25%
+  }
+  &__title {
+    color: white;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-align: center;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    font-size: 2.5em;
+    padding: 0px 20px 10px 20px;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.6);
+
+    @include for-tablet-portrait-up {
+      font-size: 45px;
+    }
+  }
+
+  &__username {
+    color: white;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    font-size: 30px;
+    margin: -10px 0 10px 0;
+    border-bottom: 1px dotted rgba(255,255,255,.6);
+    @include for-tablet-portrait-up {
+      font-size: 45px;
+    }
+  }
+
+  &__text {
+    flex: 1 0 auto;
+    width: 25%;
+    font-size: 1.1em;
+    font-weight: 100;
+    padding-left: 3px;
+
+
+    &--bold {
+      font-weight: 400;
+    }
+  }
+
+  &__text--body {
+    padding: 10px 0 30px 0;
+    white-space: pre-wrap;
+    font-size: 1.5em;
+  }
+
+  &__hide-for-small {
+    display: none;
+    @include for-phone-portrait-up {
+      display: block;
+    }
+  }
+
+}

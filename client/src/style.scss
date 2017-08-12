@@ -9,13 +9,44 @@ $fa-font-path: "~font-awesome/fonts";
 @import 'styles/profile';
 @import 'styles/posts';
 @import 'styles/react-table';
-
+@import 'styles/autosuggest';
+@import 'styles/connectionresult';
+@import 'styles/connections';
+@import 'styles/post-view';
+@import 'styles/mentorpath';
+@import 'styles/spinner';
+@import 'styles/modal';
 
 * {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  outline: 0;
+}
+
+/* a subtle focus style for keyboard-input elements */
+input:focus {
+  border: 1px solid #aaa;
+}
+
+/* no focus style for non-keyboard-inputs elements */
+button:focus,
+select:focus {
+  outline: none;
+}
+
+/* and for keyboard users, override everything with
+   a Big Blue Border when focused on any element */
+body.user-is-tabbing *:focus {
+  border: 2px solid #7AACFE !important; /* for non-webkit browsers */
+  border: 5px auto -webkit-focus-ring-color !important;
+}
+
+.main {
+  background: -webkit-linear-gradient(to bottom, #22c1c3, #fdbb2d);
+  background: linear-gradient(to bottom, #22c1c3, #fdbb2d);
+  height: 100vh;
 }
 
 .container {
@@ -25,8 +56,9 @@ $fa-font-path: "~font-awesome/fonts";
 	background: -webkit-linear-gradient(to bottom, #22c1c3, #fdbb2d);
 	background: linear-gradient(to bottom, #22c1c3, #fdbb2d);
   height: 100%;
-	min-height: 100vh;
+	height: calc(100vh - 59px);
   padding: 60px 0;
+  overflow-y: scroll;
 }
 
 .title {
