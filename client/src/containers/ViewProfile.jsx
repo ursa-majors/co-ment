@@ -3,65 +3,66 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import axios from 'axios';
 
-import * as Actions from '../store/actions';
+import * as apiActions from '../store/actions/apiActions';
 
 class ViewProfile extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      profile: {},
-    };
-  }
-
   componentDidMount() {
-    const profileId = this.props.match.params.id;
-    // axios default headers
-    axios.defaults.baseURL = 'https://co-ment.glitch.me';
-    axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
-    axios.get(`/api/profile/${profileId}`)
-      .then((result) => {
-        this.setState({ profile: result.data });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    // const profileId = this.props.match.params.id;
+    // // axios default headers
+    // axios.defaults.baseURL = 'https://co-ment.glitch.me';
+    // axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
+    // axios.get(`/api/profile/${profileId}`)
+    //   .then((result) => {
+    //     this.setState({ profile: result.data });
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+    // this.props.api.getProfile(this.props.appState.authToken, this.props.appState.profile._id);
+    console.log(this.props);
   }
 
 
   render() {
-    const skillsDisp = this.state.profile.certs ?
-    this.state.profile.certs.join(', ') : '';
+    let langDisp;
+    let skillsDisp;
+    if (this.props.appState.profile.skills && this.props.appState.profile.languages) {
+       skillsDisp = this.props.appState.profile.skills.join(', ');
+       langDisp = this.props.appState.profile.languages.join(', ');
+    }
 
     return (
-      <div className="profile">
-        <div className="preview">
-          <div className="preview__image-wrap">
-            {this.state.profile.ghProfile && this.state.profile.ghProfile.avatar_url ?
-              <img className="preview__image" src={this.state.profile.ghProfile.avatar_url} alt={this.state.profile.ghProfile.name} /> :
-              <i className="fa fa-user-circle fa-5x preview__icon" aria-hidden="true" />
+      <div className="view-profile">
+        <div className="view-preview">
+          <div className="view-preview__image-wrap">
+            {this.props.appState.profile.avatarUrl ?
+              <img className="view-preview__image" src={this.props.appState.profile.avatarUrl} alt={this.props.appState.profile.username} /> :
+              <i className="fa fa-user-circle fa-5x view-preview__icon" aria-hidden="true" />
           }
           </div>
-          <div className="preview__text-wrap">
-            <div className="preview__username">{this.state.profile.username}</div>
-            {this.state.profile.ghProfile && <div className="preview__text">{this.state.profile.ghProfile.name}</div> }
-            <div className="preview__text">
-              <span className="preview__text--bold">Language: &nbsp;</span>
-              {this.state.profile.pref_lang}
+          <div className="view-preview__text-wrap">
+            <div className="view-preview__username">{this.props.appState.profile.username}</div>
+            <div className="view-preview__text">{this.props.appState.profile.name}</div>
+            <div className="view-preview__text">
+              <span className="view-preview__text--bold">Languages: &nbsp;</span>
+              {langDisp ? langDisp : ''}
             </div>
-            <div className="preview__text">
-              <span className="preview__text--bold">Time zone: &nbsp;</span>
-              {this.state.profile.time_zone}
+            <div className="view-preview__text">
+              <span className="view-preview__text--bold">Time zone: &nbsp;</span>
+              {this.props.appState.profile.time_zone}
             </div>
-            <div className="preview__text">
-              <span className="preview__text--bold">Skills: &nbsp;</span>
-              <ul className="preview__skill-list">{skillsDisp}</ul>
+            <div className="view-preview__text">
+              <span className="view-preview__text--bold">Gender: &nbsp;</span>
+              {this.props.appState.profile.gender}
             </div>
-
+            <div className="view-preview__text">
+              <span className="view-preview__text--bold">Skills: &nbsp;</span>
+              {skillsDisp ? skillsDisp : ''}
+            </div>
           </div>
         </div>
       </div>
-
     );
   }
 }
@@ -71,7 +72,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(Actions, dispatch),
+  api: bindActionCreators(apiActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ViewProfile);

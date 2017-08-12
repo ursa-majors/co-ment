@@ -42,11 +42,6 @@ class Profile extends React.Component {
     }
   }
 
-  getGithubProfile() {
-    console.log('getting github profile');
-    this.props.api.getProfile(this.props.appState.authToken, this.props.appState.profile._id);
-  }
-
   handleInput(e) {
     this.props.actions.setFormField(e.target.name, e.target.value);
   }
@@ -56,7 +51,6 @@ class Profile extends React.Component {
   }
 
   addLanguage() {
-    console.log('69: addLang');
     const newLang = this.props.profiles.editForm.language;
     for (let i = 0; i < this.props.profiles.editForm.languages.length; i ++ ) {
       if (this.props.profiles.editForm.languages[i] === newLang) {
@@ -68,7 +62,6 @@ class Profile extends React.Component {
   }
 
   addSkill() {
-    console.log('80: addSkill');
     const newSkill = this.props.profiles.editForm.skill;
     for (let i = 0; i < this.props.profiles.editForm.skills.length; i ++ ) {
       if (this.props.profiles.editForm.skills[i] === newSkill) {
@@ -229,7 +222,6 @@ removeSkill(e) {
               id="ghUserName"
               name="ghUserName"
               value={this.props.profiles.editForm.ghUserName}
-              // onBlur={()=>this.getGithubProfile()}
               onChange={e => this.handleInput(e)}
               placeholder="GitHub User Name"
             />

@@ -132,11 +132,9 @@ function profiles(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { gettingProfile: false, getError: error, getSuccess: false, });
 
     case MODIFY_PROFILE_REQUEST:
-    console.log('request modify profile');
       return Object.assign({}, state, { savingProfile: true, saveError: null, saveSuccess: null, });
 
     case MODIFY_PROFILE_SUCCESS:
-    console.log('success modify profile');
     profile = Object.assign({}, action.payload);
           return update(
             state,
@@ -151,7 +149,6 @@ function profiles(state = INITIAL_STATE, action) {
           );
 
     case MODIFY_PROFILE_FAILURE:
-    console.log('failure modify profile');
       error = action.payload.data || { message: action.payload.message };
       return Object.assign({}, state, { savingProfile: false, saveError: error, saveSuccess: false, });
 
