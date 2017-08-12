@@ -3,6 +3,7 @@
    ========================== Route Descriptions ==============================
    VERB      URL                       DESCRIPTION
    ----------------------------------------------------------------------------
+   GET       /api/profiles             Get all profiles
    GET       /api/profile/:id          Get a user's profile
    PUT       /api/profile/:id          Update user's own profile
    DELETE    /api/profile/:id          Delete user's own profile
@@ -30,6 +31,14 @@ const parseSKill = require('../utils/skillsparser');
 const mailer     = require('../utils/mailer');
 const secret     = process.env.JWT_SECRET;
 const auth       = jwt({ secret: secret, requestProperty: 'token' });
+
+const user_projection = {
+    _id       : 1, updatedAt : 1, createdAt  : 1, email     : 1,
+    username  : 1, name      : 1, ghUserName : 1, ghProfile : 1,
+    time_zone : 1, skills    : 1, languages  : 1, validated : 1,
+    avatarUrl : 1, location  : 1, about      : 1, certs     : 1,
+    gender    : 1
+};
 
 
 /* ============================ UTILITY METHODS ============================ */
@@ -66,6 +75,31 @@ function getGithubProfile(ghUserName) {
 
 /* ================================ ROUTES ================================= */
 
+/* Get all user profiles. Secured route - valid JWT required
+   Returns an array of user profile objects on success.
+   Example: GET > `/api/profiles`
+*/
+routes.get('/api/profiles', auth, (req, res) => {
+
+    const target = req.params.id;
+
+    User.find({}, user_projection, (err, profiles) => {
+
+        if (!profiles) {
+            return res
+                .status(404)
+                .json({ message : 'No profiles found!'});
+        }
+
+        return res
+            .status(200)
+            .json(profiles);
+
+    });
+
+});
+
+
 /* Get a user's profile. Secured route - valid JWT required
    Returns JSON user profile object on success.
    Example: GET > `/api/profile/597dccac7017890bd8d13cc7`
@@ -74,7 +108,7 @@ routes.get('/api/profile/:id', auth, (req, res) => {
     
     const target = req.params.id;
     
-    User.findOne({_id: target}, (err, profile) => {
+    User.findOne({_id: target}, user_projection, (err, profile) => {
         
         if (!profile) {
             return res
