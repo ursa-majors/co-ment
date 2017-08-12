@@ -161,25 +161,26 @@ routes.put('/api/profile/:id', auth, (req, res) => {
 });
 
 
-/* Delete a user. Secured route - valid JWT required
+/* Delete a user and all their posts.
+   Secured route - valid JWT required
    Returns deleted user profile on success.
    Example: DELETE > /api/profile/597e3dca8167330add4be737
 */
 routes.delete('/api/profile/:id', auth, (req, res) => {
     
-    const target = {
+    const targetUser = {
         _id      : req.params.id,
         username : req.token.username
     };
     
     // make sure the requesting user ID and target user ID match
-    if (target._id !== req.token._id) {
+    if (targetUser._id !== req.token._id) {
         return res
             .status(400)
             .json({ message: 'Error: user ID mismatch.'});
     }
     
-    User.findOneAndRemove(target)
+    User.findOneAndRemove(targetUser)
         .exec()
         .then( user => {
             
@@ -191,13 +192,39 @@ routes.delete('/api/profile/:id', auth, (req, res) => {
                 
             } else {
                 
-                return res
-                    .status(200)
-                    .json({
-                        message : 'User profile deleted!',
-                        post    : user
-                    });
-
+                const postAuthor = {
+                    author_id : targetUser._id,
+                    author    : targetUser.username
+                };
+                
+                const updates = {
+                    deleted   : true,
+                    active    : false
+                };
+                
+                const options = {
+                    multi     : true
+                };
+                
+                // "delete" all posts from same author. Sets "deleted" to true,
+                // and "active" to false
+                Post.update(postAuthor, updates, options, (err, raw) => {
+                    
+                    if (err) { throw err; }
+                    
+                    else {
+                        console.log('The raw response from Mongo was ', raw);
+                        
+                        return res
+                            .status(200)
+                            .json({
+                                message : 'User profile deleted!',
+                                post    : user
+                            });
+                    }                    
+                    
+                }); 
+                
             }
         
         })
@@ -220,7 +247,9 @@ routes.delete('/api/profile/:id', auth, (req, res) => {
 */
 routes.get('/api/posts', auth, (req, res) => {
     
-    const query = {};
+    const query = {
+        deleted : false  // find only non-deleted posts
+    };
     
     // check for 'id' query param & add to 'query' map
     if (req.query.hasOwnProperty('id')) {
@@ -258,12 +287,13 @@ routes.get('/api/posts', auth, (req, res) => {
 */
 routes.post('/api/posts', auth, (req, res) => {
         
-    // Check if post with same author_id, role & title already exists
+    // Check if exists non-deleted post with same author_id, role & title
     Post
         .findOne({
             author_id : req.token._id,
             role      : req.body.role,
-            title     : req.body.title
+            title     : req.body.title,
+            deleted   : false
         })
         .exec()
         .then( post => {
@@ -281,7 +311,7 @@ routes.post('/api/posts', auth, (req, res) => {
                 const myPost = new Post();
                 
                 // build new post from request body and token
-                myPost.author       = req.body.author;
+                myPost.author       = req.token.username;
                 myPost.author_id    = req.token._id;
                 myPost.role         = req.body.role;
                 myPost.title        = req.body.title;
@@ -387,35 +417,35 @@ routes.delete('/api/posts/:id', auth, (req, res) => {
         _id       : req.params.id,
         author_id : req.token._id
     };
+    
+    const updates = {
+        deleted : true,
+        active  : false
+    };
 
-    Post.findOneAndRemove(target)
-        .exec()
-        .then( post => {
+    // findOneAndUpdate(conditions, update, callback) 
+    Post.findOneAndUpdate(target, updates, (err, post) => {
+        
+        if (err) { throw err; }
+        
+        if (!post) {
 
-            if (!post) {
-
-                return res
-                    .status(404)
-                    .json({message: 'Post not found!'});
-
-            } else {
-
-                return res
-                    .status(200)
-                    .json({
-                        message : 'Post deleted!',
-                        post    : post
-                    });
-
-            }
-
-        })
-        .catch( err => {
-            console.log('Error!!!', err);
             return res
-                .status(400)
-                .json({ message: err});
-        });
+                .status(404)
+                .json({message: 'Post not found!'});
+
+        } else {
+
+            return res
+                .status(200)
+                .json({
+                    message : 'Post deleted!',
+                    post    : post
+                });
+
+        }
+        
+    });
 
 });
 
