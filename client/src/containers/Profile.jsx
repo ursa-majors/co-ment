@@ -108,9 +108,9 @@ class Profile extends React.Component {
 
   validateInputs() {
     let msg = '';
-    if (this.props.profiles.editForm.ghUserName === '') {
-      msg = 'GitHub UserName is required.  ';
-    }
+    // if (this.props.profiles.editForm.ghUserName === '') {
+    //   msg = 'GitHub UserName is required.  ';
+    // }
     if (this.props.profiles.editForm.time_zone === 'Choose your time zone' || this.props.profiles.editForm.time_zone === '') {
       msg = 'Time zone is required.  ';
     }
@@ -143,7 +143,7 @@ class Profile extends React.Component {
 
     // check for required fields
     // message will be displayed; exit if validate fails
-    // if (!this.validateInputs()) { return; }
+    if (!this.validateInputs()) { return; }
 
     const body = {
       ghUserName: this.props.profiles.editForm.ghUserName,
@@ -164,7 +164,7 @@ class Profile extends React.Component {
     console.log(this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.profile._id, body));
     console.log(this.props.appState.profile);
 
-    this.props.history.push(`/`);
+    this.props.history.push(`/viewprofile/${this.props.appState.profile._id}`);
 
   }
 
@@ -180,7 +180,7 @@ class Profile extends React.Component {
     let ghProfile;
     let name;
     let avatarUrl;
-    const formError = this.props.profiles.formError ? 'error' : 'hidden';
+    const formError = this.props.profiles.editForm.errMsg ? 'error' : 'hidden';
     const msgClass = this.props.profiles.saveError ? 'error' : 'hidden';
     const languageList = languages.map(i => (<option key={i}>{i}</option>));
     const skillsList = skills.map(i => (<option key={i}>{i}</option>));
