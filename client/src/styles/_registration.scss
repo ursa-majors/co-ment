@@ -46,6 +46,10 @@
     width: 100%;
     text-align: left;
     padding: 0;
+    -moz-column-break-inside:avoid;
+    -webkit-column-break-inside:avoid;
+    column-break-inside:avoid;
+    position: relative;
   }
   &__input {
     width: 100%;
@@ -93,10 +97,20 @@
       font-family: 'Alegreya Sans', sans-serif;
       color: #545454;
       padding: 0 15px 0 0;
+      @include for-big-desktop-up {
+      font-size: 1.2em;
+    }
     }
     &--radio-wrap {
       display: inline-block;
       font-family: 'Alegreya Sans', sans-serif;
+    }
+
+    &--textarea {
+
+      &::placeholder {
+
+      }
     }
 
   }

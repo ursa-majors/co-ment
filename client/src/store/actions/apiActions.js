@@ -145,3 +145,21 @@ export function modifyProfile(token, profileId, body) {
     },
   };
 }
+
+export const GITHUB_PROFILE_REQUEST = 'GITHUB_PROFILE_REQUEST';
+export const GITHUB_PROFILE_SUCCESS = 'GITHUB_PROFILE_SUCCESS';
+export const GITHUB_PROFILE_FAILURE = 'GITHUB_PROFILE_FAILURE';
+
+export function githubProfile(username) {
+  return {
+    [CALL_API]: {
+      endpoint: `https://api.github.com/users/${username}`,
+      method: 'GET',
+      types: [GITHUB_PROFILE_REQUEST, GITHUB_PROFILE_SUCCESS, GITHUB_PROFILE_FAILURE],
+      headers : {
+            'Accept'     : 'application/vnd.github.v3+json',
+            'User-Agent' : 'request'
+        }
+    },
+  };
+}
