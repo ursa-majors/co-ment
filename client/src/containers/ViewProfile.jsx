@@ -29,7 +29,7 @@ class ViewProfile extends React.Component {
 
     return (
       <div className="view-profile">
-        {this.props.appState.profile.ghProfile ?
+
         <div className="view-preview">
           <div className="view-preview__image-wrap">
             {this.props.appState.profile.avatarUrl ?
@@ -65,7 +65,7 @@ class ViewProfile extends React.Component {
               {this.props.appState.profile.about}
             </div> }
           </div>
-        </div> : <Loading/> }
+        </div>
       </div>
     );
   }

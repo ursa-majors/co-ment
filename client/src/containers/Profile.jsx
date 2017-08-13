@@ -404,15 +404,7 @@ class Profile extends React.Component {
             <div className="form__input-group">
               <label htmlFor="about" className="form__label">About
               </label>
-              <textarea
-                className="form__input form__input--textarea"
-                id="about"
-                name="about"
-                value={this.props.profiles.editForm.about}
-                onChange={e => this.handleTextAreaInput(e)}
-                placeholder="Introduce yourself"
-                ref={(input) => { this.textInput = input; }}
-              />
+              <textarea className="form__input form__input--textarea" id="about" name="about" value={this.props.profiles.editForm.about} onChange={e => this.handleTextAreaInput(e)} placeholder="Introduce yourself" ref={(input) => { this.textInput = input; }} rows="5"/>
             </div>
           </div>
           <div className="form__input-group">

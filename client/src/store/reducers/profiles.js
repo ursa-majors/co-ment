@@ -173,8 +173,6 @@ function profiles(state = INITIAL_STATE, action) {
 
     case GITHUB_PROFILE_SUCCESS:
     let ghProfile = Object.assign({}, action.payload);
-    console.log('successfully fetched github profile:');
-    console.log(ghProfile);
 
       return update(
         state,
@@ -182,9 +180,7 @@ function profiles(state = INITIAL_STATE, action) {
           gettingGHProfile: { $set: false },
           getGHError: { $set: null },
           getGHSuccess: { $set: true },
-          // currentProfile: { ghProfile: { $set: ghProfile } },
           editForm: { ghProfile: { $set: ghProfile } },
-          profile: { ghProfile: { $set: ghProfile } },
         },
       );
 

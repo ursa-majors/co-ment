@@ -97,10 +97,20 @@
       font-family: 'Alegreya Sans', sans-serif;
       color: #545454;
       padding: 0 15px 0 0;
+      @include for-big-desktop-up {
+      font-size: 1.2em;
+    }
     }
     &--radio-wrap {
       display: inline-block;
       font-family: 'Alegreya Sans', sans-serif;
+    }
+
+    &--textarea {
+
+      &::placeholder {
+
+      }
     }
 
   }
