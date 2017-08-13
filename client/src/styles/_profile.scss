@@ -206,11 +206,28 @@
       padding: 20px;
       border-radius: 4px;
       align-self: flex-start;
+      max-height: 100%;
+      overflow-y: auto;
 
       @include for-tablet-portrait-up {
-          width: 60%;
+          width: 80%;
         }
-  }
+
+      }
+
+      &__column-wrap {
+        -webkit-column-gap: 20;
+        -moz-column-gap: 20;
+        column-gap: 20;
+        position: relative;
+        padding: 20px 10px 10px 10px;
+
+        @include for-tablet-portrait-up {
+          -webkit-column-count: 2;
+          -moz-column-count: 2;
+          column-count: 2;
+        }
+     }
   }
 
   .view-profile {

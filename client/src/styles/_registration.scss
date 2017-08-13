@@ -46,6 +46,10 @@
     width: 100%;
     text-align: left;
     padding: 0;
+    -moz-column-break-inside:avoid;
+    -webkit-column-break-inside:avoid;
+    column-break-inside:avoid;
+    position: relative;
   }
   &__input {
     width: 100%;
