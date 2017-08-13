@@ -5,6 +5,7 @@ import * as Actions from '../store/actions/profileActions';
 import * as apiActions from '../store/actions/apiActions';
 
 import InputAutosuggest from './InputAutosuggest';
+import RadioGroup from './RadioGroup';
 import {languages, skills, timezones } from '../utils';
 
 class Profile extends React.Component {
@@ -22,25 +23,13 @@ class Profile extends React.Component {
     this.addSkill = this.addSkill.bind(this);
     this.removeLanguage = this.removeLanguage.bind(this);
     this.removeSkill = this.removeSkill.bind(this);
+    this.handleRadioChange = this.handleRadioChange.bind(this);
   }
 
   componentDidMount() {
     // copy the current profile properties into the editable object
-    this.props.api.getProfile(this.props.appState.authToken, this.props.appState.profile._id);
+    this.props.actions.setEditProfile(this.props.appState.profile);
 }
-
-  // Add Tags on Comma or Enter
-  handleKeyPressAdd(e) {
-    if (e.charCode === 44 || e.which === 44 || e.charCode === 13 || e.which === 13) {
-      e.preventDefault();
-      const type = e.target.name;
-      if (type === 'language') {
-        this.addLanguage();
-      } else if (type === 'skill') {
-        this.addSkill();
-      }
-    }
-  }
 
   handleInput(e) {
     this.props.actions.setFormField(e.target.name, e.target.value);
@@ -72,6 +61,19 @@ class Profile extends React.Component {
     this.props.actions.addSkill(newSkill);
   }
 
+    // Add Tags on Comma or Enter
+  handleKeyPressAdd(e) {
+    if (e.charCode === 44 || e.which === 44 || e.charCode === 13 || e.which === 13) {
+      e.preventDefault();
+      const type = e.target.name;
+      if (type === 'language') {
+        this.addLanguage();
+      } else if (type === 'skill') {
+        this.addSkill();
+      }
+    }
+  }
+
   handleKeyDownRemove(e) {
     if (e.charCode === 13 || e.which === 13 || e.keyCode === 8 || e.which === 8) {
       const type = e.target.className;
@@ -93,20 +95,20 @@ class Profile extends React.Component {
   }
 }
 
-removeSkill(e) {
-  const newArray = this.props.profiles.editForm.skills;
-  for (let i = 0; i < this.props.profiles.editForm.skills.length; i ++ ) {
-    if (this.props.profiles.editForm.skills[i] === e.target.id) {
-      this.props.actions.removeSkill(i);
-      break;
+  removeSkill(e) {
+    const newArray = this.props.profiles.editForm.skills;
+    for (let i = 0; i < this.props.profiles.editForm.skills.length; i ++ ) {
+      if (this.props.profiles.editForm.skills[i] === e.target.id) {
+        this.props.actions.removeSkill(i);
+        break;
+      }
     }
   }
-}
 
   validateInputs() {
     let msg = '';
-    if (this.props.profiles.editForm.name === '') {
-      msg = 'Name is required.  ';
+    if (this.props.profiles.editForm.ghUserName === '') {
+      msg = 'GitHub UserName is required.  ';
     }
     if (this.props.profiles.editForm.time_zone === 'Choose your time zone' || this.props.profiles.editForm.time_zone === '') {
       msg = 'Time zone is required.  ';
@@ -144,15 +146,18 @@ removeSkill(e) {
 
     const body = {
       ghUserName: this.props.profiles.editForm.ghUserName,
-      name: this.props.profiles.editForm.name,
+      // name: this.props.profiles.editForm.name,
       languages: this.props.profiles.editForm.languages,
       skills: this.props.profiles.editForm.skills,
       time_zone: this.props.profiles.editForm.time_zone,
       gender: this.props.profiles.editForm.gender,
-      avatarUrl: this.props.profiles.editForm.avatarUrl,
+      // avatarUrl: this.props.profiles.editForm.avatarUrl,
     };
 
-      this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.profile._id, body);
+    console.log('sending');
+    console.log(body);
+
+    this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.profile._id, body);
 
     this.props.history.push(`/viewprofile/${this.props.appState.profile._id}`);
   }
@@ -170,49 +175,21 @@ removeSkill(e) {
     let name;
     let avatarUrl;
     const formError = this.props.profiles.formError ? 'error' : 'hidden';
-    const msgClass = this.props.profiles.saveError ? 'error' : this.props.profiles.saveSuccess ? 'success' : 'hidden';
+    const msgClass = this.props.profiles.saveError ? 'error' : 'hidden';
     const languageList = languages.map(i => (<option key={i}>{i}</option>));
     const skillsList = skills.map(i => (<option key={i}>{i}</option>));
     const tzList = timezones.map(i => (
       <option key={i[1]} value={`UTC ${i[0]}`}>{`(UTC ${i[0]}) ${i[1]}`}</option>
       ));
-    if (this.props.appState.profile.skills && this.props.appState.profile.languages) {
-       skillsDisp = this.props.appState.profile.skills.join(', ');
-       langDisp = this.props.appState.profile.languages.join(', ');
+    if (this.props.profiles.editForm.skills && this.props.profiles.editForm.languages) {
+       skillsDisp = this.props.profiles.editForm.skills.join(', ');
+       langDisp = this.props.profiles.editForm.languages.join(', ');
     }
 
     return (
       <div className="container profile">
-        <div className="preview">
-          <div className="preview__image-wrap">
-            {this.props.profiles.editForm.avatarUrl ?
-              <img className="preview__image" src={this.props.appState.profile.avatarUrl} alt={this.props.appState.profile.username} /> :
-              <i className="fa fa-user-circle fa-5x preview__icon" aria-hidden="true" />
-          }
-          </div>
-          <div className="preview__text-wrap">
-            <div className="preview__username">{this.props.profiles.editForm.username}</div>
-            <div className="preview__text">{this.props.profiles.editForm.name}</div>
-            <div className="preview__text">
-              <span className="preview__text--bold">Languages: &nbsp;</span>
-              {langDisp ? langDisp : ''}
-            </div>
-            <div className="preview__text">
-              <span className="preview__text--bold">Time zone: &nbsp;</span>
-              {this.props.profiles.editForm.time_zone}
-            </div>
-            <div className="preview__text">
-              <span className="preview__text--bold">Gender: &nbsp;</span>
-              {this.props.profiles.editForm.gender}
-            </div>
-            <div className="preview__text">
-              <span className="preview__text--bold">Skills: &nbsp;</span>
-              {skillsDisp ? skillsDisp : ''}
-            </div>
-          </div>
-        </div>
         <div className="profile__body">
-          <div className="form__header">Update Profile</div>
+          <div className="form__header">Update Profile: {this.props.appState.profile.username}</div>
           <div className="form__input-group">
             <label htmlFor="ghUserName" className="form__label">GitHub User Name
             </label>
@@ -226,7 +203,7 @@ removeSkill(e) {
               placeholder="GitHub User Name"
             />
           </div>
-          <div className="form__input-group">
+        {/*  <div className="form__input-group">
             <label htmlFor="name" className="form__label">Full name
             </label>
             <input
@@ -238,7 +215,7 @@ removeSkill(e) {
               onChange={e => this.handleInput(e)}
               placeholder="Full name"
             />
-          </div>
+          </div> */}
           <div className="form__input-group">
             <label htmlFor="language" className="form__label">Languages you speak fluently
             </label>
@@ -328,35 +305,15 @@ removeSkill(e) {
             </select>
           </div>
           <div className="form__input-group" >
-            <label htmlFor="gender" className="form__label">Gender</label>
-            <div className="form__input--radio-group">
-              <input
-                className="form__input--radio"
-                type="radio"
-                name="gender"
-                value="Male"
-                checked={this.props.profiles.editForm.gender === 'Male'}
-                onChange={(e) => this.handleInput(e)}/>
-              <span className="form__input--radio-label">Male</span>
-              <input
-                className="form__input--radio"
-                type="radio"
-                name="gender"
-                value="Female"
-                checked={this.props.profiles.editForm.gender === 'Female'}
-                onChange={(e) => this.handleInput(e)}/>
-              <span className="form__input--radio-label">Female</span>
-              <input
-                className="form__input--radio"
-                type="radio"
-                name="gender"
-                value="Other"
-                checked={this.props.profiles.editForm.gender === 'Other'}
-                onChange={(e) => this.handleInput(e)}/>
-              <span className="form__input--radio-label">Other</span>
-            </div>
+           <RadioGroup
+            title={'Gender'}
+            setName={'gender'}
+            type={'radio'}
+            controlFunc={this.handleRadioChange}
+            options={['Male', 'Female', 'Other']}
+            selectedOptions={this.props.profiles.editForm.gender} />
           </div>
-          <div className="form__input-group">
+      {/*    <div className="form__input-group">
             <label htmlFor="name" className="form__label">Link to profile image
             </label>
             <input
@@ -368,7 +325,7 @@ removeSkill(e) {
               onChange={e => this.handleInput(e)}
               placeholder="Paste URL or leave blank to use GitHub avatar"
             />
-          </div>
+          </div> */}
           <div className="form__input-group">
             <div className={formError}>{this.props.profiles.editForm.errMsg}</div>
           </div>
@@ -380,10 +337,8 @@ removeSkill(e) {
         </div>
         <div className="form__input-group">
             <div className={msgClass}>
-            {this.props.profiles.saveError ?
-              this.props.profiles.saveError.message :
-              this.props.profiles.saveSuccess ?
-              'Profile updated' : ''}
+            {this.props.profiles.saveError &&
+              this.props.profiles.saveError.message }
             </div>
           </div>
         </div>

@@ -19,7 +19,7 @@ class ViewProfile extends React.Component {
     //   .catch((error) => {
     //     console.log(error);
     //   });
-    // this.props.api.getProfile(this.props.appState.authToken, this.props.appState.profile._id);
+    this.props.api.getProfile(this.props.appState.authToken, this.props.appState.profile._id);
     console.log(this.props);
   }
 
@@ -52,10 +52,11 @@ class ViewProfile extends React.Component {
               <span className="view-preview__text--bold">Time zone: &nbsp;</span>
               {this.props.appState.profile.time_zone}
             </div>
-            <div className="view-preview__text">
-              <span className="view-preview__text--bold">Gender: &nbsp;</span>
-              {this.props.appState.profile.gender}
-            </div>
+            {this.props.appState.profile.gender &&
+              <div className="view-preview__text">
+                <span className="view-preview__text--bold">Gender: &nbsp;</span>
+                {this.props.appState.profile.gender}
+              </div> }
             <div className="view-preview__text">
               <span className="view-preview__text--bold">Skills: &nbsp;</span>
               {skillsDisp ? skillsDisp : ''}

@@ -80,13 +80,23 @@
 
     &--radio {
       margin: 0 5px 0 0;
+      padding: 1px;
+
+      &:focus {
+        border-radius: 50%;
+        outline: 2px solid #7AACFE !important; /* for non-webkit browsers */
+        outline: 2px auto -webkit-focus-ring-color !important;
+      }
 
     }
     &--radio-label {
       font-family: 'Alegreya Sans', sans-serif;
       color: #545454;
       padding: 0 15px 0 0;
-
+    }
+    &--radio-wrap {
+      display: inline-block;
+      font-family: 'Alegreya Sans', sans-serif;
     }
 
   }

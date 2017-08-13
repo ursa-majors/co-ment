@@ -121,11 +121,11 @@ function profiles(state = INITIAL_STATE, action) {
           gettingProfile: { $set: false },
           getError: { $set: null },
           getSuccess: { $set: true },
-          currentProfile: { $set: profile },
+          // currentProfile: { $set: profile },
           editForm: { $set: profile },
           profile: { $set: profile },
         },
-      );
+      ), ()=>{this.props.history.push(`/viewprofile/${this.props.appState.profile._id}`)};
 
     case GET_PROFILE_FAILURE:
       error = action.payload.data || { message: action.payload.message };
@@ -142,7 +142,7 @@ function profiles(state = INITIAL_STATE, action) {
               savingProfile: { $set: false },
               saveError: { $set: null },
               editForm: { $set: defaultForm },
-              currentProfile: { $set: profile },
+              // currentProfile: { $set: profile },
               profile: { $set: profile },
               saveSuccess: { $set: true },
             },
