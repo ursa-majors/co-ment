@@ -130,6 +130,7 @@ routes.put('/api/profile/:id', auth, (req, res) => {
             name       : ghProfile.name,
             avatarUrl  : ghProfile.avatar_url,
             location   : ghProfile.location,
+            about      : req.body.about,
             languages  : req.body.languages,
             gender     : req.body.gender,
             skills     : (req.body.skills).map( skill => parseSKill(skill) ),
