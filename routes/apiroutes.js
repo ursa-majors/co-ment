@@ -127,8 +127,12 @@ routes.put('/api/profile/:id', auth, (req, res) => {
         const updates = {
             ghUserName : req.body.ghUserName,
             ghProfile  : ghProfile,
-            pref_lang  : req.body.pref_lang,
-            certs      : (req.body.certs).map( skill => parseSKill(skill) ),
+            name       : ghProfile.name,
+            avatarUrl  : ghProfile.avatar_url,
+            location   : ghProfile.location,
+            languages  : req.body.languages,
+            gender     : req.body.gender,
+            skills     : (req.body.skills).map( skill => parseSKill(skill) ),
             time_zone  : req.body.time_zone
         };
 
