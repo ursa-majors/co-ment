@@ -7,6 +7,7 @@ import * as apiActions from '../store/actions/apiActions';
 import InputAutosuggest from './InputAutosuggest';
 import RadioGroup from './RadioGroup';
 import {languages, skills, timezones } from '../utils';
+import parseSKill from '../utils/skillsparser';
 
 class Profile extends React.Component {
 
@@ -58,7 +59,7 @@ class Profile extends React.Component {
         return;
       }
     }
-    this.props.actions.addSkill(newSkill);
+    this.props.actions.addSkill(parseSKill(newSkill));
   }
 
     // Add Tags on Comma or Enter
