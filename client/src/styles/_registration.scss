@@ -52,13 +52,13 @@
     border-radius: 3px;
     margin: 5px auto;
     border: 1px solid #d6d6d6;
-    padding: 15px;
+    padding: 12px;
     font-size: .9em;
     font-weight: 100;
     color: #545454;
-    @include for-tablet-portrait-up {
+    @include for-big-desktop-up {
+      padding: 15px;
       font-size: 1.2em;
-      padding: 20px;
     }
 
     &--select {
@@ -74,6 +74,31 @@
       white-space: nowrap;
     }
 
+    &--radio-group {
+      padding: 10px 0;
+    }
+
+    &--radio {
+      margin: 0 5px 0 0;
+      padding: 1px;
+
+      &:focus {
+        border-radius: 50%;
+        outline: 2px solid #7AACFE !important; /* for non-webkit browsers */
+        outline: 2px auto -webkit-focus-ring-color !important;
+      }
+
+    }
+    &--radio-label {
+      font-family: 'Alegreya Sans', sans-serif;
+      color: #545454;
+      padding: 0 15px 0 0;
+    }
+    &--radio-wrap {
+      display: inline-block;
+      font-family: 'Alegreya Sans', sans-serif;
+    }
+
   }
   &__connection-input {
     padding: 12px;
@@ -81,22 +106,28 @@
   &__label {
     font-family: 'Alegreya Sans SC', sans-serif;
     text-transform: lowercase;
-    font-size: 1.2em;
     width: 100%;
     margin-top: 10px;
     position: relative;
     top: 6px;
+    @include for-big-desktop-up {
+      font-size: 1.2em;
+    }
   }
 
   &__error {
+    font-family: 'Alegreya Sans', sans-serif;
     color: #a94442;
-    // background-color: #f2dede;
+    background-color: #f2dede;
     font-size: 1.2em;
-    font-weight: 500;
+    font-weight: 100;
     margin: 15px auto;
-    // border: 1px solid #ebccd1;
+    border: 1px solid #a94442;
+    padding: 7px;
     border-radius: 3px;
     transition: opacity .15s linear;
+    text-align: center;
+
   }
 
   &__button-wrap {
@@ -126,7 +157,7 @@
     background: transparent;
 
     @include for-tablet-portrait-up {
-      padding: 20px 40px;
+      // padding: 20px 40px;
       border: 2px solid white;
       font-size: 20px;
     }

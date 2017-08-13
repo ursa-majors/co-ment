@@ -101,7 +101,7 @@ class InputAutosuggest extends React.Component {
       || e.keyCode === 9 || e.which === 9
       ) {
       e.preventDefault();
-      this.props.addTag(e.target.name);
+      this.props.addTag();
       this.onSuggestionSelected();
     }
   }

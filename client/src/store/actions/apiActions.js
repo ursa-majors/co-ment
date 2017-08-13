@@ -64,6 +64,22 @@ export function getPost(token, userId, role) {
   };
 }
 
+export const GET_PROFILE_REQUEST = 'GET_PROFILE_REQUEST';
+export const GET_PROFILE_SUCCESS = 'GET_PROFILE_SUCCESS';
+export const GET_PROFILE_FAILURE = 'GET_PROFILE_FAILURE';
+
+export function getProfile(token, profileId) {
+  console.log(`getting profile with id=${profileId}`);
+  return {
+    [CALL_API]: {
+      endpoint: `https://co-ment.glitch.me/api/profile/${profileId}`,
+      method: 'GET',
+      types: [GET_PROFILE_REQUEST, GET_PROFILE_SUCCESS, GET_PROFILE_FAILURE],
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  };
+}
+
 export const GET_ALL_POSTS_REQUEST = 'GET_ALL_POSTS_REQUEST';
 export const GET_ALL_POSTS_SUCCESS = 'GET_ALL_POSTS_SUCCESS';
 export const GET_ALL_POSTS_FAILURE = 'GET_ALL_POSTS_FAILURE';
@@ -106,6 +122,23 @@ export function modifyPost(token, postId, body) {
       endpoint: `https://co-ment.glitch.me/api/posts/${postId}`,
       method: 'PUT',
       types: [MODIFY_POST_REQUEST, MODIFY_POST_SUCCESS, MODIFY_POST_FAILURE],
+      headers: { Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    },
+  };
+}
+
+export const MODIFY_PROFILE_REQUEST = 'MODIFY_PROFILE_REQUEST';
+export const MODIFY_PROFILE_SUCCESS = 'MODIFY_PROFILE_SUCCESS';
+export const MODIFY_PROFILE_FAILURE = 'MODIFY_PROFILE_FAILURE';
+
+export function modifyProfile(token, profileId, body) {
+  return {
+    [CALL_API]: {
+      endpoint: `https://co-ment.glitch.me/api/profile/${profileId}`,
+      method: 'PUT',
+      types: [MODIFY_PROFILE_REQUEST, MODIFY_PROFILE_SUCCESS, MODIFY_PROFILE_FAILURE],
       headers: { Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json' },
       body: JSON.stringify(body),

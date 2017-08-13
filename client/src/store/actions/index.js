@@ -86,10 +86,3 @@ export function clearLoginPwd() {
     type: CLEAR_LOGIN_PWD,
   });
 }
-
-export function updateProfile(profile) {
-  return ({
-    type: UPDATE_PROFILE,
-    payload: profile,
-  });
-}

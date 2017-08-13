@@ -58,7 +58,6 @@ body.user-is-tabbing *:focus {
   height: 100%;
 	height: calc(100vh - 59px);
   padding: 60px 0;
-  overflow-y: scroll;
 }
 
 .title {
@@ -73,6 +72,7 @@ body.user-is-tabbing *:focus {
   text-transform: lowercase;
 }
 
+// visible to screenreader only
 .sr-only {
     position: absolute;
     width: 1px;
@@ -83,3 +83,48 @@ body.user-is-tabbing *:focus {
     clip: rect(0,0,0,0);
     border: 0;
 }
+
+// use when you need to wrap an interactive element in a <button> element to enable keypress behavior and WAI-ARIA roles but don't want default browser button styling
+//
+.aria-button {
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  background: transparent;
+
+  &:hover, &:active, &:focus {
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    background: transparent;
+    outline: none;
+  }
+}
+
+.error {
+    font-family: 'Alegreya Sans', sans-serif;
+    color: #a94442;
+    background-color: #f2dede;
+    font-size: 1.2em;
+    font-weight: 100;
+    margin: 15px auto;
+    border: 1px solid #a94442;
+    padding: 7px;
+    border-radius: 3px;
+    transition: opacity .15s linear;
+    text-align: center;
+  }
+
+.success {
+    font-family: 'Alegreya Sans', sans-serif;
+    color: #3c763d;
+    background-color: #dff0d8;
+    font-size: 1.2em;
+    font-weight: 100;
+    margin: 15px auto;
+    border: 1px solid #3c763d;
+    padding: 7px;
+    border-radius: 3px;
+    transition: opacity .15s linear;
+    text-align: center;
+  }
