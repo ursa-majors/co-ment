@@ -10,18 +10,8 @@ import Loading from './Loading';
 class ViewProfile extends React.Component {
 
   componentWillMount() {
-    // const profileId = this.props.match.params.id;
-    // // axios default headers
-    // axios.defaults.baseURL = 'https://co-ment.glitch.me';
-    // axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
-    // axios.get(`/api/profile/${profileId}`)
-    //   .then((result) => {
-    //     this.setState({ profile: result.data });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    this.props.api.getProfile(this.props.appState.authToken, this.props.appState.profile._id);
+    const profileId = this.props.match.params.id;
+    this.props.api.getProfile(this.props.appState.authToken, profileId);
     console.log('cWm got profile:');
     console.log(this.props.appState.profile);
     console.log('props:');
@@ -50,6 +40,8 @@ class ViewProfile extends React.Component {
           <div className="view-preview__text-wrap">
             <div className="view-preview__username">{this.props.appState.profile.username}</div>
             <div className="view-preview__text">{this.props.appState.profile.name}</div>
+            {this.props.appState.profile.location &&
+            <div className="view-preview__text">{this.props.appState.profile.location}</div> }
             <div className="view-preview__text">
               <span className="view-preview__text--bold">Languages: &nbsp;</span>
               {langDisp ? langDisp : ''}
@@ -58,14 +50,20 @@ class ViewProfile extends React.Component {
               <span className="view-preview__text--bold">Time zone: &nbsp;</span>
               {this.props.appState.profile.time_zone}
             </div>
+            {this.props.appState.profile.gender &&
               <div className="view-preview__text">
                 <span className="view-preview__text--bold">Gender: &nbsp;</span>
                 {this.props.appState.profile.gender}
-              </div>
+              </div> }
             <div className="view-preview__text">
               <span className="view-preview__text--bold">Skills: &nbsp;</span>
               {skillsDisp ? skillsDisp : ''}
             </div>
+            {this.props.appState.profile.about &&
+            <div className="view-preview__text">
+              <span className="view-preview__text--bold">About me: &nbsp;</span>
+              {this.props.appState.profile.about}
+            </div> }
           </div>
         </div> : <Loading/> }
       </div>

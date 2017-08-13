@@ -134,3 +134,29 @@ export const formatDate = (date) => {
 
   return `${day} ${monthNames[monthIndex]} ${year}`;
 };
+
+////// get GitHub profile /////
+
+export const getGithubProfile = (ghUserName) => {
+
+    if (!ghUserName) { ghUserName = ''; }
+
+    const options = {
+        url : 'https://api.github.com/users/' + ghUserName,
+        headers : {
+            'Accept'     : 'application/vnd.github.v3+json',
+            'User-Agent' : 'request'
+        }
+    };
+
+    return new Promise( (resolve, reject) => {
+
+        request.get(options, (error, response, body) => {
+            if (!error && response.statusCode === 200) {
+                resolve(JSON.parse(body));
+            } else {
+                resolve(undefined);
+            }
+        });
+    });
+}

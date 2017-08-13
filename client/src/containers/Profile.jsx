@@ -6,10 +6,17 @@ import * as apiActions from '../store/actions/apiActions';
 
 import InputAutosuggest from './InputAutosuggest';
 import RadioGroup from './RadioGroup';
-import {languages, skills, timezones } from '../utils';
+import {languages, skills, timezones, getGithubProfile } from '../utils';
 import parseSKill from '../utils/skillsparser';
 
 class Profile extends React.Component {
+
+  static adjustTextArea(target) {
+    const el = target;
+    let adjustedHeight = el.clientHeight;
+    adjustedHeight = Math.max(el.scrollHeight, adjustedHeight);
+    if (adjustedHeight > el.clientHeight) { el.style.height = `${adjustedHeight + 20}px`; }
+  }
 
   constructor(props) {
     super(props);
@@ -17,6 +24,7 @@ class Profile extends React.Component {
     this.state = {
       suggestions: [],
       value: '',
+      showFields: false,
     };
 
     this.onChange = this.onChange.bind(this);
@@ -30,17 +38,50 @@ class Profile extends React.Component {
   componentWillMount() {
     // copy the current profile properties into the editable object
     this.props.actions.setEditProfile(this.props.appState.profile);
-}
+  }
+
+  componentDidMount() {
+    Profile.adjustTextArea(this.textInput);
+  }
 
   handleInput(e) {
+    // send form field values to editForm object
     this.props.actions.setFormField(e.target.name, e.target.value);
   }
 
+  handleTextAreaInput(e) {
+    this.props.actions.setFormField(e.target.name, e.target.value);
+    Profile.adjustTextArea(e.target);
+  }
+
   handleRadioChange(e) {
+    // handle radio group value change
     this.props.actions.setFormField('gender', e.target.value);
   }
 
+  checkGHProfile(e) {
+    // check to see if user has entered valid github username.
+    // if field is empty or gh profile not found, display optional form fields (full name, location, avatar url).
+    // if field is filled but no profile found, display error message (TODO)
+    console.log('checking github');
+    console.log(e.target.value);
+    if (e.target.value) {
+      const ghProfile = getGithubProfile(e.target.value);
+      console.log(ghProfile);
+      if (ghProfile === undefined) {
+        console.log('user not found');
+        // need error handling here
+        const newState = { ...this.state };
+        this.setState({ ...newState, showFields: true, });
+      }
+    } else {
+        const newState = { ...this.state };
+        this.setState({ ...newState, showFields: true, });
+      }
+  }
+
   addLanguage() {
+    // add field value to array of languages, display tags above input field, clear input
     const newLang = this.props.profiles.editForm.language;
     for (let i = 0; i < this.props.profiles.editForm.languages.length; i ++ ) {
       if (this.props.profiles.editForm.languages[i] === newLang) {
@@ -52,6 +93,7 @@ class Profile extends React.Component {
   }
 
   addSkill() {
+    // add field value to array of skills, display tags above input field, clear input
     const newSkill = this.props.profiles.editForm.skill;
     for (let i = 0; i < this.props.profiles.editForm.skills.length; i ++ ) {
       if (this.props.profiles.editForm.skills[i] === newSkill) {
@@ -62,8 +104,8 @@ class Profile extends React.Component {
     this.props.actions.addSkill(parseSKill(newSkill));
   }
 
-    // Add Tags on Comma or Enter
   handleKeyPressAdd(e) {
+    // add tags on comma or enter keypress
     if (e.charCode === 44 || e.which === 44 || e.charCode === 13 || e.which === 13) {
       e.preventDefault();
       const type = e.target.name;
@@ -76,6 +118,7 @@ class Profile extends React.Component {
   }
 
   handleKeyDownRemove(e) {
+    // when tag label is focused, backspace or enter will remove tag
     if (e.charCode === 13 || e.which === 13 || e.keyCode === 8 || e.which === 8) {
       const type = e.target.className;
       if (type === 'language') {
@@ -87,6 +130,7 @@ class Profile extends React.Component {
   }
 
  removeLanguage(e) {
+  // remove language from array
   const newArray = this.props.profiles.editForm.languages;
   for (let i = 0; i < this.props.profiles.editForm.languages.length; i ++ ) {
     if (this.props.profiles.editForm.languages[i] === e.target.id) {
@@ -97,6 +141,7 @@ class Profile extends React.Component {
 }
 
   removeSkill(e) {
+    // remove skill from array
     const newArray = this.props.profiles.editForm.skills;
     for (let i = 0; i < this.props.profiles.editForm.skills.length; i ++ ) {
       if (this.props.profiles.editForm.skills[i] === e.target.id) {
@@ -107,10 +152,11 @@ class Profile extends React.Component {
   }
 
   validateInputs() {
+    // name is only required if github userName is empty
     let msg = '';
-    // if (this.props.profiles.editForm.ghUserName === '') {
-    //   msg = 'GitHub UserName is required.  ';
-    // }
+    if (this.props.profiles.editForm.ghUserName === '' && this.props.profiles.editForm.name === '') {
+      msg = 'Name is required.  ';
+    }
     if (this.props.profiles.editForm.time_zone === 'Choose your time zone' || this.props.profiles.editForm.time_zone === '') {
       msg = 'Time zone is required.  ';
     }
@@ -147,30 +193,26 @@ class Profile extends React.Component {
 
     const body = {
       ghUserName: this.props.profiles.editForm.ghUserName,
-      // name: this.props.profiles.editForm.name,
+      name: this.props.profiles.editForm.name,
       languages: this.props.profiles.editForm.languages,
       skills: this.props.profiles.editForm.skills,
       time_zone: this.props.profiles.editForm.time_zone,
       gender: this.props.profiles.editForm.gender,
-      // avatarUrl: this.props.profiles.editForm.avatarUrl,
+      avatarUrl: this.props.profiles.editForm.avatarUrl,
+      location: this.props.profiles.editForm.location,
+      about: this.props.profiles.editForm.about,
     };
-
-    console.log('sending');
-    console.log(body);
 
     this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.profile._id, body);
 
-    console.log('162');
-    console.log(this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.profile._id, body));
-    console.log(this.props.appState.profile);
+    // data is being written to db, but is not showing up in the next view. timing is off somehow in the reducer, the next page is GETting the profile before the PUT is completed
 
     this.props.history.push(`/viewprofile/${this.props.appState.profile._id}`);
 
   }
 
-  ////// autosuggest functions ///////
-
-   onChange(id, newValue) {
+  onChange(id, newValue) {
+  // handle autosuggest selection
     this.props.actions.setFormField(id, newValue);
   }
 
@@ -182,11 +224,17 @@ class Profile extends React.Component {
     let avatarUrl;
     const formError = this.props.profiles.editForm.errMsg ? 'error' : 'hidden';
     const msgClass = this.props.profiles.saveError ? 'error' : 'hidden';
+
+    // seed values for autosuggest fields
     const languageList = languages.map(i => (<option key={i}>{i}</option>));
     const skillsList = skills.map(i => (<option key={i}>{i}</option>));
+
+    // render timezone select
     const tzList = timezones.map(i => (
       <option key={i[1]} value={`UTC ${i[0]}`}>{`(UTC ${i[0]}) ${i[1]}`}</option>
       ));
+
+    // render arrays of skills and languages for tag lists
     if (this.props.profiles.editForm.skills && this.props.profiles.editForm.languages) {
        skillsDisp = this.props.profiles.editForm.skills.join(', ');
        langDisp = this.props.profiles.editForm.languages.join(', ');
@@ -206,22 +254,53 @@ class Profile extends React.Component {
               name="ghUserName"
               value={this.props.profiles.editForm.ghUserName}
               onChange={e => this.handleInput(e)}
+              onBlur={(e) => this.checkGHProfile(e)}
               placeholder="GitHub User Name"
             />
           </div>
-        {/*  <div className="form__input-group">
-            <label htmlFor="name" className="form__label">Full name
-            </label>
-            <input
-              className="form__input"
-              type="text"
-              id="name"
-              name="name"
-              value={this.props.profiles.editForm.name}
-              onChange={e => this.handleInput(e)}
-              placeholder="Full name"
-            />
-          </div> */}
+          {this.state.showFields &&
+            <div>
+              <div className="form__input-group">
+                <label htmlFor="name" className="form__label">Full name
+                </label>
+                <input
+                  className="form__input"
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={this.props.profiles.editForm.name}
+                  onChange={e => this.handleInput(e)}
+                  placeholder="Full name"
+                />
+              </div>
+              <div className="form__input-group">
+                <label htmlFor="location" className="form__label">Location
+                </label>
+                <input
+                  className="form__input"
+                  type="text"
+                  id="location"
+                  name="location"
+                  value={this.props.profiles.editForm.location}
+                  onChange={e => this.handleInput(e)}
+                  placeholder="Location"
+                />
+              </div>
+              <div className="form__input-group">
+                <label htmlFor="name" className="form__label">Link to profile image
+                </label>
+                <input
+                  className="form__input"
+                  type="text"
+                  id="avatarUrl"
+                  name="avatarUrl"
+                  value={this.props.profiles.editForm.avatarUrl}
+                  onChange={e => this.handleInput(e)}
+                  placeholder="Paste URL or leave blank to use GitHub avatar"
+                />
+              </div>
+            </div>
+          }
           <div className="form__input-group">
             <label htmlFor="language" className="form__label">Languages you speak fluently
             </label>
@@ -319,19 +398,19 @@ class Profile extends React.Component {
             options={['Male', 'Female', 'Other']}
             selectedOptions={this.props.profiles.editForm.gender} />
           </div>
-      {/*    <div className="form__input-group">
-            <label htmlFor="name" className="form__label">Link to profile image
+          <div className="form__input-group">
+            <label htmlFor="about" className="form__label">About
             </label>
-            <input
-              className="form__input"
-              type="text"
-              id="avatarUrl"
-              name="avatarUrl"
-              value={this.props.profiles.editForm.avatarUrl}
-              onChange={e => this.handleInput(e)}
-              placeholder="Paste URL or leave blank to use GitHub avatar"
+            <textarea
+              className="form__input form__input--textarea"
+              id="about"
+              name="about"
+              value={this.props.profiles.editForm.about}
+              onChange={e => this.handleTextAreaInput(e)}
+              placeholder="Introduce yourself"
+              ref={(input) => { this.textInput = input; }}
             />
-          </div> */}
+          </div>
           <div className="form__input-group">
             <div className={formError}>{this.props.profiles.editForm.errMsg}</div>
           </div>
