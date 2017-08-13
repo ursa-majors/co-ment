@@ -53,10 +53,10 @@ export const GET_POST_REQUEST = 'GET_POST_REQUEST';
 export const GET_POST_SUCCESS = 'GET_POST_SUCCESS';
 export const GET_POST_FAILURE = 'GET_POST_FAILURE';
 
-export function getPost(token, postId) {
+export function getPost(token, userId, role) {
   return {
     [CALL_API]: {
-      endpoint: `https://co-ment.glitch.me/api/post/${postId}`,
+      endpoint: `https://co-ment.glitch.me/api/posts&author_id=${userId}&role=${role}`,
       method: 'GET',
       types: [GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE],
       headers: { Authorization: `Bearer ${token}` },
@@ -102,7 +102,7 @@ export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
 export function addPost(token, body) {
   return {
     [CALL_API]: {
-      endpoint: 'https://co-ment.glitch.me/api/post',
+      endpoint: 'https://co-ment.glitch.me/api/posts',
       method: 'POST',
       types: [ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE],
       headers: { Authorization: `Bearer ${token}`,

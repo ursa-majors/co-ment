@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as Actions from '../store/actions/apiActions';
 import Loading from '../containers/Loading';
+import { formatDate } from '../utils';
 
 class Connections extends React.Component {
 
@@ -26,21 +27,21 @@ class Connections extends React.Component {
     return (
       <div className="container">
         <div className="conn-preview">
-          <div className="content__text--wrap">
-            <div className="content__title">Connections</div>
+          <div className="conn-preview__text--wrap">
+            <div className="conn-preview__title">Connections</div>
           </div>
-          <div className="content__header-wrap">
-            <div className="content__header">Mentor Name</div>
-            <div className="content__header">Mentee Name</div>
-            <div className="content__header">Status</div>
-            <div className="content__header">Date</div>
+          <div className="conn-preview__header-wrap">
+            <div className="conn-preview__header">Mentor</div>
+            <div className="conn-preview__header">Mentee</div>
+            <div className="conn-preview__header">Status</div>
+            <div className="conn-preview__header conn-preview__hide-for-small">Date</div>
           </div>
             {this.props.connection.connections.map(item => (
-              <div className="content__header-wrap">
-                <div className="content__text">{item.mentorName}</div>
-                <div className="content__text">{item.menteeName}</div>
-                <div className="content__text">{item.status}</div>
-                <div className="content__text">{item.dateStarted}</div>
+              <div className="conn-preview__header-wrap">
+                <div className="conn-preview__text">{item.mentorName}</div>
+                <div className="conn-preview__text">{item.menteeName}</div>
+                <div className="conn-preview__text">{item.status}</div>
+                <div className="conn-preview__text conn-preview__hide-for-small">{formatDate(new Date(item.dateStarted))}</div>
               </div>
             ))}
         </div>

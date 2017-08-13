@@ -4,7 +4,8 @@ import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import * as Actions from '../store/actions/postActions';
-
+import Spinner from '../containers/Spinner';
+import Modal from '../containers/Modal';
 
 class ViewPost extends React.Component {
 
@@ -39,6 +40,26 @@ class ViewPost extends React.Component {
       });
   }
 
+  /**
+  *  Check to see if there is already a similar connection between the user and poster
+  **/
+  checkConnectionRequest = () => {
+    const connections = this.props.connection.connections;
+    if (connections.length > 0) {
+      for (let i = 0; i < connections.length; i += 1) {
+        if (connections[i].initiator === this.props.appState.profile._id &&
+          connections[i][this.props.posts.currentPost.role] === this.props.posts.currentPost.author_id) {
+          this.props.actions.setModalText('You already have a connection to this poster');
+          this.props.actions.setModalClass('modal__show');
+          return;
+        }
+      }
+    } else {
+      // TODO: go get connections, then test them as above
+    }
+    this.props.history.push('/connection');
+  }
+
   render() {
     const roleText = (this.props.posts.currentPost.role === 'mentor' ? ' Available' : ' Wanted');
     const owner = (this.props.appState.profile._id === this.props.posts.currentPost.author_id);
@@ -62,7 +83,7 @@ class ViewPost extends React.Component {
       actions = (
         <ul className="post-nav">
           <li className="post-nav__item" >
-            <span className="post-nav__item-link pointer" onClick={() => this.props.history.push('/connection')}>
+            <span className="post-nav__item-link pointer" onClick={this.checkConnectionRequest}>
               Request Connection
             </span>
           </li>
@@ -72,9 +93,15 @@ class ViewPost extends React.Component {
 
     return (
       <div className="post-view">
+        <Spinner cssClass={this.props.posts.viewPostSpinnerClass} />
+        <Modal
+          modalClass={this.props.posts.viewPostModalClass}
+          modalText={this.props.posts.viewPostModalText}
+          dismiss={() => { this.props.actions.setModalText(''); this.props.actions.setModalClass('modal__hide'); }}
+        />
         <div className="single-post">
             <div className="single-post__username">{`Mentor ${roleText}`}</div>
-            <div className="single-post__text preview__title">
+            <div className="preview__title">
               {this.props.posts.currentPost.title}
             </div>
             <div className="single-post__text">
@@ -109,6 +136,7 @@ class ViewPost extends React.Component {
 const mapStateToProps = state => ({
   appState: state.appState,
   posts: state.posts,
+  connection: state.connection,
 });
 
 const mapDispatchToProps = dispatch => ({
