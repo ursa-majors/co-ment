@@ -58,11 +58,10 @@ class ViewProfile extends React.Component {
               <span className="view-preview__text--bold">Time zone: &nbsp;</span>
               {this.props.appState.profile.time_zone}
             </div>
-            {this.props.appState.profile.gender &&
               <div className="view-preview__text">
                 <span className="view-preview__text--bold">Gender: &nbsp;</span>
                 {this.props.appState.profile.gender}
-              </div> }
+              </div>
             <div className="view-preview__text">
               <span className="view-preview__text--bold">Skills: &nbsp;</span>
               {skillsDisp ? skillsDisp : ''}

@@ -89,9 +89,11 @@ class InputAutosuggest extends React.Component {
   };
 
   onSuggestionSelected() {
-    this.setState({
-      value: ''
-    });
+    // console.log(this.state.value);
+    // this.props.addTag();
+    // this.setState({
+    //     value: ''
+    //   });
   };
 
   // comma or enter or tab in skill field triggers addSkill
@@ -102,7 +104,9 @@ class InputAutosuggest extends React.Component {
       ) {
       e.preventDefault();
       this.props.addTag();
-      this.onSuggestionSelected();
+      this.setState({
+        value: ''
+      });
     }
   }
 
