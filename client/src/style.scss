@@ -69,6 +69,7 @@ body.user-is-tabbing *:focus {
   text-transform: lowercase;
 }
 
+// visible to screenreader only
 .sr-only {
     position: absolute;
     width: 1px;
@@ -78,6 +79,23 @@ body.user-is-tabbing *:focus {
     overflow: hidden;
     clip: rect(0,0,0,0);
     border: 0;
+}
+
+// use when you need to wrap an interactive element in a <button> element to enable keypress behavior and WAI-ARIA roles but don't want default browser button styling
+//
+.aria-button {
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  background: transparent;
+
+  &:hover, &:active, &:focus {
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    background: transparent;
+    outline: none;
+  }
 }
 
 .error {

@@ -3,11 +3,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import axios from 'axios';
 
+import * as Actions from '../store/actions/profileActions';
 import * as apiActions from '../store/actions/apiActions';
+import Loading from './Loading';
 
 class ViewProfile extends React.Component {
 
-  componentDidMount() {
+  componentWillMount() {
     // const profileId = this.props.match.params.id;
     // // axios default headers
     // axios.defaults.baseURL = 'https://co-ment.glitch.me';
@@ -20,6 +22,9 @@ class ViewProfile extends React.Component {
     //     console.log(error);
     //   });
     this.props.api.getProfile(this.props.appState.authToken, this.props.appState.profile._id);
+    console.log('cWm got profile:');
+    console.log(this.props.appState.profile);
+    console.log('props:');
     console.log(this.props);
   }
 
@@ -34,6 +39,7 @@ class ViewProfile extends React.Component {
 
     return (
       <div className="view-profile">
+        {this.props.appState.profile.ghProfile ?
         <div className="view-preview">
           <div className="view-preview__image-wrap">
             {this.props.appState.profile.avatarUrl ?
@@ -62,7 +68,7 @@ class ViewProfile extends React.Component {
               {skillsDisp ? skillsDisp : ''}
             </div>
           </div>
-        </div>
+        </div> : <Loading/> }
       </div>
     );
   }

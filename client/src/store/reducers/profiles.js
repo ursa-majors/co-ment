@@ -60,13 +60,13 @@ function profiles(state = INITIAL_STATE, action) {
           editForm: {
             skill: { $set: '' },
             language: { $set: '' },
-            skills: { $set: action.payload.skills },
-            gender: { $set: action.payload.gender },
-            languages: { $set: action.payload.languages },
+            skills: { $set: action.payload.skills || [] },
+            gender: { $set: action.payload.gender || '' },
+            languages: { $set: action.payload.languages || [] },
             time_zone: { $set: action.payload.time_zone || 'Choose your time zone' },
-            name: { $set: action.payload.name },
-            ghUserName: { $set: action.payload.ghUserName },
-            avatarUrl: { $set: action.payload.avatar_url },
+            name: { $set: action.payload.name || '' },
+            ghUserName: { $set: action.payload.ghUserName || '' },
+            avatarUrl: { $set: action.payload.avatar_url || '' },
             hideErr: { $set: 'form__hidden' },
             errMsg: { $set: '' },
             update: { $set: true },
@@ -114,18 +114,22 @@ function profiles(state = INITIAL_STATE, action) {
 
     case GET_PROFILE_SUCCESS:
     let profile = Object.assign({}, action.payload);
-    console.log('121', profile);
-      return update(
+    console.log('successfully got profile:');
+    console.log(profile);
+
+      const newState = update(
         state,
         {
           gettingProfile: { $set: false },
           getError: { $set: null },
           getSuccess: { $set: true },
-          // currentProfile: { $set: profile },
+          currentProfile: { $set: profile },
           editForm: { $set: profile },
           profile: { $set: profile },
         },
-      ), ()=>{this.props.history.push(`/viewprofile/${this.props.appState.profile._id}`)};
+      );
+      console.log(newState);
+      return newState;
 
     case GET_PROFILE_FAILURE:
       error = action.payload.data || { message: action.payload.message };
@@ -135,15 +139,14 @@ function profiles(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { savingProfile: true, saveError: null, saveSuccess: null, });
 
     case MODIFY_PROFILE_SUCCESS:
-    profile = Object.assign({}, action.payload);
           return update(
             state,
             {
               savingProfile: { $set: false },
               saveError: { $set: null },
-              editForm: { $set: defaultForm },
-              // currentProfile: { $set: profile },
-              profile: { $set: profile },
+              editForm: { $set: action.payload.user },
+              currentProfile: { $set: action.payload.user },
+              profile: { $set: action.payload.user },
               saveSuccess: { $set: true },
             },
           );

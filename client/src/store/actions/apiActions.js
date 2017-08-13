@@ -134,8 +134,6 @@ export const MODIFY_PROFILE_SUCCESS = 'MODIFY_PROFILE_SUCCESS';
 export const MODIFY_PROFILE_FAILURE = 'MODIFY_PROFILE_FAILURE';
 
 export function modifyProfile(token, profileId, body) {
-  console.dir(body);
-  console.log(`sending ${body} to api with token ${token} and profileId ${profileId}`);
   return {
     [CALL_API]: {
       endpoint: `https://co-ment.glitch.me/api/profile/${profileId}`,

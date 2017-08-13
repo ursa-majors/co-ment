@@ -26,7 +26,7 @@ class Profile extends React.Component {
     this.handleRadioChange = this.handleRadioChange.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     // copy the current profile properties into the editable object
     this.props.actions.setEditProfile(this.props.appState.profile);
 }
@@ -159,7 +159,12 @@ class Profile extends React.Component {
 
     this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.profile._id, body);
 
-    this.props.history.push(`/viewprofile/${this.props.appState.profile._id}`);
+    console.log('162');
+    console.log(this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.profile._id, body));
+    console.log(this.props.appState.profile);
+
+    this.props.history.push(`/`);
+
   }
 
   ////// autosuggest functions ///////
