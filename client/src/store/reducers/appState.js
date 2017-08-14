@@ -4,7 +4,7 @@ import { LOGIN, LOGOUT, UPDATE_PROFILE } from '../actions';
 const INITIAL_STATE = {
   loggedIn: false,
   authToken: {},
-  profile: {},
+  userId: '',
 };
 
 function appState(state = INITIAL_STATE, action) {
@@ -13,7 +13,7 @@ function appState(state = INITIAL_STATE, action) {
       window.localStorage.setItem('authToken', JSON.stringify(action.token));
       window.localStorage.setItem('userId', JSON.stringify(action.profile._id));
       return update(state,
-        { profile: { $set: action.profile },
+        { userId: { $set: action.profile._id },
           authToken: { $set: action.token },
           loggedIn: { $set: true },
         },

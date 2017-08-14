@@ -1,6 +1,7 @@
 import update from 'immutability-helper';
 import { SAVE_PROFILE, SET_CURRENT_PROFILE, SET_EDIT_PROFILE, SET_FORM_FIELD, ADD_LANGUAGE,
-  ADD_SKILL, REMOVE_LANGUAGE, REMOVE_SKILL, DISMISS_VIEWPROFILE_MODAL } from '../actions/profileActions';
+  ADD_SKILL, REMOVE_LANGUAGE, REMOVE_SKILL, DISMISS_VIEWPROFILE_MODAL, SET_USER_PROFILE,
+ } from '../actions/profileActions';
 import { GET_PROFILE_REQUEST, GET_PROFILE_SUCCESS, GET_PROFILE_FAILURE,
   MODIFY_PROFILE_REQUEST, MODIFY_PROFILE_SUCCESS, MODIFY_PROFILE_FAILURE,
   GITHUB_PROFILE_REQUEST, GITHUB_PROFILE_SUCCESS, GITHUB_PROFILE_FAILURE,
@@ -37,6 +38,7 @@ const INITIAL_STATE = {
     location: '',
     about: '',
   },
+  userProfile: {},
   profileSpinnerClass: 'spinner__hide',
   viewProfileModalClass: 'modal__hide',
   viewProfileModalText: '',
@@ -65,6 +67,9 @@ function profiles(state = INITIAL_STATE, action) {
 
     case SET_CURRENT_PROFILE:
       return update(state, { currentProfile: { $set: action.payload } });
+
+    case SET_USER_PROFILE:
+      return update(state, { userProfile: { $set: action.payload } });
 
     case SET_EDIT_PROFILE:
       return update(
@@ -177,7 +182,7 @@ function profiles(state = INITIAL_STATE, action) {
           saveError: { $set: null },
           editForm: { $set: action.payload.user },
           currentProfile: { $set: action.payload.user },
-          profile: { $set: action.payload.user },
+          userProfile: { $set: action.payload.user },
           saveSuccess: { $set: true },
         },
       );

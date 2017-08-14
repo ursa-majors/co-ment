@@ -1,5 +1,6 @@
 export const SAVE_PROFILE = 'SAVE_PROFILE';
 export const SET_CURRENT_PROFILE = 'SET_CURRENT_PROFILE';
+export const SET_USER_PROFILE = 'SET_USER_PROFILE';
 export const SET_EDIT_PROFILE = 'SET_EDIT_PROFILE';
 export const SET_FORM_FIELD = 'SET_FORM_FIELD';
 export const ADD_SKILL = 'ADD_SKILL';
@@ -18,6 +19,13 @@ export function saveProfile(profile) {
 export function setCurrentProfile(profile) {
   return ({
     type: SET_CURRENT_PROFILE,
+    payload: profile,
+  });
+}
+
+export function setUserProfile(profile) {
+  return ({
+    type: SET_USER_PROFILE,
     payload: profile,
   });
 }
