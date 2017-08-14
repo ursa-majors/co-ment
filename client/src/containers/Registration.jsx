@@ -43,7 +43,6 @@ class Registration extends React.Component {
           // TODO: Handle errors such as duplicate user
           this.props.login(result.data.token, result.data.profile);
           this.props.setUserProfile(result.data.profile);
-          this.props.
           this.props.history.push('/');
         })
         .catch((error) => {
