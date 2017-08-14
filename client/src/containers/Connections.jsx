@@ -9,7 +9,7 @@ class Connections extends React.Component {
 
   componentDidMount() {
     const token = this.props.appState.authToken;
-    const id = this.props.appState.profile._id;
+    const id = this.props.profiles.userProfile._id;
     this.props.api.getConnections(token, id);
   }
 
@@ -53,6 +53,7 @@ class Connections extends React.Component {
 const mapStateToProps = state => ({
   appState: state.appState,
   connection: state.connection,
+  profiles: state.profiles,
 });
 
 const mapDispatchToProps = dispatch => ({

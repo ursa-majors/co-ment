@@ -47,7 +47,7 @@ class ViewPost extends React.Component {
     const connections = this.props.connection.connections;
     if (connections.length > 0) {
       for (let i = 0; i < connections.length; i += 1) {
-        if (connections[i].initiator === this.props.appState.profile._id &&
+        if (connections[i].initiator === this.props.appState.userId &&
           connections[i][this.props.posts.currentPost.role] === this.props.posts.currentPost.author_id) {
           this.props.actions.setModalText('You already have a connection to this poster');
           this.props.actions.setModalClass('modal__show');
@@ -62,7 +62,7 @@ class ViewPost extends React.Component {
 
   render() {
     const roleText = (this.props.posts.currentPost.role === 'mentor' ? ' Available' : ' Wanted');
-    const owner = (this.props.appState.profile._id === this.props.posts.currentPost.author_id);
+    const owner = (this.props.appState.userId === this.props.posts.currentPost.author_id);
     let actions;
     if (owner) {
       actions = (

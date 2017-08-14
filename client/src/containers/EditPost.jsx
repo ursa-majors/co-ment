@@ -90,8 +90,8 @@ class EditPost extends React.Component {
     if (!this.validateInputs()) { return; }
 
     const body = {
-      author: this.props.appState.profile.username,
-      author_id: this.props.appState.profile._id,
+      author: this.props.profiles.userProfile.username,
+      author_id: this.props.profiles.userProfile._id,
       role: this.props.posts.editForm.role,
       title: this.props.posts.editForm.title,
       body: this.props.posts.editForm.content,

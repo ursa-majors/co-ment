@@ -13,7 +13,6 @@ class ViewProfile extends React.Component {
     const profileId = this.props.match.params.id;
     this.props.api.getProfile(this.props.appState.authToken, profileId);
     console.log('cWm got profile:');
-    console.log(this.props.appState.profile);
     console.log('props:');
     console.log(this.props);
   }

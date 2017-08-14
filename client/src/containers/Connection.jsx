@@ -10,8 +10,8 @@ class Connection extends React.Component {
     const desiredRole = (this.props.posts.currentPost.role.toLowerCase() === 'mentor' ? 'mentee' : 'mentor');
     this.state = {
       recipient: this.props.posts.currentPost.author,
-      sender: this.props.appState.profile.username,
-      subject: `co/ment - Contact Request from ${this.props.appState.profile.username}`,
+      sender: this.props.profiles.userProfile.username,
+      subject: `co/ment - Contact Request from ${this.props.profiles.userProfile.username}`,
       role: desiredRole,
       body: '',
       formError: '',
@@ -25,11 +25,11 @@ class Connection extends React.Component {
   sendMsg = () => {
     const token = this.props.appState.authToken;
     const connection = {
-      mentor: (this.state.role === 'mentor' ? this.props.appState.profile._id : this.props.posts.currentPost.author_id ),
-      mentee: (this.state.role === 'mentee' ? this.props.appState.profile._id : this.props.posts.currentPost.author_id ),
-      mentorName: (this.state.role === 'mentor' ? this.props.appState.profile.username : this.props.posts.currentPost.author ),
-      menteeName: (this.state.role === 'mentee' ? this.props.appState.profile.username : this.props.posts.currentPost.author ),
-      initiator: this.props.appState.profile._id,
+      mentor: (this.state.role === 'mentor' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author_id ),
+      mentee: (this.state.role === 'mentee' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author_id ),
+      mentorName: (this.state.role === 'mentor' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author ),
+      menteeName: (this.state.role === 'mentee' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author ),
+      initiator: this.props.appState.userId,
       status: 'pending',
     };
     this.props.api.contact(token, { bodyText: this.state.body }, this.props.posts.currentPost.author_id);
@@ -87,6 +87,7 @@ class Connection extends React.Component {
 const mapStateToProps = state => ({
   appState: state.appState,
   posts: state.posts,
+  profiles: state.profiles,
 });
 
 const mapDispatchToProps = dispatch => ({

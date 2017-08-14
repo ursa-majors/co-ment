@@ -98,7 +98,7 @@ class Posts extends React.Component {
           minWidth: 40,
           filterable: true,
           Cell: (props) => {
-            const url = (this.props.appState.profile._id === props.original.author_id ? '/profile' : `/viewprofile/${props.original.author_id}`);
+            const url = (this.props.appState.userId === props.original.author_id ? '/profile' : `/viewprofile/${props.original.author_id}`);
             return (
               <div className="posts__cell">
                 <Link to={`${url}`}>
