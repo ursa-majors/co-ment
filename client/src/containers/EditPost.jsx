@@ -197,6 +197,7 @@ class EditPost extends React.Component {
 const mapStateToProps = state => ({
   appState: state.appState,
   posts: state.posts,
+  profiles: state.profiles,
 });
 
 const mapDispatchToProps = dispatch => ({
