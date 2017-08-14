@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import axios from 'axios';
 import * as Actions from '../store/actions';
+import * as profileActions from '../store/actions/profileActions';
 // Placeholder component for login //
 
 class Login extends React.Component {
@@ -23,6 +24,7 @@ class Login extends React.Component {
       axios.post('https://co-ment.glitch.me/api/login', { username, password })
         .then((result) => {
           this.props.actions.login(result.data.token, result.data.profile);
+          this.props.profileActions.setUserProfile(result.data.profile);
           this.props.actions.clearLoginPwd();
           this.props.history.push('/');
         })
@@ -103,6 +105,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(Actions, dispatch),
+  profileActions: bindActionCreators(profileActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

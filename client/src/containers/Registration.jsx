@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import * as Actions from '../store/actions/regActions';
 import { login } from '../store/actions';
+import { setUserProfile } from '../store/actions/profileActions';
 
 class Registration extends React.Component {
 
@@ -41,6 +42,7 @@ class Registration extends React.Component {
         .then((result) => {
           // TODO: Handle errors such as duplicate user
           this.props.login(result.data.token, result.data.profile);
+          this.props.setUserProfile(result.data.profile);
           this.props.history.push('/');
         })
         .catch((error) => {
@@ -135,6 +137,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(Actions, dispatch),
   login: bindActionCreators(login, dispatch),
+  setUserProfile: bindActionCreators(setUserProfile, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Registration);

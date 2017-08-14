@@ -37,7 +37,7 @@ class Profile extends React.Component {
 
   componentWillMount() {
     // copy the current profile properties into the editable object
-    this.props.actions.setEditProfile(this.props.appState.profile);
+    this.props.actions.setEditProfile(this.props.profiles.userProfile);
   }
 
   componentDidMount() {
@@ -177,7 +177,6 @@ class Profile extends React.Component {
   }
 
   handleSubmit() {
-
     // clear previous errors
     this.props.actions.setFormField('hideErr', 'posts__hidden');
 
@@ -205,11 +204,11 @@ class Profile extends React.Component {
       about: this.props.profiles.editForm.about,
     };
 
-    this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.profile._id, body);
+    this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.userId, body);
 
     // data is being written to db, but is not showing up in the next view. timing is off somehow in the reducer, the next page is GETting the profile before the PUT is completed
 
-    this.props.history.push(`/viewprofile/${this.props.appState.profile._id}`);
+    this.props.history.push(`/viewprofile/${this.props.appState.userId}`);
 
   }
 
@@ -245,7 +244,7 @@ class Profile extends React.Component {
     return (
       <div className="container profile" id="profile-form">
         <div className="profile__body">
-          <div className="form__header">Update Profile: {this.props.appState.profile.username}</div>
+          <div className="form__header">Update Profile: {this.props.profiles.userProfile.username}</div>
           <div className="profile__column-wrap">
             <div className="form__input-group">
               <label htmlFor="ghUserName" className="form__label">GitHub User Name

@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import * as Actions from '../store/actions';
+import * as profileActions from '../store/actions/profileActions';
 
 class Home extends React.Component {
 
@@ -23,6 +24,7 @@ class Home extends React.Component {
         })
         .then((response) => {
           this.props.actions.login(token, response.data);
+          this.props.profileActions.setUserProfile(response.data);
         })
         .catch(() => {
           this.props.actions.logout();
@@ -79,5 +81,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(Actions, dispatch),
+  profileActions: bindActionCreators(profileActions, dispatch),
 });
+
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

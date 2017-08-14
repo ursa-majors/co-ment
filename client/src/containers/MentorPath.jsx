@@ -16,13 +16,13 @@ const searchObj = {
 class MentorPath extends React.Component {
 
   componentDidMount() {
-    this.props.api.getPost( this.props.appState.authToken, this.props.appState.profile._id, 'mentor')
+    this.props.api.getPost( this.props.appState.authToken, this.props.appState.userId, 'mentor')
   }
 
   profileComplete() {
     let valid = false;
-    if (this.props.appState.profile.languages.length > 0 && this.props.appState.profile.time_zone !== '' &&
-      this.props.appState.profile.skills.length > 0  && this.props.appState.profile.validated) {
+    if (this.props.profiles.userProfile.languages.length > 0 && this.props.profiles.userProfile.time_zone !== '' &&
+      this.props.profiles.userProfile.skills.length > 0  && this.props.profiles.userProfile.validated) {
       valid = true;
     }
     return valid;
@@ -80,6 +80,7 @@ class MentorPath extends React.Component {
 const mapStateToProps = state => ({
   appState: state.appState,
   posts: state.posts,
+  profiles: state.profiles,
 });
 
 const mapDispatchToProps = dispatch => ({
