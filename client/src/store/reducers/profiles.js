@@ -1,8 +1,9 @@
 import update from 'immutability-helper';
-import { SAVE_PROFILE, SET_CURRENT_PROFILE, SET_EDIT_PROFILE, SET_FORM_FIELD, ADD_LANGUAGE, ADD_SKILL, REMOVE_LANGUAGE, REMOVE_SKILL } from '../actions/profileActions';
+import { SAVE_PROFILE, SET_CURRENT_PROFILE, SET_EDIT_PROFILE, SET_FORM_FIELD, ADD_LANGUAGE,
+  ADD_SKILL, REMOVE_LANGUAGE, REMOVE_SKILL, DISMISS_VIEWPROFILE_MODAL } from '../actions/profileActions';
 import { GET_PROFILE_REQUEST, GET_PROFILE_SUCCESS, GET_PROFILE_FAILURE,
   MODIFY_PROFILE_REQUEST, MODIFY_PROFILE_SUCCESS, MODIFY_PROFILE_FAILURE,
-  GITHUB_PROFILE_REQUEST, GITHUB_PROFILE_SUCCESS, GITHUB_PROFILE_FAILURE
+  GITHUB_PROFILE_REQUEST, GITHUB_PROFILE_SUCCESS, GITHUB_PROFILE_FAILURE,
 } from '../actions/apiActions';
 
 const defaultForm = {
@@ -36,6 +37,9 @@ const INITIAL_STATE = {
     location: '',
     about: '',
   },
+  profileSpinnerClass: 'spinner__hide',
+  viewProfileModalClass: 'modal__hide',
+  viewProfileModalText: '',
   gettingProfile: false,
   gettingGHProfile: false,
   getError: null,
@@ -89,8 +93,8 @@ function profiles(state = INITIAL_STATE, action) {
       return update(state, { editForm: { [action.field]: { $set: action.value } } });
 
     case ADD_LANGUAGE:
-        return update(
-        state,
+      return update(
+      state,
         {
           editForm: {
             languages: { $push: [action.payload] },
@@ -120,13 +124,20 @@ function profiles(state = INITIAL_STATE, action) {
       return Object.assign(
         {},
         state,
-        { gettingProfile: true, profileError: null, getError: null, getSuccess: null },
+        {
+          currentProfile: {},
+          gettingProfile: true,
+          profileError: null,
+          getError: null,
+          getSuccess: null,
+          profileSpinnerClass: 'spinner__show',
+        },
       );
 
     case GET_PROFILE_SUCCESS:
-    let profile = Object.assign({}, action.payload);
-    console.log('successfully got profile:');
-    console.log(profile);
+      let profile = Object.assign({}, action.payload);
+      console.log('successfully got profile:');
+      console.log(profile);
 
       return update(
         state,
@@ -137,32 +148,53 @@ function profiles(state = INITIAL_STATE, action) {
           currentProfile: { $set: profile },
           editForm: { $set: profile },
           profile: { $set: profile },
+          profileSpinnerClass: { $set: 'spinner__hide' },
         },
       );
 
     case GET_PROFILE_FAILURE:
-      error = action.payload.data || { message: action.payload.message };
-      return Object.assign({}, state, { gettingProfile: false, getError: error, getSuccess: false, });
+      error = action.payload.data || { message: action.payload.response.message };
+      return Object.assign(
+        {},
+        state,
+        {
+          gettingProfile: false,
+          getError: error,
+          getSuccess: false,
+          profileSpinnerClass: 'spinner__hide',
+          viewProfileModalClass: 'modal__show',
+          viewProfileModalText: error.message,
+        });
 
     case MODIFY_PROFILE_REQUEST:
-      return Object.assign({}, state, { savingProfile: true, saveError: null, saveSuccess: null, });
+      return Object.assign({}, state, { savingProfile: true, saveError: null, saveSuccess: null });
 
     case MODIFY_PROFILE_SUCCESS:
-          return update(
-            state,
-            {
-              savingProfile: { $set: false },
-              saveError: { $set: null },
-              editForm: { $set: action.payload.user },
-              currentProfile: { $set: action.payload.user },
-              profile: { $set: action.payload.user },
-              saveSuccess: { $set: true },
-            },
-          );
+      return update(
+        state,
+        {
+          savingProfile: { $set: false },
+          saveError: { $set: null },
+          editForm: { $set: action.payload.user },
+          currentProfile: { $set: action.payload.user },
+          profile: { $set: action.payload.user },
+          saveSuccess: { $set: true },
+        },
+      );
 
     case MODIFY_PROFILE_FAILURE:
       error = action.payload.data || { message: action.payload.message };
-      return Object.assign({}, state, { savingProfile: false, saveError: error, saveSuccess: false, });
+      return Object.assign(
+        {},
+        state,
+        {
+          savingProfile: false,
+          saveError: error,
+          saveSuccess: false,
+        });
+
+    case DISMISS_VIEWPROFILE_MODAL:
+      return Object.assign({}, state, { viewProfileModalText: '', viewProfileModalClass: 'modal__hide' });
 
     case GITHUB_PROFILE_REQUEST:
       return Object.assign(
@@ -186,7 +218,14 @@ function profiles(state = INITIAL_STATE, action) {
 
     case GITHUB_PROFILE_FAILURE:
       error = action.payload.data || { message: action.payload.message };
-      return Object.assign({}, state, { gettingGHProfile: false, getGHError: error, getGHSuccess: false, });
+      return Object.assign(
+        {},
+        state,
+        {
+          gettingGHProfile: false,
+          getGHError: error,
+          getGHSuccess: false,
+        });
 
     default:
       return state;
