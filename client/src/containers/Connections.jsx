@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
+
 import * as Actions from '../store/actions/apiActions';
 import Loading from '../containers/Loading';
 import { formatDate } from '../utils';
@@ -37,10 +39,14 @@ class Connections extends React.Component {
             <div className="conn-preview__header conn-preview__hide-for-small">Date</div>
           </div>
             {this.props.connection.connections.map(item => (
-              <div className="conn-preview__header-wrap">
+              <div className="conn-preview__header-wrap" key={item._id}>
                 <div className="conn-preview__text">{item.mentorName}</div>
                 <div className="conn-preview__text">{item.menteeName}</div>
-                <div className="conn-preview__text">{item.status}</div>
+                <div className="conn-preview__text">
+                  <Link to={`/connectiondetails/${item._id}`}>
+                    {item.status}
+                  </Link>
+                </div>
                 <div className="conn-preview__text conn-preview__hide-for-small">{formatDate(new Date(item.dateStarted))}</div>
               </div>
             ))}
