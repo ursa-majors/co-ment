@@ -69,7 +69,6 @@ export const GET_PROFILE_SUCCESS = 'GET_PROFILE_SUCCESS';
 export const GET_PROFILE_FAILURE = 'GET_PROFILE_FAILURE';
 
 export function getProfile(token, profileId) {
-  console.log(`getting profile with id=${profileId}`);
   return {
     [CALL_API]: {
       endpoint: `https://co-ment.glitch.me/api/profile/${profileId}`,
@@ -156,10 +155,10 @@ export function githubProfile(username) {
       endpoint: `https://api.github.com/users/${username}`,
       method: 'GET',
       types: [GITHUB_PROFILE_REQUEST, GITHUB_PROFILE_SUCCESS, GITHUB_PROFILE_FAILURE],
-      headers : {
-            'Accept'     : 'application/vnd.github.v3+json',
-            'User-Agent' : 'request'
-        }
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+        'User-Agent': 'request',
+      },
     },
   };
 }
