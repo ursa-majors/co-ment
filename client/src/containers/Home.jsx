@@ -1,11 +1,10 @@
 import React from 'react';
-
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import axios from 'axios';
-import * as Actions from '../store/actions';
-import * as profileActions from '../store/actions/profileActions';
+
+import Spinner from './Spinner';
+import * as apiActions from '../store/actions/apiActions';
 
 class Home extends React.Component {
 
@@ -17,18 +16,7 @@ class Home extends React.Component {
       if (token && token !== 'undefined') {
         token = JSON.parse(token);
         const user = JSON.parse(window.localStorage.getItem('userId'));
-        axios.get(`https://co-ment.glitch.me/api/profile/${user}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          this.props.actions.login(token, response.data);
-          this.props.profileActions.setUserProfile(response.data);
-        })
-        .catch(() => {
-          this.props.actions.logout();
-        });
+        this.props.api.validateToken(token, user);
       }
     }
   }
@@ -53,6 +41,7 @@ class Home extends React.Component {
 
     return (
       <div className="splash">
+        <Spinner cssClass={this.props.appState.loginSpinnerClass}/>
         <div className="splash__image" />
         <div className="splash__wrapper">
           <div className="splash__text-wrap">
@@ -80,8 +69,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(Actions, dispatch),
-  profileActions: bindActionCreators(profileActions, dispatch),
+  api: bindActionCreators(apiActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
