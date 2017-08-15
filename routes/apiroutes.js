@@ -589,6 +589,51 @@ routes.post('/api/connect', auth, (req, res) => {
   });
 });
 
+routes.post('/api/updateconnection', auth, (req, res) => {
+  let update;
+  switch(req.body.type){
+    case 'ACCEPT':
+      update = {
+        status: 'accepted',
+        dateAccepted: Date.now(),
+      }
+      break;
+    case 'DECLINE':
+      update = {
+        status: 'declined',
+        dateDeclined: Date.now(),
+      }
+      break;
+    case 'EXPIRE':
+      update = {
+        status: 'expired',
+        dateExpired: Date.now(),
+      }
+      break;
+      default:
+        update = {}
+  }
+
+  const target = { _id: req.body.id };
+
+  const options = {
+      // 'new' returns the updated document rather than the original
+      new: true
+  };
+  Connection.findOneAndUpdate(target, update, options)
+    .exec()
+    .then( conn => {
+       return res
+        .status(200)
+        .json({ conn })
+    })
+    .catch( err => {
+      console.log('Error!!!', err);
+      return res
+          .status(400)
+          .json({ message: err});
+    });
+});
 /* ================================ EXPORT ================================= */
 
 module.exports = routes;

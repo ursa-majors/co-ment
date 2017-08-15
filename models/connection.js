@@ -11,70 +11,72 @@ const connectionSchema = new mongoose.Schema({
         required  : true
       },
       name: {
-        type     : String,
+        type      : String,
         required  : true
       },
       avatar: {
-        type     : String,
+        type      : String,
+        default   : '',
       }
     },
 
     mentee : {
       id: {
-        type     : String,
+        type      : String,
         required  : true
       },
       name: {
-        type     : String,
+        type      : String,
         required  : true
       },
       avatar: {
-        type     : String,
+        type      : String,
+        default   : '',
       }
     },
 
     initiator : {
       id: {
-        type     : String,
+        type      : String,
         required  : true
       },
       name: {
-        type     : String,
+        type      : String,
         required  : true
       },
     },
 
     dateStarted : {
-        type     : Date,
+        type      : Date,
     },
 
     dateEnded : {
-        type     : Date,
+        type      : Date,
     },
 
     dateAccepted: {
-        type     : Date,
+        type      : Date,
     },
 
     dateDeclined: {
-        type     : Date,
+        type      : Date,
     },
 
     originalPost: {
       id: {
-        type     : String,
+        type      : String,
         required  : true
       },
       title: {
-        type     : String,
+        type      : String,
         required  : true
       },
     },
 
     status : {
-        type     : String,
-        enum     : ['pending', 'accepted', 'declined', 'expired'],
-        default  : 'pending',
+        type      : String,
+        enum      : ['pending', 'accepted', 'declined', 'expired'],
+        default   : 'pending',
     },
   }
 );
