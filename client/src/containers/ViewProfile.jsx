@@ -12,9 +12,6 @@ class ViewProfile extends React.Component {
   componentWillMount() {
     const profileId = this.props.match.params.id;
     this.props.api.getProfile(this.props.appState.authToken, profileId);
-    console.log('cWm got profile:');
-    console.log('props:');
-    console.log(this.props);
   }
 
 
@@ -40,21 +37,24 @@ class ViewProfile extends React.Component {
           <div className="view-preview__image-wrap">
             {this.props.profile.currentProfile.avatarUrl ?
               <img className="view-preview__image" src={this.props.profile.currentProfile.avatarUrl} alt={this.props.profile.currentProfile.username} /> :
-              <i className="fa fa-user-circle fa-5x view-preview__icon" aria-hidden="true" />
+              <i className="fa fa-user-circle fa-5x view-preview__icon--avatar" aria-hidden="true" />
           }
           </div>
           <div className="view-preview__text-wrap">
-            <div className="view-preview__username">{this.props.profile.currentProfile.username}</div>
-            <div className="view-preview__text">{this.props.profile.currentProfile.name}</div>
+          <div className="view-preview__name">{this.props.profile.currentProfile.name}</div>
+            <div className="view-preview__username">@{this.props.profile.currentProfile.username}</div>
             {this.props.profile.currentProfile.location &&
-            <div className="view-preview__text">{this.props.profile.currentProfile.location}</div> }
+              <div className="view-preview__location-wrap">
+                <i className="fa fa-map-marker view-preview__icon--location" aria-hidden="true" />
+                <span className="view-preview__location">{this.props.profile.currentProfile.location} &bull; {this.props.profile.currentProfile.time_zone}</span>
+              </div> }
             <div className="view-preview__text">
               <span className="view-preview__text--bold">Languages: &nbsp;</span>
               {langDisp ? langDisp : ''}
             </div>
             <div className="view-preview__text">
               <span className="view-preview__text--bold">Time zone: &nbsp;</span>
-              {this.props.profile.currentProfile.time_zone}
+
             </div>
             {this.props.profile.currentProfile.gender &&
               <div className="view-preview__text">
