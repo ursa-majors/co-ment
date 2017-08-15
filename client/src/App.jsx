@@ -23,7 +23,6 @@ import ConnectionDetails from './containers/ConnectionDetails';
 class App extends React.Component {
 
   render() {
-    console.log(this.props)
     const links = (this.props.appState.loggedIn ? ['posts', 'profile', 'connections', 'logout'] : ['login']);
     return (
       <BrowserRouter>
@@ -45,7 +44,7 @@ class App extends React.Component {
               <Route path="/connection" component={Connection} />
               <Route path="/connections" component={Connections} />
               <Route path="/connectionresult" component={ConnectionResult} />
-              <Route path="connectiondetails/:id" component={ConnectionDetails} />
+              <Route path="/connectiondetails/:id" component={ConnectionDetails} />
             </Switch>
           </main>
           <FooterNav />
