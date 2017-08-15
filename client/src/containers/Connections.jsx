@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 
-import * as Actions from '../store/actions/apiActions';
+import * as Actions from '../store/actions/apiConnectionActions';
 import Loading from '../containers/Loading';
 import { formatDate } from '../utils';
 
@@ -40,8 +40,8 @@ class Connections extends React.Component {
           </div>
             {this.props.connection.connections.map(item => (
               <div className="conn-preview__header-wrap" key={item._id}>
-                <div className="conn-preview__text">{item.mentorName}</div>
-                <div className="conn-preview__text">{item.menteeName}</div>
+                <div className="conn-preview__text">{item.mentor.name}</div>
+                <div className="conn-preview__text">{item.mentee.name}</div>
                 <div className="conn-preview__text">
                   <Link to={`/connectiondetails/${item._id}`}>
                     {item.status}
