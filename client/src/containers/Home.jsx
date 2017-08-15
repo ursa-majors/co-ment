@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import Spinner from './Spinner';
-import * as apiActions from '../store/actions/apiActions';
+import * as apiActions from '../store/actions/apiLoginActions';
 
 class Home extends React.Component {
 
