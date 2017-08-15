@@ -6,28 +6,42 @@ const mongoose  = require('mongoose');
 const connectionSchema = new mongoose.Schema({
 
     mentor : {
+      id: {
         type     : String,
         required  : true
+      },
+      name: {
+        type     : String,
+        required  : true
+      },
+      avatar: {
+        type     : String,
+      }
     },
 
     mentee : {
+      id: {
         type     : String,
-        required : true
-    },
-
-    mentorName: {
+        required  : true
+      },
+      name: {
         type     : String,
-        required : true
-    },
-
-    menteeName: {
+        required  : true
+      },
+      avatar: {
         type     : String,
-        required : true
+      }
     },
 
     initiator : {
+      id: {
         type     : String,
-        required : true
+        required  : true
+      },
+      name: {
+        type     : String,
+        required  : true
+      },
     },
 
     dateStarted : {
@@ -44,6 +58,17 @@ const connectionSchema = new mongoose.Schema({
 
     dateDeclined: {
         type     : Date,
+    },
+
+    originalPost: {
+      id: {
+        type     : String,
+        required  : true
+      },
+      title: {
+        type     : String,
+        required  : true
+      },
     },
 
     status : {
