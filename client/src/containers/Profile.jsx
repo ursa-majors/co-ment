@@ -210,6 +210,8 @@ class Profile extends React.Component {
       linkedin: this.props.profiles.editForm.linkedin,
       codepen: this.props.profiles.editForm.codepen,
     };
+    console.log('form submit body:')
+    console.log(body);
 
     // write data to db
     this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.userId, body);
@@ -410,7 +412,7 @@ class Profile extends React.Component {
             <div className="form__input-group">
               <label htmlFor="about" className="form__label">About
               </label>
-              <textarea className="form__input form__input--textarea" id="about" name="about" value={this.props.profiles.editForm.about} onChange={e => this.handleTextAreaInput(e)} placeholder="Introduce yourself" ref={(input) => { this.textInput = input; }} rows="5"/>
+              <textarea className="form__input form__input--textarea" id="about" name="about" value={this.props.profiles.editForm.about} onChange={e => this.handleTextAreaInput(e)} placeholder="Introduce yourself" ref={(input) => { this.textInput = input; }} rows="3"/>
             </div>
 
             <div className="form__input-group">

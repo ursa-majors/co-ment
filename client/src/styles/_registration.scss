@@ -108,6 +108,7 @@
     }
 
     &--textarea {
+        overflow-y: visible;
 
       &::placeholder {
 

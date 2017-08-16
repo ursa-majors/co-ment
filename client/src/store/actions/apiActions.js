@@ -133,6 +133,7 @@ export const MODIFY_PROFILE_SUCCESS = 'MODIFY_PROFILE_SUCCESS';
 export const MODIFY_PROFILE_FAILURE = 'MODIFY_PROFILE_FAILURE';
 
 export function modifyProfile(token, profileId, body) {
+  console.log('136',body);
   return {
     [CALL_API]: {
       endpoint: `https://co-ment.glitch.me/api/profile/${profileId}`,
