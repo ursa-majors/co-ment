@@ -91,7 +91,7 @@ const userSchema = new mongoose.Schema({
         default  : false
     },
 
-    pref_lang  : [String],  // array of strings
+    languages  : [String],  // array of strings
 
     certs      : [String],  // array of strings
 
