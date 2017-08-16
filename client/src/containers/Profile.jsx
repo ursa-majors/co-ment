@@ -41,6 +41,7 @@ class Profile extends React.Component {
   }
 
   componentDidMount() {
+    // maatch textarea height to content
     Profile.adjustTextArea(this.textInput);
   }
 
@@ -50,6 +51,7 @@ class Profile extends React.Component {
   }
 
   handleTextAreaInput(e) {
+    // handle input and expand textarea height to match content
     this.props.actions.setFormField(e.target.name, e.target.value);
     Profile.adjustTextArea(e.target);
   }
@@ -202,12 +204,17 @@ class Profile extends React.Component {
       avatarUrl: this.props.profiles.editForm.avatarUrl,
       location: this.props.profiles.editForm.location,
       about: this.props.profiles.editForm.about,
+      twitter: this.props.profiles.editForm.twitter,
+      facebook: this.props.profiles.editForm.facebook,
+      link: this.props.profiles.editForm.link,
+      linkedin: this.props.profiles.editForm.linkedin,
+      codepen: this.props.profiles.editForm.codepen,
     };
 
+    // write data to db
     this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.userId, body);
 
-    // data is being written to db, but is not showing up in the next view. timing is off somehow in the reducer, the next page is GETting the profile before the PUT is completed
-
+    // redirect to profile card if successful
     this.props.history.push(`/viewprofile/${this.props.appState.userId}`);
 
   }
@@ -404,6 +411,72 @@ class Profile extends React.Component {
               <label htmlFor="about" className="form__label">About
               </label>
               <textarea className="form__input form__input--textarea" id="about" name="about" value={this.props.profiles.editForm.about} onChange={e => this.handleTextAreaInput(e)} placeholder="Introduce yourself" ref={(input) => { this.textInput = input; }} rows="5"/>
+            </div>
+
+            <div className="form__input-group">
+              <label htmlFor="location" className="form__label">Twitter
+              </label>
+              <input
+                className="form__input"
+                type="text"
+                id="twitter"
+                name="twitter"
+                value={this.props.profiles.editForm.twitter}
+                onChange={e => this.handleInput(e)}
+                placeholder="Twitter URL"
+              />
+            </div>
+            <div className="form__input-group">
+              <label htmlFor="location" className="form__label">Facebook
+              </label>
+              <input
+                className="form__input"
+                type="text"
+                id="facebook"
+                name="facebook"
+                value={this.props.profiles.editForm.facebook}
+                onChange={e => this.handleInput(e)}
+                placeholder="Facebook URL"
+              />
+            </div>
+            <div className="form__input-group">
+              <label htmlFor="location" className="form__label">Portfolio link
+              </label>
+              <input
+                className="form__input"
+                type="text"
+                id="link"
+                name="link"
+                value={this.props.profiles.editForm.link}
+                onChange={e => this.handleInput(e)}
+                placeholder="Portfolio URL"
+              />
+            </div>
+            <div className="form__input-group">
+              <label htmlFor="location" className="form__label">LinkedIn
+              </label>
+              <input
+                className="form__input"
+                type="text"
+                id="linkedin"
+                name="linkedin"
+                value={this.props.profiles.editForm.linkedin}
+                onChange={e => this.handleInput(e)}
+                placeholder="LinkedIn URL"
+              />
+            </div>
+            <div className="form__input-group">
+              <label htmlFor="location" className="form__label">CodePen
+              </label>
+              <input
+                className="form__input"
+                type="text"
+                id="codepen"
+                name="codepen"
+                value={this.props.profiles.editForm.codepen}
+                onChange={e => this.handleInput(e)}
+                placeholder="CodePen URL"
+              />
             </div>
           </div>
           <div className="form__input-group">
