@@ -12,7 +12,7 @@ class ViewPost extends React.Component {
 
   /*
   *  If the URL Parameter does not match the ID of the redux currentPost,
-  *   go fetch the matching post from API.
+  *   clear the current post from memory and go fetch the matching post from API.
   */
   componentDidMount() {
     const postId = this.props.match.params.id;

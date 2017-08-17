@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as Actions from '../store/actions/postActions';
-import * as apiActions from '../store/actions/apiActions';
+import * as apiActions from '../store/actions/apiPostActions';
 
 class EditPost extends React.Component {
 
