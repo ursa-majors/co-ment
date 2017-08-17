@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 
 import * as Actions from '../store/actions/profileActions';
 import * as apiActions from '../store/actions/apiActions';
@@ -96,6 +97,11 @@ class ViewProfile extends React.Component {
         />
         <div className="view-preview">
         <div className={this.state.flip ? "side front flip" : "side front"} id="front">
+          <Link
+            className="view-preview__edit"
+            to={'/profile'} >
+            <i className="fa fa-pencil view-preview__icon--edit" aria-hidden="true" />
+          </Link>
           <div className="view-preview__image-wrap">
             {this.props.profile.currentProfile.avatarUrl ?
               <img
@@ -161,6 +167,10 @@ class ViewProfile extends React.Component {
           </div>
         </div>
           <div className={this.state.flip ? "side back flip" : "side back"} id="back">
+            <div className="view-preview__text-wrap view-preview__card-top">
+              <div className="view-preview__name">{this.props.profile.currentProfile.name}</div>
+              <div className="view-preview__username">@{this.props.profile.currentProfile.username}</div>
+            </div>
             <div className="view-preview__about-wrap">
               {this.props.profile.currentProfile.about}
             </div>
