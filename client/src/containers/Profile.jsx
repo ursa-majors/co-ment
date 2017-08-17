@@ -5,6 +5,7 @@ import * as Actions from '../store/actions/profileActions';
 import * as apiActions from '../store/actions/apiActions';
 
 import InputAutosuggest from './InputAutosuggest';
+import SocMedia from './SocMedia';
 import RadioGroup from './RadioGroup';
 import {languages, skills, timezones } from '../utils';
 import parseSKill from '../utils/skillsparser';
@@ -25,6 +26,7 @@ class Profile extends React.Component {
       suggestions: [],
       value: '',
       showFields: false,
+      pageOne: true,
     };
 
     this.onChange = this.onChange.bind(this);
@@ -41,7 +43,15 @@ class Profile extends React.Component {
   }
 
   componentDidMount() {
+    // maatch textarea height to content
     Profile.adjustTextArea(this.textInput);
+  }
+
+  togglePage(){
+    // navigate between form pages
+    const newState = { ...this.state }
+    newState.pageOne = !this.state.pageOne;
+    this.setState({ ...newState });
   }
 
   handleInput(e) {
@@ -50,6 +60,7 @@ class Profile extends React.Component {
   }
 
   handleTextAreaInput(e) {
+    // handle input and expand textarea height to match content
     this.props.actions.setFormField(e.target.name, e.target.value);
     Profile.adjustTextArea(e.target);
   }
@@ -63,8 +74,6 @@ class Profile extends React.Component {
     // check to see if user has entered valid github username.
     // if field is empty or gh profile not found, display optional form fields (full name, location, avatar url).
     // if field is filled but no profile found, display error message (TODO)
-    console.log('checking github');
-    console.log(e.target.value);
     if (e.target.value) {
       const ghProfile = this.props.api.githubProfile(e.target.value);
       console.log(ghProfile);
@@ -163,11 +172,26 @@ class Profile extends React.Component {
       msg = 'Time zone is required.  ';
     }
     if (this.props.profiles.editForm.skills.length === 0) {
-      msg += 'At least one skill is required. ';
+      msg += 'At least one skill is required.  ';
     }
     if (this.props.profiles.editForm.languages.length === 0) {
-        msg += 'At least one language is required. ';
+        msg += 'At least one language is required.  ';
       }
+    if (this.props.profiles.editForm.twitter && document.getElementById('twitter').checkValidity() === false) {
+        msg += 'Twitter URL is invalid.  ';
+    }
+    if (this.props.profiles.editForm.facebook && document.getElementById('facebook').checkValidity() === false) {
+        msg += 'Facebook URL is invalid.  ';
+    }
+    if (this.props.profiles.editForm.link && document.getElementById('link').checkValidity() === false) {
+        msg += 'Portfolio URL is invalid.  ';
+    }
+    if (this.props.profiles.editForm.linkedin && document.getElementById('linkedin').checkValidity() === false) {
+        msg += 'LinkedIn URL is invalid.  ';
+    }
+    if (this.props.profiles.editForm.codepen && document.getElementById('codepen').checkValidity() === false) {
+        msg += 'CodePen URL is invalid.  ';
+    }
     if (msg.length > 0) {
       this.props.actions.setFormField( 'errMsg', msg);
       this.props.actions.setFormField( 'hideErr', '');
@@ -202,12 +226,19 @@ class Profile extends React.Component {
       avatarUrl: this.props.profiles.editForm.avatarUrl,
       location: this.props.profiles.editForm.location,
       about: this.props.profiles.editForm.about,
+      twitter: this.props.profiles.editForm.twitter,
+      facebook: this.props.profiles.editForm.facebook,
+      link: this.props.profiles.editForm.link,
+      linkedin: this.props.profiles.editForm.linkedin,
+      codepen: this.props.profiles.editForm.codepen,
     };
+    console.log('form submit body:')
+    console.log(body);
 
+    // write data to db
     this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.userId, body);
 
-    // data is being written to db, but is not showing up in the next view. timing is off somehow in the reducer, the next page is GETting the profile before the PUT is completed
-
+    // redirect to profile card if successful
     this.props.history.push(`/viewprofile/${this.props.appState.userId}`);
 
   }
@@ -246,6 +277,8 @@ class Profile extends React.Component {
         <div className="profile__body">
           <div className="form__header">Update Profile: {this.props.profiles.userProfile.username}</div>
           <div className="profile__column-wrap">
+          {this.state.pageOne &&
+            <div>
             <div className="form__input-group">
               <label htmlFor="ghUserName" className="form__label">GitHub User Name
               </label>
@@ -403,18 +436,42 @@ class Profile extends React.Component {
             <div className="form__input-group">
               <label htmlFor="about" className="form__label">About
               </label>
-              <textarea className="form__input form__input--textarea" id="about" name="about" value={this.props.profiles.editForm.about} onChange={e => this.handleTextAreaInput(e)} placeholder="Introduce yourself" ref={(input) => { this.textInput = input; }} rows="5"/>
+              <textarea className="form__input form__input--textarea" id="about" name="about" value={this.props.profiles.editForm.about} onChange={e => this.handleTextAreaInput(e)} placeholder="Introduce yourself" ref={(input) => { this.textInput = input; }} rows="3"/>
             </div>
+            </div>
+          }
+          {!this.state.pageOne &&
+            <SocMedia
+              handleInput={this.handleInput}
+              profiles={this.props.profiles}
+            /> }
           </div>
           <div className="form__input-group">
             <div className={formError}>{this.props.profiles.editForm.errMsg}</div>
           </div>
+          {!this.state.pageOne &&
+            <button
+              className="pageBack pageNav"
+              onClick={()=>this.togglePage()}
+              >
+              <i className="fa fa-chevron-left pageBack__icon" aria-hidden="true" />
+            </button>
+          }
+          {!this.state.pageOne &&
           <div className="form__input-group">
           <div className="form__button-wrap">
             <button className="form__button pointer" id="btn-edit" onClick={() => this.handleSubmit()}>
             {this.props.profiles.savingProfile ? 'Saving...' : 'Save'}</button>
           </div>
-        </div>
+        </div>}
+        {this.state.pageOne &&
+            <button
+              className="pageFwd pageNav"
+              onClick={()=>this.togglePage()}
+              >
+              <i className="fa fa-chevron-right pageBack__icon" aria-hidden="true" />
+            </button>
+          }
         <div className="form__input-group">
             <div className={msgClass}>
             {this.props.profiles.saveError &&

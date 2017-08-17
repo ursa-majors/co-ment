@@ -169,7 +169,12 @@ routes.put('/api/profile/:id', auth, (req, res) => {
             gender     : req.body.gender,
             about      : req.body.about,
             skills     : (req.body.skills).map( skill => parseSKill(skill) ),
-            time_zone  : req.body.time_zone
+            time_zone  : req.body.time_zone,
+            twitter    : req.body.twitter,
+            facebook   : req.body.facebook,
+            link       : req.body.link,
+            linkedin   : req.body.linkedin,
+            codepen    : req.body.codepen,
         };
 
         User.findOneAndUpdate(target, updates, options)

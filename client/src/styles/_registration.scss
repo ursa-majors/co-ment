@@ -19,6 +19,7 @@
   }
   &__header {
     color: white;
+    font-weight: 100;
     font-family: 'Alegreya Sans SC', sans-serif;
     text-transform: lowercase;
     letter-spacing: 2px;
@@ -107,6 +108,7 @@
     }
 
     &--textarea {
+        overflow-y: visible;
 
       &::placeholder {
 
@@ -192,7 +194,7 @@
 
 ::-webkit-input-placeholder {
   color: #545454;
-  opacity: 0.8;
+  // opacity: 0.8;
   -webkit-transition: opacity 0.35s ease-in-out;
   transition: opacity 0.35s ease-in-out;
   }
@@ -200,7 +202,7 @@
 
 ::-moz-placeholder {
   color: #545454;
-  opacity: 0.8;
+  // opacity: 0.8;
   -webkit-transition: opacity 0.35s ease-in-out;
   transition: opacity 0.35s ease-in-out;
   }
@@ -208,7 +210,7 @@
 
 :-ms-input-placeholder {
   color: #545454;
-  opacity: 0.8;
+  // opacity: 0.8;
   -webkit-transition: opacity 0.35s ease-in-out;
   transition: opacity 0.35s ease-in-out;
   }
@@ -216,7 +218,7 @@
 
 :-moz-placeholder {
   color: #545454;
-  opacity: 0.8;
+  // opacity: 0.8;
   -webkit-transition: opacity 0.35s ease-in-out;
   transition: opacity 0.35s ease-in-out;
   }
