@@ -72,9 +72,6 @@ function posts(state = INITIAL_STATE, action) {
     case SAVE_POST:
       return update(state, { entries: { $push: action.payload } });
 
-    case SET_CURRENT_POST:
-      return update(state, { currentPost: { $set: action.payload } });
-
     case CLEAR_CURRENT_POST:
       return Object.assign({}, state, { currentPost: defaultPost });
 
@@ -154,7 +151,6 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case GET_ALL_POSTS_FAILURE:
-      console.log(action)
       error = action.payload.message;
       return Object.assign(
         {},
@@ -203,7 +199,7 @@ function posts(state = INITIAL_STATE, action) {
               savingPost: { $set: false },
               saveError: { $set: null },
               editForm: { $set: defaultForm },
-              currentPost: { $set: {} },
+              currentPost: { $set: defaultPost },
               entries: { $splice: [[i, 1, action.payload.post]] },
             },
           );
@@ -216,7 +212,7 @@ function posts(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { savingPost: false, saveError: error });
 
     case VIEW_POST_REQUEST:
-      return Object.assign({}, state, { viewPostSpinnerClass: 'spinner__show' } );
+      return Object.assign({}, state, { viewPostSpinnerClass: 'spinner__show' });
 
     case VIEW_POST_SUCCESS:
       return Object.assign(
