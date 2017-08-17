@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as apiActions from '../store/actions/apiActions';
+import * as apiActions from '../store/actions/apiPostActions';
 import * as Actions from '../store/actions/postActions';
 
 const searchObj = {
