@@ -40,8 +40,9 @@ const INITIAL_STATE = {
   contact_error: null,
   connect_loading: false,
   connect_error: null,
-  getConnectionsLoading: false,
-  getConnectionsError: null,
+  getConnectionsSpinnerClass: 'spinner__hide',
+  getConnectionsModalClass: 'modal__hide',
+  getConnectionsModalText: '',
   connections: [],
   viewConnection: defaultConn,
   updateConnectionSpinnerClass: 'spinner__hide',
@@ -82,7 +83,14 @@ function connection(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { connect_loading: false, connect_error: error });
 
     case GET_ALL_CONNECTIONS_REQUEST:
-      return Object.assign({}, state, { getConnectionsLoading: true, getConnectionsError: null });
+      return Object.assign(
+        {},
+        state,
+        {
+          getConnectionsSpinnerClass: 'spinner__show',
+          getConnectionsModalClass: 'modal__hide',
+        },
+      );
 
     case GET_ALL_CONNECTIONS_SUCCESS:
       return Object.assign(
@@ -90,14 +98,22 @@ function connection(state = INITIAL_STATE, action) {
         state,
         {
           connections: action.payload.connections,
-          getConnectionsLoading: false,
-          getConnectionsError: null,
+          getConnectionsSpinnerClass: 'spinner__hide',
+          getConnectionsModalClass: 'modal__hide',
         },
       );
 
     case GET_ALL_CONNECTIONS_FAILURE:
-      error = action.payload.data || { message: action.payload.message };
-      return Object.assign({}, state, { getConnectionsLoading: false, getConnectionsError: error });
+      error = action.payload.message || 'An error occurred';
+      return Object.assign(
+        {},
+        state,
+        {
+          getConnectionsSpinnerClass: 'spinner__hide',
+          getConnectionsModalClass: 'modal__show',
+          getConnectionsModalText: error,
+        },
+      );
 
     case UPDATE_CONNECTION_STATUS_REQUEST:
       return Object.assign(

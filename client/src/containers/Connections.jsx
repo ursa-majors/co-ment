@@ -4,7 +4,8 @@ import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 
 import * as Actions from '../store/actions/apiConnectionActions';
-import Loading from '../containers/Loading';
+import Spinner from './Spinner';
+import Modal from './Modal';
 import { formatDate } from '../utils';
 
 class Connections extends React.Component {
@@ -16,18 +17,14 @@ class Connections extends React.Component {
   }
 
   render() {
-    console.log(this.props.connection)
-    if (this.props.connection.getConnectionsLoading) {
-      return (
-        <div className="container logout">
-          <h2 className="title">Connections</h2>
-          <Loading text="Loading Connections" />
-        </div>
-      );
-    }
-
     return (
       <div className="container">
+        <Spinner cssClass={this.props.connection.getConnectionsSpinnerClass} />
+        <Modal
+          modalClass={this.props.connection.getConnectionsModalClass}
+          modalText={this.props.connection.getConnectionsModalText}
+          dismiss={() => {}}
+        />
         <div className="conn-preview">
           <div className="conn-preview__text--wrap">
             <div className="conn-preview__title">Connections</div>
