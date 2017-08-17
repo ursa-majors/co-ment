@@ -18,11 +18,11 @@ import ViewProfile from './containers/ViewProfile';
 import Connection from './containers/Connection';
 import Connections from './containers/Connections';
 import ConnectionResult from './containers/ConnectionResult';
+import ConnectionDetails from './containers/ConnectionDetails';
 
 class App extends React.Component {
 
   render() {
-    console.log(this.props)
     const links = (this.props.appState.loggedIn ? ['posts', 'profile', 'connections', 'logout'] : ['login']);
     return (
       <BrowserRouter>
@@ -44,6 +44,7 @@ class App extends React.Component {
               <Route path="/connection" component={Connection} />
               <Route path="/connections" component={Connections} />
               <Route path="/connectionresult" component={ConnectionResult} />
+              <Route path="/connectiondetails/:id" component={ConnectionDetails} />
             </Switch>
           </main>
           <FooterNav />

@@ -3,6 +3,7 @@
    ========================== Route Descriptions ==============================
    VERB      URL                       DESCRIPTION
    ----------------------------------------------------------------------------
+   GET       /api/profiles             Get all profiles
    GET       /api/profile/:id          Get a user's profile
    PUT       /api/profile/:id          Update user's own profile
    DELETE    /api/profile/:id          Delete user's own profile
@@ -34,6 +35,14 @@ const parseSKill = require('../utils/skillsparser');
 const mailer     = require('../utils/mailer');
 const secret     = process.env.JWT_SECRET;
 const auth       = jwt({ secret: secret, requestProperty: 'token' });
+
+const user_projection = {
+    _id       : 1, updatedAt : 1, createdAt  : 1, email     : 1,
+    username  : 1, name      : 1, ghUserName : 1, ghProfile : 1,
+    time_zone : 1, skills    : 1, languages  : 1, validated : 1,
+    avatarUrl : 1, location  : 1, about      : 1, certs     : 1,
+    gender    : 1
+};
 
 
 /* ============================ UTILITY METHODS ============================ */
@@ -70,6 +79,32 @@ function getGithubProfile(ghUserName) {
 
 /* ================================ ROUTES ================================= */
 
+
+/* Get all user profiles. Secured route - valid JWT required
+   Returns an array of user profile objects on success.
+   Example: GET > `/api/profiles`
+*/
+routes.get('/api/profiles', auth, (req, res) => {
+
+    const target = req.params.id;
+
+    User.find({}, user_projection, (err, profiles) => {
+
+        if (!profiles) {
+            return res
+                .status(404)
+                .json({ message : 'No profiles found!'});
+        }
+
+        return res
+            .status(200)
+            .json(profiles);
+
+    });
+
+});
+
+
 /* Get a user's profile. Secured route - valid JWT required
    Returns JSON user profile object on success.
    Example: GET > `/api/profile/597dccac7017890bd8d13cc7`
@@ -78,7 +113,7 @@ routes.get('/api/profile/:id', auth, (req, res) => {
 
     const target = req.params.id;
 
-    User.findOne({_id: target}, (err, profile) => {
+    User.findOne({_id: target}, user_projection, (err, profile) => {
 
         if (!profile) {
             return res
@@ -130,9 +165,9 @@ routes.put('/api/profile/:id', auth, (req, res) => {
             name       : ghProfile.name,
             avatarUrl  : ghProfile.avatar_url,
             location   : ghProfile.location,
-            about      : req.body.about,
             languages  : req.body.languages,
             gender     : req.body.gender,
+            about      : req.body.about,
             skills     : (req.body.skills).map( skill => parseSKill(skill) ),
             time_zone  : req.body.time_zone,
             twitter    : req.body.twitter,
@@ -232,7 +267,7 @@ routes.delete('/api/profile/:id', auth, (req, res) => {
      'id'     Return single specific post object '_id'
    Example: GET > `/api/posts?role=mentor&id=12345689`
 */
-routes.get('/api/posts', auth, (req, res) => {
+routes.get('/api/posts*', auth, (req, res) => {
 
     const query = {};
 
@@ -248,9 +283,15 @@ routes.get('/api/posts', auth, (req, res) => {
         query.role = req.query.role;
     }
 
-    Post.find(query, (err, posts) => {
+   // check for 'author_id' & add to query map
+    if (req.query.hasOwnProperty('author_id')) {
+        query.author_id = req.query.author_id;
+    }
 
-        if (!posts || !posts.length) {
+  console.log(query)
+
+    Post.find(query, (err, posts) => {
+       if (!posts || !posts.length) {
             return res
                 .status(404)
                 .json({ message : 'No posts found!'});
@@ -333,7 +374,7 @@ routes.post('/api/posts', auth, (req, res) => {
    Example: PUT `/api/posts/597dd8665229970e99c6ab55`
 */
 routes.put('/api/posts/:id', auth, (req, res) => {
-
+    console.log(req.body, req.params.id)
     // target post by post '_id' and post 'author_id'.
     // this way, users can only update their own posts.
     const target = {
@@ -505,8 +546,8 @@ routes.post('/api/contact/:id', auth, (req, res) => {
 routes.get('/api/connections/:id', auth, (req, res) => {
   const target = req.params.id
   Connection.find({$or: [
-    {mentor: target},
-    {mentee: target}
+    { "mentor.id": target },
+    { "mentee.id": target }
 ]})
     .exec()
     .then((conns) => {
@@ -536,7 +577,6 @@ routes.get('/api/connections/:id', auth, (req, res) => {
    Example: POST > /api/connect
 */
 routes.post('/api/connect', auth, (req, res) => {
-
   let newConn = new Connection(req.body);
   newConn.dateStarted = Date.now();
   newConn.save((err, conn) => {
@@ -554,6 +594,51 @@ routes.post('/api/connect', auth, (req, res) => {
   });
 });
 
+routes.post('/api/updateconnection', auth, (req, res) => {
+  let update;
+  switch(req.body.type){
+    case 'ACCEPT':
+      update = {
+        status: 'accepted',
+        dateAccepted: Date.now(),
+      }
+      break;
+    case 'DECLINE':
+      update = {
+        status: 'declined',
+        dateDeclined: Date.now(),
+      }
+      break;
+    case 'EXPIRE':
+      update = {
+        status: 'expired',
+        dateExpired: Date.now(),
+      }
+      break;
+      default:
+        update = {}
+  }
+
+  const target = { _id: req.body.id };
+
+  const options = {
+      // 'new' returns the updated document rather than the original
+      new: true
+  };
+  Connection.findOneAndUpdate(target, update, options)
+    .exec()
+    .then( conn => {
+       return res
+        .status(200)
+        .json({ conn })
+    })
+    .catch( err => {
+      console.log('Error!!!', err);
+      return res
+          .status(400)
+          .json({ message: err});
+    });
+});
 /* ================================ EXPORT ================================= */
 
 module.exports = routes;

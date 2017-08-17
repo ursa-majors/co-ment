@@ -7,7 +7,7 @@ const INITIAL_STATE = {
   loggedIn: false,
   authToken: {},
   userId: '',
-  loginSpinnerClass: 'spinner_hide',
+  loginSpinnerClass: 'spinner__hide',
 };
 
 function appState(state = INITIAL_STATE, action) {

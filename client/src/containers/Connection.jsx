@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as Actions from '../store/actions/apiActions';
+import * as connectActions from '../store/actions/apiConnectionActions';
 
 class Connection extends React.Component {
 
@@ -25,15 +26,28 @@ class Connection extends React.Component {
   sendMsg = () => {
     const token = this.props.appState.authToken;
     const connection = {
-      mentor: (this.state.role === 'mentor' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author_id ),
-      mentee: (this.state.role === 'mentee' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author_id ),
-      mentorName: (this.state.role === 'mentor' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author ),
-      menteeName: (this.state.role === 'mentee' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author ),
-      initiator: this.props.appState.userId,
+      mentor: {
+        id: (this.state.role === 'mentor' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author_id ),
+        name: (this.state.role === 'mentor' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author ),
+        avatar: (this.state.role === 'mentor' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.avatarUrl ),
+      },
+      mentee: {
+        id: (this.state.role === 'mentee' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author_id ),
+        name: (this.state.role === 'mentee' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author ),
+        avatar: (this.state.role === 'mentee' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.avatarUrl ),
+      },
+      initiator: {
+        id: this.props.appState.userId,
+        name: this.props.profiles.userProfile.username,
+      },
+      originalPost: {
+        id: this.props.posts.currentPost._id,
+        title: this.props.posts.currentPost.title,
+      },
       status: 'pending',
     };
     this.props.api.contact(token, { bodyText: this.state.body }, this.props.posts.currentPost.author_id);
-    this.props.api.connect(token, connection);
+    this.props.connectActions.connect(token, connection);
     this.props.history.push('/connectionresult');
   }
   render() {
@@ -92,6 +106,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   api: bindActionCreators(Actions, dispatch),
+  connectActions: bindActionCreators(connectActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Connection);
