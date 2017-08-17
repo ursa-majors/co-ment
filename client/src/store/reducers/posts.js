@@ -1,7 +1,6 @@
 import update from 'immutability-helper';
-import { SET_POSTS, SAVE_POST, SET_CURRENT_POST, CLEAR_CURRENT_POST, SET_EDIT_POST, SET_FORM_FIELD,
-  ADD_KEYWORD, REMOVE_KEYWORD, SET_SEARCH_CRITERIA, CLEAR_SEARCH_CRITERIA,
-  SHOW_VIEW_POST_SPINNER, HIDE_VIEW_POST_SPINNER, SET_VIEWPOST_MODAL_CLASS,
+import { SET_POSTS, SAVE_POST, CLEAR_CURRENT_POST, SET_EDIT_POST, SET_FORM_FIELD,
+  ADD_KEYWORD, REMOVE_KEYWORD, SET_SEARCH_CRITERIA, CLEAR_SEARCH_CRITERIA, SET_VIEWPOST_MODAL_CLASS,
   SET_VIEWPOST_MODAL_TEXT, SET_LOADPOSTS_MODAL_CLASS, SET_LOADPOSTS_MODAL_TEXT } from '../actions/postActions';
 import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE,
   ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE,
@@ -60,11 +59,6 @@ const INITIAL_STATE = {
 function posts(state = INITIAL_STATE, action) {
   let error;
   switch (action.type) {
-    case SHOW_VIEW_POST_SPINNER:
-      return Object.assign({}, state, { viewPostSpinnerClass: 'spinner__show' });
-
-    case HIDE_VIEW_POST_SPINNER:
-      return Object.assign({}, state, { viewPostSpinnerClass: 'spinner__hide' });
 
     case SET_VIEWPOST_MODAL_CLASS:
       return Object.assign({}, state, { viewPostModalClass: action.payload });
@@ -225,7 +219,6 @@ function posts(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { viewPostSpinnerClass: 'spinner__show' } );
 
     case VIEW_POST_SUCCESS:
-    console.log(action)
       return Object.assign(
         {},
         state,
@@ -248,7 +241,6 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case SET_SEARCH_CRITERIA:
-    console.log(action)
       return update(state, { searchCriteria: { $set: action.payload } });
 
     case CLEAR_SEARCH_CRITERIA:

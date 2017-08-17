@@ -18,15 +18,9 @@ class ViewPost extends React.Component {
     const postId = this.props.match.params.id;
     const token = this.props.appState.authToken;
     if (this.props.posts.currentPost._id !== postId) {
+      this.props.actions.clearCurrentPost();
       this.props.api.viewPost(token, postId);
     }
-  }
-
-  /*
-  *  Clear the current post stored in redux so that we don't see it flash when next post is loaded
-  */
-  componentWillUnmount() {
-    this.props.actions.clearCurrentPost();
   }
 
   deletePost = (event) => {
