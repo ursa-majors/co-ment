@@ -2,26 +2,31 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+
 import * as Actions from '../store/actions/postActions';
+import * as apiActions from '../store/actions/apiPostActions';
 import Spinner from '../containers/Spinner';
 import Modal from '../containers/Modal';
 
 class ViewPost extends React.Component {
 
+  /*
+  *  If the URL Parameter does not match the ID of the redux currentPost,
+  *   go fetch the matching post from API.
+  */
   componentDidMount() {
     const postId = this.props.match.params.id;
-    // axios default headers
-    axios.defaults.baseURL = 'https://co-ment.glitch.me';
-    axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
-    axios.get(`/api/posts?id=${postId}`)
-      .then((result) => {
-        console.log(result.data[0])
-        this.props.actions.setCurrentPost(result.data[0]);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const token = this.props.appState.authToken;
+    if (this.props.posts.currentPost._id !== postId) {
+      this.props.api.viewPost(token, postId);
+    }
+  }
+
+  /*
+  *  Clear the current post stored in redux so that we don't see it flash when next post is loaded
+  */
+  componentWillUnmount() {
+    this.props.actions.clearCurrentPost();
   }
 
   deletePost = (event) => {
@@ -49,8 +54,8 @@ class ViewPost extends React.Component {
       for (let i = 0; i < connections.length; i += 1) {
         if (connections[i].initiator === this.props.appState.userId &&
           connections[i][this.props.posts.currentPost.role] === this.props.posts.currentPost.author_id) {
-          this.props.actions.setModalText('You already have a connection to this poster');
-          this.props.actions.setModalClass('modal__show');
+          this.props.actions.setViewPostModalText('You already have a connection to this poster');
+          this.props.actions.setViewPostModalClass('modal__show');
           return;
         }
       }
@@ -141,6 +146,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(Actions, dispatch),
+  api: bindActionCreators(apiActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ViewPost);
