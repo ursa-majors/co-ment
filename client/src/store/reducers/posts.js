@@ -1,12 +1,14 @@
 import update from 'immutability-helper';
-import { SET_POSTS, SAVE_POST, SET_CURRENT_POST, SET_EDIT_POST, SET_FORM_FIELD,
+import { SET_POSTS, SAVE_POST, SET_CURRENT_POST, CLEAR_CURRENT_POST, SET_EDIT_POST, SET_FORM_FIELD,
   ADD_KEYWORD, REMOVE_KEYWORD, SET_SEARCH_CRITERIA, CLEAR_SEARCH_CRITERIA,
-  SHOW_VIEW_POST_SPINNER, HIDE_VIEW_POST_SPINNER, SET_MODAL_CLASS, SET_MODAL_TEXT } from '../actions/postActions';
+  SHOW_VIEW_POST_SPINNER, HIDE_VIEW_POST_SPINNER, SET_VIEWPOST_MODAL_CLASS,
+  SET_VIEWPOST_MODAL_TEXT, SET_LOADPOSTS_MODAL_CLASS, SET_LOADPOSTS_MODAL_TEXT } from '../actions/postActions';
 import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE,
   ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE,
   MODIFY_POST_REQUEST, MODIFY_POST_SUCCESS, MODIFY_POST_FAILURE,
   GET_ALL_POSTS_REQUEST, GET_ALL_POSTS_SUCCESS, GET_ALL_POSTS_FAILURE,
-} from '../actions/apiActions';
+  VIEW_POST_REQUEST, VIEW_POST_SUCCESS, VIEW_POST_FAILURE,
+} from '../actions/apiPostActions';
 
 const defaultForm = {
   title: '',
@@ -18,20 +20,20 @@ const defaultForm = {
   errMsg: '',
   update: false,
 };
-
+const defaultPost = {
+  active: '',
+  author: '',
+  author_id: '',
+  availability: '',
+  keywords: [],
+  body: '',
+  role: 'mentor',
+  updated: Date.now(),
+};
 const INITIAL_STATE = {
   entries: [],
   postErrorMsg: '',
-  currentPost: {
-    active: '',
-    author: '',
-    author_id: '',
-    availability: '',
-    keywords: [],
-    body: '',
-    role: 'mentor',
-    updated: Date.now(),
-  },
+  currentPost: defaultPost,
   searchCriteria: {
     role: '',
     title: '',
@@ -46,8 +48,10 @@ const INITIAL_STATE = {
   addError: null,
   savingPost: false,
   saveError: null,
-  gettingAllPosts: false,
-  gettingAllPostsErr: null,
+  loadPostsSpinnerClass: 'spinner_hide',
+  loadPostsModalClass: 'modal__hide',
+  loadPostsModalText: '',
+  loadPostsError: '',
   viewPostSpinnerClass: 'spinner__hide',
   viewPostModalClass: 'modal__hide',
   viewPostModalText: '',
@@ -62,10 +66,10 @@ function posts(state = INITIAL_STATE, action) {
     case HIDE_VIEW_POST_SPINNER:
       return Object.assign({}, state, { viewPostSpinnerClass: 'spinner__hide' });
 
-    case SET_MODAL_CLASS:
+    case SET_VIEWPOST_MODAL_CLASS:
       return Object.assign({}, state, { viewPostModalClass: action.payload });
 
-    case SET_MODAL_TEXT:
+    case SET_VIEWPOST_MODAL_TEXT:
       return Object.assign({}, state, { viewPostModalText: action.payload });
 
     case SET_POSTS:
@@ -76,6 +80,9 @@ function posts(state = INITIAL_STATE, action) {
 
     case SET_CURRENT_POST:
       return update(state, { currentPost: { $set: action.payload } });
+
+    case CLEAR_CURRENT_POST:
+      return Object.assign({}, state, { currentPost: defaultPost });
 
     case SET_EDIT_POST:
       return update(
@@ -132,21 +139,44 @@ function posts(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { gettingPost: false, getError: error, searchPost: null });
 
     case GET_ALL_POSTS_REQUEST:
-      return Object.assign({}, state, { gettingAllPosts: true, gettingAllPostsErr: null });
+      return Object.assign(
+        {},
+        state,
+        {
+          loadPostsSpinnerClass: 'spinner__show',
+          loadPostsModalText: '',
+          loadPostsModalClass: 'modal__hide',
+        },
+      );
 
     case GET_ALL_POSTS_SUCCESS:
       return update(
         state,
         {
-          gettingAllPosts: { $set: false },
-          gettingAllPostsErr: { $set: null },
+          loadPostsSpinnerClass: { $set: 'spinner__hide' },
+          loadPostsError: { $set: null },
           entries: { $set: action.payload },
         },
       );
 
     case GET_ALL_POSTS_FAILURE:
-      error = action.payload.data || { message: action.payload.message };
-      return Object.assign({}, state, { gettingAllPosts: false, gettingAllPostsErr: error });
+      console.log(action)
+      error = action.payload.message;
+      return Object.assign(
+        {},
+        state,
+        {
+          loadPostsSpinnerClass: 'spinner__hide',
+          loadPostsModalClass: 'modal__show',
+          loadPostsModalText: error,
+        },
+      );
+
+    case SET_LOADPOSTS_MODAL_TEXT:
+      return Object.assign({}, state, { loadPostsModalText: action.payload });
+
+    case SET_LOADPOSTS_MODAL_CLASS:
+      return Object.assign({}, state, { loadPostsModalClass: action.payload });
 
     case ADD_POST_REQUEST:
       return Object.assign({}, state, { addingPost: true, addError: null });
@@ -190,6 +220,32 @@ function posts(state = INITIAL_STATE, action) {
     case MODIFY_POST_FAILURE:
       error = action.payload.data || { message: action.payload.message };
       return Object.assign({}, state, { savingPost: false, saveError: error });
+
+    case VIEW_POST_REQUEST:
+      return Object.assign({}, state, { viewPostSpinnerClass: 'spinner__show' } );
+
+    case VIEW_POST_SUCCESS:
+    console.log(action)
+      return Object.assign(
+        {},
+        state,
+        {
+          viewPostSpinnerClass: 'spinner__hide',
+          currentPost: action.payload[0],
+        },
+      );
+
+    case VIEW_POST_FAILURE:
+      error = action.payload.message || 'An error occurred';
+      return Object.assign(
+        {},
+        state,
+        {
+          viewPostSpinnerClass: 'spinner__hide',
+          viewPostModalClass: 'modal__show',
+          viewPostModalText: error,
+        },
+      );
 
     case SET_SEARCH_CRITERIA:
     console.log(action)
