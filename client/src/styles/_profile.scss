@@ -208,6 +208,7 @@
       align-self: flex-start;
       max-height: 100%;
       overflow-y: auto;
+      position: relative;
 
       @include for-tablet-portrait-up {
           width: 80%;
@@ -228,4 +229,41 @@
           column-count: 2;
         }
      }
+  }
+
+  .pageNav {
+    position: absolute;
+    bottom: 0;
+    margin: 20px;
+    padding: 12px 15px;
+    border-radius: 30px;
+    margin: 20px;
+    background: #22c1c3;
+    // border: 1px solid rgba(255,255,255,.4);
+    color: rgba(255,255,255,.4);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+    appearance: none;
+    -webkit-appearance: none;
+    border: none;
+    z-index: 3;
+
+    &:hover, &:focus, &:active {
+        background: #22c1c3;
+        box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.4);
+        transition: all 300ms ease-in-out;
+        // border: 1px solid rgba(255,255,255,.8);
+        color: rgba(255,255,255,1);
+        appearance: none;
+        webkit-appearance: none;
+        border: none;
+        outline: none;
+      }
+  }
+
+  .pageBack {
+    left: 0;
+  }
+
+  .pageFwd {
+    right: 0;
   }

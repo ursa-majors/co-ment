@@ -116,6 +116,10 @@ body.user-is-tabbing *:focus {
     text-align: center;
   }
 
+  input:focus:invalid {
+  border: 1px solid red;
+}
+
 .success {
     font-family: 'Alegreya Sans', sans-serif;
     color: #3c763d;

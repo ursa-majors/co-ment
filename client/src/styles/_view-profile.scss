@@ -29,7 +29,7 @@
       border-radius: 30px;
       margin: 20px;
       background: #22c1c3;
-      border: 1px solid rgba(255,255,255,.4);
+      border: none;
       color: rgba(255,255,255,.4);
       box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
 
@@ -37,7 +37,7 @@
         background: #22c1c3;
         box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.4);
         transition: all 300ms ease-in-out;
-        border: 1px solid rgba(255,255,255,.8);
+        border: none;
         color: rgba(255,255,255,1);
       }
 
