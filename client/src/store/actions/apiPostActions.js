@@ -77,3 +77,18 @@ export function viewPost(token, postId) {
     },
   };
 }
+
+export const DELETE_POST_REQUEST = 'DELETE_POST_REQUEST';
+export const DELETE_POST_SUCCESS = 'DELETE_POST_SUCCESS';
+export const DELETE_POST_FAILURE = 'DELETE_POST_FAILURE';
+
+export function deletePost(token, postId) {
+  return {
+    [CALL_API]: {
+      endpoint: `https://co-ment.glitch.me/api/posts/${postId}`,
+      method: 'DELETE',
+      types: [DELETE_POST_REQUEST, DELETE_POST_SUCCESS, DELETE_POST_FAILURE],
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  };
+}

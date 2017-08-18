@@ -24,19 +24,10 @@ class ViewPost extends React.Component {
   }
 
   deletePost = (event) => {
-    //event.preventDefault();
-    //event.stopPropagation();
-    axios.defaults.baseURL = 'https://co-ment.glitch.me';
-    axios.defaults.headers.common.Authorization = `Bearer ${this.props.appState.authToken}`;
-
-    axios.delete(`/api/posts/${this.props.posts.currentPost._id}`)
-      .then((result) => {
-        this.props.history.push('/posts');
-      })
-      .catch((error) => {
-        // TODO: Handle error here?
-        console.log(error);
-      });
+    const postId = this.props.match.params.id;
+    const token = this.props.appState.authToken;
+    this.props.api.deletePost(token, postId);
+    this.props.history.push('/posts');
   }
 
   /**
@@ -96,7 +87,12 @@ class ViewPost extends React.Component {
         <Modal
           modalClass={this.props.posts.viewPostModalClass}
           modalText={this.props.posts.viewPostModalText}
-          dismiss={() => { this.props.actions.setModalText(''); this.props.actions.setModalClass('modal__hide'); }}
+          dismiss={
+            () => {
+              this.props.actions.setViewPostModalText('');
+              this.props.actions.setViewPostModalClass('modal__hide');
+            }
+          }
         />
         <div className="single-post">
             <div className="single-post__username">{`Mentor ${roleText}`}</div>
