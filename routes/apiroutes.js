@@ -41,7 +41,8 @@ const user_projection = {
     username  : 1, name      : 1, ghUserName : 1, ghProfile : 1,
     time_zone : 1, skills    : 1, languages  : 1, validated : 1,
     avatarUrl : 1, location  : 1, about      : 1, certs     : 1,
-    gender    : 1
+    gender    : 1, twitter   : 1, facebook   : 1, link      : 1,
+    linkedin  : 1, codepen   : 1
 };
 
 
