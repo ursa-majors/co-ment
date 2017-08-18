@@ -118,8 +118,8 @@ body.user-is-tabbing *:focus {
   }
 
   input:focus:invalid {
-  border: 1px solid red;
-}
+    border: 1px solid red;
+  }
 
 .success {
     font-family: 'Alegreya Sans', sans-serif;

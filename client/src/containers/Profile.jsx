@@ -5,7 +5,6 @@ import * as Actions from '../store/actions/profileActions';
 import * as apiActions from '../store/actions/apiActions';
 
 import InputAutosuggest from './InputAutosuggest';
-import SocMedia from './SocMedia';
 import RadioGroup from './RadioGroup';
 import {languages, skills, timezones } from '../utils';
 import parseSKill from '../utils/skillsparser';
@@ -13,6 +12,7 @@ import parseSKill from '../utils/skillsparser';
 class Profile extends React.Component {
 
   static adjustTextArea(target) {
+    // expand input height to fit content without scrollbar
     const el = target;
     let adjustedHeight = el.clientHeight;
     adjustedHeight = Math.max(el.scrollHeight, adjustedHeight);
@@ -41,6 +41,7 @@ class Profile extends React.Component {
   componentWillMount() {
     // copy the current profile properties into the editable object
     this.props.actions.setEditProfile(this.props.profiles.userProfile);
+    console.log(this.props.profiles.userProfile);
   }
 
   componentDidMount() {
@@ -52,7 +53,11 @@ class Profile extends React.Component {
     // navigate between form pages
     const newState = { ...this.state }
     newState.pageOne = !this.state.pageOne;
-    this.setState({ ...newState });
+    this.setState({ ...newState }, () => {
+      if (this.state.pageOne) {
+        Profile.adjustTextArea(this.textInput);
+      }
+    });
   }
 
   handleInput = (e) => {
@@ -73,7 +78,7 @@ class Profile extends React.Component {
 
   checkGHProfile(e) {
     // check to see if user has entered valid github username.
-    // if field is empty or gh profile not found, display optional form fields (full name, location, avatar url).
+    // if field is empty or gh profile not found, display optional form fields (full name, location, avatar url), and adjust form layout to fit extra fields.
     // if field is filled but no profile found, display error message (TODO)
     if (e.target.value) {
       const ghProfile = this.props.api.githubProfile(e.target.value);
@@ -178,6 +183,8 @@ class Profile extends React.Component {
     if (this.props.profiles.editForm.languages.length === 0) {
         msg += 'At least one language is required.  ';
       }
+
+    // use html5 validation to check for valid urls in social media fields
     if (this.props.profiles.editForm.twitter && document.getElementById('twitter').checkValidity() === false) {
         msg += 'Twitter URL is invalid.  ';
     }
@@ -566,10 +573,83 @@ class Profile extends React.Component {
             </div>
           }
           {!this.state.pageOne &&
-              <SocMedia
-                handleInput={this.handleInput}
-                profiles={this.props.profiles}
-              />}
+            <div className="profile__pageTwo">
+              <div className="profile__column-L">
+                <div className="form__input-group">
+                  <label htmlFor="location" className="form__label">Twitter
+                  </label>
+                  <input
+                    className="form__input"
+                    type="url"
+                    pattern="https?://.+"
+                    id="twitter"
+                    name="twitter"
+                    value={this.props.profiles.editForm.twitter}
+                    onChange={e => this.handleInput(e)}
+                    placeholder="Twitter URL"
+                  />
+                </div>
+                <div className="form__input-group">
+                  <label htmlFor="location" className="form__label">Facebook
+                  </label>
+                  <input
+                    className="form__input"
+                    type="url"
+                    pattern="https?://.+"
+                    id="facebook"
+                    name="facebook"
+                    value={this.props.profiles.editForm.facebook}
+                    onChange={e => this.handleInput(e)}
+                    placeholder="Facebook URL"
+                  />
+                </div>
+                <div className="form__input-group">
+                  <label htmlFor="location" className="form__label">Portfolio link
+                  </label>
+                  <input
+                    className="form__input"
+                    type="url"
+                    pattern="https?://.+"
+                    id="link"
+                    name="link"
+                    value={this.props.profiles.editForm.link}
+                    onChange={e => this.handleInput(e)}
+                    placeholder="Portfolio URL"
+                  />
+                </div>
+              </div>
+              <div className="profile__column-R">
+                <div className="form__input-group">
+                  <label htmlFor="location" className="form__label">LinkedIn
+                  </label>
+                  <input
+                    className="form__input"
+                    type="url"
+                    pattern="https?://.+"
+                    id="linkedin"
+                    name="linkedin"
+                    value={this.props.profiles.editForm.linkedin}
+                    onChange={e => this.handleInput(e)}
+                    placeholder="LinkedIn URL"
+                  />
+                </div>
+                <div className="form__input-group">
+                  <label htmlFor="location" className="form__label">CodePen
+                  </label>
+                  <input
+                    className="form__input"
+                    type="url"
+                    pattern="https?://.+"
+                    id="codepen"
+                    name="codepen"
+                    value={this.props.profiles.editForm.codepen}
+                    onChange={e => this.handleInput(e)}
+                    placeholder="CodePen URL"
+                  />
+                </div>
+              </div>
+            </div>
+            }
           </div>
           <div className="form__input-group">
             <div className={formError}>{this.props.profiles.editForm.errMsg}</div>
