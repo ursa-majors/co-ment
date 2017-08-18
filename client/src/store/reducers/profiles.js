@@ -160,8 +160,6 @@ function profiles(state = INITIAL_STATE, action) {
 
     case GET_PROFILE_SUCCESS:
       let profile = Object.assign({}, action.payload);
-      console.log('got profile');
-      console.log(profile);
       return update(
         state,
         {

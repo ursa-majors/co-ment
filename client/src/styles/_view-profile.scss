@@ -13,7 +13,6 @@
   .view-preview {
     width: 100%;
     max-width: 360px;
-    min-height: 560px;
     margin: auto;
     font-family: 'Alegreya Sans', sans-serif;
     color: #2B2B2B;
@@ -175,7 +174,6 @@
     &__card-body {
       padding: 20px 20px 12px 20px;
       background: rgba(255,255,255,.6);
-      min-height: 140px;
     }
 
     &__card-footer {
@@ -183,9 +181,6 @@
       justify-content: center;
       padding: 10px;
       font-size: 20px;
-      position: absolute;
-      bottom: 0;
-      left: 0;
       width:100%;
 
       &--back {
@@ -278,9 +273,6 @@
   border-radius:10px;
   height:100%;
   width:100%;
-  position:absolute;
-  left:0;
-  top:0;
   transform-style:preserve-3d;
   backface-visibility:hidden;
   background: rgba(255,255,255,.75);
@@ -295,6 +287,9 @@
   line-height:1.5;
   text-align:justify;
   text-justify: inter-word;
+  position: absolute;
+  top:0;
+  left:0;
 }
 
 #front.flip  {

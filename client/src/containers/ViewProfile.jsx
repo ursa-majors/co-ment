@@ -20,11 +20,13 @@ class ViewProfile extends React.Component {
   }
 
   componentWillMount() {
+    // copy requested profile data into currentProfile
     const profileId = this.props.match.params.id;
     this.props.api.getProfile(this.props.appState.authToken, profileId);
   }
 
   onClick(e) {
+    // handle tab navigation in bottom half of profile card
     const newState = { ...this.state };
     newState.tab = e.target.id;
     this.setState({
@@ -33,6 +35,7 @@ class ViewProfile extends React.Component {
   }
 
   flip() {
+    // handle card flip front/back
     const newState = { ...this.state };
     newState.flip = !this.state.flip;
     this.setState({
@@ -86,6 +89,13 @@ class ViewProfile extends React.Component {
                   </a>
                   </span>
                ));
+    // placeholder for empty bio field:
+    let aboutText;
+    if (!this.props.profile.currentProfile.about) {
+        aboutText = 'This user has not yet added a bio.';
+    } else {
+      aboutText = this.props.profile.currentProfile.about;
+    }
 
     return (
       <div className="view-profile">
@@ -161,7 +171,7 @@ class ViewProfile extends React.Component {
                 {this.state.tab === 'about' &&
                   this.props.profile.currentProfile.about &&
                   <div className="tag-value__wrapper">
-                    {this.props.profile.currentProfile.about}
+                    {this.props.profile.currentProfile.about }
                   </div>}
               </div>
               <div className="view-preview__card-footer">
@@ -174,7 +184,7 @@ class ViewProfile extends React.Component {
                   <div className="view-preview__username">@{this.props.profile.currentProfile.username}</div>
                 </div>
                 <div className="view-preview__about-wrap">
-                  {this.props.profile.currentProfile.about}
+                  {aboutText}
                 </div>
                 <div className="view-preview__card-footer--back">
                   <div
