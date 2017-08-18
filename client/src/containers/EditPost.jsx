@@ -137,6 +137,27 @@ class EditPost extends React.Component {
           <div className="form__input-group">
             <label htmlFor="keyword" className="form__label">Keywords
             </label>
+            <div>
+              {this.props.posts.editForm.keywords.map(item => (
+                <span className="skill-value" key={item}>
+                  <span className="skill-value__icon" aria-hidden="true">
+                    <span
+                      id={item}
+                      role="button"
+                      tabIndex="0"
+                      onClick={e => this.removeKeyword(e)}
+                      onKeyPress={e => this.handleKeyPressRemove(e)}
+                    >
+                        &times;
+                      </span>
+                  </span>
+                  <span className="skill-value__label" role="option" aria-selected="true">
+                    {item}
+                    <span className="skill-aria-only">&nbsp;</span>
+                  </span>
+                </span>
+                ))}
+            </div>
             <input
               className="form__input"
               type="text"
@@ -147,25 +168,6 @@ class EditPost extends React.Component {
               onKeyPress={e => this.handleKeyPressAdd(e)}
               placeholder="Add Keywords"
             />
-            {this.props.posts.editForm.keywords.map(item => (
-              <span className="skill-value" key={item}>
-                <span className="skill-value__icon" aria-hidden="true">
-                  <span
-                    id={item}
-                    role="button"
-                    tabIndex="0"
-                    onClick={e => this.removeKeyword(e)}
-                    onKeyPress={e => this.handleKeyPressRemove(e)}
-                  >
-                      &times;
-                    </span>
-                </span>
-                <span className="skill-value__label" role="option" aria-selected="true">
-                  {item}
-                  <span className="skill-aria-only">&nbsp;</span>
-                </span>
-              </span>
-              ))}
           </div>
           <div className="form__input-group">
             <label htmlFor="content" className="form__label">Post Body
