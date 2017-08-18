@@ -180,7 +180,7 @@
 
     &__card-footer {
       display: flex;
-      justify-content: flex-start;
+      justify-content: center;
       padding: 10px;
       font-size: 20px;
       position: absolute;
@@ -305,3 +305,21 @@
     transform: rotateY(360deg);
     transition:.5s ease-in-out;
   }
+
+.react-autosuggest__suggestions-container--open {
+  max-height: 100px;
+  overflow-y: auto;
+}
+// .react-autosuggest__container,
+// .react-autosuggest__input
+// .react-autosuggest__suggestions-container,
+// .react-autosuggest__suggestions-list
+// {
+//   // break-inside: avoid;
+//   // -webkit-column-break-inside: avoid;
+//   // page-break-inside: avoid;
+//   // overflow: hidden;
+//   // display:inline-block;
+
+// }
+

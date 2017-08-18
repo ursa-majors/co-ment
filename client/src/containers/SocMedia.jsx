@@ -1,11 +1,8 @@
 import React from 'react';
-// import { connect } from 'react-redux';
-// import { bindActionCreators } from 'redux';
-// import * as Actions from '../store/actions/profileActions';
-// import * as apiActions from '../store/actions/apiActions';
 
 const SocMedia = (props) => (
-  <div>
+  <div className="profile__pageTwo">
+    <div className="profile__column-L">
       <div className="form__input-group">
         <label htmlFor="location" className="form__label">Twitter
         </label>
@@ -48,6 +45,8 @@ const SocMedia = (props) => (
           placeholder="Portfolio URL"
         />
       </div>
+    </div>
+    <div className="profile__column-R">
       <div className="form__input-group">
         <label htmlFor="location" className="form__label">LinkedIn
         </label>
@@ -76,17 +75,8 @@ const SocMedia = (props) => (
           placeholder="CodePen URL"
         />
       </div>
-      </div>
+    </div>
+  </div>
     );
-
-// const mapStateToProps = state => ({
-//   appState: state.appState,
-//   profiles: state.profiles,
-// });
-
-// const mapDispatchToProps = dispatch => ({
-//   actions: bindActionCreators(Actions, dispatch),
-//   api: bindActionCreators(apiActions, dispatch),
-// });
 
 export default SocMedia;

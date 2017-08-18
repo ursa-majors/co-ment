@@ -35,8 +35,8 @@
     &--open {
       display: block;
       position: absolute;
-      top: 69px;
-      width: 280px;
+      top: 47px;
+      width: 100%;
       border: 1px solid #d6d6d6;
       background-color: white;
       border-bottom-left-radius: 3px;
@@ -44,6 +44,8 @@
       z-index: 2;
       font-family: system-ui, sans-serif;
       font-weight: 300;
+      max-height: 116px;
+      overflow-y: auto;
 
     }
   }

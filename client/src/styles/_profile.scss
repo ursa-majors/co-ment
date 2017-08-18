@@ -207,12 +207,15 @@
       border-radius: 4px;
       align-self: flex-start;
       max-height: 100%;
-      overflow-y: auto;
       position: relative;
 
       @include for-tablet-portrait-up {
           width: 80%;
         }
+
+      &--overflow {
+        overflow-y: auto;
+      }
 
       }
 
@@ -222,11 +225,26 @@
         column-gap: 20;
         position: relative;
         padding: 20px 10px 10px 10px;
+     }
 
+     &__pageOne, &__pageTwo {
+
+      @include for-tablet-portrait-up {
+        display: flex;
+      }
+     }
+
+     &__column-L {
+        width: 100%;
         @include for-tablet-portrait-up {
-          -webkit-column-count: 2;
-          -moz-column-count: 2;
-          column-count: 2;
+          margin-right: 20px;
+          width: 50%;
+        }
+     }
+     &__column-R {
+        width: 100%;
+        @include for-tablet-portrait-up {
+          width: 50%;
         }
      }
   }
