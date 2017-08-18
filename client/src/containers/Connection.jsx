@@ -16,14 +16,46 @@ class Connection extends React.Component {
       role: desiredRole,
       body: '',
       formError: '',
+      formErrorClass: 'form__hidden'
     };
   }
 
   handleChange = (event) => {
-    this.setState({ [event.target.id]: event.target.value, error: false });
+    this.setState(
+      {
+        [event.target.id]: event.target.value,
+        formError: '',
+        formErrorClass: 'form__hidden',
+      },
+    );
   }
 
   sendMsg = () => {
+    // validate inputs (form requires only body)
+    if (!this.state.body) {
+      this.setState(
+        {
+          formError: 'Your message must have a body',
+          formErrorClass: 'form__error',
+        },
+      );
+      return;
+    }
+
+    // validate that this is not a duplicate connection request
+    const conns = this.props.connection.connections
+    for (let i = 0; i < conns.length; i += 1) {
+      if (conns[i].initiator.id === this.props.profiles.userProfile._id) {
+        if (this.state.role === 'mentor' && conns[i].mentor.id === this.props.profiles.userProfile._id && conns[i].mentee.id === this.props.posts.currentPost.author_id) {
+          return;
+        }
+        if (this.state.role === 'mentee' && conns[i].mentee.id === this.props.profiles.userProfile._id && conns[i].mentor.id === this.props.posts.currentPost.author_id) {
+          return;
+        }
+      }
+
+    }
+    return;
     const token = this.props.appState.authToken;
     const connection = {
       mentor: {
@@ -84,7 +116,7 @@ class Connection extends React.Component {
             <textarea className="form__input form__connection-input" id="body" value={this.state.body} onChange={event => this.handleChange(event)} />
           </div>
           <div className="form__input-group">
-            <div className="form__error">{this.state.formError}</div>
+            <div className={`${this.state.formErrorClass}`}>{this.state.formError}</div>
           </div>
           <div className="form__input-group">
             <div className="form__button-wrap">
@@ -102,6 +134,7 @@ const mapStateToProps = state => ({
   appState: state.appState,
   posts: state.posts,
   profiles: state.profiles,
+  connection: state.connection,
 });
 
 const mapDispatchToProps = dispatch => ({
