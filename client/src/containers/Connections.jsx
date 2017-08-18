@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 
-import * as Actions from '../store/actions/apiConnectionActions';
+import * as apiActions from '../store/actions/apiConnectionActions';
+import * as Actions from '../store/actions/connectionActions';
 import Spinner from './Spinner';
 import Modal from './Modal';
 import { formatDate } from '../utils';
@@ -17,13 +18,19 @@ class Connections extends React.Component {
   }
 
   render() {
+    console.log(this.props)
     return (
       <div className="container">
         <Spinner cssClass={this.props.connection.getConnectionsSpinnerClass} />
         <Modal
           modalClass={this.props.connection.getConnectionsModalClass}
           modalText={this.props.connection.getConnectionsModalText}
-          dismiss={() => {}}
+          dismiss={
+            () => {
+              this.props.actions.setConnectionsModalClass('modal__hide');
+              this.props.actions.setConnectionsModalText('');
+            }
+          }
         />
         <div className="conn-preview">
           <div className="conn-preview__text--wrap">
@@ -60,7 +67,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  api: bindActionCreators(Actions, dispatch),
+  api: bindActionCreators(apiActions, dispatch),
+  actions: bindActionCreators(Actions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Connections);

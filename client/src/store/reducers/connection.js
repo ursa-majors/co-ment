@@ -1,11 +1,13 @@
 import update from 'immutability-helper';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-import { SET_VIEW_CONNECTION, CLEAR_VIEW_CONNECTION } from '../actions/connectionActions';
+import { SET_VIEW_CONNECTION, CLEAR_VIEW_CONNECTION, SET_CONNECTIONS_MODAL_CLASS,
+  SET_CONNECTIONS_MODAL_TEXT } from '../actions/connectionActions';
 import { CONTACT_REQUEST, CONTACT_SUCCESS, CONTACT_FAILURE } from '../actions/apiActions';
-import { CONNECTION_REQUEST, CONNECTION_SUCCESS, CONNECTION_FAILURE,
-  GET_ALL_CONNECTIONS_REQUEST, GET_ALL_CONNECTIONS_SUCCESS, GET_ALL_CONNECTIONS_FAILURE,
-  UPDATE_CONNECTION_STATUS_REQUEST, UPDATE_CONNECTION_STATUS_SUCCESS,
-  UPDATE_CONNECTION_STATUS_FAILURE,
+import { CONNECTION_REQUEST, CONNECTION_SUCCESS, CONNECTION_FAILURE, GET_ALL_CONNECTIONS_REQUEST,
+  GET_ALL_CONNECTIONS_SUCCESS, GET_ALL_CONNECTIONS_FAILURE, UPDATE_CONNECTION_STATUS_REQUEST,
+  UPDATE_CONNECTION_STATUS_SUCCESS, UPDATE_CONNECTION_STATUS_FAILURE,
 } from '../actions/apiConnectionActions';
 
 const defaultConn = {
@@ -62,6 +64,12 @@ function connection(state = INITIAL_STATE, action) {
     case CLEAR_VIEW_CONNECTION:
       return Object.assign({}, state, { viewConnection: defaultConn });
 
+    case SET_CONNECTIONS_MODAL_CLASS:
+      return Object.assign({}, state, { getConnectionsModalClass: action.payload });
+
+    case SET_CONNECTIONS_MODAL_TEXT:
+      return Object.assign({}, state, { getConnectionsModalText: action.payload });
+
     case CONTACT_REQUEST:
       return Object.assign({}, state, { contact_loading: true, contact_error: null });
 
@@ -92,16 +100,28 @@ function connection(state = INITIAL_STATE, action) {
         },
       );
 
+
     case GET_ALL_CONNECTIONS_SUCCESS:
-      return Object.assign(
-        {},
-        state,
-        {
-          connections: action.payload.connections,
-          getConnectionsSpinnerClass: 'spinner__hide',
-          getConnectionsModalClass: 'modal__hide',
-        },
-      );
+      if (action.payload.connections.length > 0 ) {
+        return Object.assign(
+            {},
+            state,
+            {
+              connections: action.payload.connections,
+              getConnectionsSpinnerClass: 'spinner__hide',
+              getConnectionsModalClass: 'modal__hide',
+            },
+          );
+        }
+        return Object.assign(
+            {},
+            state,
+            {
+              getConnectionsSpinnerClass: 'spinner__hide',
+              getConnectionsModalClass: 'modal__show',
+              getConnectionsModalText: `You haven't made any connections yet. Search our posts to find a Mentor or Mentee connection.`
+            },
+          );
 
     case GET_ALL_CONNECTIONS_FAILURE:
       error = action.payload.message || 'An error occurred';
