@@ -97,11 +97,12 @@ class ViewProfile extends React.Component {
         />
         <div className="view-preview">
         <div className={this.state.flip ? "side front flip" : "side front"} id="front">
+        { this.props.appState.userId === this.props.match.params.id &&
           <Link
             className="view-preview__edit"
             to={'/profile'} >
             <i className="fa fa-pencil view-preview__icon--edit" aria-hidden="true" />
-          </Link>
+          </Link> }
           <div className="view-preview__image-wrap">
             {this.props.profile.currentProfile.avatarUrl ?
               <img

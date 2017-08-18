@@ -35,6 +35,7 @@ class Profile extends React.Component {
     this.removeLanguage = this.removeLanguage.bind(this);
     this.removeSkill = this.removeSkill.bind(this);
     this.handleRadioChange = this.handleRadioChange.bind(this);
+    this.handleInput = this.handleInput.bind(this);
   }
 
   componentWillMount() {
@@ -54,7 +55,7 @@ class Profile extends React.Component {
     this.setState({ ...newState });
   }
 
-  handleInput(e) {
+  handleInput = (e) => {
     // send form field values to editForm object
     this.props.actions.setFormField(e.target.name, e.target.value);
   }
@@ -274,27 +275,26 @@ class Profile extends React.Component {
 
     return (
       <div className="container profile" id="profile-form">
-        <div className="profile__body">
+        <div className={this.state.showFields && this.state.pageOne ? "profile__body profile__body--overflow" : "profile__body"}>
           <div className="form__header">Update Profile: {this.props.profiles.userProfile.username}</div>
           <div className="profile__column-wrap">
-          {this.state.pageOne &&
-            <div>
-            <div className="form__input-group">
-              <label htmlFor="ghUserName" className="form__label">GitHub User Name
-              </label>
-              <input
-                className="form__input"
-                type="text"
-                id="ghUserName"
-                name="ghUserName"
-                value={this.props.profiles.editForm.ghUserName}
-                onChange={e => this.handleInput(e)}
-                onBlur={(e) => this.checkGHProfile(e)}
-                placeholder="GitHub User Name"
-              />
-            </div>
-            {this.state.showFields &&
-              <div>
+          {this.state.pageOne && this.state.showFields &&
+            <div className="profile__pageOne">
+              <div className="profile__column-L">
+                <div className="form__input-group">
+                  <label htmlFor="ghUserName" className="form__label">GitHub User Name
+                  </label>
+                  <input
+                    className="form__input"
+                    type="text"
+                    id="ghUserName"
+                    name="ghUserName"
+                    value={this.props.profiles.editForm.ghUserName}
+                    onChange={e => this.handleInput(e)}
+                    onBlur={(e) => this.checkGHProfile(e)}
+                    placeholder="GitHub User Name"
+                  />
+                </div>
                 <div className="form__input-group">
                   <label htmlFor="name" className="form__label">Full name
                   </label>
@@ -334,117 +334,242 @@ class Profile extends React.Component {
                     placeholder="Paste URL to profile image"
                   />
                 </div>
+                <div className="form__input-group">
+                  <label htmlFor="timezone" className="form__label">Time Zone</label>
+                  <select
+                    className="form__input form__input--select"
+                    id="time_zone"
+                    name="time_zone"
+                    value={this.props.profiles.editForm.time_zone || 'Choose your time zone'}
+                    onChange={e => this.handleInput(e)}
+                  >
+                    <option disabled>Choose your time zone</option>
+                    {tzList}
+                  </select>
+                </div>
+                <div className="form__input-group" >
+                 <RadioGroup
+                  title={'Gender'}
+                  setName={'gender'}
+                  type={'radio'}
+                  controlFunc={this.handleRadioChange}
+                  options={['Male', 'Female', 'Other']}
+                  selectedOptions={this.props.profiles.editForm.gender} />
+                </div>
               </div>
-            }
-            <div className="form__input-group">
-              <label htmlFor="language" className="form__label">Languages you speak fluently
-              </label>
-            <div className="skill-value__wrapper">
-                {this.props.profiles.editForm.languages && this.props.profiles.editForm.languages.map(lang => (
-                  <span className="skill-value" key={lang}>
-                    <span className="skill-value__icon" aria-hidden="true">
-                      <span
-                        className="language"
-                        id={lang}
-                        role="button"
-                        tabIndex="0"
-                        onClick={e => this.removeLanguage(e)}
-                        onKeyDown={e => this.handleKeyDownRemove(e)}
-                      >
-                         &times;
+              <div className="profile__column-R">
+                <div className="form__input-group">
+                  <label htmlFor="language" className="form__label">Languages you speak fluently
+                  </label>
+                  <div className="skill-value__wrapper">
+                      {this.props.profiles.editForm.languages && this.props.profiles.editForm.languages.map(lang => (
+                        <span className="skill-value" key={lang}>
+                          <span className="skill-value__icon" aria-hidden="true">
+                            <span
+                              className="language"
+                              id={lang}
+                              role="button"
+                              tabIndex="0"
+                              onClick={e => this.removeLanguage(e)}
+                              onKeyDown={e => this.handleKeyDownRemove(e)}
+                            >
+                               &times;
+                              </span>
+                          </span>
+                          <span className="skill-value__label" role="option" aria-selected="true">
+                            {lang}
+                            <span className="skill-aria-only">&nbsp;</span>
+                          </span>
                         </span>
+                       ))}
+                  </div>
+                  <InputAutosuggest
+                    id="language"
+                    name="language"
+                    placeholder="Add Languages"
+                    onChange={this.onChange}
+                    list={languages}
+                    onKeyPress={(e) => this.handleKeyPressAdd(e)}
+                    value={this.props.profiles.editForm.language}
+                    addTag={this.addLanguage}
+                    removeTag={this.removeLanguage}
+                    ref={instance => { this.languageInput = instance; }}
+                  />
+                </div>
+                <div className="form__input-group">
+                  <label className="form__label" htmlFor="skills">Skills</label>
+                  <div className="skill-value__wrapper">
+                  {this.props.profiles.editForm.skills && this.props.profiles.editForm.skills.map(skill => (
+                    <span className="skill-value" key={skill}>
+                      <span className="skill-value__icon" aria-hidden="true">
+                        <span
+                          className="skill"
+                          id={skill}
+                          role="button"
+                          tabIndex="0"
+                          onClick={e => this.removeSkill(e)}
+                          onKeyDown={e => this.handleKeyDownRemove(e)}
+                        >
+                           &times;
+                        </span>
+                      </span>
+                      <span className="skill-value__label" role="option" aria-selected="true">
+                        {skill}
+                        <span className="skill-aria-only">&nbsp;</span>
+                      </span>
                     </span>
-                    <span className="skill-value__label" role="option" aria-selected="true">
-                      {lang}
-                      <span className="skill-aria-only">&nbsp;</span>
-                    </span>
-                  </span>
-                 ))}
+                   ))}
+                  </div>
+                  <InputAutosuggest
+                    id="skill"
+                    name="skill"
+                    placeholder="Add Skills"
+                    onChange={this.onChange}
+                    list={skills}
+                    onKeyPress={(e) => this.handleKeyPressAdd(e)}
+                    value={this.props.profiles.editForm.skill}
+                    addTag={this.addSkill}
+                    removeTag={this.removeSkill}
+                    ref={instance => { this.skillInput = instance; }}
+                  />
+                </div>
+                <div className="form__input-group">
+                  <label htmlFor="about" className="form__label">About
+                  </label>
+                  <textarea className="form__input form__input--textarea" id="about" name="about" value={this.props.profiles.editForm.about} onChange={e => this.handleTextAreaInput(e)} placeholder="Introduce yourself" ref={(input) => { this.textInput = input; }} rows="3"/>
+                </div>
               </div>
-              <InputAutosuggest
-                id="language"
-                name="language"
-                placeholder="Add Languages"
-                onChange={this.onChange}
-                list={languages}
-                onKeyPress={(e) => this.handleKeyPressAdd(e)}
-                value={this.props.profiles.editForm.language}
-                addTag={this.addLanguage}
-                removeTag={this.removeLanguage}
-                ref={instance => { this.languageInput = instance; }}
-              />
             </div>
-            <div className="form__input-group">
-              <label className="form__label" htmlFor="skills">Skills</label>
-              <div className="skill-value__wrapper">
-              {this.props.profiles.editForm.skills && this.props.profiles.editForm.skills.map(skill => (
-                <span className="skill-value" key={skill}>
-                  <span className="skill-value__icon" aria-hidden="true">
-                    <span
-                      className="skill"
-                      id={skill}
-                      role="button"
-                      tabIndex="0"
-                      onClick={e => this.removeSkill(e)}
-                      onKeyDown={e => this.handleKeyDownRemove(e)}
-                    >
-                       &times;
+          }
+          {this.state.pageOne && !this.state.showFields &&
+            <div className="profile__pageOne">
+              <div className="profile__column-L">
+                <div className="form__input-group">
+                  <label htmlFor="ghUserName" className="form__label">GitHub User Name
+                  </label>
+                  <input
+                    className="form__input"
+                    type="text"
+                    id="ghUserName"
+                    name="ghUserName"
+                    value={this.props.profiles.editForm.ghUserName}
+                    onChange={e => this.handleInput(e)}
+                    onBlur={(e) => this.checkGHProfile(e)}
+                    placeholder="GitHub User Name"
+                  />
+                </div>
+                <div className="form__input-group">
+                  <label htmlFor="language" className="form__label">Languages you speak fluently
+                  </label>
+                  <div className="skill-value__wrapper">
+                      {this.props.profiles.editForm.languages && this.props.profiles.editForm.languages.map(lang => (
+                        <span className="skill-value" key={lang}>
+                          <span className="skill-value__icon" aria-hidden="true">
+                            <span
+                              className="language"
+                              id={lang}
+                              role="button"
+                              tabIndex="0"
+                              onClick={e => this.removeLanguage(e)}
+                              onKeyDown={e => this.handleKeyDownRemove(e)}
+                            >
+                               &times;
+                              </span>
+                          </span>
+                          <span className="skill-value__label" role="option" aria-selected="true">
+                            {lang}
+                            <span className="skill-aria-only">&nbsp;</span>
+                          </span>
+                        </span>
+                       ))}
+                  </div>
+                  <InputAutosuggest
+                    id="language"
+                    name="language"
+                    placeholder="Add Languages"
+                    onChange={this.onChange}
+                    list={languages}
+                    onKeyPress={(e) => this.handleKeyPressAdd(e)}
+                    value={this.props.profiles.editForm.language}
+                    addTag={this.addLanguage}
+                    removeTag={this.removeLanguage}
+                    ref={instance => { this.languageInput = instance; }}
+                  />
+                </div>
+                <div className="form__input-group">
+                  <label className="form__label" htmlFor="skills">Skills</label>
+                  <div className="skill-value__wrapper">
+                  {this.props.profiles.editForm.skills && this.props.profiles.editForm.skills.map(skill => (
+                    <span className="skill-value" key={skill}>
+                      <span className="skill-value__icon" aria-hidden="true">
+                        <span
+                          className="skill"
+                          id={skill}
+                          role="button"
+                          tabIndex="0"
+                          onClick={e => this.removeSkill(e)}
+                          onKeyDown={e => this.handleKeyDownRemove(e)}
+                        >
+                           &times;
+                        </span>
+                      </span>
+                      <span className="skill-value__label" role="option" aria-selected="true">
+                        {skill}
+                        <span className="skill-aria-only">&nbsp;</span>
+                      </span>
                     </span>
-                  </span>
-                  <span className="skill-value__label" role="option" aria-selected="true">
-                    {skill}
-                    <span className="skill-aria-only">&nbsp;</span>
-                  </span>
-                </span>
-               ))}
+                   ))}
+                  </div>
+                  <InputAutosuggest
+                    id="skill"
+                    name="skill"
+                    placeholder="Add Skills"
+                    onChange={this.onChange}
+                    list={skills}
+                    onKeyPress={(e) => this.handleKeyPressAdd(e)}
+                    value={this.props.profiles.editForm.skill}
+                    addTag={this.addSkill}
+                    removeTag={this.removeSkill}
+                    ref={instance => { this.skillInput = instance; }}
+                  />
+                </div>
               </div>
-              <InputAutosuggest
-                id="skill"
-                name="skill"
-                placeholder="Add Skills"
-                onChange={this.onChange}
-                list={skills}
-                onKeyPress={(e) => this.handleKeyPressAdd(e)}
-                value={this.props.profiles.editForm.skill}
-                addTag={this.addSkill}
-                removeTag={this.removeSkill}
-                ref={instance => { this.skillInput = instance; }}
-              />
-            </div>
-            <div className="form__input-group">
-              <label htmlFor="timezone" className="form__label">Time Zone</label>
-              <select
-                className="form__input form__input--select"
-                id="time_zone"
-                name="time_zone"
-                value={this.props.profiles.editForm.time_zone || 'Choose your time zone'}
-                onChange={e => this.handleInput(e)}
-              >
-                <option disabled>Choose your time zone</option>
-                {tzList}
-              </select>
-            </div>
-            <div className="form__input-group" >
-             <RadioGroup
-              title={'Gender'}
-              setName={'gender'}
-              type={'radio'}
-              controlFunc={this.handleRadioChange}
-              options={['Male', 'Female', 'Other']}
-              selectedOptions={this.props.profiles.editForm.gender} />
-            </div>
-            <div className="form__input-group">
-              <label htmlFor="about" className="form__label">About
-              </label>
-              <textarea className="form__input form__input--textarea" id="about" name="about" value={this.props.profiles.editForm.about} onChange={e => this.handleTextAreaInput(e)} placeholder="Introduce yourself" ref={(input) => { this.textInput = input; }} rows="3"/>
-            </div>
+              <div className="profile__column-R">
+                <div className="form__input-group">
+                  <label htmlFor="timezone" className="form__label">Time Zone</label>
+                  <select
+                    className="form__input form__input--select"
+                    id="time_zone"
+                    name="time_zone"
+                    value={this.props.profiles.editForm.time_zone || 'Choose your time zone'}
+                    onChange={e => this.handleInput(e)}
+                  >
+                    <option disabled>Choose your time zone</option>
+                    {tzList}
+                  </select>
+                </div>
+                <div className="form__input-group" >
+                 <RadioGroup
+                  title={'Gender'}
+                  setName={'gender'}
+                  type={'radio'}
+                  controlFunc={this.handleRadioChange}
+                  options={['Male', 'Female', 'Other']}
+                  selectedOptions={this.props.profiles.editForm.gender} />
+                </div>
+                <div className="form__input-group">
+                  <label htmlFor="about" className="form__label">About
+                  </label>
+                  <textarea className="form__input form__input--textarea" id="about" name="about" value={this.props.profiles.editForm.about} onChange={e => this.handleTextAreaInput(e)} placeholder="Introduce yourself" ref={(input) => { this.textInput = input; }} rows="3"/>
+                </div>
+              </div>
             </div>
           }
           {!this.state.pageOne &&
-            <SocMedia
-              handleInput={this.handleInput}
-              profiles={this.props.profiles}
-            /> }
+              <SocMedia
+                handleInput={this.handleInput}
+                profiles={this.props.profiles}
+              />}
           </div>
           <div className="form__input-group">
             <div className={formError}>{this.props.profiles.editForm.errMsg}</div>
