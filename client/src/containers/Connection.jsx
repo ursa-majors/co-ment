@@ -47,15 +47,26 @@ class Connection extends React.Component {
     for (let i = 0; i < conns.length; i += 1) {
       if (conns[i].initiator.id === this.props.profiles.userProfile._id) {
         if (this.state.role === 'mentor' && conns[i].mentor.id === this.props.profiles.userProfile._id && conns[i].mentee.id === this.props.posts.currentPost.author_id) {
+          this.setState(
+            {
+              formError: `You already have a ${this.state.role} connection with ${this.props.posts.currentPost.author}` ,
+              formErrorClass: 'form__error',
+            },
+          );
           return;
         }
         if (this.state.role === 'mentee' && conns[i].mentee.id === this.props.profiles.userProfile._id && conns[i].mentor.id === this.props.posts.currentPost.author_id) {
+          this.setState(
+            {
+              formError: `You already have a ${this.state.role} connection with ${this.props.posts.currentPost.author}` ,
+              formErrorClass: 'form__error',
+            },
+          );
           return;
         }
       }
-
     }
-    return;
+
     const token = this.props.appState.authToken;
     const connection = {
       mentor: {
