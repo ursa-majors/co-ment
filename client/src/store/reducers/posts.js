@@ -7,6 +7,7 @@ import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE,
   MODIFY_POST_REQUEST, MODIFY_POST_SUCCESS, MODIFY_POST_FAILURE,
   GET_ALL_POSTS_REQUEST, GET_ALL_POSTS_SUCCESS, GET_ALL_POSTS_FAILURE,
   VIEW_POST_REQUEST, VIEW_POST_SUCCESS, VIEW_POST_FAILURE,
+  DELETE_POST_REQUEST, DELETE_POST_SUCCESS, DELETE_POST_FAILURE,
 } from '../actions/apiPostActions';
 
 const defaultForm = {
@@ -54,6 +55,9 @@ const INITIAL_STATE = {
   viewPostSpinnerClass: 'spinner__hide',
   viewPostModalClass: 'modal__hide',
   viewPostModalText: '',
+  deletePostSpinnerClass: 'spinner__hide',
+  deletePostModalClass: 'modal__hide',
+  deletePostModalText: '',
 };
 
 function posts(state = INITIAL_STATE, action) {
@@ -178,13 +182,13 @@ function posts(state = INITIAL_STATE, action) {
           addingPost: { $set: false },
           addError: { $set: null },
           editForm: { $set: defaultForm },
-          currentPost: { $set: {} },
-          entries: { $push: [action.payload] },
+          currentPost: { $set: defaultPost },
+          entries: { $push: [action.payload.post] },
         },
       );
 
     case ADD_POST_FAILURE:
-      error = action.payload.data || { message: action.payload.message };
+      error = action.payload.message || 'An unknown error occurred';
       return Object.assign({}, state, { addingPost: false, addError: error });
 
     case MODIFY_POST_REQUEST:
@@ -233,6 +237,37 @@ function posts(state = INITIAL_STATE, action) {
           viewPostSpinnerClass: 'spinner__hide',
           viewPostModalClass: 'modal__show',
           viewPostModalText: error,
+        },
+      );
+
+    case DELETE_POST_REQUEST:
+      return Object.assign({}, state, { deletePostSpinnerClass: 'spinner__show' });
+
+    case DELETE_POST_SUCCESS:
+      for (let i = 0; i < state.entries.length; i += 1) {
+        if (state.entries[i]._id === action.payload.post._id) {
+          return update(
+            state,
+            {
+              deletePostSpinnerClass: { $set: 'spinner__hide' },
+              deletePostModalClass: { $set: 'modal__show' },
+              deletePostModalText: { $set: 'Post Deleted!' },
+              entries: { $splice: [[i, 1]] },
+            },
+          );
+        }
+      }
+      break;
+
+    case DELETE_POST_FAILURE:
+      error = action.payload.message || 'An unknown error occurred';
+      return Object.assign(
+        {},
+        state,
+        {
+          deletePostSpinnerClass: 'spinner__hide',
+          deletePostModalClass: 'modal__show',
+          deletePostModalText: error,
         },
       );
 
