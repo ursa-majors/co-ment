@@ -10,6 +10,14 @@ import Modal from '../containers/Modal';
 
 class ViewPost extends React.Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      flip: false,
+    };
+  }
+
   /*
   *  If the URL Parameter does not match the ID of the redux currentPost,
   *   clear the current post from memory and go fetch the matching post from API.
@@ -28,6 +36,15 @@ class ViewPost extends React.Component {
     const token = this.props.appState.authToken;
     this.props.api.deletePost(token, postId);
     this.props.history.push('/posts');
+  }
+
+  flip() {
+    // handle card flip front/back
+    const newState = { ...this.state };
+    newState.flip = !this.state.flip;
+    this.setState({
+      ...newState,
+    })
   }
 
   /**
@@ -95,7 +112,26 @@ class ViewPost extends React.Component {
           }
         />
         <div className="single-post">
-            <div className="single-post__username">{`Mentor ${roleText}`}</div>
+          <div className={this.props.posts.currentPost.role === 'mentor' ? 'single-post__ribbon' : 'single-post__ribbon--green'}>
+            <span className={this.props.posts.currentPost.role === 'mentor' ? 'single-post__ribbon-span' : 'single-post__ribbon-span--green'}>Mentor<br/>{roleText}</span>
+          </div>
+          <div className={this.state.flip ? "side front flip" : "side front"} id="front">
+            <div className="single-post__image-wrap">
+                {this.props.posts.currentPost.author.avatarUrl ?
+                  <img
+                    className="single-post__image"
+                    src={this.props.posts.currentPost.author.avatarUrl}
+                    alt={this.props.posts.currentPost.author} /> :
+                  <i className="fa fa-user-circle fa-5x view-preview__icon--avatar" aria-hidden="true" /> }
+              </div>
+              <div className="single-post__text-wrap single-post__card-top">
+                <div className="single-post__name">{this.props.posts.currentPost.author.name}</div>
+                <div className="single-post__username">
+                  <Link to={`/viewprofile/${this.props.posts.currentPost.author_id}`}>
+                    @{this.props.posts.currentPost.author}
+                  </Link>
+                </div>
+              </div>
             <div className="preview__title">
               {this.props.posts.currentPost.title}
             </div>
@@ -123,6 +159,7 @@ class ViewPost extends React.Component {
               </div>
             </div>
           </div>
+      </div>
       </div>
     );
   }
