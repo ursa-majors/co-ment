@@ -98,38 +98,53 @@ class ConnectionDetails extends React.Component {
     const conn = this.props.connection.viewConnection;
     return (
       <div className="container conn-details">
-        <div className="conn-details__text-wrap">
-          <div className="conn-details__title">
-            Connection Details
+        <div className="conn-preview">
+          <div className="conn-details__text-wrap">
+            <div className="conn-details__title">
+              Connection Details
+            </div>
           </div>
-        </div>
-        <div className="conn-details__avatars">
-          <div className="conn-details__image-wrap">
-            <div>Mentor</div>
-            <img className="conn-details__image" src={this.props.connection.viewConnection.mentor.avatar || null} />
+          <div className="conn-details__avatars">
+            <div className="conn-details__image-wrap">
+              <div  className="conn-details__header">Mentor</div>
+              {
+                this.props.connection.viewConnection.mentor.avatar ?
+                <img className="conn-details__image" src={this.props.connection.viewConnection.mentor.avatar} /> :
+                <i className="fa fa-user-circle fa-5x conn-details__default-avatar" aria-hidden="true" />
+              }
+              <div className="conn-details__text">{this.props.connection.viewConnection.mentor.name}</div>
+            </div>
+            <div className="conn-details__image-wrap">
+              <div className="conn-details__header">Mentee</div>
+                {
+                  this.props.connection.viewConnection.mentee.avatar ?
+                  <img className="conn-details__image" src={this.props.connection.viewConnection.mentee.avatar} /> :
+                  <i className="fa fa-user-circle fa-5x conn-details__default-avatar" aria-hidden="true" />
+                }
+              <div  className="conn-details__text">{this.props.connection.viewConnection.mentee.name}</div>
+            </div>
           </div>
-          <div className="conn-details__image-wrap">
-            <div>Mentee</div>
-            <img className="conn-details__image" src={this.props.connection.viewConnection.mentee.avatar || null} />
+          <div className="conn-details__header-wrap">
+            <div className="conn-details__header">Initiated By: </div>
+            <span className="conn-details__text">{this.props.connection.viewConnection.initiator.name} </span>
           </div>
-        </div>
-        <div className="conn-details__text-wrap">
-          Initiated By: {this.props.connection.viewConnection.initiator.name}
-        </div>
-        <div className="conn-details__text-wrap">
-          Original Post:
-          <Link to={`/viewpost/${this.props.connection.viewConnection.originalPost.id}`}>
-            {this.props.connection.viewConnection.originalPost.title}
-          </Link>
-        </div>
-        <div className="conn-details__text-wrap">
-          Status: {this.props.connection.viewConnection.status}
-        </div>
-        <div className="conn-details__text-wrap">
-          Date Updated: {this.props.connection.viewConnection.dateStarted}
-        </div>
-        <div className="single-post__button-wrap">
-          { this.getActions() }
+          <div className="conn-details__header-wrap">
+            <div className="conn-details__header">Original Post:</div>
+            <Link className="conn-details__text" to={`/viewpost/${this.props.connection.viewConnection.originalPost.id}`}>
+              {this.props.connection.viewConnection.originalPost.title}
+            </Link>
+          </div>
+          <div className="conn-details__header-wrap">
+            <div className="conn-details__header">Status: </div>
+            <span className="conn-details__text">{this.props.connection.viewConnection.status}</span>
+          </div>
+          <div className="conn-details__header-wrap">
+            <div className="conn-details__header">Date Updated: </div>
+            <span className="conn-details__text">{this.props.connection.viewConnection.dateStarted}</span>
+          </div>
+          <div className="single-post__button-wrap">
+            { this.getActions() }
+          </div>
         </div>
       </div>
     );
