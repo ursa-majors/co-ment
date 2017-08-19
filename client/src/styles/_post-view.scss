@@ -197,11 +197,11 @@
 
     &::before {
         top: 0;
-        right: 4px;
+        right: 42px;
       }
 
     &::after {
-      bottom: 4px;
+      bottom: 42px;
       left: 0;
     }
 
@@ -227,11 +227,11 @@
 
       &::before {
         top: 0;
-        right: 4px;
+        right: 42px;
       }
 
       &::after {
-        bottom: 4px;
+        bottom: 42px;
         left: 0;
       }
     }
@@ -240,38 +240,40 @@
   &__ribbon-span {
     position: absolute;
     display: block;
-    width: 225px;
+    width: 265px;
     padding: 8px 0;
     background-color: #3498db;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     color: #fff;
     font-family: 'Alegreya Sans SC', sans-serif;
+    font-size: 1.2em;
     font-weight: 400;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
     text-transform: lowercase;
     letter-spacing: 2px;
     text-align: center;
     right: -25px;
-    top: 35px;
+    top: 28px;
     transform: rotate(-45deg);
     line-height: .8em;
 
     &--green {
       position: absolute;
       display: block;
-      width: 225px;
+      width: 265px;
       padding: 8px 0;
       background-color: #3498db;
       box-shadow: 0 5px 10px rgba(0,0,0,.1);
       color: #fff;
       font-family: 'Alegreya Sans SC', sans-serif;
+      font-size: 1.2em;
       font-weight: 400;
       text-shadow: 0 1px 1px rgba(0,0,0,.2);
       text-transform: lowercase;
       letter-spacing: 2px;
       text-align: center;
       right: -25px;
-      top: 35px;
+      top: 28px;
       transform: rotate(-45deg);
       line-height: .8em;
       background-color: #61C3AD;
@@ -280,33 +282,39 @@
 
   &__image {
     border-radius: 100%;
-    width: 130px;
+    width: 170px;
     max-width: 100%;
     height: auto;
-    border: 1px solid rgba(255,255,255,.5);
+    border: 2px solid rgba(255,255,255,.8);
+    cursor: pointer;
   }
 
   &__icon {
     height: 100%;
     width: auto;
     color: rgba(255,255,255,.4);
+    cursor: pointer;
   }
 
   &__image-wrap {
-    width: 130px;
-    height: 130px;
+    width: 170px;
+    height: 170px;
+    margin: 20px;
   }
 
-  &__header-wrap {
-    display: flex;
-    flex-direction: row;
-    padding: 10px;
+  &__date {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 20px 15px;
   }
 
   &__name {
       font-weight: 700;
       text-align: center;
-      font-size: 30px;
+      font-size: 24px;
+      line-height: 22px;
+      margin-top: 10px;
     }
 
   &__username {
@@ -315,25 +323,8 @@
     font-size: 22px;
   }
 
-  &__text {
-    font-size: 1.2em;
-    font-weight: 100;
-    padding-left: 3px;
-
-    @include for-tablet-landscape-up {
-      font-size: 1.4em;
-      margin: 10px 0;
-    }
-
-    &--bold {
-      font-weight: 400;
-    }
-  }
-
-  &__text--body {
-    padding: 10px 0 30px 0;
-    white-space: pre-wrap;
-    font-size: 1.5em;
+  &__card-body {
+    display: flex;
   }
 
   &__title {

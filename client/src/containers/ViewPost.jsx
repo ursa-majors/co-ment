@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import * as Actions from '../store/actions/postActions';
 import * as apiActions from '../store/actions/apiPostActions';
+import { formatDate } from '../utils/';
 import Spinner from '../containers/Spinner';
 import Modal from '../containers/Modal';
 
@@ -68,7 +69,7 @@ class ViewPost extends React.Component {
   }
 
   render() {
-    const roleText = (this.props.posts.currentPost.role === 'mentor' ? ' Available' : ' Wanted');
+    const roleText = (this.props.posts.currentPost.role === 'mentor' ? 'mentor' : 'mentee');
     const owner = (this.props.appState.userId === this.props.posts.currentPost.author_id);
     let actions;
     if (owner) {
@@ -113,53 +114,58 @@ class ViewPost extends React.Component {
         />
         <div className="single-post">
           <div className={this.props.posts.currentPost.role === 'mentor' ? 'single-post__ribbon' : 'single-post__ribbon--green'}>
-            <span className={this.props.posts.currentPost.role === 'mentor' ? 'single-post__ribbon-span' : 'single-post__ribbon-span--green'}>Mentor<br/>{roleText}</span>
+            <span className={this.props.posts.currentPost.role === 'mentor' ? 'single-post__ribbon-span' : 'single-post__ribbon-span--green'}>{roleText}</span>
           </div>
           <div className={this.state.flip ? "side front flip" : "side front"} id="front">
-            <div className="single-post__image-wrap">
-                {this.props.posts.currentPost.author.avatarUrl ?
-                  <img
-                    className="single-post__image"
-                    src={this.props.posts.currentPost.author.avatarUrl}
-                    alt={this.props.posts.currentPost.author} /> :
-                  <i className="fa fa-user-circle fa-5x view-preview__icon--avatar" aria-hidden="true" /> }
-              </div>
-              <div className="single-post__text-wrap single-post__card-top">
-                <div className="single-post__name">{this.props.posts.currentPost.author.name}</div>
-                <div className="single-post__username">
-                  <Link to={`/viewprofile/${this.props.posts.currentPost.author_id}`}>
+            <div className="single-post__date">
+              <span className="tag-value">
+                <span className="tag-value__label">
+                  {formatDate(new Date(this.props.posts.currentPost.updatedAt))}
+                </span>
+              </span>
+            </div>
+            <div className="single-post__card-body">
+              <div className="single-post__image-wrap">
+                <Link to={`/viewprofile/${this.props.posts.currentPost.author_id}`}>
+                  {this.props.posts.currentPost.author_avatar ?
+                    <img
+                      className="single-post__image"
+                      src={this.props.posts.currentPost.author_avatar}
+                      alt={this.props.posts.currentPost.author} /> :
+                    <i className="fa fa-user-circle fa-5x view-preview__icon--avatar" aria-hidden="true" /> }
+                  <div className="single-post__name">{this.props.posts.currentPost.author_name}</div>
+                  <div className="single-post__username">
                     @{this.props.posts.currentPost.author}
+                  </div>
+                </Link>
+              </div>
+              <div className="single-post__text-wrap">
+                <div className="preview__title">
+                  {this.props.posts.currentPost.title}
+                </div>
+                <div className="single-post__text">
+                  <span className="single-post__text--bold">Author: </span>
+                  <Link to={`/viewprofile/${this.props.posts.currentPost.author_id}`}>
+                    {this.props.posts.currentPost.author}
                   </Link>
                 </div>
+                <div className="single-post__text">
+                  <span className="single-post__text--bold">Keywords: </span>
+                  {
+                    this.props.posts.currentPost.keywords.map(i => (
+                      <li className="single-post__skill-item" key={i}>{i}, </li>))
+                  }
+                </div>
+                <div className="single-post__text single-post__text--body">
+                  {`${this.props.posts.currentPost.body}`}
+                </div>
               </div>
-            <div className="preview__title">
-              {this.props.posts.currentPost.title}
             </div>
-            <div className="single-post__text">
-              <span className="single-post__text--bold">Author: </span>
-              <Link to={`/viewprofile/${this.props.posts.currentPost.author_id}`}>
-                {this.props.posts.currentPost.author}
-              </Link>
-            </div>
-            <div className="single-post__text">
-              <span className="single-post__text--bold">Keywords: </span>
-              {
-                this.props.posts.currentPost.keywords.map(i => (
-                  <li className="single-post__skill-item" key={i}>{i}, </li>))
-              }
-            </div>
-            <div className="single-post__text single-post__text--body">
-              {`${this.props.posts.currentPost.body}`}
-            </div>
-            <div className="single-post__text single-post_text-bottom">
-              <span className="single-post__text--bold">Updated: </span>
-              {new Date(this.props.posts.currentPost.updatedAt).toUTCString()}
               <div className="single-post__button-wrap">
               { actions }
               </div>
             </div>
           </div>
-      </div>
       </div>
     );
   }
