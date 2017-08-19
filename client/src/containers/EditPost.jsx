@@ -92,6 +92,8 @@ class EditPost extends React.Component {
     const body = {
       author: this.props.profiles.userProfile.username,
       author_id: this.props.profiles.userProfile._id,
+      author_name: this.props.profiles.userProfile.name,
+      author_avatar: this.props.profiles.userProfile.avatarUrl,
       role: this.props.posts.editForm.role,
       title: this.props.posts.editForm.title,
       body: this.props.posts.editForm.content,

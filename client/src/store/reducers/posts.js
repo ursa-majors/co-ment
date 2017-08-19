@@ -24,6 +24,8 @@ const defaultPost = {
   active: '',
   author: '',
   author_id: '',
+  author_name: '',
+  author_avatar: '',
   availability: '',
   keywords: [],
   body: '',

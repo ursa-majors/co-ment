@@ -337,13 +337,15 @@ routes.post('/api/posts', auth, (req, res) => {
                 const myPost = new Post();
 
                 // build new post from request body and token
-                myPost.author       = req.body.author;
-                myPost.author_id    = req.token._id;
-                myPost.role         = req.body.role;
-                myPost.title        = req.body.title;
-                myPost.body         = req.body.body;
-                myPost.keywords     = req.body.keywords;
-                myPost.availability = req.body.availability;
+                myPost.author           = req.body.author;
+                myPost.author_id        = req.token._id;
+                myPost.author_name      = req.body.author_name;
+                myPost.author_avatar    = req.body.author_avatar;
+                myPost.role             = req.body.role;
+                myPost.title            = req.body.title;
+                myPost.body             = req.body.body;
+                myPost.keywords         = req.body.keywords;
+                myPost.availability     = req.body.availability;
 
                 // save new post to database
                 myPost.save( (err, newPost) => {
@@ -385,14 +387,16 @@ routes.put('/api/posts/:id', auth, (req, res) => {
 
     // build new post object from request body and parsed token
     const updates = {
-        active       : req.body.active,
-        author       : req.body.author,
-        author_id    : req.token._id,
-        role         : req.body.role,
-        title        : req.body.title,
-        body         : req.body.body,
-        keywords     : req.body.keywords,
-        availability : req.body.availability
+        active          : req.body.active,
+        author          : req.body.author,
+        author_id       : req.token._id,
+        author_name     : req.body.author_name,
+        author_avatar   : req.body.author_avatar,
+        role            : req.body.role,
+        title           : req.body.title,
+        body            : req.body.body,
+        keywords        : req.body.keywords,
+        availability    : req.body.availability
     };
 
     const options = {
