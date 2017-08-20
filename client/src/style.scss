@@ -47,8 +47,8 @@ body.user-is-tabbing *:focus {
 }
 
 .main {
-  background: -webkit-linear-gradient(to bottom, $color_aqua, $color_sky);
-  background: linear-gradient(to bottom, $color_aqua, $color_sky);
+  background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
+  background: linear-gradient(to top, $color_aqua, $color_sky);
   height: 100vh;
 }
 
@@ -56,8 +56,8 @@ body.user-is-tabbing *:focus {
 	display: flex;
 	justify-content: center;
 	background: $color_aqua;
-	background: -webkit-linear-gradient(to bottom, $color_aqua, $color_sky);
-	background: linear-gradient(to bottom, $color_aqua, $color_sky);
+	background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
+	background: linear-gradient(to top, $color_aqua, $color_sky);
   height: 100%;
 	// height: calc(100vh - 59px);
   padding: 60px 0;

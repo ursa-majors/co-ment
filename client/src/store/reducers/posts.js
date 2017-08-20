@@ -221,12 +221,19 @@ function posts(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { viewPostSpinnerClass: 'spinner__show' });
 
     case VIEW_POST_SUCCESS:
+      let excerpt;
+      if (action.payload[0].body.length > 140) {
+        excerpt = action.payload[0].body.substr(0, 140);
+      } else {
+        excerpt = null;
+      }
       return Object.assign(
         {},
         state,
         {
           viewPostSpinnerClass: 'spinner__hide',
           currentPost: action.payload[0],
+          excerpt: excerpt,
         },
       );
 
