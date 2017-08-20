@@ -56,11 +56,11 @@
     width: 100%;
     border-radius: 3px;
     margin: 5px auto;
-    border: 1px solid #d6d6d6;
+    border: 1px solid $color_gray_border;
     padding: 12px;
     font-size: .9em;
     font-weight: 100;
-    color: #545454;
+    color: $color_gray_text;
     @include for-big-desktop-up {
       padding: 15px;
       font-size: 1.2em;
@@ -89,14 +89,14 @@
 
       &:focus {
         border-radius: 50%;
-        outline: 2px solid #7AACFE !important; /* for non-webkit browsers */
+        outline: 2px solid $color_focus_ring !important; /* for non-webkit browsers */
         outline: 2px auto -webkit-focus-ring-color !important;
       }
 
     }
     &--radio-label {
       font-family: 'Alegreya Sans', sans-serif;
-      color: #545454;
+      color: $color_gray_text;
       padding: 0 15px 0 0;
       @include for-big-desktop-up {
       font-size: 1.2em;
@@ -133,12 +133,12 @@
 
   &__error {
     font-family: 'Alegreya Sans', sans-serif;
-    color: #a94442;
-    background-color: #f2dede;
+    color: $color_error_text;
+    background-color: $color_error_bkg;
     font-size: 1.2em;
     font-weight: 100;
     margin: 15px auto;
-    border: 1px solid #a94442;
+    border: 1px solid $color_error_text;
     padding: 7px;
     border-radius: 3px;
     transition: opacity .15s linear;
@@ -193,7 +193,7 @@
 }
 
 ::-webkit-input-placeholder {
-  color: #545454;
+  color: $color_gray_text;
   // opacity: 0.8;
   -webkit-transition: opacity 0.35s ease-in-out;
   transition: opacity 0.35s ease-in-out;
@@ -201,7 +201,7 @@
 
 
 ::-moz-placeholder {
-  color: #545454;
+  color: $color_gray_text;
   // opacity: 0.8;
   -webkit-transition: opacity 0.35s ease-in-out;
   transition: opacity 0.35s ease-in-out;
@@ -209,7 +209,7 @@
 
 
 :-ms-input-placeholder {
-  color: #545454;
+  color: $color_gray_text;
   // opacity: 0.8;
   -webkit-transition: opacity 0.35s ease-in-out;
   transition: opacity 0.35s ease-in-out;
@@ -217,7 +217,7 @@
 
 
 :-moz-placeholder {
-  color: #545454;
+  color: $color_gray_text;
   // opacity: 0.8;
   -webkit-transition: opacity 0.35s ease-in-out;
   transition: opacity 0.35s ease-in-out;
@@ -253,6 +253,6 @@
     padding: 20px;
     font-size: 1.2em;
     font-weight: 100;
-    color: #545454;
+    color: $color_gray_text;
 
  }

@@ -35,7 +35,7 @@
     max-width: 900px;
     margin: 20px auto;
     background: rgba(255,255,255,.7);
-    color: #545454;
+    color: $color_gray_text;
     border-radius: 4px;
   }
 
@@ -104,14 +104,14 @@
   }
 
   &__keyword-value {
-    color: #545454;
+    color: $color_gray_text;
     display: inline-block;
     font-size: 0.9em;
     line-height: 1.4;
-    background-color: #ebf5ff;
+    background-color: $color_lighter-blue;
     background-color: rgba(255, 255, 255, 0.24);
     border-radius: 2px;
-    border: 1px solid #545454;
+    border: 1px solid $color_gray_text;
     border: 1px solid rgba(84, 84, 84, 0.24);
     margin-right: 5px;
     margin-top: 5px;
@@ -171,7 +171,7 @@
   max-width: 480px;
   margin: auto;
   font-family: 'Alegreya Sans', sans-serif;
-  color: #2B2B2B;
+  color: $color_gray_darker;
   position:relative;
   z-index:1;
   perspective: 600px;
@@ -190,7 +190,7 @@
       z-index: -1;
       content: '';
       display: block;
-      border: 5px solid #2980b9;
+      border: 5px solid $color_sky_darker;
       border-top-color: transparent;
       border-left-color: transparent;
     }
@@ -220,7 +220,7 @@
         z-index: -1;
         content: '';
         display: block;
-        border: 5px solid #2980b9;
+        border: 5px solid $color_aqua_darker;
         border-top-color: transparent;
         border-left-color: transparent;
       }
@@ -242,7 +242,7 @@
     display: block;
     width: 265px;
     padding: 8px 0;
-    background-color: #3498db;
+    background-color: $color_sky;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     color: #fff;
     font-family: 'Alegreya Sans SC', sans-serif;
@@ -262,7 +262,7 @@
       display: block;
       width: 265px;
       padding: 8px 0;
-      background-color: #3498db;
+      background-color: $color_sky;
       box-shadow: 0 5px 10px rgba(0,0,0,.1);
       color: #fff;
       font-family: 'Alegreya Sans SC', sans-serif;
@@ -276,7 +276,7 @@
       top: 28px;
       transform: rotate(-45deg);
       line-height: .8em;
-      background-color: #61C3AD;
+      background-color: $color_aqua;
     }
   }
 
@@ -309,18 +309,40 @@
     margin: 20px 15px;
   }
 
+  &__name-wrap {
+    display: flex;
+    flex-direction: column;
+    margin-top: 12px;
+  }
+
   &__name {
       font-weight: 700;
       text-align: center;
       font-size: 24px;
       line-height: 22px;
       margin-top: 10px;
+      border-bottom: 1px solid transparent;
+      display: inline-block;
+      margin: auto;
+
+      &:hover {
+        border-bottom: 1px dotted $color_gray_text;
+        color: $color_gray_lighter;
+      }
     }
 
   &__username {
     font-weight: 400;
     text-align: center;
     font-size: 22px;
+    border-bottom: 1px transparent;
+    display: inline-block;
+    margin: auto;
+
+    &:hover {
+        border-bottom: 1px dotted $color_gray_text;
+        color: $color_gray_lighter;
+      }
   }
 
   &__card-body {

@@ -9,11 +9,11 @@
     width: 100%;
     border-radius: 3px;
     margin: 5px auto;
-    border: 1px solid #d6d6d6;
+    border: 1px solid $color_gray_border;
     padding: 12px;
     font-size: .9em;
     font-weight: 100;
-    color: #545454;
+    color: $color_gray_text;
     @include for-big-desktop-up {
       padding: 15px;
       font-size: 1.2em;
@@ -37,7 +37,7 @@
       position: absolute;
       top: 47px;
       width: 100%;
-      border: 1px solid #d6d6d6;
+      border: 1px solid $color_gray_border;
       background-color: white;
       border-bottom-left-radius: 3px;
       border-bottom-right-radius: 3px;

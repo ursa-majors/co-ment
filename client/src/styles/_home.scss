@@ -2,9 +2,9 @@
   color: #FFFFFF;
   text-align: center;
   font-family: 'Alegreya Sans', sans-serif;
-  background: #6B559D;
-  background: -webkit-linear-gradient(to top, #6B559D, #151741);
-  background: linear-gradient(to top, #6B559D, #151741);
+  background: $color_purple_sky;
+  background: -webkit-linear-gradient(to top, $color_purple_sky, $color_purple_sky_dark);
+  background: linear-gradient(to top, $color_purple_sky, $color_purple_sky_dark);
 
   &__image {
       height: 125vh;
@@ -124,9 +124,9 @@
       display: flex;
       justify-content: center;
       text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-      background: #0e76bc;
-      background: -webkit-linear-gradient(top, #0e76bc, #5ebcab);
-      background: linear-gradient(to bottom, #0e76bc, #5ebcab);
+      background: $color_sky;
+      background: -webkit-linear-gradient(top, $color_sky, $color_aqua);
+      background: linear-gradient(to bottom, $color_sky, $color_aqua);
       padding: 30px 0 70px 0;
       min-height: 25vh;
 

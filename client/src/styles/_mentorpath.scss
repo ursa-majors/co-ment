@@ -2,9 +2,9 @@
   color: #FFFFFF;
   text-align: center;
   font-family: 'Alegreya Sans', sans-serif;
-  background: #6B559D;
-  background: -webkit-linear-gradient(to top, #6B559D, #151741);
-  background: linear-gradient(to top, #6B559D, #151741);
+  background: $color_purple_sky;
+  background: -webkit-linear-gradient(to top, $color_purple_sky, $color_purple_sky_dark);
+  background: linear-gradient(to top, $color_purple_sky, $color_purple_sky_dark);
 
   &__mentor-path {
     width: 100%;

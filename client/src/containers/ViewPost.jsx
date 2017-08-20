@@ -126,17 +126,19 @@ class ViewPost extends React.Component {
             </div>
             <div className="single-post__card-body">
               <div className="single-post__image-wrap">
-                <Link to={`/viewprofile/${this.props.posts.currentPost.author_id}`}>
+                <Link className="unstyled-link" to={`/viewprofile/${this.props.posts.currentPost.author_id}`}>
                   {this.props.posts.currentPost.author_avatar ?
                     <img
                       className="single-post__image"
                       src={this.props.posts.currentPost.author_avatar}
                       alt={this.props.posts.currentPost.author} /> :
                     <i className="fa fa-user-circle fa-5x view-preview__icon--avatar" aria-hidden="true" /> }
-                  <div className="single-post__name">{this.props.posts.currentPost.author_name}</div>
-                  <div className="single-post__username">
-                    @{this.props.posts.currentPost.author}
-                  </div>
+                    <div className="single-post__name-wrap">
+                      <span className="single-post__name">{this.props.posts.currentPost.author_name}</span>
+                      <span className="single-post__username">
+                        @{this.props.posts.currentPost.author}
+                      </span>
+                    </div>
                 </Link>
               </div>
               <div className="single-post__text-wrap">
@@ -145,7 +147,7 @@ class ViewPost extends React.Component {
                 </div>
                 <div className="single-post__text">
                   <span className="single-post__text--bold">Author: </span>
-                  <Link to={`/viewprofile/${this.props.posts.currentPost.author_id}`}>
+                  <Link className="unstyled-link" to={`/viewprofile/${this.props.posts.currentPost.author_id}`}>
                     {this.props.posts.currentPost.author}
                   </Link>
                 </div>
