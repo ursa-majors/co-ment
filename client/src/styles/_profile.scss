@@ -1,20 +1,20 @@
 .skill-value {
-  color: #545454;
+  color: $color_gray_text;
   display: inline-block;
   font-family: 'Alegreya Sans', sans-serif;
   font-size: 0.9em;
   line-height: 1.4;
-  background-color: #ebf5ff;
+  background-color: $color_lighter-blue;
   background-color: rgba(255, 255, 255, 0.24);
   border-radius: 2px;
-  border: 1px solid #545454;
+  border: 1px solid $color_gray_text;
   border: 1px solid rgba(84, 84, 84, 0.24);
   margin-right: 5px;
   margin-top: 5px;
   vertical-align: top;
 
   &:hover {
-      border: 1px solid #e7e7e7;
+      border: 1px solid $color_gray_bkgrd;
       border: 1px solid rgba(84, 84, 84, 0.6);
     }
 
@@ -33,7 +33,7 @@
     cursor: pointer;
     border-bottom-left-radius: 2px;
     border-top-left-radius: 2px;
-    border-right: 1px solid #c2e0ff;
+    border-right: 1px solid $color_light-blue;
     border-right: 1px solid rgba(0, 126, 255, 0.24);
     padding: 1px 5px 3px;
 
@@ -184,9 +184,9 @@
 
   .profile {
     padding: 60px 0 80px 0;
-    background: #22c1c3;
-    background: -webkit-linear-gradient(to bottom, #22c1c3, #fdbb2d);
-    background: linear-gradient(to bottom, #22c1c3, #fdbb2d);
+    background: $color_aqua;
+    background: -webkit-linear-gradient(to bottom, $color_aqua, $color_sky);
+    background: linear-gradient(to bottom, $color_aqua, $color_sky);
     height: 100%;
     height: calc(100vh - 59px);
     flex-wrap: wrap;
@@ -256,7 +256,7 @@
     padding: 12px 15px;
     border-radius: 30px;
     margin: 20px;
-    background: #22c1c3;
+    background: $color_aqua;
     // border: 1px solid rgba(255,255,255,.4);
     color: rgba(255,255,255,.4);
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
@@ -266,7 +266,7 @@
     z-index: 3;
 
     &:hover, &:focus, &:active {
-        background: #22c1c3;
+        background: $color_aqua;
         box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.4);
         transition: all 300ms ease-in-out;
         // border: 1px solid rgba(255,255,255,.8);

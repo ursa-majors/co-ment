@@ -41,7 +41,6 @@ class Profile extends React.Component {
   componentWillMount() {
     // copy the current profile properties into the editable object
     this.props.actions.setEditProfile(this.props.profiles.userProfile);
-    console.log(this.props.profiles.userProfile);
   }
 
   componentDidMount() {
@@ -136,7 +135,7 @@ class Profile extends React.Component {
 
   handleKeyDownRemove(e) {
     // when tag label is focused, backspace or enter will remove tag
-    if (e.charCode === 13 || e.which === 13 || e.keyCode === 8 || e.which === 8) {
+    if (e.keyCode === 13 || e.which === 13 || e.keyCode === 8 || e.which === 8) {
       const type = e.target.className;
       if (type === 'language') {
         this.removeLanguage(e);
