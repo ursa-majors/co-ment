@@ -74,30 +74,41 @@ class ViewPost extends React.Component {
     let actions;
     if (owner) {
       actions = (
-        <ul className="post-nav">
-          <li className="post-nav__item" >
-            <span className="post-nav__item-link pointer" onClick={() => this.props.history.push(`/editpost/${this.props.posts.currentPost._id}`)}>
-              Edit
-            </span>
-          </li>
-          <li className="post-nav__item" >
-            <span className="post-nav__item-link pointer" onClick={() => this.deletePost()}>
-              Delete
-            </span>
-          </li>
-        </ul>
+        <div>
+          <button
+            className="single-post__edit"
+            aria-label="edit"
+            onClick={() => this.props.history.push(`/editpost/${this.props.posts.currentPost._id}`)}>
+            <i className="fa fa-pencil single-post__icon--edit" aria-hidden="true" />
+          </button>
+          <button
+            className="single-post__delete"
+            aria-label="delete"
+            onClick={() => this.deletePost()}>
+            <i className="fa fa-trash single-post__icon--delete" aria-hidden="true" />
+          </button>
+        </div>
       );
     } else {
       actions = (
-        <ul className="post-nav">
-          <li className="post-nav__item" >
-            <span className="post-nav__item-link pointer" onClick={this.checkConnectionRequest}>
-              Request Connection
-            </span>
-          </li>
-        </ul>
+        <button
+          className="single-post__connect"
+          aria-label="request connection"
+          onClick={this.checkConnectionRequest}>
+          <i className="fa fa-envelope single-post__icon--connect" aria-hidden="true" />
+        </button>
       );
     }
+    let keywordsDisp;
+    if (this.props.posts.currentPost.keywords) {
+      keywordsDisp = this.props.posts.currentPost.keywords.map(word => (
+        <span className="tag-value" key={word}>
+          <span className="tag-value__label">
+            {word}
+          </span>
+        </span>
+       ));
+      }
 
     return (
       <div className="post-view">
@@ -142,24 +153,14 @@ class ViewPost extends React.Component {
                 </Link>
               </div>
               <div className="single-post__text-wrap">
-                <div className="preview__title">
+                <div className="single-post__title">
                   {this.props.posts.currentPost.title}
                 </div>
-                <div className="single-post__text">
-                  <span className="single-post__text--bold">Author: </span>
-                  <Link className="unstyled-link" to={`/viewprofile/${this.props.posts.currentPost.author_id}`}>
-                    {this.props.posts.currentPost.author}
-                  </Link>
-                </div>
-                <div className="single-post__text">
-                  <span className="single-post__text--bold">Keywords: </span>
-                  {
-                    this.props.posts.currentPost.keywords.map(i => (
-                      <li className="single-post__skill-item" key={i}>{i}, </li>))
-                  }
-                </div>
-                <div className="single-post__text single-post__text--body">
+                <div className="single-post__body">
                   {`${this.props.posts.currentPost.body}`}
+                </div>
+                <div className="tag-value__wrapper">
+                    {keywordsDisp ? keywordsDisp : ''}
                 </div>
               </div>
             </div>
