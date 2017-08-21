@@ -163,9 +163,8 @@ class Profile extends React.Component {
   }
 
   validateInputs() {
-    // name is only required if github userName is empty
     let msg = '';
-    if (this.props.profiles.editForm.ghUserName === '' && this.props.profiles.editForm.name === '') {
+    if (this.props.profiles.editForm.name === '') {
       msg = 'Name is required.  ';
     }
     if (this.props.profiles.editForm.time_zone === 'Choose your time zone' || this.props.profiles.editForm.time_zone === '') {
