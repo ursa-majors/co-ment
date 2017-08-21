@@ -153,8 +153,7 @@ routes.put('/api/profile/:id', auth, (req, res) => {
         }
 
     })
-    .then( () => getGithubProfile(req.body.ghUserName) )
-    .then( (ghProfile) => {
+    .then( () => {
 
         const options = {
             new: true  // return updated document rather than the original
@@ -162,10 +161,9 @@ routes.put('/api/profile/:id', auth, (req, res) => {
 
         const updates = {
             ghUserName : req.body.ghUserName,
-            ghProfile  : ghProfile,
-            name       : ghProfile.name,
-            avatarUrl  : ghProfile.avatar_url,
-            location   : ghProfile.location,
+            name       : req.body.name,
+            avatarUrl  : req.body.avatarUrl,
+            location   : req.body.location,
             languages  : req.body.languages,
             gender     : req.body.gender,
             about      : req.body.about,

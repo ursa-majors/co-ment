@@ -1,6 +1,6 @@
 import update from 'immutability-helper';
 import { SAVE_PROFILE, SET_CURRENT_PROFILE, SET_EDIT_PROFILE, SET_FORM_FIELD, ADD_LANGUAGE,
-  ADD_SKILL, REMOVE_LANGUAGE, REMOVE_SKILL, DISMISS_VIEWPROFILE_MODAL, SET_USER_PROFILE,
+  ADD_SKILL, REMOVE_LANGUAGE, REMOVE_SKILL, DISMISS_VIEWPROFILE_MODAL, SET_USER_PROFILE, SET_PROFILE_MODAL_CLASS, SET_PROFILE_MODAL_TEXT
  } from '../actions/profileActions';
 import { GET_PROFILE_REQUEST, GET_PROFILE_SUCCESS, GET_PROFILE_FAILURE,
   MODIFY_PROFILE_REQUEST, MODIFY_PROFILE_SUCCESS, MODIFY_PROFILE_FAILURE,
@@ -73,6 +73,12 @@ function profiles(state = INITIAL_STATE, action) {
   let time_zone;
   switch (action.type) {
 
+    case SET_PROFILE_MODAL_TEXT:
+      return Object.assign({}, state, { viewProfileModalText: action.payload });
+
+    case SET_PROFILE_MODAL_CLASS:
+      return Object.assign({}, state, { viewProfileModalClass: action.payload });
+
     case SAVE_PROFILE:
       return update(state, { profile: { $set: action.payload } });
 
@@ -86,6 +92,7 @@ function profiles(state = INITIAL_STATE, action) {
       return update(state, { userProfile: { $set: action.payload } });
 
     case SET_EDIT_PROFILE:
+    console.log('95', action.payload);
       return update(
         state,
         {
@@ -100,7 +107,7 @@ function profiles(state = INITIAL_STATE, action) {
             location: { $set: action.payload.location || '' },
             about: { $set: action.payload.about || '' },
             ghUserName: { $set: action.payload.ghUserName || '' },
-            avatarUrl: { $set: action.payload.avatar_url || '' },
+            avatarUrl: { $set: action.payload.avatarUrl || '' },
             twitter: { $set: action.payload.twitter || '' },
             facebook: { $set: action.payload.facebook || '' },
             link: { $set: action.payload.link || '' },
@@ -222,11 +229,16 @@ function profiles(state = INITIAL_STATE, action) {
       return Object.assign(
         {},
         state,
-        { gettingGHProfile: true, profileError: null, getGHError: null, getGHSuccess: null },
+        { gettingGHProfile: true,
+          profileError: null,
+          getGHError: null,
+          getGHSuccess: null,
+          profileSpinnerClass: 'spinner__show', },
       );
 
     case GITHUB_PROFILE_SUCCESS:
     let ghProfile = Object.assign({}, action.payload);
+    console.log(ghProfile);
 
       return update(
         state,
@@ -234,7 +246,12 @@ function profiles(state = INITIAL_STATE, action) {
           gettingGHProfile: { $set: false },
           getGHError: { $set: null },
           getGHSuccess: { $set: true },
-          editForm: { ghProfile: { $set: ghProfile } },
+          editForm: {
+            name: { $set: ghProfile.name },
+            location: { $set: ghProfile.location },
+            avatarUrl: { $set: ghProfile.avatar_url },
+          },
+          profileSpinnerClass: { $set: 'spinner__hide' },
         },
       );
 
@@ -247,6 +264,9 @@ function profiles(state = INITIAL_STATE, action) {
           gettingGHProfile: false,
           getGHError: error,
           getGHSuccess: false,
+          profileSpinnerClass: 'spinner__hide',
+          viewProfileModalClass: 'modal__show',
+          viewProfileModalText: error.message,
         });
 
     default:
