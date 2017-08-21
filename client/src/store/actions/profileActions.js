@@ -8,6 +8,8 @@ export const ADD_LANGUAGE = 'ADD_LANGUAGE';
 export const REMOVE_SKILL = 'REMOVE_SKILL';
 export const REMOVE_LANGUAGE = 'REMOVE_LANGUAGE';
 export const DISMISS_VIEWPROFILE_MODAL = 'DISMISS_VIEWPROFILE_MODAL';
+export const SET_PROFILE_MODAL_CLASS = 'SET_PROFILE_MODAL_CLASS';
+export const SET_PROFILE_MODAL_TEXT = 'SET_PROFILE_MODAL_TEXT';
 
 export function saveProfile(profile) {
   return ({
@@ -74,8 +76,21 @@ export function removeSkill(word) {
 }
 
 export function dismissViewProfileModal() {
-  console.log('dvpm')
   return ({
     type: DISMISS_VIEWPROFILE_MODAL,
+  });
+}
+
+export function setProfileModalClass(modalClass) {
+  return ({
+    type: SET_PROFILE_MODAL_CLASS,
+    payload: modalClass,
+  });
+}
+
+export function setProfileModalText(text) {
+  return ({
+    type: SET_PROFILE_MODAL_TEXT,
+    payload: text,
   });
 }
