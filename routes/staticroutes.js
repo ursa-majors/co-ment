@@ -11,10 +11,9 @@ const path   = require('path');
 // single root '/' route to serve client frontend.
 // Client handles frontend routing.
 routes.get('/', (req, res) => {
-    
     res.status(200)
-        .sendFile(path.join(__dirname, '../client/index.html'));
-    
+        .sendFile(path.join(__dirname, '../client/build/index.html'));
+
 });
 
 
