@@ -92,6 +92,7 @@ function profiles(state = INITIAL_STATE, action) {
       return update(state, { userProfile: { $set: action.payload } });
 
     case SET_EDIT_PROFILE:
+    console.log('95', action.payload);
       return update(
         state,
         {
@@ -106,7 +107,7 @@ function profiles(state = INITIAL_STATE, action) {
             location: { $set: action.payload.location || '' },
             about: { $set: action.payload.about || '' },
             ghUserName: { $set: action.payload.ghUserName || '' },
-            avatarUrl: { $set: action.payload.avatar_url || '' },
+            avatarUrl: { $set: action.payload.avatarUrl || '' },
             twitter: { $set: action.payload.twitter || '' },
             facebook: { $set: action.payload.facebook || '' },
             link: { $set: action.payload.link || '' },
