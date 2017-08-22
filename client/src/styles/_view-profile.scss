@@ -19,7 +19,7 @@
     position:relative;
     z-index:1;
     perspective: 600px;
-    transition: all 500ms ease-in-out;
+    transition: $transition_card;
 
     &__edit {
       position: absolute;
@@ -30,7 +30,7 @@
       margin: 20px;
       background: $color_aqua;
       border: none;
-      color: rgba(255,255,255,.4);
+      color: rgba(255,255,255,.8);
       box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
 
       &:hover, &:focus, &:active {
@@ -57,7 +57,7 @@
       margin-top: 20px;
       text-align: center;
       padding: 20px 20px 0 20px;
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
       }
 
     &__image {
@@ -66,47 +66,47 @@
       height: auto;
       margin: 0 auto;
       border: 2px solid rgba(255,255,255,.9);
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
     &__icon--avatar {
       height: 100%;
       width: auto;
       color: rgba(255,255,255,.4);
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
     &__text-wrap {
       padding: 15px 30px 10px 30px;
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
     &__name {
       font-weight: 700;
       text-align: center;
       font-size: 30px;
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
     &__username {
       font-weight: 400;
       text-align: center;
       font-size: 22px;
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
     &__location-wrap {
       display: flex;
       justify-content: center;
       padding: 10px;
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
     &__icon--location {
         color: $color_gray_lighter;
         padding: 2px 9px 0 0;
         font-size: 18px;
-        transition: all 500ms ease-in-out;
+        /* transition: $transition_card; */
     }
 
     &__location {
@@ -114,7 +114,7 @@
       font-family: 'Alegreya Sans SC', sans-serif;
       text-transform: lowercase;
       font-size: 18px;
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
     &__card-nav {
@@ -122,7 +122,7 @@
       justify-content: space-between;
       width: 100%;
       background: white;
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
     &__nav-item {
@@ -135,7 +135,7 @@
       font-family: 'Alegreya Sans SC', sans-serif;
       text-transform: lowercase;
       font-size: 18px;
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
 
       &:first-child {
         padding-left: 20px;
@@ -175,7 +175,7 @@
         font-family: inherit;
         font-size: inherit;
         text-transform: inherit;
-        transition: all 500ms ease-in-out;
+        /* transition: $transition_card; */
 
 
         &:hover, &--active {
@@ -190,7 +190,7 @@
     &__card-body {
       padding: 20px 20px 12px 20px;
       background: rgba(255,255,255,.6);
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
     &__card-footer {
@@ -199,7 +199,7 @@
       padding: 10px;
       font-size: 20px;
       width:100%;
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
 
       &--back {
         display: flex;
@@ -215,7 +215,7 @@
 
     &__icon--sm-wrap {
       padding: 0 10px;
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
 
       & a {
           color: $color_gray_darker;
@@ -256,7 +256,7 @@
     color: $color_gray_darker;
     position:relative;
     z-index:1;
-    transition: all 500ms ease-in-out;
+    transition: $transition_card;
 
     &__expand, &__compress {
       position: absolute;
@@ -267,7 +267,7 @@
       margin: 10px;
       background: $color_aqua;
       border: none;
-      color: rgba(255,255,255,.4);
+      color: rgba(255,255,255,.8);
       box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
 
       &:hover, &:focus, &:active {
@@ -295,14 +295,14 @@
 
     &__top-wrap {
       display: flex;
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
     &__image-wrap {
       width: 100%;
       padding: 10px;
       flex-basis: 40%;
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
       }
 
     &__image {
@@ -311,45 +311,45 @@
       height: auto;
       margin: 0 auto;
       border: 2px solid rgba(255,255,255,.9);
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
     &__icon--avatar {
       height: 100%;
       width: auto;
       color: rgba(255,255,255,.4);
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
     &__text-wrap {
       padding: 20px 0 5px 0;
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
     &__name {
       font-weight: 700;
       font-size: 20px;
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
     &__username {
       font-weight: 400;
       font-size: 16px;
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
     &__location-wrap {
       display: flex;
       justify-content: flex-start;
       padding: 10px 10px 10px 0;
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
     &__icon--location {
         color: $color_gray_lighter;
         padding: 2px 9px 0 0;
         font-size: 12px;
-        transition: all 500ms ease-in-out;
+        /* transition: $transition_card; */
     }
 
     &__location {
@@ -357,7 +357,7 @@
       font-family: 'Alegreya Sans SC', sans-serif;
       text-transform: lowercase;
       font-size: 12px;
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
       &--flip {
@@ -372,7 +372,7 @@
     &__card-body {
       padding: 10px;
       background: rgba(255,255,255,.6);
-      transition: all 500ms ease-in-out;
+      /* transition: $transition_card; */
     }
 
 }
@@ -426,6 +426,7 @@
   border: 1px solid rgba(84, 84, 84, 0.24);
   margin: 0 6px 6px 0;
   vertical-align: top;
+  transition: $transition_card;
 
 
   &__label {
@@ -435,6 +436,7 @@
     padding: 1px 3px;
     display: inline-block;
     vertical-align: middle;
+    transition: $transition_card;
   }
 
   &__wrapper {
