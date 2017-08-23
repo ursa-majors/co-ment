@@ -19,6 +19,7 @@ import Connection from './containers/Connection';
 import Connections from './containers/Connections';
 import ConnectionResult from './containers/ConnectionResult';
 import ConnectionDetails from './containers/ConnectionDetails';
+import Validate from './containers/Validate';
 
 class App extends React.Component {
 
@@ -45,6 +46,7 @@ class App extends React.Component {
               <Route path="/connections" component={Connections} />
               <Route path="/connectionresult" component={ConnectionResult} />
               <Route path="/connectiondetails/:id" component={ConnectionDetails} />
+              <Route path="/validate" component={Validate} />
             </Switch>
           </main>
           <FooterNav />
