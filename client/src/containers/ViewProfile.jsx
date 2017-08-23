@@ -19,14 +19,10 @@ class ViewProfile extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     // copy requested profile data into currentProfile
     const profileId = this.props.match.params.id;
     this.props.api.getProfile(this.props.appState.authToken, profileId);
-    }
-
-  componentDidMount() {
-    console.log(this.props.profile.currentProfile);
   }
 
   onClick(e) {
