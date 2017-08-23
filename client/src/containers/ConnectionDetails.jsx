@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
+
+import Spinner from './Spinner';
 import * as apiActions from '../store/actions/apiConnectionActions';
 import * as Actions from '../store/actions/connectionActions';
 
@@ -10,10 +12,23 @@ class ConnectionDetails extends React.Component {
 
   // Find the connection matching the URL param and set it in redux state.
   componentDidMount() {
-    for (let i = 0; i < this.props.connection.connections.length; i += 1) {
-      if (this.props.connection.connections[i]._id === this.props.match.params.id) {
-        this.props.actions.setViewConnection(this.props.connection.connections[i]);
-      }
+
+
+    if (!this.props.connection.connections) {
+      this.setCurrentConnection(this.props.match.params.id);
+    } else {
+      // reload connections and find the matching param
+      const token = this.props.appState.authToken;
+      const userId = this.props.appState.userId;
+      this.props.api.getConnections(token, userId)
+        .then((result) => {
+          if (result.type === 'GET_ALL_CONNECTIONS_SUCCESS') {
+            this.setCurrentConnection(this.props.match.params.id);
+          }
+        })
+        .catch((error) => {
+          console.log('an error has occurred');
+        })
     }
   }
 
@@ -21,6 +36,13 @@ class ConnectionDetails extends React.Component {
     this.props.actions.clearViewConnection();
   }
 
+  setCurrentConnection = (id) => {
+    for (let i = 0; i < this.props.connection.connections.length; i += 1) {
+      if (this.props.connection.connections[i]._id === id) {
+        this.props.actions.setViewConnection(this.props.connection.connections[i]);
+      }
+    }
+  }
   getActions = () => {
     let actions;
     switch (this.props.connection.viewConnection.status) {
@@ -94,10 +116,10 @@ class ConnectionDetails extends React.Component {
   }
 
   render() {
-    console.log(this.props.connection)
     const conn = this.props.connection.viewConnection;
     return (
       <div className="container conn-details">
+        <Spinner cssClass={this.props.connection.connDetailsSpinnerClass} />
         <div className="conn-preview">
           <div className="conn-details__text-wrap">
             <div className="conn-details__title">

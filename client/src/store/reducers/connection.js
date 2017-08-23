@@ -7,8 +7,8 @@ import { SET_VIEW_CONNECTION, CLEAR_VIEW_CONNECTION, SET_CONNECTIONS_MODAL_CLASS
 import { CONTACT_REQUEST, CONTACT_SUCCESS, CONTACT_FAILURE } from '../actions/apiActions';
 import { CONNECTION_REQUEST, CONNECTION_SUCCESS, CONNECTION_FAILURE, GET_ALL_CONNECTIONS_REQUEST,
   GET_ALL_CONNECTIONS_SUCCESS, GET_ALL_CONNECTIONS_FAILURE, UPDATE_CONNECTION_STATUS_REQUEST,
-  UPDATE_CONNECTION_STATUS_SUCCESS, UPDATE_CONNECTION_STATUS_FAILURE,
-} from '../actions/apiConnectionActions';
+  UPDATE_CONNECTION_STATUS_SUCCESS, UPDATE_CONNECTION_STATUS_FAILURE, GET_CONNECTION_REQUEST,
+  GET_CONNECTION_SUCCESS, GET_CONNECTION_FAILURE } from '../actions/apiConnectionActions';
 
 const defaultConn = {
   _id: '',
@@ -51,6 +51,9 @@ const INITIAL_STATE = {
   updateConnectionModalClass: 'modal__hide',
   updateConnectionModalText: '',
   updateConnectionError: '',
+  connDetailsSpinnerClass: 'spinner__hide',
+  connDetailsModalClass: 'modal__hide',
+  connDetailsModalText: '',
 };
 
 function connection(state = INITIAL_STATE, action) {
@@ -102,26 +105,26 @@ function connection(state = INITIAL_STATE, action) {
 
 
     case GET_ALL_CONNECTIONS_SUCCESS:
-      if (action.payload.connections.length > 0 ) {
+      if (action.payload.connections.length > 0) {
         return Object.assign(
-            {},
-            state,
-            {
-              connections: action.payload.connections,
-              getConnectionsSpinnerClass: 'spinner__hide',
-              getConnectionsModalClass: 'modal__hide',
-            },
-          );
-        }
-        return Object.assign(
-            {},
-            state,
-            {
-              getConnectionsSpinnerClass: 'spinner__hide',
-              getConnectionsModalClass: 'modal__show',
-              getConnectionsModalText: `You haven't made any connections yet. Search our posts to find a Mentor or Mentee connection.`
-            },
-          );
+          {},
+          state,
+          {
+            connections: action.payload.connections,
+            getConnectionsSpinnerClass: 'spinner__hide',
+            getConnectionsModalClass: 'modal__hide',
+          },
+        );
+      }
+      return Object.assign(
+        {},
+        state,
+        {
+          getConnectionsSpinnerClass: 'spinner__hide',
+          getConnectionsModalClass: 'modal__show',
+          getConnectionsModalText: `You haven't made any connections yet. Search our posts to find a Mentor or Mentee connection.`
+        },
+      );
 
     case GET_ALL_CONNECTIONS_FAILURE:
       error = action.payload.message || 'An error occurred';
@@ -135,6 +138,30 @@ function connection(state = INITIAL_STATE, action) {
         },
       );
 
+    case GET_CONNECTION_REQUEST:
+      return Object.assign({}, state, { connDetailsSpinnerClass: 'spinner__show' });
+
+    case GET_CONNECTION_SUCCESS:
+      return Object.assign(
+        {},
+        state,
+        {
+          connDetailsSpinnerClass: 'spinner__hide',
+          viewConnection: action.payload,
+        },
+      );
+
+    case GET_CONNECTION_FAILURE:
+      error = action.payload.message || 'An error occurred';
+      return Object.assign(
+        {},
+        state,
+        {
+          connDetailsSpinnerClass: 'spinner__hide',
+          connDetailsModalClass: 'modal__show',
+          connDetailsModalText: error,
+        },
+      );
     case UPDATE_CONNECTION_STATUS_REQUEST:
       return Object.assign(
         {},
