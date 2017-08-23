@@ -5,10 +5,17 @@ import { connect } from 'react-redux';
 
 import Spinner from './Spinner';
 import * as apiActions from '../store/actions/apiLoginActions';
+import { setRedirectUrl } from '../store/actions';
 
 class Home extends React.Component {
 
   componentDidMount() {
+    // Check for hash-fragment and stash it in redux
+    if (this.props.location.hash) {
+      const hash = this.props.location.hash.slice(2);
+      const url = `/${hash.split('=')[1]}`;
+      this.props.actions.setRedirectUrl(url);
+    }
     // If we're not logged in, check local storage for authToken
     // if it doesn't exist, it returns the string "undefined"
     if (!this.props.appState.loggedIn) {
@@ -20,7 +27,10 @@ class Home extends React.Component {
         this.props.api.validateToken(token, user)
           .then((result) => {
             if (result.type === 'VALIDATE_TOKEN_SUCCESS') {
-              console.log(this.props)
+              if (this.props.appState.redirectUrl) {
+                this.props.history.push(this.props.appState.redirectUrl)
+                this.props.actions.setRedirectUrl('');
+              }
             }
           })
       }
@@ -76,6 +86,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   api: bindActionCreators(apiActions, dispatch),
+  actions: bindActionCreators({ setRedirectUrl }, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

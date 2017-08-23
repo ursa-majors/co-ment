@@ -26,7 +26,12 @@ class Login extends React.Component {
       this.props.api.login(body)
         .then((result) => {
           if (result.type === 'LOGIN_SUCCESS') {
-            this.props.history.push('/');
+            if (this.props.appState.redirectUrl) {
+              this.props.history.push(this.props.appState.redirectUrl);
+              this.props.actions.setRedirectUrl('');
+            } else {
+              this.props.history.push('/');
+            }
           }
         });
     } else if (!username) {
