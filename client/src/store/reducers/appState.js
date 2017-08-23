@@ -1,13 +1,14 @@
 import update from 'immutability-helper';
-import { LOGIN, LOGOUT } from '../actions';
+import { LOGIN, LOGOUT, SET_REDIRECT_URL } from '../actions';
 import { VALIDATE_TOKEN_REQUEST, VALIDATE_TOKEN_SUCCESS, VALIDATE_TOKEN_FAILURE, LOGIN_SUCCESS,
-} from '../actions/apiLoginActions';
+  REGISTRATION_SUCCESS } from '../actions/apiLoginActions';
 
 const INITIAL_STATE = {
   loggedIn: false,
   authToken: {},
   userId: '',
   loginSpinnerClass: 'spinner__hide',
+  redirectUrl: '',
 };
 
 function appState(state = INITIAL_STATE, action) {
@@ -68,6 +69,22 @@ function appState(state = INITIAL_STATE, action) {
           authToken: action.payload.token,
         },
        );
+
+    case REGISTRATION_SUCCESS:
+      window.localStorage.setItem('authToken', JSON.stringify(action.payload.token));
+      window.localStorage.setItem('userId', JSON.stringify(action.payload.profile._id));
+      return Object.assign(
+        {},
+        state,
+        {
+          loggedIn: true,
+          userId: action.payload.profile._id,
+          authToken: action.payload.token,
+        },
+       );
+
+    case SET_REDIRECT_URL:
+      return Object.assign({}, state, { redirectUrl: action.payload });
 
     default:
       return state;

@@ -61,3 +61,31 @@ export function login(body) {
     },
   };
 }
+
+export const REGISTRATION_REQUEST = 'REGISTRATION_REQUEST';
+export const REGISTRATION_SUCCESS = 'REGISTRATION_SUCCESS';
+export const REGISTRATION_FAILURE = 'REGISTRATION_FAILURE';
+
+/*
+* Function: login - Attempts to loign in with supplied ID/password.
+*   returns a JWT if successful.
+* @param {string} body - the userID/password entered by user
+* This action dispatches additional actions as it executes:
+*   REGISTRATION_REQUEST: Initiates a spinner on the login page.  Needed for
+*     when the back end server has gone to sleep
+*   REGISTRATION_SUCCESS: Dispatched if the credentials valid and the profile is returned.
+*     This logs the user in, stores the token and sets the current user profile.
+*   REGISTRATION_FAILURE: Dispatched if the credentials are invalid.
+*     Displays error to user, prompt to try again or register.
+*/
+export function register(body) {
+  return {
+    [CALL_API]: {
+      endpoint: 'https://co-ment.glitch.me/api/register',
+      method: 'POST',
+      types: [REGISTRATION_REQUEST, REGISTRATION_SUCCESS, REGISTRATION_FAILURE],
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    },
+  };
+}
