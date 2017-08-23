@@ -14,19 +14,6 @@ class Posts extends React.Component {
 
   componentDidMount() {
     this.props.api.getAllPosts(this.props.appState.authToken);
-    /* axios.get('https://co-ment.glitch.me/api/posts', {
-      headers: {
-        Authorization: `Bearer ${this.props.appState.authToken}`,
-      },
-    })
-    .then((response) => {
-      this.props.actions.setPosts(response.data);
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-    */
   }
 
   render() {
