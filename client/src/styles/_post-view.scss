@@ -466,7 +466,6 @@
 
 .post-thumb {
   width: 100%;
-  max-width: 240px;
   margin: auto;
   font-family: 'Alegreya Sans', sans-serif;
   color: $color_gray_darker;
@@ -479,7 +478,7 @@
     height: 100px;
     overflow: hidden;
     position: absolute;
-    top: -10px;
+    top: 8px;
     left: -10px;
     z-index: 3;
 
@@ -509,7 +508,7 @@
       height: 100px;
       overflow: hidden;
       position: absolute;
-      top: -10px;
+      top: 8px;
       left: -10px;
       z-index: 3;
 

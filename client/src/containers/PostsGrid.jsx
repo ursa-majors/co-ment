@@ -63,12 +63,13 @@ class PostsGrid extends React.Component {
         />
         <div>
           <div ref={element => this.element = element} className="row my-shuffle shuffle posts-grid__cont">
-        {this.props.posts.entries.map((post) => (
+        {this.props.posts.entries.reverse().map((post) => (
           <div key={post._id} className="col-2\@xs col-3@sm col-4@md col-5@lg post">
             <PostThumb
               id={post._id}
-              active={this.state.actve===post._id}
+              active={this.state.active===post._id}
               post={post}
+              shuffle={this.shuffle.resetItems}
               />
           </div>
         ))}
