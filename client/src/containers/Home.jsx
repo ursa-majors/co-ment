@@ -16,7 +16,13 @@ class Home extends React.Component {
       if (token && token !== 'undefined') {
         token = JSON.parse(token);
         const user = JSON.parse(window.localStorage.getItem('userId'));
-        this.props.api.validateToken(token, user);
+        // If we validate successfully, look for redirect_url and follow it
+        this.props.api.validateToken(token, user)
+          .then((result) => {
+            if (result.type === 'VALIDATE_TOKEN_SUCCESS') {
+              console.log(this.props)
+            }
+          })
       }
     }
   }

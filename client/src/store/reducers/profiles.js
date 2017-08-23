@@ -6,7 +6,7 @@ import { GET_PROFILE_REQUEST, GET_PROFILE_SUCCESS, GET_PROFILE_FAILURE,
   MODIFY_PROFILE_REQUEST, MODIFY_PROFILE_SUCCESS, MODIFY_PROFILE_FAILURE,
   GITHUB_PROFILE_REQUEST, GITHUB_PROFILE_SUCCESS, GITHUB_PROFILE_FAILURE,
 } from '../actions/apiActions';
-import { VALIDATE_TOKEN_SUCCESS } from '../actions/apiLoginActions';
+import { VALIDATE_TOKEN_SUCCESS, LOGIN_SUCCESS } from '../actions/apiLoginActions';
 
 const defaultForm = {
   skill: '',
@@ -91,8 +91,10 @@ function profiles(state = INITIAL_STATE, action) {
     case VALIDATE_TOKEN_SUCCESS:
       return update(state, { userProfile: { $set: action.payload } });
 
+    case LOGIN_SUCCESS:
+      return update(state, { userProfile: { $set: action.payload.profile } });
+
     case SET_EDIT_PROFILE:
-    console.log('95', action.payload);
       return update(
         state,
         {

@@ -33,3 +33,31 @@ export function validateToken(token, profileId) {
     },
   };
 }
+
+export const LOGIN_REQUEST = 'LOGIN_REQUEST';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+
+/*
+* Function: login - Attempts to loign in with supplied ID/password.
+*   returns a JWT if successful.
+* @param {string} body - the userID/password entered by user
+* This action dispatches additional actions as it executes:
+*   LOGIN_REQUEST: Initiates a spinner on the login page.  Needed for
+*     when the back end server has gone to sleep
+*   LOGIN_SUCCESS: Dispatched if the credentials valid and the profile is returned.
+*     This logs the user in, stores the token and sets the current user profile.
+*   LOGIN_FAILURE: Dispatched if the credentials are invalid.
+*     Displays error to user, prompt to try again or register.
+*/
+export function login(body) {
+  return {
+    [CALL_API]: {
+      endpoint: 'https://co-ment.glitch.me/api/login',
+      method: 'POST',
+      types: [LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE],
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    },
+  };
+}
