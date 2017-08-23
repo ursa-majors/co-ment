@@ -40,7 +40,7 @@ class PostThumb extends React.Component {
         <div className="post-thumb">
           <div className={this.props.post.role === 'mentor' ? `post-thumb__ribbon` : `post-thumb__ribbon--green`}>
             <span className={this.props.post.role === 'mentor' ? `post-thumb__ribbon-span` : `post-thumb__ribbon-span--green`}>{roleText}</span>
-          </div> }
+          </div>
           <div className="side front" id="front">
           {this.props.post.updatedAt &&
             <div className={`post-thumb__date`}>

@@ -26,8 +26,9 @@ class PostsGrid extends React.Component {
     // initialize a shuffle instance.
     this.shuffle = new Shuffle(this.element, {
       itemSelector: '.post',
-      sizer: this.sizer,
+      sizer: document.getElementsByClassName('sizer')[0],
     });
+    this.shuffle.resetItems();
 
     // console.log(this.props.posts.entries[0]);
 
@@ -62,9 +63,10 @@ class PostsGrid extends React.Component {
           }
         />
         <div>
-          <div ref={element => this.element = element} className="row my-shuffle shuffle posts-grid__cont">
+          <div ref={element => this.element = element} className="flex-row my-shuffle shuffle posts-grid__cont">
+          <div className="flex-col-1-sp sizer"></div>
         {this.props.posts.entries.reverse().map((post) => (
-          <div key={post._id} className="col-2\@xs col-3@sm col-4@md col-5@lg post">
+          <div key={post._id} className="flex-col-12-xs flex-col-6-sm flex-col-4-md flex-col-3-lg flex-col-2-xl picture-item shuffle-item shuffle-item--visible post">
             <PostThumb
               id={post._id}
               active={this.state.active===post._id}
