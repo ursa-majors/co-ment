@@ -101,6 +101,16 @@ class PostsGrid extends React.Component {
           />
         </Modal>
         <div>
+        <div className="posts-grid__controls">
+          <span className="posts__button-wrap">
+            <Link to="/editpost">
+              <button className="posts__button pointer" aria-label="New Post" >
+                <span className="posts__btn--big">New Post</span>
+                <span className="posts__btn--sm">+</span>
+              </button>
+            </Link>
+          </span>
+          </div>
           <div ref={element => this.element = element} className="flex-row my-shuffle shuffle posts-grid__cont">
           <div className="flex-col-1-sp sizer"></div>
         {this.props.posts.entries.reverse().map((post) => (
