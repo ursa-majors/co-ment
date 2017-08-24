@@ -7,7 +7,7 @@ import * as Actions from '../store/actions/postActions';
 import * as apiActions from '../store/actions/apiPostActions';
 import { formatDate } from '../utils/';
 import Spinner from '../containers/Spinner';
-import Modal from '../containers/Modal';
+import ModalSm from '../containers/ModalSm';
 
 class ViewPost extends React.Component {
 
@@ -15,6 +15,7 @@ class ViewPost extends React.Component {
     super(props);
     this.state = {
       flip: false,
+      thumb: true,
     };
   }
 
@@ -57,6 +58,10 @@ class ViewPost extends React.Component {
           break;
         case 'delete':
           this.deletePost();
+        case 'expand':
+        case 'compress':
+          this.toggleThumb();
+          break;
         default:
           return null;
       }
@@ -68,6 +73,15 @@ class ViewPost extends React.Component {
     // handle card flip front/back
     const newState = { ...this.state };
     newState.flip = !this.state.flip;
+    this.setState({
+      ...newState,
+    })
+  }
+
+  toggleThumb() {
+    // handle toggle thumb / full-size view
+    const newState = { ...this.state };
+    newState.thumb = !this.state.thumb;
     this.setState({
       ...newState,
     })
@@ -94,40 +108,93 @@ class ViewPost extends React.Component {
   }
 
   render() {
+    const cardSize = this.state.thumb ? 'post-thumb' : 'post-full';
     const roleText = (this.props.posts.currentPost.role === 'mentor' ? 'mentor' : 'mentee');
     const owner = (this.props.appState.userId === this.props.posts.currentPost.author_id);
     let actions;
     if (owner) {
       actions = (
         <div>
+        {!this.state.thumb &&
+          <div>
           <button
-            className="edit single-post__edit"
+            className={`edit ${cardSize}__edit`}
             aria-label="edit"
             name="edit"
             onKeyDown={e => this.handleKeyDown(e)}
             onClick={() => this.props.history.push(`/editpost/${this.props.posts.currentPost._id}`)}>
-            <i className="fa fa-pencil single-post__icon--edit" aria-hidden="true" />
+            <i className={`fa fa-pencil ${cardSize}__icon--edit`}
+             aria-label="edit" />
           </button>
           <button
-            className="delete single-post__delete"
+            className={`delete ${cardSize}__delete`}
             aria-label="delete"
             name="delete"
             onKeyDown={e => this.handleKeyDown(e)}
             onClick={() => this.deletePost()}>
-            <i className="fa fa-trash single-post__icon--delete" aria-hidden="true" />
+            <i className={`fa fa-trash ${cardSize}__icon--delete`} aria-label="delet4e" />
           </button>
+          {!this.state.flip &&
+            <button
+              className={`expand ${cardSize}__compress`}
+              aria-label="compress"
+              name="compress"
+              onKeyDown={e => this.handleKeyDown(e)}
+              onClick={() => this.toggleThumb()}>
+              <i className={`fa fa-compress ${cardSize}__icon--compress`} aria-label="compress" />
+            </button>
+          }
+          </div>
+        }
+        {this.state.thumb &&
+          <button
+            className={`expand ${cardSize}__expand`}
+            aria-label="expand"
+            name="expand"
+            onKeyDown={e => this.handleKeyDown(e)}
+            onClick={() => this.toggleThumb()}>
+            <i className={`fa fa-expand ${cardSize}__icon--expand`}
+            aria-label="expand" />
+          </button>
+        }
         </div>
       );
     } else {
       actions = (
-        <button
-          className="connect single-post__connect"
-          aria-label="request connection"
-          name="connect"
-          onKeyDown={e => this.handleKeyDown(e)}
-          onClick={this.checkConnectionRequest}>
-          <i className="fa fa-envelope single-post__icon--connect" aria-hidden="true" />
-        </button>
+        <div>
+        {!this.state.thumb &&
+          <div>
+            <button
+              className={`compress ${cardSize}__compress`}
+              aria-label="compress"
+              name="compress"
+              onKeyDown={e => this.handleKeyDown(e)}
+              onClick={() => this.toggleThumb()}>
+              <i className={`fa fa-compress ${cardSize}__icon--compress`} aria-label="compress" />
+            </button>
+            <button
+              className={`connect ${cardSize}__connect`}
+              aria-label="request connection"
+              name="connect"
+              onKeyDown={e => this.handleKeyDown(e)}
+              onClick={this.checkConnectionRequest}>
+              <i className={`fa fa-envelope ${cardSize}__icon--connect`}
+              aria-label="connect" />
+            </button>
+          </div>
+        }
+        {this.state.thumb &&
+          <button
+            className={`expand ${cardSize}__expand`}
+            aria-label="expand"
+            name="expand"
+            onKeyDown={e => this.handleKeyDown(e)}
+            onClick={() => this.toggleThumb()}>
+            <i className={`fa fa-expand ${cardSize}__icon--expand`}
+            aria-label="expand" />
+          </button>
+        }
+        </div>
       );
     }
     let keywordsDisp;
@@ -144,7 +211,7 @@ class ViewPost extends React.Component {
     return (
       <div className="post-view">
         <Spinner cssClass={this.props.posts.viewPostSpinnerClass} />
-        <Modal
+        <ModalSm
           modalClass={this.props.posts.viewPostModalClass}
           modalText={this.props.posts.viewPostModalText}
           dismiss={
@@ -154,98 +221,154 @@ class ViewPost extends React.Component {
             }
           }
         />
-        <div className="single-post">
+        <div className={cardSize}>
         {!this.state.flip &&
-          <div className={this.props.posts.currentPost.role === 'mentor' ? 'single-post__ribbon' : 'single-post__ribbon--green'}>
-            <span className={this.props.posts.currentPost.role === 'mentor' ? 'single-post__ribbon-span' : 'single-post__ribbon-span--green'}>{roleText}</span>
+          <div className={this.props.posts.currentPost.role === 'mentor' ? `${cardSize}__ribbon` : `${cardSize}__ribbon--green`}>
+            <span className={this.props.posts.currentPost.role === 'mentor' ? `${cardSize}__ribbon-span` : `${cardSize}__ribbon-span--green`}>{roleText}</span>
           </div> }
           <div className={this.state.flip ? "side front flip" : "side front"} id="front">
-            <div className="single-post__date">
+            <div className={`${cardSize}__date`}>
               <span className="tag-value">
                 <span className="tag-value__label">
                   {formatDate(new Date(this.props.posts.currentPost.updatedAt))}
                 </span>
               </span>
             </div>
-            <div className="single-post__card-body">
-              <div className="single-post__image-wrap">
-                <Link className="unstyled-link" to={`/viewprofile/${this.props.posts.currentPost.author_id}`}>
-                  {this.props.posts.currentPost.author_avatar ?
-                    <img
-                      className="single-post__image"
-                      src={this.props.posts.currentPost.author_avatar}
-                      alt={this.props.posts.currentPost.author} /> :
-                    <i className="fa fa-user-circle fa-5x single-post_icon--avatar" aria-hidden="true" /> }
-                    <div className="single-post__name-wrap">
-                      <span className="single-post__name">{this.props.posts.currentPost.author_name}</span>
-                      <span className="single-post__username">
-                        @{this.props.posts.currentPost.author}
+            {!this.state.thumb &&
+              <div className={`${cardSize}__card-body`}>
+                <div className={`${cardSize}__image-wrap`}>
+                  <Link className="unstyled-link" to={`/viewprofile/${this.props.posts.currentPost.author_id}`}>
+                    {this.props.posts.currentPost.author_avatar ?
+                      <img
+                        className={`${cardSize}__image`}
+                        src={this.props.posts.currentPost.author_avatar}
+                        alt={this.props.posts.currentPost.author} /> :
+                      <i className={`fa fa-user-circle fa-5x ${cardSize}__icon--avatar`} aria-hidden="true" /> }
+                      <div className={`${cardSize}__name-wrap`}>
+                        <span className={`${cardSize}__name`}>
+                          {this.props.posts.currentPost.author_name}</span>
+                        <span className={`${cardSize}__username`}>
+                          @{this.props.posts.currentPost.author}
+                        </span>
+                      </div>
+                  </Link>
+                </div>
+                <div className={`${cardSize}__text-wrap`}>
+                  <div className={`${cardSize}__title`}>
+                    {this.props.posts.currentPost.title}
+                  </div>
+                  { this.props.posts.excerpt ?
+                  <div className={`${cardSize}__body ${cardSize}__excerpt`}>
+                    {`${this.props.posts.excerpt}...`}
+                    {!this.state.thumb &&
+                    <span
+                      className="flip-it post-full__readmore tag-value"
+                      onClick={()=>this.flip()}
+                      tabIndex={0}
+                      name='flip'
+                      aria-label='flip'
+                      onKeyDown={e => this.handleKeyDown(e)}
+                      >
+                      <span className="tag-value__label">
+                      more &nbsp;
+                      <i className="fa fa-chevron-right post-full__icon--readmore" aria-hidden="true" />
                       </span>
+                    </span> }
+                  </div> :
+                  <div className={`${cardSize}__body`}>
+                    {this.props.posts.currentPost.body}
+                  </div>
+                  }
+                  {!this.state.thumb &&
+                  <div className="tag-value__wrapper">
+                      {keywordsDisp ? keywordsDisp : ''}
+                  </div> }
+                </div>
+              </div>
+            }
+            {this.state.thumb &&
+              <div className={`${cardSize}__card-body`}>
+                <div className={`${cardSize}__text-wrap`}>
+                    <div className={`${cardSize}__title`}>
+                      {this.props.posts.currentPost.title}
                     </div>
-                </Link>
+                    { this.props.posts.excerpt ?
+                    <div className={`${cardSize}__body ${cardSize}__excerpt`}>
+                      {`${this.props.posts.excerpt}...`}
+                      {!this.state.thumb &&
+                      <span
+                        className="flip-it post-full__readmore tag-value"
+                        onClick={()=>this.flip()}
+                        tabIndex={0}
+                        name='flip'
+                        aria-label='flip'
+                        onKeyDown={e => this.handleKeyDown(e)}
+                        >
+                        <span className="tag-value__label">
+                        more &nbsp;
+                        <i className="fa fa-chevron-right post-full__icon--readmore" aria-hidden="true" />
+                        </span>
+                      </span> }
+                    </div> :
+                    <div className={`${cardSize}__body`}>
+                      {this.props.posts.currentPost.body}
+                    </div>
+                    }
+                    {!this.state.thumb &&
+                    <div className="tag-value__wrapper">
+                        {keywordsDisp ? keywordsDisp : ''}
+                    </div> }
+                </div>
+                <div className={`${cardSize}__image-wrap`}>
+                  <Link className="unstyled-link post-thumb__img-link" to={`/viewprofile/${this.props.posts.currentPost.author_id}`}>
+                    {this.props.posts.currentPost.author_avatar ?
+                      <img
+                        className={`${cardSize}__image`}
+                        src={this.props.posts.currentPost.author_avatar}
+                        alt={this.props.posts.currentPost.author} /> :
+                      <i className={`fa fa-user-circle fa-5x ${cardSize}__icon--avatar`} aria-hidden="true" /> }
+                      <div className={`${cardSize}__name-wrap`}>
+                        <span className={`${cardSize}__username`}>
+                          @{this.props.posts.currentPost.author}
+                        </span>
+                      </div>
+                  </Link>
+                </div>
+
               </div>
-              <div className="single-post__text-wrap">
-                <div className="single-post__title">
-                  {this.props.posts.currentPost.title}
-                </div>
-                { this.props.posts.excerpt ?
-                <div className="single-post__body single-post__excerpt">
-                  {`${this.props.posts.excerpt}...`}
-                  <span
-                    className="flip-it single-post__readmore tag-value"
-                    onClick={()=>this.flip()}
-                    tabIndex={0}
-                    name='flip'
-                    aria-label='flip'
-                    onKeyDown={e => this.handleKeyDown(e)}
-                    >
-                    <span className="tag-value__label">
-                    more &nbsp;
-                    <i className="fa fa-chevron-right single-post__icon--readmore" aria-hidden="true" />
-                    </span>
-                  </span>
-                </div> :
-                <div className="single-post__body">
-                  {this.props.posts.currentPost.body}
-                </div>
-                }
-                <div className="tag-value__wrapper">
-                    {keywordsDisp ? keywordsDisp : ''}
-                </div>
-              </div>
-            </div>
-              <div className={ !owner ? "single-post__button-wrap" : "single-post__button-wrap single-post__button-wrap--edit"}>
+            }
+              <div className={ !owner ? `${cardSize}__button-wrap` : `${cardSize}__button-wrap ${cardSize}__button-wrap--edit`}>
               { actions }
               </div>
             </div>
-            {this.props.posts.excerpt &&
+            {this.props.posts.excerpt && !this.state.thumb &&
               <div className={this.state.flip ? "side back flip" : "side back"} id="back">
-                <div className="single-post__date">
+                <div className="post-full__date">
                 <span className="tag-value">
                   <span className="tag-value__label">
                     {formatDate(new Date(this.props.posts.currentPost.updatedAt))}
                   </span>
                 </span>
               </div>
-              <div className="single-post__back-wrap">
-                <div className="single-post__title">
+              <div className="post-full__back-wrap">
+                <div className="post-full__title">
                   {this.props.posts.currentPost.title}
                   </div>
-                  <div className="single-post__body">
+                  <div className="post-full__body">
                   {this.props.posts.currentPost.body}
                   </div>
-                  <div className={ !owner ? "single-post__button-wrap" : "single-post__button-wrap single-post__button-wrap--edit"}>
+                  <div className={ !owner ? "post-full__button-wrap" : "post-full__button-wrap post-full__button-wrap--edit"}>
               { actions }
               </div>
-                  <div className="view-preview__card-footer--back">
+                  <div className="post-full__card-footer--back">
                     <div
-                      className='flip-it view-preview__card-nav-item--flip'
+                      className='flip-it post-full__nav-item--flip'
                       name='flip'
                       aria-label='flip'
                       onKeyDown={e => this.handleKeyDown(e)}
                       onClick={() => this.flip()}
                       tabIndex={0}>
-                      <i className="fa fa-refresh view-preview__icon--flip" aria-hidden="true" />
+                      <i className="fa fa-refresh post-full__icon--flip" aria-hidden="true" />
                     </div>
                   </div>
                 </div>

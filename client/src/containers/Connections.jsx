@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import * as apiActions from '../store/actions/apiConnectionActions';
 import * as Actions from '../store/actions/connectionActions';
 import Spinner from './Spinner';
-import Modal from './Modal';
+import ModalSm from './ModalSm';
 import { formatDate } from '../utils';
 
 class Connections extends React.Component {
@@ -21,7 +21,7 @@ class Connections extends React.Component {
     return (
       <div className="container">
         <Spinner cssClass={this.props.connection.getConnectionsSpinnerClass} />
-        <Modal
+        <ModalSm
           modalClass={this.props.connection.getConnectionsModalClass}
           modalText={this.props.connection.getConnectionsModalText}
           dismiss={

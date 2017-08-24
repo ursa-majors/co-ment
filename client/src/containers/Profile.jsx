@@ -7,7 +7,7 @@ import * as apiActions from '../store/actions/apiActions';
 import InputAutosuggest from './InputAutosuggest';
 import RadioGroup from './RadioGroup';
 import Spinner from '../containers/Spinner';
-import Modal from '../containers/Modal';
+import ModalSm from '../containers/ModalSm';
 import {languages, skills, timezones } from '../utils';
 import parseSKill from '../utils/skillsparser';
 
@@ -163,9 +163,8 @@ class Profile extends React.Component {
   }
 
   validateInputs() {
-    // name is only required if github userName is empty
     let msg = '';
-    if (this.props.profiles.editForm.ghUserName === '' && this.props.profiles.editForm.name === '') {
+    if (this.props.profiles.editForm.name === '') {
       msg = 'Name is required.  ';
     }
     if (this.props.profiles.editForm.time_zone === 'Choose your time zone' || this.props.profiles.editForm.time_zone === '') {
@@ -277,7 +276,7 @@ class Profile extends React.Component {
     return (
       <div className="container profile" id="profile-form">
       <Spinner cssClass={this.props.profiles.profileSpinnerClass} />
-        <Modal
+        <ModalSm
           modalClass={this.props.profiles.viewProfileModalClass}
           modalText={this.props.profiles.viewProfileModalText}
           dismiss={

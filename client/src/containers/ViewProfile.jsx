@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import * as Actions from '../store/actions/profileActions';
 import * as apiActions from '../store/actions/apiActions';
 import Spinner from './Spinner';
-import Modal from './Modal';
+import ModalSm from './ModalSm';
 
 class ViewProfile extends React.Component {
 
@@ -16,6 +16,7 @@ class ViewProfile extends React.Component {
     this.state = {
       tab: 'skills',
       flip: false,
+      thumb: true,
     };
   }
 
@@ -41,6 +42,41 @@ class ViewProfile extends React.Component {
     this.setState({
       ...newState,
     })
+  }
+
+  toggleThumb() {
+    // handle toggle thumb / full-size view
+    const newState = { ...this.state };
+    newState.thumb = !this.state.thumb;
+    this.setState({
+      ...newState,
+    })
+  }
+
+  handleKeyDown = (e) => {
+    // enter key fires flip / expand / toggle tabs when focused
+    const action = e.target.className.split(" ")[0];
+    console.log(action);
+    if (e.keyCode === 13 || e.which === 13 ) {
+      console.log('enter');
+      switch (action) {
+        case 'flip-it':
+          this.flip();
+          break;
+        case 'expand':
+        case 'compress':
+          this.toggleThumb();
+          break;
+        case 'skills':
+          this.onClick(e);
+          break;
+        case 'languages':
+          this.onClick(e);
+        default:
+          return null;
+      }
+    }
+
   }
 
 
@@ -79,12 +115,12 @@ class ViewProfile extends React.Component {
     if (codepen) { smArr.push([ 'codepen', codepen]); }
     // render social media icons & links for profile card
     smDisp = smArr.map(sm => (
-                <span className="view-preview__icon--sm-wrap" key={sm[0]}>
+                <span className="full__icon--sm-wrap" key={sm[0]}>
                   <a
                     href={sm[1]}
                     rel="noopener noreferrer"
                     target="_blank"
-                    className={`view-preview__icon--sm view-preview__icon--${sm[0]}`}>
+                    className={`full__icon--sm full__icon--${sm[0]}`}>
                     <i className={`fa fa-${sm[0]}`} aria-hidden="true" />
                   </a>
                   </span>
@@ -97,107 +133,170 @@ class ViewProfile extends React.Component {
       aboutText = this.props.profile.currentProfile.about;
     }
 
+    let cardSize = this.state.thumb ? 'thumb' : 'full';
+
     return (
       <div className="view-profile">
         <Spinner cssClass={`${this.props.profile.profileSpinnerClass}`} />
-        <Modal
+        <ModalSm
           modalClass={`${this.props.profile.viewProfileModalClass}`}
           modalText={`${this.props.profile.viewProfileModalText}`}
           dismiss={() => this.props.actions.dismissViewProfileModal()}
         />
         {this.props.profile.getSuccess &&
-          <div className="view-preview">
+          <div className={cardSize}>
             <div className={this.state.flip ? "side front flip" : "side front"} id="front">
             { this.props.appState.userId === this.props.match.params.id &&
+              !this.state.thumb &&
               <Link
-                className="view-preview__edit"
+                className="full__edit"
                 to={'/profile'} >
-                <i className="fa fa-pencil view-preview__icon--edit" aria-hidden="true" />
-              </Link> }
-              <div className="view-preview__image-wrap">
+                <i className="fa fa-pencil full__icon--edit" aria-label="edit" />
+              </Link> /* edit link */
+            } {/* post owner, full size */}
+            { this.props.appState.userId !== this.props.match.params.id &&
+              !this.state.thumb &&
+              <div className="thumb__compress">
+                <i className="compress fa fa-compress thumb__icon--compress"
+                  aria-label="compress"
+                  tabIndex={0}
+                  onClick={()=>this.toggleThumb()}
+                  onKeyDown={(e)=>this.handleKeyDown(e)}/>
+                </div>
+            } {/* compress button, full only */}
+            <div className={`${cardSize}__top-wrap`}>
+              <div className={`${cardSize}__image-wrap`}>
                 {this.props.profile.currentProfile.avatarUrl ?
                   <img
-                    className="view-preview__image"
+                    className={`${cardSize}__image`}
                     src={this.props.profile.currentProfile.avatarUrl}
                     alt={this.props.profile.currentProfile.username} /> :
-                  <i className="fa fa-user-circle fa-5x view-preview__icon--avatar" aria-hidden="true" /> }
-              </div>
-              <div className="view-preview__text-wrap view-preview__card-top">
-                <div className="view-preview__name">{this.props.profile.currentProfile.name}</div>
-                <div className="view-preview__username">@{this.props.profile.currentProfile.username}</div>
+                  <i
+                    className={`fa-user-circle fa-5x ${cardSize}__icon--avatar`}
+                    aria-hidden="true" />
+                }
+              </div> {/* images-wrap */}
+              <div className={`${cardSize}__card-top ${cardSize}__text-wrap`}>
+                <div className={`${cardSize}__name`}>
+                  {this.props.profile.currentProfile.name}</div>
+                <div className={`${cardSize}__username`}>
+                  @{this.props.profile.currentProfile.username}</div>
                 {this.props.profile.currentProfile.location &&
-                  <div className="view-preview__location-wrap">
-                    <i className="fa fa-map-marker view-preview__icon--location" aria-hidden="true" />
-                    <span className="view-preview__location">{this.props.profile.currentProfile.location} &bull; {this.props.profile.currentProfile.time_zone}</span>
+                  <div className={`${cardSize}__location-wrap`}>
+                    <i className="fa fa-map-marker full__icon--location" aria-hidden="true" />
+                    <span className={`${cardSize}__location`}>
+                    {this.props.profile.currentProfile.location} &bull; {this.props.profile.currentProfile.time_zone}</span>
                   </div>}
+              </div> {/* text-wrap */}
               </div>
-              <div className="view-preview__card-nav">
-                <div
-                  className={this.state.tab === 'skills' ? 'view-preview__card-nav-item view-preview__card-nav-item--active' : 'view-preview__card-nav-item'}
-                  name='skills'
-                  onClick={e => this.onClick(e)}
-                  >
-                  <i className="fa fa-code view-preview__icon--nav" aria-hidden="true" />
-                  <span
-                    className={this.state.tab === 'skills' ? 'view-preview__card-nav-item-text--active' : 'view-preview__card-nav-item-text'}
-                    id='skills'>Skills</span>
-                </div>
-                <div
-                  className={this.state.tab === 'languages' ? 'view-preview__card-nav-item view-preview__card-nav-item--active' : 'view-preview__card-nav-item'}
-                  name='languages'
-                  onClick={e => this.onClick(e)}>
-                  <i className="fa fa-commenting-o view-preview__icon--nav" aria-hidden="true" />
-                  <span className={this.state.tab === 'languages' ? 'view-preview__card-nav-item-text--active' : 'view-preview__card-nav-item-text'}
-                  id='languages'>Languages</span>
-                </div>
-                <div
-                  className={this.state.tab === 'about' ? 'view-preview__card-nav-item view-preview__card-nav-item--active' : 'view-preview__card-nav-item'}
-                  name='about'
-                  onClick={e => this.flip()}>
-                  <i className="fa fa-user view-preview__icon--nav" aria-hidden="true" />
-                  <span className={this.state.tab === 'about' ? 'view-preview__card-nav-item-text--active' : 'view-preview__card-nav-item-text'}
-                  id='about'>About</span>
-                </div>
-              </div>
-              <div className="view-preview__card-body">
-                {this.state.tab === 'skills' &&
+              { !this.state.thumb &&
+                <div className={"full__card-nav"}>
+                  <div
+                    className={this.state.tab === 'skills' ? 'skills full__nav-item full__nav-item--active' : 'skills full__nav-item'}
+                    name='skills'
+                    tabIndex={0}
+                    onClick={e => this.onClick(e)}
+                    onKeyDown={(e)=>this.handleKeyDown(e)}>
+                    <i className="fa fa-code full__icon--nav" aria-hidden="true" />
+                    <span
+                      className={this.state.tab === 'skills' ?
+                      'full__nav-item-text--active' :
+                      'full__nav-item-text'}
+                      id='skills'>Skills</span>
+                  </div> {/* skills */}
+                  <div
+                    className={this.state.tab === 'languages' ?
+                    'languages full__nav-item full__nav-item--active':
+                    'languages full__nav-item'}
+                    name='languages'
+                    tabIndex={0}
+                    onClick={e => this.onClick(e)}
+                    onKeyDown={(e)=>this.handleKeyDown(e)}
+                    >
+                    <i className="fa fa-commenting-o full__icon--nav" aria-hidden="true" />
+                    <span
+                      className={this.state.tab === 'languages' ?
+                        'full__nav-item-text--active' :
+                        'full__nav-item-text'}
+                      id='languages'>Languages</span>
+                  </div> {/* languages */}
+                  <div
+                    className={this.state.tab === 'about' ?
+                    'flip-it full__nav-item full__nav-item--active' :
+                    'flip-it full__nav-item'}
+                    name='about'
+                    tabIndex={0}
+                    onClick={e => this.flip()}
+                    onKeyDown={(e)=>this.handleKeyDown(e)}>
+                    <i className="fa fa-user full__icon--nav" aria-hidden="true" />
+                    <span className={this.state.tab === 'about' ?
+                    'full__nav-item-text--active' :
+                    'full__nav-item-text'}
+                    id='about'>About</span>
+                  </div> {/* about */}
+                </div> /* card-nav */
+              } {/* !this.state.thumb */}
+              { !this.state.thumb &&
+                <div>
+                <div className="full__card-body">
+                    {this.state.tab === 'skills' &&
+                      <div className="tag-value__wrapper">
+                        {skillsDisp ? skillsDisp : ''}
+                      </div>}
+                    {this.state.tab === 'languages' &&
+                      <div className="tag-value__wrapper">
+                        {langDisp ? langDisp : ''}
+                      </div>}
+                    {this.state.tab === 'about' &&
+                      this.props.profile.currentProfile.about &&
+                      <div className="tag-value__wrapper">
+                        {this.props.profile.currentProfile.about }
+                      </div>}
+                  </div> {/* full__card-body */}
+                  <div className="full__card-footer">
+                    {smDisp ? smDisp : ''}
+                  </div>
+                </div> /* body & footer for full-size view */
+              } {/* !this.state.thumb */}
+              { this.state.thumb &&
+                <div className="thumb__card-body">
                   <div className="tag-value__wrapper">
                     {skillsDisp ? skillsDisp : ''}
-                  </div>}
-                {this.state.tab === 'languages' &&
-                  <div className="tag-value__wrapper">
-                    {langDisp ? langDisp : ''}
-                  </div>}
-                {this.state.tab === 'about' &&
-                  this.props.profile.currentProfile.about &&
-                  <div className="tag-value__wrapper">
-                    {this.props.profile.currentProfile.about }
-                  </div>}
-              </div>
-              <div className="view-preview__card-footer">
-                {smDisp ? smDisp : ''}
-              </div>
-            </div>
-              <div className={this.state.flip ? "side back flip" : "side back"} id="back">
-                <div className="view-preview__text-wrap view-preview__card-top">
-                  <div className="view-preview__name">{this.props.profile.currentProfile.name}</div>
-                  <div className="view-preview__username">@{this.props.profile.currentProfile.username}</div>
+                  </div>
+                </div> /* thumb body */
+              } {/* this.state.thumb */}
+              {this.state.thumb &&
+              <div className="thumb__expand">
+                <i className="expand fa fa-expand thumb__icon--expand"
+                  aria-label="expand"
+                  tabIndex={0}
+                  onClick={()=>this.toggleThumb()}
+                  onKeyDown={(e)=>this.handleKeyDown(e)}/>
                 </div>
-                <div className="view-preview__about-wrap">
+            } {/* expand button, thumb only */}
+            </div> {/* card front */}
+            { !this.state.thumb &&
+              <div className={this.state.flip ? "side back flip" : "side back"} id="back">
+                <div className="full__text-wrap full__card-top">
+                  <div className="full__name">{this.props.profile.currentProfile.name}</div>
+                  <div className="full__username">@{this.props.profile.currentProfile.username}</div>
+                </div>
+                <div className="full__about-wrap">
                   {aboutText}
                 </div>
-                <div className="view-preview__card-footer--back">
+                <div className="full__card-footer--back">
                   <div
-                    className='view-preview__card-nav-item--flip'
+                    className='full__card-nav-item--flip'
                     name='flip'
                     onClick={e => this.flip()}>
-                    <i className="fa fa-refresh view-preview__icon--flip" aria-hidden="true" />
+                    <i className="fa fa-refresh full__icon--flip" aria-hidden="true" />
                   </div>
                 </div>
-              </div>
-          </div>
+              </div> /* card back */
+            } {/* !thumb */}
+          </div> /* pfl card */
         }
-      </div>
+      </div> /* view-profile */
     );
   }
 }

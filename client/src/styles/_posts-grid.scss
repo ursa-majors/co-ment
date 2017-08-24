@@ -1,0 +1,60 @@
+.my-shuffle {
+  position: relative;
+  overflow: hidden;
+}
+
+.posts-grid {
+	background: url(./img/splash_pfl.svg) no-repeat top center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 100%;
+  padding: 60px 20px;
+
+  &__cont {
+  	overflow: hidden;
+  }
+}
+
+.post {
+	margin-top: 20px;
+	padding: 10px;
+
+	&__modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: none;
+    padding: 25px;
+    background-color: transparent;
+    z-index: 6;
+
+    &__close--x {
+  	margin-top: -2px;
+    -webkit-appearance: none;
+    padding: 0;
+    cursor: pointer;
+    background: 0 0;
+    border: 0;
+    float: right;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=20);
+    opacity: .2;
+    font-family: inherit;
+    text-transform: none;
+    overflow: visible;
+    margin: 0;
+    font: inherit;
+    align-items: flex-start;
+    text-align: center;
+    display: inline-block;
+  }
+	}
+}
+

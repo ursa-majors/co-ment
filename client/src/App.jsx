@@ -9,7 +9,7 @@ import About from './containers/About';
 import Login from './containers/Login';
 import Registration from './containers/Registration';
 import Profile from './containers/Profile';
-import Posts from './containers/Posts';
+import PostsGrid from './containers/PostsGrid';
 import EditPost from './containers/EditPost';
 import Logout from './containers/Logout';
 import MentorPath from './containers/MentorPath';
@@ -27,7 +27,7 @@ class App extends React.Component {
     const links = (this.props.appState.loggedIn ? ['posts', 'profile', 'connections', 'logout'] : ['login']);
     return (
       <BrowserRouter>
-        <div>
+        <div className="app-root">
           <HeaderNav links={links} />
           <main className="main">
             <Switch>
@@ -36,7 +36,7 @@ class App extends React.Component {
               <Route path="/login" component={Login} />
               <Route path="/about" component={About} />
               <Route path="/profile" component={Profile} />
-              <Route path="/posts" component={Posts} />
+              <Route path="/posts" component={PostsGrid} />
               <Route path="/logout" component={Logout} />
               <Route path="/viewpost/:id" component={ViewPost} />
               <Route path="/viewprofile/:id" component={ViewProfile} />
