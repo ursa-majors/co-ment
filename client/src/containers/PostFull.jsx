@@ -44,6 +44,8 @@ class PostFull extends React.Component {
           break;
         case 'delete':
           this.deletePost();
+        case 'close':
+          this.props.closeModal();
         default:
           return null;
       }
@@ -64,6 +66,7 @@ class PostFull extends React.Component {
   *  Check to see if there is already a similar connection between the user and poster
   **/
   checkConnectionRequest = () => {
+    console.log('check connection');
     const connections = this.props.connection.connections;
     if (connections.length > 0) {
       for (let i = 0; i < connections.length; i += 1) {
@@ -88,6 +91,16 @@ class PostFull extends React.Component {
       actions = (
         <div>
           <button
+            className="close post-full__compress"
+            aria-label="close"
+            name="close"
+            data-dismiss="modal"
+            onKeyDown={e => this.handleKeyDown(e)}
+            onClick={()=>this.props.closeModal()}>
+                <i className="close fa fa-compress thumb__icon--compress"
+                  aria-label="close"/>
+          </button>
+          <button
             className={`edit post-full__edit`}
             aria-label="edit"
             name="edit"
@@ -108,15 +121,27 @@ class PostFull extends React.Component {
       );
     } else {
       actions = (
-        <button
-          className={`connect post-full__connect`}
-          aria-label="request connection"
-          name="connect"
-          onKeyDown={e => this.handleKeyDown(e)}
-          onClick={this.checkConnectionRequest}>
-          <i className={`fa fa-envelope post-full__icon--connect`}
-          aria-label="connect" />
-        </button>
+        <div>
+          <button
+              className="close post-full__compress"
+              aria-label="close"
+              name="close"
+              data-dismiss="modal"
+              onKeyDown={e => this.handleKeyDown(e)}
+              onClick={()=>this.props.closeModal()}>
+                  <i className="close fa fa-compress thumb__icon--compress"
+                    aria-label="close"/>
+          </button>
+          <button
+            className={`connect post-full__connect`}
+            aria-label="request connection"
+            name="connect"
+            onKeyDown={e => this.handleKeyDown(e)}
+            onClick={this.checkConnectionRequest}>
+            <i className={`fa fa-envelope post-full__icon--connect`}
+            aria-label="connect" />
+          </button>
+        </div>
       );
     }
 
@@ -147,21 +172,21 @@ class PostFull extends React.Component {
             </div>
             <div className={`post-full__card-body`}>
               <div className={`post-full__image-wrap`}>
-                <Link className="unstyled-link" to={`/viewprofile/${this.props.post.author_id}`}>
-                  {this.props.post.author_avatar ?
-                    <img
-                      className={`post-full__image`}
-                      src={this.props.post.author_avatar}
-                      alt={this.props.post.author} /> :
-                    <i className={`fa fa-user-circle fa-5x post-full__icon--avatar`} aria-hidden="true" /> }
-                    <div className={`post-full__name-wrap`}>
-                      <span className={`post-full__name`}>
-                        {this.props.post.author_name}</span>
-                      <span className={`post-full__username`}>
-                        @{this.props.post.author}
-                      </span>
-                    </div>
+                {this.props.post.author_avatar ?
+                  <img
+                    className={`post-full__image`}
+                    src={this.props.post.author_avatar}
+                    alt={this.props.post.author} /> :
+                  <i className={`fa fa-user-circle fa-5x post-full__icon--avatar`} aria-hidden="true" /> }
+                <div className={`post-full__name-wrap`}>
+                  <span className={`post-full__name`}>
+                    {this.props.post.author_name}</span>
+                  <Link className="unstyled-link" to={`/viewprofile/${this.props.post.author_id}`}>
+                    <span className={`post-full__username`}>
+                      @{this.props.post.author}
+                    </span>
                 </Link>
+                </div>
               </div>
               <div className={`post-full__text-wrap`}>
                 <div className={`post-full__title`}>

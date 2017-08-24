@@ -23,6 +23,7 @@ class PostsGrid extends React.Component {
     };
 
     this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount() {
@@ -51,14 +52,14 @@ class PostsGrid extends React.Component {
     this.shuffle = null;
   }
 
-  closeModal() {
+  closeModal = () => {
+    console.log('close');
     const newState = {...this.state};
     newState.modalOpen = false;
     newState.modalTitle = '';
     this.setState({
-      ...this.state,
-      newState,
-   });
+      ...newState,
+   }, ()=>{console.log(this.state)});
   }
 
   openModal = (post) => {
@@ -69,6 +70,7 @@ class PostsGrid extends React.Component {
       const searchCriteria = this.props.posts.searchCriteria;
       const modalStyles = { overlay: { zIndex: 10 } };
       const title = this.state.post && this.state.post.title ? this.state.post.title : '';
+      const reset = this.shuffle ? this.shuffle.resetItems : null;
 
     return (
       <div className="posts-grid">
@@ -95,6 +97,7 @@ class PostsGrid extends React.Component {
             closeModal={this.closeModal}
             title={title}
             post={this.state.post}
+            history={this.props.history}
           />
         </Modal>
         <div>
@@ -104,9 +107,8 @@ class PostsGrid extends React.Component {
           <div key={post._id} className="flex-col-12-xs flex-col-6-sm flex-col-4-md flex-col-3-lg flex-col-2-xl picture-item shuffle-item shuffle-item--visible post">
             <PostThumb
               id={post._id}
-              active={this.state.active===post._id}
               post={post}
-              shuffle={this.shuffle.resetItems}
+              shuffle={reset}
               openModal={this.openModal}
               />
           </div>
