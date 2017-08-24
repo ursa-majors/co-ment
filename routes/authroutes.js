@@ -19,23 +19,6 @@ const User      = require('../models/user');
 
 /* =============================== UTILITIES =============================== */
 
-/* Generate user profile on auth success, less salt & hash
- *
- * @params    [object]   user   [the whole user profile returned from db]
- * @returns   [object]          [user profile without salt & hash]
-*/
-function makeUserProfile(user) {
-
-    const filtered = {};
-
-    Object.keys(user)
-        .filter( k => (k !== 'salt' && k !== 'hash'))
-        .forEach( k => filtered[k] = user[k]);
-
-    return filtered;
-
-}
-
 
 /* Generate random signup key
  *
@@ -239,6 +222,7 @@ routes.post('/api/login', (req, res, next) => {
 
         if (err) { return next(err); }
 
+        // if auth failed, there will be no user - fail
         if (!user) {
             return res
                 .status(401)
@@ -246,15 +230,31 @@ routes.post('/api/login', (req, res, next) => {
 
         } else {
 
-            const profile = makeUserProfile(user._doc);
-
-            // generate token, respond with profile & JWT
+            // generate a token
             const token = user.generateJWT();
-            return res
-                .status(200)
-                .json({
-                    'profile' : profile,
-                    'token'   : token
+            
+            // exclude sensitive info from field selection
+            const proj  = { hash : 0, salt : 0, signupKey : 0 };
+
+            // find the authenticated user
+            User.findById(user._id, proj)
+                .exec()
+                .then( (profile) => {
+
+                    // return the user profile & JWT
+                    return res
+                        .status(200)
+                        .json({
+                            'profile' : profile,
+                            'token'   : token
+                        });
+
+                })
+                .catch( err => {
+                    console.log('Error!!!', err);
+                        return res
+                            .status(400)
+                            .json({ message: err});
                 });
 
         }
