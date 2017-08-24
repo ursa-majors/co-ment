@@ -183,7 +183,10 @@
     width:100%;
     transform-style:preserve-3d;
     backface-visibility:hidden;
-    background: rgba(255,255,255,1);
+    background: $color_sky_lighter;
+    background: $color_purple_sky;
+  background: -webkit-linear-gradient(to bottom, $color_aqua_lighter, $color_sky_lighter);
+  background: linear-gradient(to bottom, $color_aqua_lighter, $color_sky_lighter);
     border-radius: 10px;
     box-shadow: 0 16px 24px rgba(0, 0, 0, 0.4);
     transition: .5s ease-in-out;

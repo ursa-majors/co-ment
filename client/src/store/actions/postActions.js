@@ -4,6 +4,7 @@ export const SET_POST_ERROR = 'SET_POST_ERROR';
 export const CLEAR_CURRENT_POST = 'CLEAR_CURRENT_POST';
 export const SET_EDIT_POST = 'SET_EDIT_POST';
 export const SET_FORM_FIELD = 'SET_FORM_FIELD';
+export const RESET_FORM = 'RESET_FORM';
 export const ADD_KEYWORD = 'ADD_KEYWORD';
 export const REMOVE_KEYWORD = 'REMOVE_KEYWORD';
 export const SET_SEARCH_CRITERIA = 'SET_SEARCH_CRITERIA';
@@ -38,6 +39,12 @@ export function setEditPost(post) {
   return ({
     type: SET_EDIT_POST,
     payload: post,
+  });
+}
+
+export function resetForm() {
+  return ({
+    type: RESET_FORM,
   });
 }
 

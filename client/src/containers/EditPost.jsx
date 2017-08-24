@@ -14,6 +14,11 @@ class EditPost extends React.Component {
     }
   }
 
+  // Reset form on unmount
+  componentWillUnmount() {
+    this.props.actions.resetForm();
+  }
+
   // Add Keywords on Comma or Enter
   handleKeyPressAdd(e) {
     if (e.charCode === 44 || e.which === 44 || e.charCode === 13 || e.which === 13) {
