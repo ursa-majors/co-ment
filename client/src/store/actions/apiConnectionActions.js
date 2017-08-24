@@ -31,18 +31,18 @@ export function connect(token, details) {
 }
 
 /*
-* Function getConnections - retrieve all connections where the given ID is either mentor or mentee
+* Function getConnections - retrieve all connections where the user either a mentor or mentee.
+* We just pass the token; backend extracts user `_id` from the JWT token after authentication.
 * @param {string} token - the authToken that allows API actions
-* @param {string} id - a string representing the user ID
 */
 export const GET_ALL_CONNECTIONS_REQUEST = 'GET_ALL_CONNECTIONS_REQUEST';
 export const GET_ALL_CONNECTIONS_SUCCESS = 'GET_ALL_CONNECTIONS_SUCCESS';
 export const GET_ALL_CONNECTIONS_FAILURE = 'GET_ALL_CONNECTIONS_FAILURE';
 
-export function getConnections(token, id) {
+export function getConnections(token) {
   return {
     [CALL_API]: {
-      endpoint: `https://co-ment.glitch.me/api/connections/${id}`,
+      endpoint: `https://co-ment.glitch.me/api/connections`,
       method: 'GET',
       types:
         [GET_ALL_CONNECTIONS_REQUEST, GET_ALL_CONNECTIONS_SUCCESS, GET_ALL_CONNECTIONS_FAILURE],

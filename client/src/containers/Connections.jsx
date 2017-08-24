@@ -13,8 +13,7 @@ class Connections extends React.Component {
 
   componentDidMount() {
     const token = this.props.appState.authToken;
-    const id = this.props.profiles.userProfile._id;
-    this.props.api.getConnections(token, id);
+    this.props.api.getConnections(token);
   }
 
   render() {
