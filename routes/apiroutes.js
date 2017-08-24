@@ -295,6 +295,7 @@ routes.delete('/api/profile/:id', auth, (req, res) => {
 routes.get('/api/posts*', auth, (req, res) => {
     
     const query = {
+        active  : true,  // find only active posts
         deleted : false  // find only non-deleted posts
     };
 
