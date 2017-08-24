@@ -19,8 +19,8 @@
    POST      /api/contact/:user_id     Contact a mentor/mentee
 
    POST      /api/connect              Create a mentor/mentee connection
-
-   GET       /api/connections/:id      Get all connections where ID is either mentor or mentee
+   GET       /api/connections          Get all user's own connections
+   POST      /api/updateconnection     Update a connection's status & date
 */
 
 /* ================================= SETUP ================================= */
@@ -315,7 +315,7 @@ routes.get('/api/posts*', auth, (req, res) => {
         query.author_id = req.query.author_id;
     }
 
-  console.log(query)
+    console.log(query);
 
     Post.find(query, (err, posts) => {
        if (!posts || !posts.length) {
@@ -404,7 +404,7 @@ routes.post('/api/posts', auth, (req, res) => {
    Example: PUT `/api/posts/597dd8665229970e99c6ab55`
 */
 routes.put('/api/posts/:id', auth, (req, res) => {
-    console.log(req.body, req.params.id)
+
     // target post by post '_id' and post 'author_id'.
     // this way, users can only update their own posts.
     const target = {
@@ -575,102 +575,144 @@ routes.post('/api/contact/:id', auth, (req, res) => {
 
 });
 
-routes.get('/api/connections/:id', auth, (req, res) => {
-  const target = req.params.id
-  Connection.find({$or: [
-    { "mentor.id": target },
-    { "mentee.id": target }
-]})
-    .exec()
-    .then((conns) => {
-      return res
-        .status(200)
-        .json({ connections: conns });
-    })
-    .catch((error) => {
-      console.log(`Error: $(error)`);
-      return res
-          .status(400)
-          .json({ message : 'Error: Cannot get connections'});
+
+/* Get all connections where the user is either a mentor or mentee
+   Secured route - valid JWT required
+   Expects the user's _id from the JWT token
+   Returns success message on success.
+   Example: GET > /api/connections
+*/
+routes.get('/api/connections', auth, (req, res) => {
+    
+    const target = req.token._id;
+    
+    Connection.find({
+        $or: [
+            { "mentor.id": target },
+            { "mentee.id": target }
+        ]})
+        .exec()
+        .then( (conns) => {
+            return res
+                .status(200)
+                .json({ connections: conns });
+        })
+        .catch( (error) => {
+            console.log(`Error: $(error)`);
+            return res
+                .status(400)
+                .json({ message : 'Error: Cannot get connections' });
+        
     });
+    
 });
+
+
 /* Create a connection record in mongoDB
    Secured route - valid JWT required
    Expects post body:
    {
-     mentor: id,
-     mentee: id,
-     mentorName: string,
-     menteeName: string,
-     initiator: id,
-     status: 'pending'
+     mentor     : id,
+     mentee     : id,
+     mentorName : string,
+     menteeName : string,
+     initiator  : id,
+     status     : 'pending'
    }
    Returns success message on success.
    Example: POST > /api/connect
 */
 routes.post('/api/connect', auth, (req, res) => {
-  let newConn = new Connection(req.body);
-  newConn.dateStarted = Date.now();
-  newConn.save((err, conn) => {
-    if (err) { throw err }
+    
+    let newConn = new Connection(req.body);
+    
+    newConn.dateStarted = Date.now();
+    
+    newConn
+        .save( (err, conn) => {
+            if (err) { throw err; }
 
-    return res
-      .status(200)
-      .json({ message: "Connection created" })
-  })
-  .catch( err => {
-      console.log('Error!!!', err);
-      return res
-          .status(400)
-          .json({ message: err});
-  });
+            return res
+                .status(200)
+                .json({ message: "Connection created" });
+
+        })
+        .catch( (err) => {
+            console.log('Error!!!', err);
+            return res
+                .status(400)
+                .json({ message: err });
+        });
+    
 });
 
+
+/* Update a connection record's status & status date
+   Secured route - valid JWT required
+   Expects post body:
+   {
+     id   : id,
+     type : String
+   }
+   Returns success message on success.
+   Example: POST > /api/updateconnection
+*/
 routes.post('/api/updateconnection', auth, (req, res) => {
-  let update;
-  switch(req.body.type){
-    case 'ACCEPT':
-      update = {
-        status: 'accepted',
-        dateAccepted: Date.now(),
-      }
-      break;
-    case 'DECLINE':
-      update = {
-        status: 'declined',
-        dateDeclined: Date.now(),
-      }
-      break;
-    case 'EXPIRE':
-      update = {
-        status: 'expired',
-        dateExpired: Date.now(),
-      }
-      break;
-      default:
-        update = {}
-  }
 
-  const target = { _id: req.body.id };
+    const target = {
+        _id: req.body.id
+    };
 
-  const options = {
-      // 'new' returns the updated document rather than the original
-      new: true
-  };
-  Connection.findOneAndUpdate(target, update, options)
-    .exec()
-    .then( conn => {
-       return res
-        .status(200)
-        .json({ conn })
-    })
-    .catch( err => {
-      console.log('Error!!!', err);
-      return res
-          .status(400)
-          .json({ message: err});
-    });
+    let update;
+
+    switch (req.body.type) {
+
+        case 'ACCEPT':
+            update = {
+                status: 'accepted',
+                dateAccepted: Date.now(),
+            };
+            break;
+
+        case 'DECLINE':
+            update = {
+                status: 'declined',
+                dateDeclined: Date.now(),
+            };
+            break;
+
+        case 'EXPIRE':
+            update = {
+                status: 'expired',
+                dateExpired: Date.now(),
+            };
+            break;
+
+        default:
+            update = {};
+
+    }
+
+    const options = {
+        new: true  // return updated document rather than original
+    };
+
+    Connection.findOneAndUpdate(target, update, options)
+        .exec()
+        .then( (conn) => {
+            return res
+                .status(200)
+                .json({ conn });
+        })
+        .catch( (err) => {
+            console.log('Error!!!', err);
+            return res
+                .status(400)
+                .json({ message: err });
+        });
 });
+
+
 /* ================================ EXPORT ================================= */
 
 module.exports = routes;
