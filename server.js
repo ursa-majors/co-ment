@@ -74,7 +74,7 @@ passport.use(new LocalStrategy(
             // query - find by username
             { username : username },
             // projection - select fields to return
-            'username salt hash ghUserName ghProfile pref_lang certs time_zone',
+            'username salt hash',
             // callback - gets error & result of query
             (err, user) => {
 
