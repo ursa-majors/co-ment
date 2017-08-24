@@ -1,5 +1,5 @@
 import update from 'immutability-helper';
-import { SET_POSTS, SAVE_POST, CLEAR_CURRENT_POST, SET_EDIT_POST, SET_FORM_FIELD,
+import { SET_POSTS, SAVE_POST, CLEAR_CURRENT_POST, SET_EDIT_POST, SET_FORM_FIELD, RESET_FORM,
   ADD_KEYWORD, REMOVE_KEYWORD, SET_SEARCH_CRITERIA, CLEAR_SEARCH_CRITERIA, SET_VIEWPOST_MODAL_CLASS,
   SET_VIEWPOST_MODAL_TEXT, SET_LOADPOSTS_MODAL_CLASS, SET_LOADPOSTS_MODAL_TEXT } from '../actions/postActions';
 import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE,
@@ -80,6 +80,9 @@ function posts(state = INITIAL_STATE, action) {
 
     case CLEAR_CURRENT_POST:
       return Object.assign({}, state, { currentPost: defaultPost });
+
+    case CLEAR_CURRENT_POST:
+      return Object.assign({}, state, { editForm: defaultPost });
 
     case SET_EDIT_POST:
       return update(

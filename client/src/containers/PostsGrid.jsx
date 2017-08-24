@@ -63,12 +63,12 @@ class PostsGrid extends React.Component {
   }
 
   openModal = (post) => {
-    this.setState({ modalOpen: true, post, }, ()=>{console.log('65',post);});
+    this.setState({ modalOpen: true, post, });
   }
 
   render() {
       const searchCriteria = this.props.posts.searchCriteria;
-      const modalStyles = { overlay: { zIndex: 10 } };
+      const modalStyles = { overlay: { zIndex: 10, backgroundColor: 'rgba(0,0,0,.7)', } };
       const title = this.state.post && this.state.post.title ? this.state.post.title : '';
       const reset = this.shuffle ? this.shuffle.resetItems : null;
 

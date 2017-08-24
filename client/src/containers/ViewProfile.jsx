@@ -16,7 +16,7 @@ class ViewProfile extends React.Component {
     this.state = {
       tab: 'skills',
       flip: false,
-      thumb: true,
+      thumb: false,
     };
   }
 
