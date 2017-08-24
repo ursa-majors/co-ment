@@ -19,23 +19,6 @@ const User      = require('../models/user');
 
 /* =============================== UTILITIES =============================== */
 
-/* Generate user profile on auth success, less salt & hash
- *
- * @params    [object]   user   [the whole user profile returned from db]
- * @returns   [object]          [user profile without salt & hash]
-*/
-function makeUserProfile(user) {
-
-    const filtered = {};
-
-    Object.keys(user)
-        .filter( k => (k !== 'salt' && k !== 'hash'))
-        .forEach( k => filtered[k] = user[k]);
-
-    return filtered;
-
-}
-
 
 /* Generate random signup key
  *
