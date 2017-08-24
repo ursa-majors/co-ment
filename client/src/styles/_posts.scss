@@ -4,9 +4,9 @@
   display: flex;
   flex-direction: column;
   padding: 60px 0;
-  background: #22c1c3;
-  background: -webkit-linear-gradient(to bottom, #22c1c3, #fdbb2d);
-  background: linear-gradient(to bottom, #22c1c3, #fdbb2d);
+  background: $color_aqua;
+  background: -webkit-linear-gradient(to bottom, $color_aqua, $color_sky);
+  background: linear-gradient(to bottom, $color_aqua, $color_sky);
 
   &__header {
     color: white;
@@ -36,7 +36,7 @@
     max-width: 900px;
     margin: 20px auto;
     background: rgba(255,255,255,.7);
-    color: #545454;
+    color: $color_gray_text;
     border-radius: 4px;
   }
 
@@ -105,14 +105,14 @@
   }
 
   &__keyword-value {
-    color: #545454;
+    color: $color_gray_text;
     display: inline-block;
     font-size: 0.9em;
     line-height: 1.4;
-    background-color: #ebf5ff;
+    background-color: $color_lighter-blue;
     background-color: rgba(255, 255, 255, 0.24);
     border-radius: 2px;
-    border: 1px solid #545454;
+    border: 1px solid $color_gray_text;
     border: 1px solid rgba(84, 84, 84, 0.24);
     margin-right: 5px;
     margin-top: 5px;

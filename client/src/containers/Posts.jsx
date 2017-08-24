@@ -5,47 +5,18 @@ import { Link } from 'react-router-dom';
 import ReactTable from 'react-table';
 
 import * as Actions from '../store/actions/postActions';
-import * as apiActions from '../store/actions/apiActions';
+import * as apiActions from '../store/actions/apiPostActions';
 import { formatDate } from '../utils/';
-import Loading from '../containers/Loading';
+import Spinner from './Spinner';
+import Modal from './Modal';
 
 class Posts extends React.Component {
 
   componentDidMount() {
     this.props.api.getAllPosts(this.props.appState.authToken);
-    /* axios.get('https://co-ment.glitch.me/api/posts', {
-      headers: {
-        Authorization: `Bearer ${this.props.appState.authToken}`,
-      },
-    })
-    .then((response) => {
-      this.props.actions.setPosts(response.data);
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-    */
   }
 
   render() {
-    if (this.props.posts.addingPost || this.props.posts.savingPost || this.props.posts.gettingAllPosts) {
-      return (
-        <div className="container">
-          <div className="posts__header">
-            Posts
-            <span className="posts__button-wrap">
-              <Link to="/editpost">
-                <button className="posts__button pointer" >
-                  New Post
-                </button>
-              </Link>
-            </span>
-          </div>
-          <Loading text="Fetching Posts" />
-        </div>
-      );
-    }
       // const makePlaceholderFilter = (placeholder) => {
       //   return ({filter, onFilterChange}) => (
       //       <input type='text'
@@ -98,7 +69,7 @@ class Posts extends React.Component {
           minWidth: 40,
           filterable: true,
           Cell: (props) => {
-            const url = (this.props.appState.profile._id === props.original.author_id ? '/profile' : `/viewprofile/${props.original.author_id}`);
+            const url = `/viewprofile/${props.original.author_id}`;
             return (
               <div className="posts__cell">
                 <Link to={`${url}`}>
@@ -130,6 +101,17 @@ class Posts extends React.Component {
 
     return (
       <div className="container posts">
+        <Spinner cssClass={`${this.props.posts.loadPostsSpinnerClass}`} />
+        <Modal
+          modalClass={`${this.props.posts.loadPostsModalClass}`}
+          modalText={`${this.props.posts.loadPostsModalText}`}
+          dismiss={() =>
+            {
+              this.props.actions.setLoadPostsModalText('');
+              this.props.actions.setLoadPostsModalClass('modal__hide');
+            }
+          }
+        />
         <div className="posts__header">
           Posts
           <span className="posts__button-wrap">

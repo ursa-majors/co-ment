@@ -1,28 +1,34 @@
-import { SET_REG_USER, SET_REG_PWD, SET_REG_CONF_PWD, CLEAR_PWD, SET_REG_ERROR } from '../actions';
+import { SET_REG_ERROR } from '../actions/regActions';
+import { REGISTRATION_REQUEST, REGISTRATION_SUCCESS, REGISTRATION_FAILURE } from '../actions/apiLoginActions';
 
 const INITIAL_STATE = {
-  regUsername: '',
-  regPassword: '',
-  regConfirmPwd: '',
+  registrationSpinnerClass: 'spinner__hide',
   regErrorMsg: '',
 };
 
 function register(state = INITIAL_STATE, action) {
+  let error;
   switch (action.type) {
-    case SET_REG_USER:
-      return Object.assign({}, state, { regUsername: action.payload });
-
-    case SET_REG_PWD:
-      return Object.assign({}, state, { regPassword: action.payload });
-
-    case SET_REG_CONF_PWD:
-      return Object.assign({}, state, { regConfirmPwd: action.payload });
-
-    case CLEAR_PWD:
-      return Object.assign({}, state, { regPassword: '', regConfirmPwd: '' });
 
     case SET_REG_ERROR:
       return Object.assign({}, state, { regErrorMsg: action.payload });
+
+    case REGISTRATION_REQUEST:
+      return Object.assign({}, state, { registrationSpinnerClass: 'spinner__show' });
+
+    case REGISTRATION_SUCCESS:
+      return Object.assign({}, state, { registrationSpinnerClass: 'spinner__hide' });
+
+    case REGISTRATION_FAILURE:
+      error = action.response.message || 'An unknown error occurred';
+      return Object.assign(
+        {},
+        state,
+        {
+          registrationSpinnerClass: 'spinner__hide',
+          regErrorMsg: error,
+        },
+      );
 
     default:
       return state;

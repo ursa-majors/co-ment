@@ -1,14 +1,21 @@
 import React from 'react';
-
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import axios from 'axios';
-import * as Actions from '../store/actions';
+
+import Spinner from './Spinner';
+import * as apiActions from '../store/actions/apiLoginActions';
+import { setRedirectUrl } from '../store/actions';
 
 class Home extends React.Component {
 
   componentDidMount() {
+    // Check for hash-fragment and stash it in redux
+    if (this.props.location.hash) {
+      const hash = this.props.location.hash.slice(2);
+      const url = `/${hash.split('=')[1]}`;
+      this.props.actions.setRedirectUrl(url);
+    }
     // If we're not logged in, check local storage for authToken
     // if it doesn't exist, it returns the string "undefined"
     if (!this.props.appState.loggedIn) {
@@ -16,17 +23,16 @@ class Home extends React.Component {
       if (token && token !== 'undefined') {
         token = JSON.parse(token);
         const user = JSON.parse(window.localStorage.getItem('userId'));
-        axios.get(`https://co-ment.glitch.me/api/profile/${user}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          this.props.actions.login(token, response.data);
-        })
-        .catch(() => {
-          this.props.actions.logout();
-        });
+        // If we validate successfully, look for redirect_url and follow it
+        this.props.api.validateToken(token, user)
+          .then((result) => {
+            if (result.type === 'VALIDATE_TOKEN_SUCCESS') {
+              if (this.props.appState.redirectUrl) {
+                this.props.history.push(this.props.appState.redirectUrl)
+                this.props.actions.setRedirectUrl('');
+              }
+            }
+          })
       }
     }
   }
@@ -51,6 +57,7 @@ class Home extends React.Component {
 
     return (
       <div className="splash">
+        <Spinner cssClass={this.props.appState.loginSpinnerClass}/>
         <div className="splash__image" />
         <div className="splash__wrapper">
           <div className="splash__text-wrap">
@@ -78,6 +85,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(Actions, dispatch),
+  api: bindActionCreators(apiActions, dispatch),
+  actions: bindActionCreators({ setRedirectUrl }, dispatch),
 });
+
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

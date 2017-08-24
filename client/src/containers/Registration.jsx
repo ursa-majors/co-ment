@@ -2,10 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 
 import * as Actions from '../store/actions/regActions';
-import { login } from '../store/actions';
+import * as apiActions from '../store/actions/apiLoginActions';
 
 class Registration extends React.Component {
 
@@ -37,11 +36,12 @@ class Registration extends React.Component {
     const confPwd = this.state.confirmPwd;
 
     if (username && email && (password === confPwd)) {
-      axios.post('https://co-ment.glitch.me/api/register', { username, password, email })
+      const body = { username, password, email };
+      this.props.api.register(body)
         .then((result) => {
-          // TODO: Handle errors such as duplicate user
-          this.props.login(result.data.token, result.data.profile);
-          this.props.history.push('/');
+          if (result.type === 'REGISTRATION_SUCCESS') {
+            this.props.history.push('/');
+          }
         })
         .catch((error) => {
           this.props.actions.setRegError(error.response.data.message);
@@ -134,7 +134,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(Actions, dispatch),
-  login: bindActionCreators(login, dispatch),
+  api: bindActionCreators(apiActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Registration);

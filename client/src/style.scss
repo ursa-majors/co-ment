@@ -2,6 +2,7 @@ $fa-font-path: "~font-awesome/fonts";
 @import "~font-awesome/scss/font-awesome";
 
 @import 'styles/media-queries';
+@import 'styles/vars';
 @import 'styles/home';
 @import 'styles/registration';
 @import 'styles/nav';
@@ -16,6 +17,8 @@ $fa-font-path: "~font-awesome/fonts";
 @import 'styles/mentorpath';
 @import 'styles/spinner';
 @import 'styles/modal';
+@import 'styles/view-profile';
+@import 'styles/connectiondetails';
 
 * {
   -moz-box-sizing: border-box;
@@ -44,21 +47,20 @@ body.user-is-tabbing *:focus {
 }
 
 .main {
-  background: -webkit-linear-gradient(to bottom, #22c1c3, #fdbb2d);
-  background: linear-gradient(to bottom, #22c1c3, #fdbb2d);
+  background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
+  background: linear-gradient(to top, $color_aqua, $color_sky);
   height: 100vh;
 }
 
 .container {
 	display: flex;
 	justify-content: center;
-	background: #22c1c3;
-	background: -webkit-linear-gradient(to bottom, #22c1c3, #fdbb2d);
-	background: linear-gradient(to bottom, #22c1c3, #fdbb2d);
+	background: $color_aqua;
+	background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
+	background: linear-gradient(to top, $color_aqua, $color_sky);
   height: 100%;
-	height: calc(100vh - 59px);
+	// height: calc(100vh - 59px);
   padding: 60px 0;
-  overflow-y: scroll;
 }
 
 .title {
@@ -73,6 +75,7 @@ body.user-is-tabbing *:focus {
   text-transform: lowercase;
 }
 
+// visible to screenreader only
 .sr-only {
     position: absolute;
     width: 1px;
@@ -83,3 +86,57 @@ body.user-is-tabbing *:focus {
     clip: rect(0,0,0,0);
     border: 0;
 }
+
+// use when you need to wrap an interactive element in a <button> element to enable keypress behavior and WAI-ARIA roles but don't want default browser button styling
+//
+.aria-button {
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  background: transparent;
+
+  &:hover, &:active, &:focus {
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    background: transparent;
+    outline: none;
+  }
+}
+
+.error {
+    font-family: 'Alegreya Sans', sans-serif;
+    color: $color_error_text;
+    background-color: $color_error_bkg;
+    font-size: 1.2em;
+    font-weight: 100;
+    margin: 15px auto;
+    border: 1px solid $color_error_text;
+    padding: 7px;
+    border-radius: 3px;
+    transition: opacity .15s linear;
+    text-align: center;
+  }
+
+  input:focus:invalid {
+    border: 1px solid red;
+  }
+
+.success {
+    font-family: 'Alegreya Sans', sans-serif;
+    color: $color_success_text;
+    background-color: $color_success_bkg;
+    font-size: 1.2em;
+    font-weight: 100;
+    margin: 15px auto;
+    border: 1px solid $color_success_text;
+    padding: 7px;
+    border-radius: 3px;
+    transition: opacity .15s linear;
+    text-align: center;
+  }
+
+.unstyled-link {
+    color: inherit;
+    text-decoration: none;
+  }

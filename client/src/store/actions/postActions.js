@@ -1,17 +1,17 @@
 export const SET_POSTS = 'SET_POSTS';
 export const SAVE_POST = 'SAVE_POST';
 export const SET_POST_ERROR = 'SET_POST_ERROR';
-export const SET_CURRENT_POST = 'SET_CURRENT_POST';
+export const CLEAR_CURRENT_POST = 'CLEAR_CURRENT_POST';
 export const SET_EDIT_POST = 'SET_EDIT_POST';
 export const SET_FORM_FIELD = 'SET_FORM_FIELD';
 export const ADD_KEYWORD = 'ADD_KEYWORD';
 export const REMOVE_KEYWORD = 'REMOVE_KEYWORD';
 export const SET_SEARCH_CRITERIA = 'SET_SEARCH_CRITERIA';
 export const CLEAR_SEARCH_CRITERIA = 'CLEAR_SEARCH_CRITERIA';
-export const SHOW_VIEW_POST_SPINNER = 'SHOW_VIEW_POST_SPINNER';
-export const HIDE_VIEW_POST_SPINNER = 'HIDE_VIEW_POST_SPINNER';
-export const SET_MODAL_TEXT = 'SET_MODAL_TEXT';
-export const SET_MODAL_CLASS = 'SET_MODAL_CLASS';
+export const SET_VIEWPOST_MODAL_TEXT = 'SET_VIEWPOST_MODAL_TEXT';
+export const SET_VIEWPOST_MODAL_CLASS = 'SET_VIEWPOST_MODAL_CLASS';
+export const SET_LOADPOSTS_MODAL_TEXT = 'SET_LOADPOSTS_MODAL_TEXT';
+export const SET_LOADPOSTS_MODAL_CLASS = 'SET_LOADPOSTS_MODAL_CLASS';
 
 export function setPosts(posts) {
   return ({
@@ -27,10 +27,10 @@ export function savePost(post) {
   });
 }
 
-export function setCurrentPost(post) {
+
+export function clearCurrentPost() {
   return ({
-    type: SET_CURRENT_POST,
-    payload: post,
+    type: CLEAR_CURRENT_POST,
   });
 }
 
@@ -88,16 +88,30 @@ export function hideViewPostSpinner() {
   });
 }
 
-export function setModalClass(modalClass) {
+export function setViewPostModalClass(modalClass) {
   return ({
-    type: SET_MODAL_CLASS,
+    type: SET_VIEWPOST_MODAL_CLASS,
     payload: modalClass,
   });
 }
 
-export function setModalText(text) {
+export function setViewPostModalText(text) {
   return ({
-    type: SET_MODAL_TEXT,
+    type: SET_VIEWPOST_MODAL_TEXT,
+    payload: text,
+  });
+}
+
+export function setLoadPostsModalClass(modalClass) {
+  return ({
+    type: SET_LOADPOSTS_MODAL_CLASS,
+    payload: modalClass,
+  });
+}
+
+export function setLoadPostsModalText(text) {
+  return ({
+    type: SET_LOADPOSTS_MODAL_TEXT,
     payload: text,
   });
 }

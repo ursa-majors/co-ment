@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as Actions from '../store/actions/apiActions';
+import * as connectActions from '../store/actions/apiConnectionActions';
 
 class Connection extends React.Component {
 
@@ -10,30 +11,86 @@ class Connection extends React.Component {
     const desiredRole = (this.props.posts.currentPost.role.toLowerCase() === 'mentor' ? 'mentee' : 'mentor');
     this.state = {
       recipient: this.props.posts.currentPost.author,
-      sender: this.props.appState.profile.username,
-      subject: `co/ment - Contact Request from ${this.props.appState.profile.username}`,
+      sender: this.props.profiles.userProfile.username,
+      subject: `co/ment - Contact Request from ${this.props.profiles.userProfile.username}`,
       role: desiredRole,
       body: '',
       formError: '',
+      formErrorClass: 'form__hidden'
     };
   }
 
   handleChange = (event) => {
-    this.setState({ [event.target.id]: event.target.value, error: false });
+    this.setState(
+      {
+        [event.target.id]: event.target.value,
+        formError: '',
+        formErrorClass: 'form__hidden',
+      },
+    );
   }
 
   sendMsg = () => {
+    // validate inputs (form requires only body)
+    if (!this.state.body) {
+      this.setState(
+        {
+          formError: 'Your message must have a body',
+          formErrorClass: 'form__error',
+        },
+      );
+      return;
+    }
+
+    // validate that this is not a duplicate connection request
+    const conns = this.props.connection.connections
+    for (let i = 0; i < conns.length; i += 1) {
+      if (conns[i].initiator.id === this.props.profiles.userProfile._id) {
+        if (this.state.role === 'mentor' && conns[i].mentor.id === this.props.profiles.userProfile._id && conns[i].mentee.id === this.props.posts.currentPost.author_id) {
+          this.setState(
+            {
+              formError: `You already have a ${this.state.role} connection with ${this.props.posts.currentPost.author}` ,
+              formErrorClass: 'form__error',
+            },
+          );
+          return;
+        }
+        if (this.state.role === 'mentee' && conns[i].mentee.id === this.props.profiles.userProfile._id && conns[i].mentor.id === this.props.posts.currentPost.author_id) {
+          this.setState(
+            {
+              formError: `You already have a ${this.state.role} connection with ${this.props.posts.currentPost.author}` ,
+              formErrorClass: 'form__error',
+            },
+          );
+          return;
+        }
+      }
+    }
+
     const token = this.props.appState.authToken;
     const connection = {
-      mentor: (this.state.role === 'mentor' ? this.props.appState.profile._id : this.props.posts.currentPost.author_id ),
-      mentee: (this.state.role === 'mentee' ? this.props.appState.profile._id : this.props.posts.currentPost.author_id ),
-      mentorName: (this.state.role === 'mentor' ? this.props.appState.profile.username : this.props.posts.currentPost.author ),
-      menteeName: (this.state.role === 'mentee' ? this.props.appState.profile.username : this.props.posts.currentPost.author ),
-      initiator: this.props.appState.profile._id,
+      mentor: {
+        id: (this.state.role === 'mentor' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author_id ),
+        name: (this.state.role === 'mentor' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author ),
+        avatar: (this.state.role === 'mentor' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.avatarUrl ),
+      },
+      mentee: {
+        id: (this.state.role === 'mentee' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author_id ),
+        name: (this.state.role === 'mentee' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author ),
+        avatar: (this.state.role === 'mentee' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.avatarUrl ),
+      },
+      initiator: {
+        id: this.props.appState.userId,
+        name: this.props.profiles.userProfile.username,
+      },
+      originalPost: {
+        id: this.props.posts.currentPost._id,
+        title: this.props.posts.currentPost.title,
+      },
       status: 'pending',
     };
     this.props.api.contact(token, { bodyText: this.state.body }, this.props.posts.currentPost.author_id);
-    this.props.api.connect(token, connection);
+    this.props.connectActions.connect(token, connection);
     this.props.history.push('/connectionresult');
   }
   render() {
@@ -70,7 +127,7 @@ class Connection extends React.Component {
             <textarea className="form__input form__connection-input" id="body" value={this.state.body} onChange={event => this.handleChange(event)} />
           </div>
           <div className="form__input-group">
-            <div className="form__error">{this.state.formError}</div>
+            <div className={`${this.state.formErrorClass}`}>{this.state.formError}</div>
           </div>
           <div className="form__input-group">
             <div className="form__button-wrap">
@@ -87,10 +144,13 @@ class Connection extends React.Component {
 const mapStateToProps = state => ({
   appState: state.appState,
   posts: state.posts,
+  profiles: state.profiles,
+  connection: state.connection,
 });
 
 const mapDispatchToProps = dispatch => ({
   api: bindActionCreators(Actions, dispatch),
+  connectActions: bindActionCreators(connectActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Connection);

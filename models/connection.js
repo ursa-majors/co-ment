@@ -6,50 +6,77 @@ const mongoose  = require('mongoose');
 const connectionSchema = new mongoose.Schema({
 
     mentor : {
+      id: {
         type     : String,
         required  : true
+      },
+      name: {
+        type      : String,
+        required  : true
+      },
+      avatar: {
+        type      : String,
+        default   : '',
+      }
     },
 
     mentee : {
-        type     : String,
-        required : true
-    },
-
-    mentorName: {
-        type     : String,
-        required : true
-    },
-
-    menteeName: {
-        type     : String,
-        required : true
+      id: {
+        type      : String,
+        required  : true
+      },
+      name: {
+        type      : String,
+        required  : true
+      },
+      avatar: {
+        type      : String,
+        default   : '',
+      }
     },
 
     initiator : {
-        type     : String,
-        required : true
+      id: {
+        type      : String,
+        required  : true
+      },
+      name: {
+        type      : String,
+        required  : true
+      },
     },
 
     dateStarted : {
-        type     : Date,
+        type      : Date,
     },
 
     dateEnded : {
-        type     : Date,
+        type      : Date,
     },
 
     dateAccepted: {
-        type     : Date,
+        type      : Date,
     },
 
     dateDeclined: {
-        type     : Date,
+        type      : Date,
+    },
+
+    originalPost: {
+      id: {
+        type      : String,
+        required  : true
+      },
+      title: {
+        type      : String,
+        required  : true
+      },
     },
 
     status : {
-        type     : String,
-        enum     : ['pending', 'accepted', 'declined', 'expired'],
-        default  : 'pending',
+        type      : String,
+        enum      : ['pending', 'accepted', 'declined', 'expired'],
+        default   : 'pending',
     },
   }
 );

@@ -30,6 +30,7 @@ module.exports = {
     host: 'localhost',
     port: '3000',
     hot: true,
+    overlay: true,
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
@@ -43,7 +44,8 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loaders: ['babel-loader'],
+        loaders: ['babel-loader?retainLines=true'],
+        include: path.join(__dirname, 'src')
       },
       {
         test: /\.scss$/,
@@ -62,6 +64,7 @@ module.exports = {
     filename: 'index.js',
     path: path.join(__dirname, '/build'),
   },
+  devtool: 'cheap-module-eval-source-map',
   plugins: dev ?
   [
     HTMLWebpackPluginConfig,

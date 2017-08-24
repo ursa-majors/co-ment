@@ -41,7 +41,8 @@ const user_projection = {
     username  : 1, name      : 1, ghUserName : 1, ghProfile : 1,
     time_zone : 1, skills    : 1, languages  : 1, validated : 1,
     avatarUrl : 1, location  : 1, about      : 1, certs     : 1,
-    gender    : 1
+    gender    : 1, twitter   : 1, facebook   : 1, link      : 1,
+    linkedin  : 1, codepen   : 1
 };
 
 
@@ -111,9 +112,9 @@ routes.get('/api/profiles', auth, (req, res) => {
 routes.get('/api/profile/:id', auth, (req, res) => {
 
     const target = req.params.id;
-    
+
     User.findOne({_id: target}, user_projection, (err, profile) => {
-        
+
         if (!profile) {
             return res
                 .status(404)
@@ -151,8 +152,7 @@ routes.put('/api/profile/:id', auth, (req, res) => {
         }
 
     })
-    .then( () => getGithubProfile(req.body.ghUserName) )
-    .then( (ghProfile) => {
+    .then( () => {
 
         const options = {
             new: true  // return updated document rather than the original
@@ -160,10 +160,19 @@ routes.put('/api/profile/:id', auth, (req, res) => {
 
         const updates = {
             ghUserName : req.body.ghUserName,
-            ghProfile  : ghProfile,
-            pref_lang  : req.body.pref_lang,
-            certs      : (req.body.certs).map( skill => parseSKill(skill) ),
-            time_zone  : req.body.time_zone
+            name       : req.body.name,
+            avatarUrl  : req.body.avatarUrl,
+            location   : req.body.location,
+            languages  : req.body.languages,
+            gender     : req.body.gender,
+            about      : req.body.about,
+            skills     : (req.body.skills).map( skill => parseSKill(skill) ),
+            time_zone  : req.body.time_zone,
+            twitter    : req.body.twitter,
+            facebook   : req.body.facebook,
+            link       : req.body.link,
+            linkedin   : req.body.linkedin,
+            codepen    : req.body.codepen,
         };
 
         User.findOneAndUpdate(target, updates, options)
@@ -283,12 +292,12 @@ routes.delete('/api/profile/:id', auth, (req, res) => {
      'id'     Return single specific post object '_id'
    Example: GET > `/api/posts?role=mentor&id=12345689`
 */
-routes.get('/api/posts', auth, (req, res) => {
+routes.get('/api/posts*', auth, (req, res) => {
     
     const query = {
         deleted : false  // find only non-deleted posts
     };
-    
+
     // check for 'id' query param & add to 'query' map
     if (req.query.hasOwnProperty('id')) {
         query._id = req.query.id;
@@ -301,9 +310,15 @@ routes.get('/api/posts', auth, (req, res) => {
         query.role = req.query.role;
     }
 
-    Post.find(query, (err, posts) => {
+   // check for 'author_id' & add to query map
+    if (req.query.hasOwnProperty('author_id')) {
+        query.author_id = req.query.author_id;
+    }
 
-        if (!posts || !posts.length) {
+  console.log(query)
+
+    Post.find(query, (err, posts) => {
+       if (!posts || !posts.length) {
             return res
                 .status(404)
                 .json({ message : 'No posts found!'});
@@ -349,13 +364,15 @@ routes.post('/api/posts', auth, (req, res) => {
                 const myPost = new Post();
 
                 // build new post from request body and token
-                myPost.author       = req.token.username;
-                myPost.author_id    = req.token._id;
-                myPost.role         = req.body.role;
-                myPost.title        = req.body.title;
-                myPost.body         = req.body.body;
-                myPost.keywords     = req.body.keywords;
-                myPost.availability = req.body.availability;
+                myPost.author           = req.body.author;
+                myPost.author_id        = req.token._id;
+                myPost.author_name      = req.body.author_name;
+                myPost.author_avatar    = req.body.author_avatar;
+                myPost.role             = req.body.role;
+                myPost.title            = req.body.title;
+                myPost.body             = req.body.body;
+                myPost.keywords         = req.body.keywords;
+                myPost.availability     = req.body.availability;
 
                 // save new post to database
                 myPost.save( (err, newPost) => {
@@ -387,7 +404,7 @@ routes.post('/api/posts', auth, (req, res) => {
    Example: PUT `/api/posts/597dd8665229970e99c6ab55`
 */
 routes.put('/api/posts/:id', auth, (req, res) => {
-
+    console.log(req.body, req.params.id)
     // target post by post '_id' and post 'author_id'.
     // this way, users can only update their own posts.
     const target = {
@@ -397,14 +414,16 @@ routes.put('/api/posts/:id', auth, (req, res) => {
 
     // build new post object from request body and parsed token
     const updates = {
-        active       : req.body.active,
-        author       : req.body.author,
-        author_id    : req.token._id,
-        role         : req.body.role,
-        title        : req.body.title,
-        body         : req.body.body,
-        keywords     : req.body.keywords,
-        availability : req.body.availability
+        active          : req.body.active,
+        author          : req.body.author,
+        author_id       : req.token._id,
+        author_name     : req.body.author_name,
+        author_avatar   : req.body.author_avatar,
+        role            : req.body.role,
+        title           : req.body.title,
+        body            : req.body.body,
+        keywords        : req.body.keywords,
+        availability    : req.body.availability
     };
 
     const options = {
@@ -559,8 +578,8 @@ routes.post('/api/contact/:id', auth, (req, res) => {
 routes.get('/api/connections/:id', auth, (req, res) => {
   const target = req.params.id
   Connection.find({$or: [
-    {mentor: target},
-    {mentee: target}
+    { "mentor.id": target },
+    { "mentee.id": target }
 ]})
     .exec()
     .then((conns) => {
@@ -590,7 +609,6 @@ routes.get('/api/connections/:id', auth, (req, res) => {
    Example: POST > /api/connect
 */
 routes.post('/api/connect', auth, (req, res) => {
-
   let newConn = new Connection(req.body);
   newConn.dateStarted = Date.now();
   newConn.save((err, conn) => {
@@ -608,6 +626,51 @@ routes.post('/api/connect', auth, (req, res) => {
   });
 });
 
+routes.post('/api/updateconnection', auth, (req, res) => {
+  let update;
+  switch(req.body.type){
+    case 'ACCEPT':
+      update = {
+        status: 'accepted',
+        dateAccepted: Date.now(),
+      }
+      break;
+    case 'DECLINE':
+      update = {
+        status: 'declined',
+        dateDeclined: Date.now(),
+      }
+      break;
+    case 'EXPIRE':
+      update = {
+        status: 'expired',
+        dateExpired: Date.now(),
+      }
+      break;
+      default:
+        update = {}
+  }
+
+  const target = { _id: req.body.id };
+
+  const options = {
+      // 'new' returns the updated document rather than the original
+      new: true
+  };
+  Connection.findOneAndUpdate(target, update, options)
+    .exec()
+    .then( conn => {
+       return res
+        .status(200)
+        .json({ conn })
+    })
+    .catch( err => {
+      console.log('Error!!!', err);
+      return res
+          .status(400)
+          .json({ message: err});
+    });
+});
 /* ================================ EXPORT ================================= */
 
 module.exports = routes;

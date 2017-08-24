@@ -1,8 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import axios from 'axios';
+
 import * as Actions from '../store/actions';
+import * as profileActions from '../store/actions/profileActions';
+import * as loginActions from '../store/actions/apiLoginActions';
 // Placeholder component for login //
 
 class Login extends React.Component {
@@ -20,14 +22,17 @@ class Login extends React.Component {
     const password = this.props.login.loginPassword;
 
     if (username && password) {
-      axios.post('https://co-ment.glitch.me/api/login', { username, password })
+      const body = { username, password };
+      this.props.api.login(body)
         .then((result) => {
-          this.props.actions.login(result.data.token, result.data.profile);
-          this.props.actions.clearLoginPwd();
-          this.props.history.push('/');
-        })
-        .catch((error) => {
-          this.props.actions.setLoginError(error.response.data.message);
+          if (result.type === 'LOGIN_SUCCESS') {
+            if (this.props.appState.redirectUrl) {
+              this.props.history.push(this.props.appState.redirectUrl);
+              this.props.actions.setRedirectUrl('');
+            } else {
+              this.props.history.push('/');
+            }
+          }
         });
     } else if (!username) {
       this.props.actions.setLoginError('Username cannot be blank');
@@ -58,6 +63,7 @@ class Login extends React.Component {
   }
 
   render() {
+    const errorClass = this.props.login.errorMsg ? 'error' : 'hidden';
     return (
       <div className="container form">
         <div className="form__body">
@@ -82,7 +88,7 @@ class Login extends React.Component {
             />
           </div>
           <div className="form__input-group">
-            <div className="form__error">{this.props.login.errorMsg}</div>
+            <div className={errorClass}>{this.props.login.errorMsg}</div>
           </div>
         </div>
         <div className="form__input-group">
@@ -102,6 +108,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(Actions, dispatch),
+  profileActions: bindActionCreators(profileActions, dispatch),
+  api: bindActionCreators(loginActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
