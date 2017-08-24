@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import * as Actions from '../store/actions/profileActions';
 import * as apiActions from '../store/actions/apiActions';
 import Spinner from './Spinner';
-import Modal from './Modal';
+import ModalSm from './ModalSm';
 
 class ViewProfile extends React.Component {
 
@@ -142,7 +142,7 @@ class ViewProfile extends React.Component {
     return (
       <div className="view-profile">
         <Spinner cssClass={`${this.props.profile.profileSpinnerClass}`} />
-        <Modal
+        <ModalSm
           modalClass={`${this.props.profile.viewProfileModalClass}`}
           modalText={`${this.props.profile.viewProfileModalText}`}
           dismiss={() => this.props.actions.dismissViewProfileModal()}

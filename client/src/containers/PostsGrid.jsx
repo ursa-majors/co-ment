@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
+import Modal from 'react-modal';
 import Shuffle from 'shufflejs';
 
 import * as Actions from '../store/actions/postActions';
@@ -9,15 +10,19 @@ import * as apiActions from '../store/actions/apiPostActions';
 import { formatDate } from '../utils/';
 import PostThumb from './PostThumb';
 import Spinner from './Spinner';
-import Modal from './Modal';
+import ModalSm from './ModalSm';
+import ModalGuts from './ModalGuts';
 
 class PostsGrid extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      active: null,
+      post: {},
+      modalOpen: false,
     };
+
+    this.openModal = this.openModal.bind(this);
   }
 
   componentDidMount() {
@@ -46,13 +51,29 @@ class PostsGrid extends React.Component {
     this.shuffle = null;
   }
 
+  closeModal() {
+    const newState = {...this.state};
+    newState.modalOpen = false;
+    newState.modalTitle = '';
+    this.setState({
+      ...this.state,
+      newState,
+   });
+  }
+
+  openModal = (post) => {
+    this.setState({ modalOpen: true, post, }, ()=>{console.log('65',post);});
+  }
+
   render() {
       const searchCriteria = this.props.posts.searchCriteria;
+      const modalStyles = { overlay: { zIndex: 10 } };
+      const title = this.state.post && this.state.post.title ? this.state.post.title : '';
 
     return (
       <div className="posts-grid">
         <Spinner cssClass={`${this.props.posts.loadPostsSpinnerClass}`} />
-        <Modal
+        <ModalSm
           modalClass={`${this.props.posts.loadPostsModalClass}`}
           modalText={`${this.props.posts.loadPostsModalText}`}
           dismiss={() =>
@@ -62,6 +83,20 @@ class PostsGrid extends React.Component {
             }
           }
         />
+        <Modal
+          style={modalStyles}
+          isOpen={this.state.modalOpen}
+          onRequestClose={this.closeModal}
+          className="post__modal"
+          post={this.state.post}
+          contentLabel={title}
+        >
+          <ModalGuts
+            closeModal={this.closeModal}
+            title={title}
+            post={this.state.post}
+          />
+        </Modal>
         <div>
           <div ref={element => this.element = element} className="flex-row my-shuffle shuffle posts-grid__cont">
           <div className="flex-col-1-sp sizer"></div>
@@ -72,6 +107,7 @@ class PostsGrid extends React.Component {
               active={this.state.active===post._id}
               post={post}
               shuffle={this.shuffle.resetItems}
+              openModal={this.openModal}
               />
           </div>
         ))}

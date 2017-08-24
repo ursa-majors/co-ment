@@ -7,7 +7,7 @@ import * as Actions from '../store/actions/postActions';
 import * as apiActions from '../store/actions/apiPostActions';
 import { formatDate } from '../utils/';
 import Spinner from '../containers/Spinner';
-import Modal from '../containers/Modal';
+import ModalSm from '../containers/ModalSm';
 
 class ViewPost extends React.Component {
 
@@ -211,7 +211,7 @@ class ViewPost extends React.Component {
     return (
       <div className="post-view">
         <Spinner cssClass={this.props.posts.viewPostSpinnerClass} />
-        <Modal
+        <ModalSm
           modalClass={this.props.posts.viewPostModalClass}
           modalText={this.props.posts.viewPostModalText}
           dismiss={

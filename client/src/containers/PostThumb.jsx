@@ -7,7 +7,7 @@ import * as Actions from '../store/actions/postActions';
 import * as apiActions from '../store/actions/apiPostActions';
 import { formatDate } from '../utils/';
 import Spinner from '../containers/Spinner';
-import Modal from '../containers/Modal';
+import ModalSm from '../containers/ModalSm';
 
 class PostThumb extends React.Component {
 
@@ -18,18 +18,12 @@ class PostThumb extends React.Component {
       console.log('enter');
       switch (action) {
         case 'expand':
-          this.openModal();
+          this.props.openModal();
           break;
         default:
           return null;
       }
     }
-  }
-
-  openModal() {
-    // show full-size view in modal
-
-    this.props.shuffle();
   }
 
   render() {
@@ -86,7 +80,7 @@ class PostThumb extends React.Component {
                   aria-label="expand"
                   name="expand"
                   onKeyDown={e => this.handleKeyDown(e)}
-                  onClick={() => this.openModal()}>
+                  onClick={() => this.props.openModal(this.props.post)}>
                     <i className={`fa fa-expand post-thumb__icon--expand`}
                     aria-label="expand" />
                 </button>

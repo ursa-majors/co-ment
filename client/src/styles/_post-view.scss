@@ -177,6 +177,19 @@
   perspective: 600px;
   transition: $transition_card;
 
+  &__side {
+    border-radius:10px;
+    height:100%;
+    width:100%;
+    transform-style:preserve-3d;
+    backface-visibility:hidden;
+    background: rgba(255,255,255,1);
+    border-radius: 10px;
+    box-shadow: 0 16px 24px rgba(0, 0, 0, 0.4);
+    transition: .5s ease-in-out;
+    position: relative;
+    }
+
   &__ribbon {
     width: 150px;
     height: 150px;

@@ -7,7 +7,7 @@ import * as apiActions from '../store/actions/apiActions';
 import InputAutosuggest from './InputAutosuggest';
 import RadioGroup from './RadioGroup';
 import Spinner from '../containers/Spinner';
-import Modal from '../containers/Modal';
+import ModalSm from '../containers/ModalSm';
 import {languages, skills, timezones } from '../utils';
 import parseSKill from '../utils/skillsparser';
 
@@ -276,7 +276,7 @@ class Profile extends React.Component {
     return (
       <div className="container profile" id="profile-form">
       <Spinner cssClass={this.props.profiles.profileSpinnerClass} />
-        <Modal
+        <ModalSm
           modalClass={this.props.profiles.viewProfileModalClass}
           modalText={this.props.profiles.viewProfileModalText}
           dismiss={

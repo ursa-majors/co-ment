@@ -9,7 +9,6 @@ import About from './containers/About';
 import Login from './containers/Login';
 import Registration from './containers/Registration';
 import Profile from './containers/Profile';
-import Posts from './containers/Posts';
 import PostsGrid from './containers/PostsGrid';
 import EditPost from './containers/EditPost';
 import Logout from './containers/Logout';
