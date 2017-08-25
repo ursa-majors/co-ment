@@ -20,6 +20,7 @@ class PostsGrid extends React.Component {
     this.state = {
       post: {},
       modalOpen: false,
+      activeFilters: [],
     };
 
     this.openModal = this.openModal.bind(this);
@@ -35,9 +36,12 @@ class PostsGrid extends React.Component {
       sizer: document.getElementsByClassName('sizer')[0],
     });
     this.shuffle.resetItems();
+    this.addShuffleEventListeners();
+    this.addFilterButtons();
+    this.addSorting();
+    this.addSearchFilter();
 
     // console.log(this.props.posts.entries[0]);
-
   }
 
   componentDidUpdate() {
@@ -53,18 +57,165 @@ class PostsGrid extends React.Component {
   }
 
   closeModal = () => {
-    console.log('close');
     const newState = {...this.state};
     newState.modalOpen = false;
     newState.modalTitle = '';
     this.setState({
       ...newState,
-   }, ()=>{console.log(this.state)});
+   });
   }
 
   openModal = (post) => {
-    this.setState({ modalOpen: true, post, });
+    const newState = {...this.state};
+    newState.modalOpen = true;
+    newState.post = post;
+    this.setState({
+      ...newState,
+   });
   }
+
+  ////////// FILTER SORT SEARCH ////////
+  /// need to add html, add classes for document.queryselector calls, add data-attributes for filtering and sorting
+  ///
+
+
+  addShuffleEventListeners = () => {
+    this.shuffle.on(Shuffle.EventType.LAYOUT, (data) => {
+      console.log('layout. data:', data);
+    });
+
+    this.shuffle.on(Shuffle.EventType.REMOVED, (data) => {
+      console.log('removed. data:', data);
+    });
+  }
+
+  addFilterButtons = () => {
+    const options = document.querySelector('.filter-options');
+    if (!options) {
+      return;
+    }
+
+    const filterButtons = Array.from(options.children);
+
+    filterButtons.forEach((button) => {
+      button.addEventListener('click', this.handleFilterClick.bind(this), false);
+    }, this);
+  };
+
+  handleFilterClick = (e) => {
+    const btn = e.currentTarget;
+    const isActive = btn.classList.contains('active');
+    const btnGroup = btn.getAttribute('data-group');
+    const newState = {...this.state};
+
+    if (isActive) {
+      newState.activeFilters.splice(this.state.activeFilters.indexOf(btnGroup));
+      } else {
+        newState.activeFilters.push(btnGroup);
+      }
+
+    this.setState({
+      ...newState,
+      }, () => {
+        btn.classList.toggle('active');
+        this.shuffle.filter(this.state.activeFilters);
+    });
+  }
+
+  removeActiveClassFromChildren = (parent) => {
+    const children = parent.children;
+    for (let i = (children.length - 1); i >= 0; i--) {
+      children[i].classList.remove('active');
+    }
+  }
+
+  addSorting = () => {
+  const buttonGroup = document.querySelector('.sort-options');
+    if (!buttonGroup) {
+      return;
+    }
+  buttonGroup.addEventListener('change', this.handleSortChange.bind(this));
+  };
+
+  handleSortChange = (e) => {
+  // Add and remove `active` class from buttons.
+  const wrapper = e.currentTarget;
+  const buttons = Array.from(e.currentTarget.children);
+  buttons.forEach((button) => {
+    if (button.querySelector('input').value === e.target.value) {
+      button.classList.add('active');
+    } else {
+      button.classList.remove('active');
+    }
+  });
+
+  // Create the sort options to give to Shuffle.
+  const value = e.target.value;
+  let options = {};
+
+  sortByDate = (element) => {
+    return element.getAttribute('data-created');
+  }
+
+  sortByTitle = (element) => {
+    return element.getAttribute('data-title').toLowerCase();
+  }
+
+  if (value === 'date-created') {
+    options = {
+      reverse: true,
+      by: sortByDate,
+    };
+  } else if (value === 'title') {
+    options = {
+      by: sortByTitle,
+    };
+  }
+
+  this.shuffle.sort(options);
+  };
+
+// Advanced filtering
+  addSearchFilter =  () => {
+  const searchInput = document.querySelector('.js-shuffle-search');
+
+  if (!searchInput) {
+    return;
+  }
+
+  searchInput.addEventListener('keyup', this.handleSearchKeyup.bind(this));
+};
+
+/**
+ * Filter the shuffle instance by items with a title that matches the search input.
+ * @param {Event} e Event object.
+ */
+  handleSearchKeyup = (e) => {
+  const searchText = e.target.value.toLowerCase();
+
+  this.shuffle.filter((element, shuffle) => {
+
+    // If there is a current filter applied, ignore elements that don't match it.
+    if (shuffle.group !== Shuffle.ALL_ITEMS) {
+      // Get the item's groups.
+      var groups = JSON.parse(element.getAttribute('data-groups'));
+      var isElementInCurrentGroup = groups.indexOf(shuffle.group) !== -1;
+
+      // Only search elements in the current group
+      if (!isElementInCurrentGroup) {
+        return false;
+      }
+    }
+
+    var titleElement = element.querySelector('.picture-item__title');
+    var titleText = titleElement.textContent.toLowerCase().trim();
+
+    return titleText.indexOf(searchText) !== -1;
+  });
+};
+  ///
+  ///
+  ////////// FILTER SORT SEARCH /////////
 
   render() {
       const searchCriteria = this.props.posts.searchCriteria;
