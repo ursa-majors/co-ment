@@ -122,7 +122,7 @@ const tzVal = numericOffset < 0 ? `(UTC ${numericOffset})` : `(UTC + ${numericOf
 const filterList = q => tzList.filter(i => i.indexOf(q) > -1);
 export const tzGuess = filterList(tzVal)[0];
 
-////// date formatter for posts list //////
+////// date formatter for post cards //////
 
 export const formatDate = (date) => {
   const monthNames = [
