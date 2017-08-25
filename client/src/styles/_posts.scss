@@ -130,33 +130,23 @@
 
   &__button-wrap {
     width: 100%;
-    margin: -40px auto 0 auto;
     padding-right: 10px;
-    display: flex;
-    justify-content: flex-end;
-    text-align: center;
-
-    @include for-tablet-portrait-up {
-      margin: 40px auto 0 auto;
-      justify-content: center;
-      padding-right: 0;
-    }
   }
 
   &__button {
     color: white;
     font-family: 'Alegreya Sans', sans-serif;
-    font-size: 40px;
+    font-size: 20px;
     line-height: .5em;
     text-decoration: none;
     font-weight: 100;
-    border-radius: 50px;
+    border-radius: 30px;
     border: 1px solid white;
     background: transparent;
+    margin-top: 4px;
 
     @include for-tablet-portrait-up {
-      padding: 20px;
-      border: 2px solid white;
+      margin-top: 0;
     }
 
     &:hover, &:active, &:focus, &-done {
@@ -175,8 +165,9 @@
       font-family: 'Alegreya Sans SC', sans-serif;
       text-transform: lowercase;
       letter-spacing: 2px;
-      font-size: 20px;
+      font-size: 15px;
       line-height: 1.3em;
+      padding: 10px 11px 12px 11px;
     }
   }
 

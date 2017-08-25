@@ -13,37 +13,6 @@
     clear: both
 }
 
-.row {
-    margin-left: auto;
-    margin-right: auto
-}
-
-.row:after,
-.row:before {
-    content: " ";
-    display: table
-}
-
-.row:after {
-    clear: both
-}
-
-.row .row {
-    margin-left: -8px;
-    margin-right: -8px
-}
-
-.row--centered {
-    -ms-flex-pack: center;
-    -ms-flex-wrap: wrap;
-    -webkit-box-pack: center;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center
-}
-
 .hidden {
     display: none!important;
     visibility: hidden
@@ -81,6 +50,7 @@
   flex-wrap: wrap;
   margin-left: -8px;
   margin-right: -8px;
+  position: relative;
 }
 
 .flex-col-1-sp,
@@ -88,11 +58,14 @@
 .flex-col-3-lg,
 .flex-col-4-md,
 .flex-col-6-sm,
+.flex-col-8-md,
+.flex-col-9-lg,
 .flex-col-12-xs {
   position: relative;
   min-height: 1px;
   padding-right: 8px;
   padding-left: 8px;
+  top: 0;
 }
 
 .flex-col-1-sp {
@@ -121,6 +94,11 @@
     max-width: 33.333%;
     width: 33.333%;
   }
+  .flex-col-8-md {
+    flex: 0 0 66.667%;
+    max-width: 66.667%;
+    width: 66.667%;
+  }
 }
 
 @include for-desktop-up {
@@ -129,6 +107,12 @@
     max-width: 25%;
     width: 25%;
   }
+  .flex-col-9-lg {
+    flex: 0 0 75%;
+    max-width: 75%;
+    width: 75%;
+  }
+
 }
 
 @include for-big-desktop-up {
@@ -141,39 +125,8 @@
 
 
 
-
-/* ---------- */
-
-/* Shuffle/demo specific styles */
 .sizer {
   position: absolute;
   visibility: hidden;
   width: 8.3333%;
-}
-
-.box {
-  margin-top: 16px;
-}
-
-.box__inner {
-  height: 150px;
-  background-color: mediumseagreen;
-  border: 1px solid black;
-}
-
-/* HERE'S THE FIX. CHANGE YOUR GRID CLASS NAMES AS NEEDED. */
-/* Using position:absolute inside a flex container removes
-the element as a flex child, so the `flex` properties don't apply. The width
-is explicitly set here so that the sizer column maintains the width we
-want, but also doesn't actually show up in the grid. */
-.flex-col-1 {
-  width: 8.333%;
-}
-
-.flex-col-3 {
-  width: 25%;
-}
-
-.flex-col-6 {
-  width: 50%;
 }
