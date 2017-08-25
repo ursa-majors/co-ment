@@ -154,7 +154,7 @@ class ViewProfile extends React.Component {
                 <i className="fa fa-pencil full__icon--edit" aria-label="edit" />
               </Link> /* edit link */
             } {/* post owner, full size */}
-            { this.props.appState.userId !== this.props.match.params.id &&
+            {/* this.props.appState.userId !== this.props.match.params.id &&
               !this.state.thumb &&
               <div className="thumb__compress">
                 <i className="compress fa fa-compress thumb__icon--compress"

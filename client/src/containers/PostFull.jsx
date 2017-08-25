@@ -17,6 +17,12 @@ class PostFull extends React.Component {
   }
 
   componentDidMount() {
+    const postId = this.props.post._id;
+    const token = this.props.appState.authToken;
+        if (this.props.posts.currentPost._id !== postId) {
+      this.props.actions.clearCurrentPost();
+      this.props.api.viewPost(token, postId);
+    }
     }
 
   deletePost = (event) => {
