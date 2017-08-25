@@ -15,6 +15,15 @@ import ModalGuts from './ModalGuts';
 
 class PostsGrid extends React.Component {
 
+  static adjustBkgSize() {
+    // adjust background size to fit content
+    const el = document.getElementById('posts-grid');
+    let adjustedHeight = el.clientHeight;
+    adjustedHeight = Math.max(el.scrollHeight, window.innerHeight);
+    console.log(`adjustedHeight: ${adjustedHeight}, cientHeight: ${el.clientHeight}, viewport height: ${window.innerHeight}`);
+    if (adjustedHeight > el.clientHeight) { el.style.height = `${adjustedHeight}px`; }
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -26,6 +35,8 @@ class PostsGrid extends React.Component {
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
   }
+
+  // need to add a window size event listener to set .posts-grid height to 100% OR 100vh, whichever is greater, to keep background image covering viewport height on search results display
 
   componentDidMount() {
     this.props.api.getAllPosts(this.props.appState.authToken);
@@ -40,6 +51,7 @@ class PostsGrid extends React.Component {
     this.addFilterButtons();
     this.addSorting();
     this.addSearchFilter();
+    PostsGrid.adjustBkgSize();
 
     // console.log(this.props.posts.entries[0]);
   }
@@ -48,6 +60,7 @@ class PostsGrid extends React.Component {
     // Notify shuffle to dump the elements it's currently holding and consider
     // all elements matching the `itemSelector` as new.
     this.shuffle.resetItems();
+    PostsGrid.adjustBkgSize();
   }
 
   componentWillUnmount() {
@@ -81,11 +94,13 @@ class PostsGrid extends React.Component {
 
   addShuffleEventListeners = () => {
     this.shuffle.on(Shuffle.EventType.LAYOUT, (data) => {
-      console.log('layout. data:', data);
+      // console.log('layout. data:', data);
+      PostsGrid.adjustBkgSize();
     });
 
     this.shuffle.on(Shuffle.EventType.REMOVED, (data) => {
-      console.log('removed. data:', data);
+      // console.log('removed. data:', data);
+      PostsGrid.adjustBkgSize();
     });
   }
 
@@ -191,27 +206,28 @@ class PostsGrid extends React.Component {
  * @param {Event} e Event object.
  */
   handleSearchKeyup = (e) => {
-  const searchText = e.target.value.toLowerCase();
-
-  this.shuffle.filter((element, shuffle) => {
-
-    // If there is a current filter applied, ignore elements that don't match it.
-    if (shuffle.group !== Shuffle.ALL_ITEMS) {
-      // Get the item's groups.
-      var groups = JSON.parse(element.getAttribute('data-groups'));
-      var isElementInCurrentGroup = groups.indexOf(shuffle.group) !== -1;
-
-      // Only search elements in the current group
-      if (!isElementInCurrentGroup) {
-        return false;
+    const searchText = e.target.value.toLowerCase();
+    this.shuffle.filter((element, shuffle) => {
+      // If there is a current filter applied, ignore elements that don't match it.
+      if (shuffle.group !== Shuffle.ALL_ITEMS) {
+        // Get the item's groups.
+        var groups = JSON.parse(element.getAttribute('data-groups'));
+        var isElementInCurrentGroup = groups.indexOf(shuffle.group) !== -1;
+        // Only search elements in the current group
+        if (!isElementInCurrentGroup) {
+          return false;
+        }
       }
-    }
-
-    var titleElement = element.querySelector('.picture-item__title');
-    var titleText = titleElement.textContent.toLowerCase().trim();
-
-    return titleText.indexOf(searchText) !== -1;
-  });
+      const titleElement = element.querySelector('.post-thumb__title');
+      const titleText = titleElement.textContent.toLowerCase().trim();
+      const bodyElement = element.querySelector('.post-thumb__body');
+      const bodyText = bodyElement.textContent.toLowerCase().trim();
+      // add username ?
+      // in order to make keywords, timezone, gender searchable they have to be output to grid even if not visible in thumb view
+      const searchBlob = titleText.concat(bodyText);
+      return searchBlob.indexOf(searchText) !== -1;
+      PostsGrid.adjustBkgSize();
+    });
 };
   ///
   ///
@@ -224,7 +240,7 @@ class PostsGrid extends React.Component {
       const reset = this.shuffle ? this.shuffle.resetItems : null;
 
     return (
-      <div className="posts-grid">
+      <div className="posts-grid" id="posts-grid">
         <Spinner cssClass={`${this.props.posts.loadPostsSpinnerClass}`} />
         <ModalSm
           modalClass={`${this.props.posts.loadPostsModalClass}`}
@@ -253,14 +269,56 @@ class PostsGrid extends React.Component {
         </Modal>
         <div>
         <div className="posts-grid__controls">
-          <span className="posts__button-wrap">
+          <div className="flex-row">
             <Link to="/editpost">
               <button className="posts__button pointer" aria-label="New Post" >
                 <span className="posts__btn--big">New Post</span>
                 <span className="posts__btn--sm">+</span>
               </button>
             </Link>
-          </span>
+          </div>
+           <div className="flex-row">
+
+      <div className="flex-col-4-md flex-col-3-lg filters-group">
+        <label htmlFor="filters-search-input" className="filter-label">Search</label>
+        <input
+          className="textfield filter__search js-shuffle-search"
+          type="search"
+          id="filters-search-input"
+          onKeyUp={(e)=>this.handleSearchKeyup(e)}
+
+          />
+      </div>
+
+    </div>
+    <div className="flex-row">
+
+      <div className="flex-col-12-xs filters-group-wrap">
+        <div className="filters-group">
+          <p className="filter-label">Filter</p>
+          <div className="btn-group filter-options">
+            <button className="btn btn--primary" data-group="space">Space</button>
+            <button className="btn btn--primary" data-group="nature">Nature</button>
+            <button className="btn btn--primary" data-group="animal">Animal</button>
+            <button className="btn btn--primary" data-group="city">City</button>
+          </div>
+        </div>
+        <div className="filters-group">
+          <p className="filter-label">Sort</p>
+          <div className="btn-group sort-options">
+            <label className="btn active">
+              <input type="radio" name="sort-value" value="dom" /> Default
+            </label>
+            <label className="btn">
+              <input type="radio" name="sort-value" value="title" /> Title
+            </label>
+            <label className="btn">
+              <input type="radio" name="sort-value" value="date-created" /> Date Created
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
           </div>
           <div ref={element => this.element = element} className="flex-row my-shuffle shuffle posts-grid__cont">
           <div className="flex-col-1-sp sizer"></div>
