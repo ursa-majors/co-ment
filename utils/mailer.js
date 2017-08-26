@@ -28,12 +28,20 @@ const transporter   = nodeMailer.createTransport(smtpTransport({
  * @params    [string]   body      [mail message body]
 */
 function mailer(to, subject, body) {
-    transporter.sendMail({
+    
+    const mailObj = {
         from    : `co/ment ${process.env.EMAIL_USER}`,
         to      : to,
         subject : subject,
-        text    : body
-    }, (err, info) => {
+    };
+    
+    if (body.type === 'text') {
+        mailObj.text = body.text;
+    } else if (body.type === 'html') {
+        mailObj.html = body.text;
+    }
+    
+    transporter.sendMail(mailObj, (err, info) => {
         if (err) {
             console.log(err);
         } else {
