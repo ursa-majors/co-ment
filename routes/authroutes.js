@@ -239,9 +239,6 @@ routes.post('/api/login', (req, res, next) => {
                 .json(info);
 
         } else {
-
-            // generate a token
-            const token = user.generateJWT();
             
             // exclude sensitive info from field selection
             const proj  = { hash : 0, salt : 0, signupKey : 0 };
@@ -250,6 +247,9 @@ routes.post('/api/login', (req, res, next) => {
             User.findById(user._id, proj)
                 .exec()
                 .then( (profile) => {
+                
+                    // generate a token
+                    const token = profile.generateJWT();
 
                     // return the user profile & JWT
                     return res
