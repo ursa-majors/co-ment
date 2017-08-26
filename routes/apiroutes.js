@@ -33,6 +33,7 @@ const jwt        = require('express-jwt');
 const request    = require('request');
 const parseSKill = require('../utils/skillsparser');
 const mailer     = require('../utils/mailer');
+const sanitize   = require('../utils/sanitizer');
 const secret     = process.env.JWT_SECRET;
 const auth       = jwt({ secret: secret, requestProperty: 'token' });
 
@@ -545,14 +546,21 @@ routes.post('/api/contact/:id', auth, (req, res) => {
 
                 if (err) { throw err; }
 
-                // what do we want to include in the message? Hmm ...
-                const bodyText = req.body.bodyText;
-
+                // clean post body using `sanitizer` util
+                const bodyText   = sanitize(req.body.bodyText);
                 const from_user  = sender.username;
                 const from_email = sender.email;
                 const to         = recipient.email;
                 const subject    = `co/ment - Contact Request from ${from_user}`;
-                const body       = `Contact Request from ${from_user} (${from_email}).\n\n${bodyText}`;
+                const body       = {
+                    type : 'html',
+                    text : `
+                        <div style="background: #0e76bc; background-image: linear-gradient(#0e76bc, #5cbeaf); padding: 0 2em 5em;">
+                            <h1 style="text-align: center; padding: .5em; color: white; font-family: sans-serif; font-weight:100; letter-spacing: .08em; text-shadow: 0 0 20px rgba(0, 0, 0, 0.63);">co/ment</h1>
+                            <p style="color: white; font-size: 1.1em; font-family: sans-serif;">Contact Request from <strong>${from_user}</strong> (<a href="mailto:${from_email}" style="color: #fff500;">${from_email}</a>).</p>
+                            <p style="color: white; font-size: 1.1em; font-family: sans-serif;">${bodyText}</p>
+                        </div>`
+                };
 
                 // send mail using `mailer` util
                 try {
