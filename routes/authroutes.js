@@ -63,7 +63,17 @@ function sendValidationEmail(params) {
 
     const url     = makeValidationUrl(params.to_uid, params.key);
     const subject = 'co/ment - Email verification required';
-    const body    = `Click the link below to validate your account:\n\n${url}`;
+    const body    = {
+        type: 'html',
+        text: `
+            <div style="background: #0e76bc; background-image: linear-gradient(#0e76bc, #5cbeaf); padding: 0 2em 5em">
+                <h1 style="text-align: center; padding: .5em; color: white; font-family: sans-serif; font-weight:100; letter-spacing: .08em; text-shadow: 0 0 20px rgba(0, 0, 0, 0.63);">co/ment</h1>
+                <p style="color: white; font-size: 1.1em; font-family: sans-serif;">Your registration submission has been received - thanks!</p>
+                <p style="color: white; font-size: 1.1em; font-family: sans-serif;">The purpose of this email is to confirm that you are a real person. Until your account is verified you will not be able to update your profile, create or edit posts, or connect with other users.</p>
+                <p style="color: white; font-size: 1.1em; font-family: sans-serif;">Click <a style="color: #fff500; font-family: sans-serif;" href="${url}">this link</a> to validate your account. Or copy and paste the following into a browser tab:</p>
+                <a style="color: #fff500; font-family: sans-serif;" href="${url}">${url}</a>
+            </div>`
+    };
 
     // send mail using `mailer` util
     try {
