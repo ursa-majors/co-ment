@@ -46,6 +46,7 @@ const user_projection = {
     linkedin  : 1, codepen   : 1
 };
 
+const validatedErrMsg = 'You need to validate your account before you can access this resource. Check your inbox for a validation email.';
 
 /* ============================ UTILITY METHODS ============================ */
 
@@ -81,11 +82,17 @@ function getGithubProfile(ghUserName) {
 
 /* ================================ ROUTES ================================= */
 
-/* Get all user profiles. Secured route - valid JWT required
+/* Get all user profiles. Secured route - valid JWT required.
    Returns an array of user profile objects on success.
    Example: GET > `/api/profiles`
 */
 routes.get('/api/profiles', auth, (req, res) => {
+
+    if (!req.token.validated) {
+        return res
+            .status(400)  // bad request
+            .json({ message : validatedErrMsg });
+    }
 
     const target = req.params.id;
 
@@ -111,6 +118,12 @@ routes.get('/api/profiles', auth, (req, res) => {
    Example: GET > `/api/profile/597dccac7017890bd8d13cc7`
 */
 routes.get('/api/profile/:id', auth, (req, res) => {
+    
+    if (!req.token.validated) {
+        return res
+            .status(400)  // bad request
+            .json({ message : validatedErrMsg });
+    }
 
     const target = req.params.id;
 
@@ -136,6 +149,12 @@ routes.get('/api/profile/:id', auth, (req, res) => {
    Example: PUT > `/api/profile/597dccac7017890bd8d13cc7`
 */
 routes.put('/api/profile/:id', auth, (req, res) => {
+
+    if (!req.token.validated) {
+        return res
+            .status(400)  // bad request
+            .json({ message : validatedErrMsg });
+    }
 
     const target = {
         _id      : req.params.id,
@@ -215,7 +234,13 @@ routes.put('/api/profile/:id', auth, (req, res) => {
    Example: DELETE > /api/profile/597e3dca8167330add4be737
 */
 routes.delete('/api/profile/:id', auth, (req, res) => {
-    
+
+    if (!req.token.validated) {
+        return res
+            .status(400)  // bad request
+            .json({ message : validatedErrMsg });
+    }
+
     const targetUser = {
         _id      : req.params.id,
         username : req.token.username
@@ -295,6 +320,12 @@ routes.delete('/api/profile/:id', auth, (req, res) => {
 */
 routes.get('/api/posts*', auth, (req, res) => {
     
+    if (!req.token.validated) {
+        return res
+            .status(400)  // bad request
+            .json({ message : validatedErrMsg });
+    }
+
     const query = {
         active  : true,  // find only active posts
         deleted : false  // find only non-deleted posts
@@ -341,7 +372,13 @@ routes.get('/api/posts*', auth, (req, res) => {
    Example: POST > `/api/posts`
 */
 routes.post('/api/posts', auth, (req, res) => {
-        
+
+    if (!req.token.validated) {
+        return res
+            .status(400)  // bad request
+            .json({ message : validatedErrMsg });
+    }
+
     // Check if exists non-deleted post with same author_id, role & title
     Post
         .findOne({
@@ -407,6 +444,12 @@ routes.post('/api/posts', auth, (req, res) => {
 */
 routes.put('/api/posts/:id', auth, (req, res) => {
 
+    if (!req.token.validated) {
+        return res
+            .status(400)  // bad request
+            .json({ message : validatedErrMsg });
+    }
+
     // target post by post '_id' and post 'author_id'.
     // this way, users can only update their own posts.
     const target = {
@@ -414,6 +457,7 @@ routes.put('/api/posts/:id', auth, (req, res) => {
         author_id : req.token._id
     };
 
+    
     // build new post object from request body and parsed token
     const updates = {
         active          : req.body.active,
@@ -427,6 +471,8 @@ routes.put('/api/posts/:id', auth, (req, res) => {
         keywords        : req.body.keywords,
         availability    : req.body.availability
     };
+    
+    console.log(updates);
 
     const options = {
         // 'new' returns the updated document rather than the original
@@ -469,6 +515,12 @@ routes.put('/api/posts/:id', auth, (req, res) => {
    Example: DELETE > /api/posts/597dd8665229970e99c6ab55
 */
 routes.delete('/api/posts/:id', auth, (req, res) => {
+
+    if (!req.token.validated) {
+        return res
+            .status(400)  // bad request
+            .json({ message : validatedErrMsg });
+    }
 
     // target post by post '_id' and post 'author_id'.
     // this way, users can only delete their own posts.
@@ -515,6 +567,12 @@ routes.delete('/api/posts/:id', auth, (req, res) => {
    Example: POST > /api/contact/597dd8665229970e99c6ab55
 */
 routes.post('/api/contact/:id', auth, (req, res) => {
+
+    if (!req.token.validated) {
+        return res
+            .status(400)  // bad request
+            .json({ message : validatedErrMsg });
+    }
 
     // prohibit users from contacing themselves
     if (req.token._id === req.params.id) {
@@ -592,7 +650,13 @@ routes.post('/api/contact/:id', auth, (req, res) => {
    Example: GET > /api/connections
 */
 routes.get('/api/connections', auth, (req, res) => {
-    
+
+    if (!req.token.validated) {
+        return res
+            .status(400)  // bad request
+            .json({ message : validatedErrMsg });
+    }
+
     const target = req.token._id;
     
     Connection.find({
@@ -632,7 +696,13 @@ routes.get('/api/connections', auth, (req, res) => {
    Example: POST > /api/connect
 */
 routes.post('/api/connect', auth, (req, res) => {
-    
+
+    if (!req.token.validated) {
+        return res
+            .status(400)  // bad request
+            .json({ message : validatedErrMsg });
+    }
+
     let newConn = new Connection(req.body);
     
     newConn.dateStarted = Date.now();
@@ -667,6 +737,12 @@ routes.post('/api/connect', auth, (req, res) => {
    Example: POST > /api/updateconnection
 */
 routes.post('/api/updateconnection', auth, (req, res) => {
+
+    if (!req.token.validated) {
+        return res
+            .status(400)  // bad request
+            .json({ message : validatedErrMsg });
+    }
 
     const target = {
         _id: req.body.id
