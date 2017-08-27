@@ -38,6 +38,7 @@ const defaultConn = {
 };
 
 const INITIAL_STATE = {
+  connectionId: null,
   contact_loading: false,
   contact_error: null,
   connect_loading: false,
@@ -87,7 +88,8 @@ function connection(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { connect_loading: true, connect_error: null });
 
     case CONNECTION_SUCCESS:
-      return Object.assign({}, state, { connect_loading: false, connect_error: null });
+      const id = action.payload.connectionId;
+      return Object.assign({}, state, { connect_loading: false, connect_error: null, connectionId: id, });
 
     case CONNECTION_FAILURE:
       error = action.payload.data || { message: action.payload.message };
