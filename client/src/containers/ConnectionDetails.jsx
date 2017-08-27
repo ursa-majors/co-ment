@@ -4,6 +4,8 @@ import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 
 import Spinner from './Spinner';
+import ModalSm from './ModalSm';
+
 import * as apiActions from '../store/actions/apiConnectionActions';
 import * as Actions from '../store/actions/connectionActions';
 
@@ -120,6 +122,16 @@ class ConnectionDetails extends React.Component {
     return (
       <div className="container conn-details">
         <Spinner cssClass={this.props.connection.connDetailsSpinnerClass} />
+        <ModalSm
+          modalClass={this.props.connection.connDetailsModalClass}
+          modalText={this.props.connection.connDetailsModalText}
+          dismiss={
+            () => {
+              this.props.actions.setConnDetailsModalText('');
+              this.props.actions.setConnDetailsModalClass('modal__hide');
+            }
+          }
+        />
         <div className="conn-preview">
           <div className="conn-details__text-wrap">
             <div className="conn-details__title">

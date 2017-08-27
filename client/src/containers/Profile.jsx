@@ -8,7 +8,7 @@ import InputAutosuggest from './InputAutosuggest';
 import RadioGroup from './RadioGroup';
 import Spinner from '../containers/Spinner';
 import ModalSm from '../containers/ModalSm';
-import {languages, skills, timezones } from '../utils';
+import { languages, skills, timezones } from '../utils';
 import parseSKill from '../utils/skillsparser';
 
 class Profile extends React.Component {
@@ -269,8 +269,8 @@ class Profile extends React.Component {
 
     // render arrays of skills and languages for tag lists
     if (this.props.profiles.editForm.skills && this.props.profiles.editForm.languages) {
-       skillsDisp = this.props.profiles.editForm.skills.join(', ');
-       langDisp = this.props.profiles.editForm.languages.join(', ');
+      skillsDisp = this.props.profiles.editForm.skills.join(', ');
+      langDisp = this.props.profiles.editForm.languages.join(', ');
     }
 
     return (
@@ -323,7 +323,7 @@ class Profile extends React.Component {
                     type="text"
                     id="name"
                     name="name"
-                    value={this.props.profiles.editForm.name}
+                    value={this.props.profiles.editForm.name || ''}
                     onChange={e => this.handleInput(e)}
                     placeholder="Full name"
                   />
@@ -338,7 +338,7 @@ class Profile extends React.Component {
                     type="text"
                     id="location"
                     name="location"
-                    value={this.props.profiles.editForm.location}
+                    value={this.props.profiles.editForm.location || ''}
                     onChange={e => this.handleInput(e)}
                     placeholder="Location"
                   />
@@ -351,7 +351,7 @@ class Profile extends React.Component {
                     type="text"
                     id="avatarUrl"
                     name="avatarUrl"
-                    value={this.props.profiles.editForm.avatarUrl}
+                    value={this.props.profiles.editForm.avatarUrl || ''}
                     onChange={e => this.handleInput(e)}
                     placeholder="Paste URL to profile image"
                   />
