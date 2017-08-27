@@ -29,7 +29,7 @@ class App extends React.Component {
       <BrowserRouter>
         <div className="app-root">
           <HeaderNav links={links} />
-          <main className="main">
+          <main className="main" id="main">
             <Switch>
               <Route exact path="/" component={Home} />
               <Route path="/register" component={Registration} />
