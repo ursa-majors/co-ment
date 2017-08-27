@@ -1,6 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
+import Spinner from './Spinner';
+import ModalSm from './ModalSm';
 import * as Actions from '../store/actions/apiActions';
 import * as connectActions from '../store/actions/apiConnectionActions';
 
@@ -89,13 +92,34 @@ class Connection extends React.Component {
       },
       status: 'pending',
     };
-    this.props.api.contact(token, { bodyText: this.state.body }, this.props.posts.currentPost.author_id);
-    this.props.connectActions.connect(token, connection);
-    this.props.history.push('/connectionresult');
+
+    this.props.connectActions.connect(token, connection)
+      .then((result1) => {
+        if (result1.type === 'CONNECTION_SUCCESS') {
+          this.props.api.contact(token, { bodyText: this.state.body }, this.props.posts.currentPost.author_id)
+          .then((result2) => {
+            if (result2.type === "CONTACT_SUCCESS") {
+              this.props.history.push('/connectionresult');
+            }
+          });
+        }
+      });
   }
+
   render() {
     return (
       <div className="container form">
+        <Spinner cssClass={this.props.connection.connectionSpinnerClass} />
+        <ModalSm
+          modalClass={this.props.connection.connectionModalClass}
+          modalText={this.props.connection.connectionModalText}
+          dismiss={
+            () => {
+              this.props.actions.setConnModalText('');
+              this.props.actions.setConnModalClass('modal__hide');
+            }
+          }
+        />
         <div className="form__body">
           <div className="form__connection-header">Request Connection</div>
           <div className="form__input-group">
