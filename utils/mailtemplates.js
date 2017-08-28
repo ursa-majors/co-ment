@@ -67,16 +67,57 @@ const contactTemplate = (to_user, from_user, from_email, bodyText, connectionId)
     background: linear-gradient(to top, #22c1c3, #4981C2);
   }
 
+  .bkg {
+    background: #22c1c3;
+    background: -webkit-linear-gradient(to top, #22c1c3, #4981C2);
+    background: linear-gradient(to top, #22c1c3, #4981C2);
+    background: url(https://raw.githubusercontent.com/ursa-majors/co-ment/51c4075794fdf2f40bfa8e3a1dbbebc0f3441d92/design/email_bkg.png) no-repeat top center;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+  }
+
   .headline {
     color: #ffffff;
     font-size: 36px;
+  }
+
+  .link {
+    color: #ffffff;
+    border-bottom: 1px transparent;
+  }
+
+  .link:hover, .link:focus, .link:active {
+    color: #ffffff;
+    border-bottom: 1px dotted #ffffff;
   }
 
  .force-full-width {
   width: 100% !important;
  }
 
+ .button {
+    color: white;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: 100;
+    border-radius: 50px;
+    padding: 10px;
+    border: 1px solid white;
+    background: transparent;
+    -webkit-text-size-adjust:none;
+  }
 
+.button:hover, .button::active, .button::focus {
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+      transition: all 300ms ease-in-out;
+    }
 
 
   </style>
@@ -99,6 +140,14 @@ const contactTemplate = (to_user, from_user, from_email, bodyText, connectionId)
         width: 320px !important;
       }
 
+      body {
+        -webkit-font-smoothing:antialiased;
+        -webkit-text-size-adjust:none;
+        width: 100%;
+        height: 100%;
+        background: #ffffff;
+        font-size: 20px;
+      }
 
     }
   </style>
@@ -118,7 +167,7 @@ const contactTemplate = (to_user, from_user, from_email, bodyText, connectionId)
               </tbody>
             </table>
 
-            <table cellpadding="0" cellspacing="0" class="gradient" style="margin: 0 auto;" width="100%">
+            <table cellpadding="0" cellspacing="0" class="bkg" style="margin: 0 auto;" width="100%">
               <tbody>
                 <tr>
                   <td class=""><br>
@@ -134,7 +183,7 @@ const contactTemplate = (to_user, from_user, from_email, bodyText, connectionId)
                     <tbody>
                       <tr>
                         <td style="color:#ffffff;" class="">&nbsp;
-                        <p style="color: white; font-size: 1.4em; line-height: 1.5em;font-weight:100;">Great news! <strong>${from_user}</strong> (<a href="mailto:${from_email}" style="color: #ffffff; border-bottom: 1px dotted #fff;">${from_email}</a>) has responded to your ad on co/ment!</p>
+                        <p style="color: white; font-size: 1.4em; line-height: 1.5em;font-weight:100;">Great news! <strong>${from_user}</strong> (<a href="mailto:${from_email}" class="link">${from_email}</a>) has responded to your ad on co/ment!</p>
 
                         <p style="color: white; font-size: 1.2em; line-height: 1.4em;font-weight:100;">${bodyText}</p>
                         <br>
@@ -143,10 +192,10 @@ const contactTemplate = (to_user, from_user, from_email, bodyText, connectionId)
                       <tr>
                         <td class="">
                         <div><!--[if mso]>
-                        <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://co-ment.glitch.me/connections" style="height:50px;v-text-anchor:middle;width:200px;" arcsize="80%" stroke="f" fillcolor="#178f8f">
+                        <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://co-ment.glitch.me/connectiondetails/${connectionId}" style="height:50px;v-text-anchor:middle;width:200px;" arcsize="80%" stroke="f" fillcolor="#178f8f">
                           <w:anchorlock></w:anchorlock>
                           <center>
-                        <![endif]--><a href="http://co-ment.glitch.me/connectiondetails/${connectionId}" style="background-color:transparent;border-radius:40px;color:#ffffff;border: 1px solid #ffffff; display:inline-block;font-family:'Alegreya Sans SC', 'Helvetica Neue', 'Arial', 'sans-serif' !important;font-size:16px;font-weight:100;line-height:50px;text-align:center;text-transform:lowercase;letter-spacing:2px;text-decoration:none;width:200px;-webkit-text-size-adjust:none;">View Connection</a> <!--[if mso]>
+                        <![endif]--><a href="http://co-ment.glitch.me/connectiondetails/${connectionId}" class="button">View Connection</a> <!--[if mso]>
                           </center>
                         </v:roundrect>
                       <![endif]--></div>
