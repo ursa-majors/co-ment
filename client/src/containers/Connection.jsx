@@ -1,6 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
+import Spinner from './Spinner';
+import ModalSm from './ModalSm';
 import * as Actions from '../store/actions/apiActions';
 import * as connectActions from '../store/actions/apiConnectionActions';
 
@@ -103,9 +106,21 @@ class Connection extends React.Component {
         }
       });
   }
+
   render() {
     return (
       <div className="container form">
+        <Spinner cssClass={this.props.connection.connectionSpinnerClass} />
+        <ModalSm
+          modalClass={this.props.connection.connectionModalClass}
+          modalText={this.props.connection.connectionModalText}
+          dismiss={
+            () => {
+              this.props.actions.setConnModalText('');
+              this.props.actions.setConnModalClass('modal__hide');
+            }
+          }
+        />
         <div className="form__body">
           <div className="form__connection-header">Request Connection</div>
           <div className="form__input-group">

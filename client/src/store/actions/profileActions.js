@@ -1,6 +1,3 @@
-export const SAVE_PROFILE = 'SAVE_PROFILE';
-export const SET_CURRENT_PROFILE = 'SET_CURRENT_PROFILE';
-export const SET_USER_PROFILE = 'SET_USER_PROFILE';
 export const SET_EDIT_PROFILE = 'SET_EDIT_PROFILE';
 export const SET_FORM_FIELD = 'SET_FORM_FIELD';
 export const ADD_SKILL = 'ADD_SKILL';
@@ -10,27 +7,6 @@ export const REMOVE_LANGUAGE = 'REMOVE_LANGUAGE';
 export const DISMISS_VIEWPROFILE_MODAL = 'DISMISS_VIEWPROFILE_MODAL';
 export const SET_PROFILE_MODAL_CLASS = 'SET_PROFILE_MODAL_CLASS';
 export const SET_PROFILE_MODAL_TEXT = 'SET_PROFILE_MODAL_TEXT';
-
-export function saveProfile(profile) {
-  return ({
-    type: SAVE_PROFILE,
-    payload: profile,
-  });
-}
-
-export function setCurrentProfile(profile) {
-  return ({
-    type: SET_CURRENT_PROFILE,
-    payload: profile,
-  });
-}
-
-export function setUserProfile(profile) {
-  return ({
-    type: SET_USER_PROFILE,
-    payload: profile,
-  });
-}
 
 export function setEditProfile(profile) {
   return ({

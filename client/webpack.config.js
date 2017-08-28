@@ -25,6 +25,8 @@ const UglifyJsPluginConfig = new webpack.optimize.UglifyJsPlugin({
   comments: false,
 });
 
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 module.exports = {
   devServer: {
     host: 'localhost',
@@ -64,12 +66,13 @@ module.exports = {
     filename: 'index.js',
     path: path.join(__dirname, '/build'),
   },
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'cheap-module-source-map',
   plugins: dev ?
   [
     HTMLWebpackPluginConfig,
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
+    new BundleAnalyzerPlugin(),
   ] :
   [HTMLWebpackPluginConfig, DefinePluginConfig, UglifyJsPluginConfig],
 };
