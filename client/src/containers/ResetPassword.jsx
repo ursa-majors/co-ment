@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 
+import Spinner from './Spinner';
+import Modal from './Modal';
 import * as Actions from '../store/actions';
 import * as apiActions from '../store/actions/apiLoginActions';
 
