@@ -4,7 +4,13 @@ export const CONTACT_REQUEST = 'CONTACT_REQUEST';
 export const CONTACT_SUCCESS = 'CONTACT_SUCCESS';
 export const CONTACT_FAILURE = 'CONTACT_FAILURE';
 
-export function contact(token, msg, recipient) {
+export function contact(token, msg, connectionId, recipient) {
+
+  const body = {
+        connectionId: connectionId,
+        bodyText: msg,
+    };
+
   return {
     [CALL_API]: {
       endpoint: `https://co-ment.glitch.me/api/contact/${recipient}`,
@@ -12,7 +18,7 @@ export function contact(token, msg, recipient) {
       types: [CONTACT_REQUEST, CONTACT_SUCCESS, CONTACT_FAILURE],
       headers: { Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json' },
-      body: JSON.stringify(msg),
+      body: JSON.stringify(body)
     },
   };
 }

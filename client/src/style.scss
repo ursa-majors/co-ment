@@ -66,8 +66,8 @@ body.user-is-tabbing *:focus {
 	background: $color_aqua;
 	background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
 	background: linear-gradient(to top, $color_aqua, $color_sky);
-  height: 100%;
-	min-height: 100vh;
+  min-height: 100vh;
+	height: 100%;
   padding: 60px 0;
 }
 

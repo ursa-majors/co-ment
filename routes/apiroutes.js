@@ -33,6 +33,7 @@ const jwt        = require('express-jwt');
 const request    = require('request');
 const parseSKill = require('../utils/skillsparser');
 const mailer     = require('../utils/mailer');
+const emailTpl   = require('../utils/mailtemplates');
 const sanitize   = require('../utils/sanitizer');
 const secret     = process.env.JWT_SECRET;
 const auth       = jwt({ secret: secret, requestProperty: 'token' });
@@ -118,7 +119,7 @@ routes.get('/api/profiles', auth, (req, res) => {
    Example: GET > `/api/profile/597dccac7017890bd8d13cc7`
 */
 routes.get('/api/profile/:id', auth, (req, res) => {
-    
+
     if (!req.token.validated) {
         return res
             .status(400)  // bad request
@@ -252,7 +253,7 @@ routes.delete('/api/profile/:id', auth, (req, res) => {
             .status(400)
             .json({ message: 'Error: user ID mismatch.'});
     }
-    
+
     User.findOneAndRemove(targetUser)
         .exec()
         .then( user => {
@@ -264,40 +265,40 @@ routes.delete('/api/profile/:id', auth, (req, res) => {
                     .json({message: 'User not found!'});
 
             } else {
-                
+
                 const postAuthor = {
                     author_id : targetUser._id,
                     author    : targetUser.username
                 };
-                
+
                 const updates = {
                     deleted   : true,
                     active    : false
                 };
-                
+
                 const options = {
                     multi     : true
                 };
-                
+
                 // "delete" all posts from same author. Sets "deleted" to true,
                 // and "active" to false
                 Post.update(postAuthor, updates, options, (err, raw) => {
-                    
+
                     if (err) { throw err; }
-                    
+
                     else {
                         console.log('The raw response from Mongo was ', raw);
-                        
+
                         return res
                             .status(200)
                             .json({
                                 message : 'User profile deleted!',
                                 post    : user
                             });
-                    }                    
-                    
-                }); 
-                
+                    }
+
+                });
+
             }
 
         })
@@ -319,7 +320,7 @@ routes.delete('/api/profile/:id', auth, (req, res) => {
    Example: GET > `/api/posts?role=mentor&id=12345689`
 */
 routes.get('/api/posts*', auth, (req, res) => {
-    
+
     if (!req.token.validated) {
         return res
             .status(400)  // bad request
@@ -347,8 +348,6 @@ routes.get('/api/posts*', auth, (req, res) => {
     if (req.query.hasOwnProperty('author_id')) {
         query.author_id = req.query.author_id;
     }
-
-    console.log(query);
 
     Post.find(query, (err, posts) => {
        if (!posts || !posts.length) {
@@ -457,7 +456,6 @@ routes.put('/api/posts/:id', auth, (req, res) => {
         author_id : req.token._id
     };
 
-    
     // build new post object from request body and parsed token
     const updates = {
         active          : req.body.active,
@@ -471,8 +469,6 @@ routes.put('/api/posts/:id', auth, (req, res) => {
         keywords        : req.body.keywords,
         availability    : req.body.availability
     };
-    
-    console.log(updates);
 
     const options = {
         // 'new' returns the updated document rather than the original
@@ -528,17 +524,17 @@ routes.delete('/api/posts/:id', auth, (req, res) => {
         _id       : req.params.id,
         author_id : req.token._id
     };
-    
+
     const updates = {
         deleted : true,
         active  : false
     };
 
-    // findOneAndUpdate(conditions, update, callback) 
+    // findOneAndUpdate(conditions, update, callback)
     Post.findOneAndUpdate(target, updates, (err, post) => {
-        
+
         if (err) { throw err; }
-        
+
         if (!post) {
 
             return res
@@ -555,7 +551,7 @@ routes.delete('/api/posts/:id', auth, (req, res) => {
                 });
 
         }
-        
+
     });
 
 });
@@ -581,8 +577,8 @@ routes.post('/api/contact/:id', auth, (req, res) => {
             .json({ message : 'You cannot contact yourself!'});
     }
 
-    const target = req.params.id;
-    const sender = req.token._id;
+    const target       = req.params.id;
+    const sender       = req.token._id;
 
     // find the target recipient
     User.findOne({_id: target})
@@ -605,19 +601,16 @@ routes.post('/api/contact/:id', auth, (req, res) => {
                 if (err) { throw err; }
 
                 // clean post body using `sanitizer` util
-                const bodyText   = sanitize(req.body.bodyText);
-                const from_user  = sender.username;
-                const from_email = sender.email;
-                const to         = recipient.email;
-                const subject    = `co/ment - Contact Request from ${from_user}`;
-                const body       = {
+                const bodyText      = sanitize(req.body.bodyText);
+                const connectionId  = req.body.connectionId;
+                const from_user     = sender.username;
+                const from_email    = sender.email;
+                const to            = recipient.email;
+                const to_user       = recipient.username;
+                const subject       = `co/ment - Contact Request from ${from_user}`;
+                const body          = {
                     type : 'html',
-                    text : `
-                        <div style="background: #0e76bc; background-image: linear-gradient(#0e76bc, #5cbeaf); padding: 0 2em 5em;">
-                            <h1 style="text-align: center; padding: .5em; color: white; font-family: sans-serif; font-weight:100; letter-spacing: .08em; text-shadow: 0 0 20px rgba(0, 0, 0, 0.63);">co/ment</h1>
-                            <p style="color: white; font-size: 1.1em; font-family: sans-serif;">Contact Request from <strong>${from_user}</strong> (<a href="mailto:${from_email}" style="color: #fff500;">${from_email}</a>).</p>
-                            <p style="color: white; font-size: 1.1em; font-family: sans-serif;">${bodyText}</p>
-                        </div>`
+                    text : emailTpl.contactTemplate(to_user, from_user, from_email, bodyText, connectionId)
                 };
 
                 // send mail using `mailer` util
@@ -658,7 +651,7 @@ routes.get('/api/connections', auth, (req, res) => {
     }
 
     const target = req.token._id;
-    
+
     Connection.find({
         $or: [
             { "mentor.id": target },
@@ -675,9 +668,9 @@ routes.get('/api/connections', auth, (req, res) => {
             return res
                 .status(400)
                 .json({ message : 'Error: Cannot get connections' });
-        
+
     });
-    
+
 });
 
 
@@ -704,16 +697,15 @@ routes.post('/api/connect', auth, (req, res) => {
     }
 
     let newConn = new Connection(req.body);
-    
+
     newConn.dateStarted = Date.now();
-    
+
     newConn
         .save( (err, conn) => {
             if (err) { throw err; }
-
             return res
                 .status(200)
-                .json({ message: "Connection created" });
+                .json({ message: "Connection created", connectionId: conn._id});
 
         })
         .catch( (err) => {
@@ -722,7 +714,7 @@ routes.post('/api/connect', auth, (req, res) => {
                 .status(400)
                 .json({ message: err });
         });
-    
+
 });
 
 

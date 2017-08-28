@@ -93,10 +93,11 @@ class Connection extends React.Component {
       status: 'pending',
     };
 
-    this.props.connectActions.connect(token, connection)
+     this.props.connectActions.connect(token, connection)
       .then((result1) => {
         if (result1.type === 'CONNECTION_SUCCESS') {
-          this.props.api.contact(token, { bodyText: this.state.body }, this.props.posts.currentPost.author_id)
+          console.log('96', this.props.connection.connectionId);
+          this.props.api.contact(token, this.state.body, this.props.connection.connectionId, this.props.posts.currentPost.author_id)
           .then((result2) => {
             if (result2.type === "CONTACT_SUCCESS") {
               this.props.history.push('/connectionresult');

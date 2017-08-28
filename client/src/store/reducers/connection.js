@@ -36,6 +36,11 @@ const defaultConn = {
 };
 
 const INITIAL_STATE = {
+  connectionId: null,
+  contact_loading: false,
+  contact_error: null,
+  connect_loading: false,
+  connect_error: null,
   // ConnectionDetails state
   viewConnection: defaultConn,
   connDetailsSpinnerClass: 'spinner__hide',
@@ -285,12 +290,13 @@ function connection(state = INITIAL_STATE, action) {
 
     /*
     *  Called From: <Connection />
-    *  Payload: None.
+    *  Payload: connection ID.
     *  Purpose: Hide the spinner - user is redirected to "ConnectionResult" page
-    *   so no modal is shown.
+    *   so no modal is shown, and return connectionId to use in connection request email template.
     */
     case CONNECTION_SUCCESS:
-      return Object.assign({}, state, { connectionSpinnerClass: 'spinner__hide' });
+      const id = action.payload.connectionId;
+      return Object.assign({}, state, { connectionSpinnerClass: 'spinner__hide',  connectionId: id, });
 
     /*
     *  Called From: <Connection />

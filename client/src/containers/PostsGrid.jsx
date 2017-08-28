@@ -46,7 +46,7 @@ class PostsGrid extends React.Component {
     });
     this.shuffle.resetItems();
     this.addShuffleEventListeners();
-    PostsGrid.adjustBkgSize();
+    // PostsGrid.adjustBkgSize();
 
     // console.log(this.props.posts.entries[0]);
   }
