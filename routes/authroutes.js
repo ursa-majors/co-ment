@@ -66,11 +66,43 @@ function sendValidationEmail(params) {
     const body    = {
         type: 'html',
         text: `
-            <div style="background: #0e76bc; background-image: linear-gradient(#0e76bc, #5cbeaf); padding: 0 2em 5em">
+            <div style="background-image: linear-gradient(#0e76bc, #5cbeaf); padding: 0 2em 5em">
                 <h1 style="text-align: center; padding: .5em; color: white; font-family: sans-serif; font-weight:100; letter-spacing: .08em; text-shadow: 0 0 20px rgba(0, 0, 0, 0.63);">co/ment</h1>
                 <p style="color: white; font-size: 1.1em; font-family: sans-serif;">Your registration submission has been received - thanks!</p>
                 <p style="color: white; font-size: 1.1em; font-family: sans-serif;">The purpose of this email is to confirm that you are a real person. Until your account is verified you will not be able to update your profile, create or edit posts, or connect with other users.</p>
                 <p style="color: white; font-size: 1.1em; font-family: sans-serif;">Click <a style="color: #fff500; font-family: sans-serif;" href="${url}">this link</a> to validate your account. Or copy and paste the following into a browser tab:</p>
+                <a style="color: #fff500; font-family: sans-serif;" href="${url}">${url}</a>
+            </div>`
+    };
+
+    // send mail using `mailer` util
+    try {
+        mailer(params.to_email, subject, body);
+        console.log('Email validation sent successfully.');
+    } catch (err) {
+        console.log(`Error: $(err)`);
+    }
+
+}
+
+/* Dispatch new password reset email
+ *
+ * @ params   [object]   params      [map of the following params]
+ * @ params   [string]    * key      [randomly generated key]
+ * @ params   [string]    * to_email [user/recipient email address]
+*/
+function sendPWResetEmail(params) {
+    console.log('pwreset', params)
+    const url     = `https://co-ment.glitch.me/resetpassword/${params.key}`
+    const subject = 'co/ment - Password Reset Request';
+    const body    = {
+        type: 'html',
+        text: `
+            <div style="background-image: linear-gradient(#0e76bc, #5cbeaf); padding: 0 2em 5em">
+                <h1 style="text-align: center; padding: .5em; color: white; font-family: sans-serif; font-weight:100; letter-spacing: .08em; text-shadow: 0 0 20px rgba(0, 0, 0, 0.63);">co/ment</h1>
+                <p style="color: white; font-size: 1.1em; font-family: sans-serif;">A password reset request was submitted for your user ID</p>
+                <p style="color: white; font-size: 1.1em; font-family: sans-serif;">Use the link in this email to reset your password. </p>
+                <p style="color: white; font-size: 1.1em; font-family: sans-serif;">Click <a style="color: #fff500; font-family: sans-serif;" href="${url}">this link</a> to reset your password. Or copy and paste the following into a browser tab:</p>
                 <a style="color: #fff500; font-family: sans-serif;" href="${url}">${url}</a>
             </div>`
     };
@@ -199,10 +231,12 @@ routes.get('/api/validate', (req, res) => {
                 .json({ message: 'Registration key mismatch.' });
 
         } else {
-
+            // build hash fragment for client-side routing
+            const hash = '#/redirect=profile';
+            // const id = user._id
             return res
                 // status 302 = “Found"
-                .redirect(302, '/');  // you made it, go home!
+                .redirect(302, `/${hash}`);  // you made it, go to validation page!
 
         }
     })
@@ -239,7 +273,7 @@ routes.post('/api/login', (req, res, next) => {
                 .json(info);
 
         } else {
-            
+
             // exclude sensitive info from field selection
             const proj  = { hash : 0, salt : 0, signupKey : 0 };
 
@@ -247,7 +281,7 @@ routes.post('/api/login', (req, res, next) => {
             User.findById(user._id, proj)
                 .exec()
                 .then( (profile) => {
-                
+
                     // generate a token
                     const token = profile.generateJWT();
 
@@ -273,7 +307,92 @@ routes.post('/api/login', (req, res, next) => {
 
 });
 
+routes.post('/api/sendresetemail', (req, res, next) => {
+  //generate a reset key
+  const resetKey = makeSignupKey();
 
+  //look up user with user name
+  User.findOne({username: req.body.username})
+    .exec()
+    .then(user => {
+
+      if (!user) {
+        return res
+          .status(400)
+          .json({ message: 'No user with that username' });
+      }
+
+      //store key in user
+      user.passwordResetKey = resetKey;
+      user.save((err, user) => {
+        if (err) throw err;
+
+        //generate an email that contains a link to /resetpassword and the key
+        // build email parameter map
+        const emailParams = {
+          key      : user.passwordResetKey.key,
+          to_email : user.email
+        };
+
+        // send validation email, passing email param map
+        sendPWResetEmail(emailParams);
+
+        return res
+          .status(200)
+          .json( {message: 'Password Reset email sent!'})
+      });
+
+    })
+    .catch( err => {
+      console.log('Error!!!', err);
+      return res
+          .status(400)
+          .json({ message: err});
+    });
+})
+
+/*
+*  Route: /api/resetpassword
+*  Purpose: Allows password reset, if front end passes a user id and key that match an email sent to
+*  user.
+*/
+routes.post('/api/resetpassword', (req, res, next) => {
+  User.findOne({username: req.body.username})
+    .exec()
+    .then(user => {
+      if (!user) {
+        return res
+          .status(400)
+          .json({ message: 'No user with that username' });
+      }
+
+      // compare key in this request to the key that was generated by
+      // password reset email.
+      if (user.passwordResetKey.key !== req.body.key) {
+        return res
+          .status(400)
+          .json({ message: 'Invalid password reset key' });
+      }
+
+      // if they match, reset password and clear the key
+      user.hashPassword(req.body.password)
+      user.passwordResetKey = {}
+      user.save( (err, user) => {
+        if (err) throw err
+
+        return res
+          .status(200)
+          .json({ message: 'Password reset successful' });
+      });
+
+    })
+    .catch(err => {
+      console.log('Error!!!', err);
+      return res
+          .status(400)
+          .json({ message: err});
+    });
+})
 /* ================================ EXPORT ================================= */
 
 module.exports = routes;

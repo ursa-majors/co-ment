@@ -214,6 +214,22 @@
     display: none;
   }
 
+  &__login-link {
+    cursor: pointer;
+    color: rgba(0,0,0,.7);
+    border: none;
+    background-color: transparent;
+    font-size: 15px;
+    border-bottom: 1px dotted rgba(0,0,0,.7);
+    margin: 5px 0 0 5px;
+
+    &:hover, &:active{
+      font-size: 16px;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+      transition: all 300ms ease-in-out;
+    }
+  }
+
 }
 
 ::-webkit-input-placeholder {

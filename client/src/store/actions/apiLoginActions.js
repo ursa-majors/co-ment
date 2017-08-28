@@ -89,3 +89,42 @@ export function register(body) {
     },
   };
 }
+
+export const RESET_PW_REQUEST = 'RESET_PW_REQUEST';
+export const RESET_PW_SUCCESS = 'RESET_PW_SUCCESS';
+export const RESET_PW_FAILURE = 'RESET_PW_FAILURE';
+
+/*
+* Function: resetPassword
+*/
+export function resetPassword(body) {
+  return {
+    [CALL_API]: {
+      endpoint: 'https://co-ment.glitch.me/api/resetpassword',
+      method: 'POST',
+      types: [RESET_PW_REQUEST, RESET_PW_SUCCESS, RESET_PW_FAILURE],
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    },
+  };
+}
+
+export const SEND_RESET_EMAIL_REQUEST = 'SEND_RESET_EMAIL_REQUEST';
+export const SEND_RESET_EMAIL_SUCCESS = 'SEND_RESET_EMAIL_SUCCESS';
+export const SEND_RESET_EMAIL_FAILURE = 'SEND_RESET_EMAIL_FAILURE';
+
+/*
+* Function: sendResetEmail
+* @param {String} - the username to send the reset email to
+*/
+export function sendResetEmail(username) {
+  return {
+    [CALL_API]: {
+      endpoint: 'https://co-ment.glitch.me/api/sendresetemail',
+      method: 'POST',
+      types: [SEND_RESET_EMAIL_REQUEST, SEND_RESET_EMAIL_SUCCESS, SEND_RESET_EMAIL_FAILURE],
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(username),
+    },
+  };
+}

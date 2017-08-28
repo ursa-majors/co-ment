@@ -1,7 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 
+import Spinner from './Spinner';
+import ModalSm from './ModalSm';
 import * as Actions from '../store/actions';
 import * as profileActions from '../store/actions/profileActions';
 import * as loginActions from '../store/actions/apiLoginActions';
@@ -62,6 +65,15 @@ class Login extends React.Component {
     }
   }
 
+  resetPassword = () => {
+    const username = this.props.login.loginUsername;
+    if (!username) {
+      this.props.actions.setLoginError('Username required to reset password');
+      return;
+    }
+    this.props.api.sendResetEmail({ username });
+  }
+
   render() {
     const errorClass = this.props.login.errorMsg ? 'error' : 'hidden';
     return (
@@ -88,14 +100,21 @@ class Login extends React.Component {
             />
           </div>
           <div className="form__input-group">
+            <button className="form__login-link" onClick={this.resetPassword}>Reset Password</button>
+          </div>
+          <div className="form__input-group">
             <div className={errorClass}>{this.props.login.errorMsg}</div>
           </div>
-        </div>
-        <div className="form__input-group">
-          <div className="form__button-wrap">
-            <button className="splash__button pointer" id="btn-login" onClick={() => this.handleLogin()}>Sign In</button>
+          <div className="form__input-group">
+            <div className="form__button-wrap">
+              <button className="splash__button pointer" id="btn-login" onClick={() => this.handleLogin()}>Sign In</button>
+              <Link to='/register'>
+                <button className="splash__button pointer" id="btn-register">Register</button>
+              </Link>
+            </div>
           </div>
         </div>
+        <Spinner cssClass={this.props.login.loginSpinnerClass} />
       </div>
     );
   }

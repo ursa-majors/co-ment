@@ -86,6 +86,12 @@ const userSchema = new mongoose.Schema({
         exp    : String
     },
 
+    passwordResetKey: {
+        key : String,
+        ts  : String,
+        exp : String,
+    },
+
     validated  : {
         type     : Boolean,
         default  : false
@@ -153,4 +159,3 @@ userSchema.methods.generateJWT = function () {
 /* ================================ EXPORT ================================= */
 
 module.exports = mongoose.model('User', userSchema);
-
