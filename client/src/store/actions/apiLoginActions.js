@@ -122,7 +122,14 @@ export function sendResetEmail(username) {
     [CALL_API]: {
       endpoint: 'https://co-ment.glitch.me/api/sendresetemail',
       method: 'POST',
-      types: [SEND_RESET_EMAIL_REQUEST, SEND_RESET_EMAIL_SUCCESS, SEND_RESET_EMAIL_FAILURE],
+      types: [
+        SEND_RESET_EMAIL_REQUEST,
+        {
+          type: SEND_RESET_EMAIL_SUCCESS,
+          meta: username,
+        },
+        SEND_RESET_EMAIL_FAILURE,
+      ],
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(username),
     },

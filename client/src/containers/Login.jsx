@@ -115,6 +115,15 @@ class Login extends React.Component {
           </div>
         </div>
         <Spinner cssClass={this.props.login.loginSpinnerClass} />
+        <ModalSm
+          modalClass={this.props.login.loginModalClass}
+          modalText={this.props.login.loginModalText}
+          dismiss={
+            () => {
+              this.props.actions.dismissLoginModal();
+            }
+          }
+        />
       </div>
     );
   }
