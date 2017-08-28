@@ -1,0 +1,50 @@
+.validate {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Alegreya Sans SC', sans-serif;
+
+  h2 {
+    margin: 25px auto;
+  }
+  &__quote-wrap {
+    color: white;
+    align-self: center;
+    min-width: 275px;
+    margin: 0 10px;
+    white-space: pre;
+  }
+
+  &__quote {
+    font-size: 14px;
+
+    @include for-phone-portrait-up {
+      font-size: 16px;
+    }
+  }
+
+  &__quote-author {
+    text-align: right;
+  }
+
+  &__text-header {
+    text-align: center;
+    color: white;
+    margin: 15px 40px;
+    font-size: 20px;
+
+    @include for-phone-portrait-up {
+      margin: 40px;
+    }
+  }
+  &__text {
+    color: white;
+    line-height: 1.5em;
+    margin: 0 30px;
+    font-size: 14px;
+
+    @include for-phone-portrait-up {
+      margin: 0 40px;
+      font-size: 16px;
+    }
+  }
+}
