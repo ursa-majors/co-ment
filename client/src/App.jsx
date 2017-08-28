@@ -20,6 +20,7 @@ import Connections from './containers/Connections';
 import ConnectionResult from './containers/ConnectionResult';
 import ConnectionDetails from './containers/ConnectionDetails';
 import Validate from './containers/Validate';
+import ResetPassword from './containers/ResetPassword';
 
 class App extends React.Component {
 
@@ -47,6 +48,7 @@ class App extends React.Component {
               <Route path="/connectionresult" component={ConnectionResult} />
               <Route path="/connectiondetails/:id" component={ConnectionDetails} />
               <Route path="/validate" component={Validate} />
+              <Route path="/resetpassword/:key" component={ResetPassword} />
             </Switch>
           </main>
           <FooterNav />

@@ -1,5 +1,8 @@
-import { SET_LOGIN_USER, SET_LOGIN_PWD, CLEAR_LOGIN_PWD, SET_LOGIN_ERROR } from '../actions';
-import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from '../actions/apiLoginActions';
+import { SET_LOGIN_USER, SET_LOGIN_PWD, CLEAR_LOGIN_PWD, SET_LOGIN_ERROR,
+  DISMISS_PWRESET_MODAL } from '../actions';
+import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, RESET_PW_REQUEST, RESET_PW_SUCCESS,
+  RESET_PW_FAILURE, SEND_RESET_EMAIL_REQUEST, SEND_RESET_EMAIL_SUCCESS, SEND_RESET_EMAIL_FAILURE,
+} from '../actions/apiLoginActions';
 
 const INITIAL_STATE = {
   loginUsername: '',
@@ -8,6 +11,9 @@ const INITIAL_STATE = {
   loginSpinnerClass: 'spinner__hide',
   loginModalClass: 'modal__hide',
   loginModalText: '',
+  pwResetSpinnerClass: 'spinner__hide',
+  pwResetModalClass: 'modal__hide',
+  pwResetModalText: '',
 };
 
 function login(state = INITIAL_STATE, action) {
@@ -76,7 +82,7 @@ function login(state = INITIAL_STATE, action) {
     *  Purpose: Display API login error to user
     */
     case LOGIN_FAILURE:
-      error = action.payload.response.message || 'An unknown error occurred';
+      error = action.payload.response.message || 'An unknown login error occurred';
       return Object.assign(
         {},
         state,
@@ -85,6 +91,115 @@ function login(state = INITIAL_STATE, action) {
           errorMsg: error,
         },
       );
+
+    /*
+    *  Called from: <Login />
+    *  Payload: None
+    *  Purpose: Display a spinner to indicate API call in progress
+    */
+    case RESET_PW_REQUEST:
+      return Object.assign(
+        {},
+        state,
+        {
+          pwResetSpinnerClass: 'spinner__show',
+          pwResetModalClass: 'modal__hide',
+          pwResetModalText: '',
+        },
+      );
+
+    /*
+    *  Called from: <Login />
+    *  Payload: None
+    *  Purpose: Display a spinner to indicate API call in progress
+    */
+    case RESET_PW_SUCCESS:
+      return Object.assign(
+        {},
+        state,
+        {
+          pwResetSpinnerClass: 'spinner__hide',
+          pwResetModalClass: 'modal__show',
+          pwResetModalText: 'Your password has been reset. Click LOGIN to continue',
+        },
+      );
+
+    /*
+    *  Called from: <Login />
+    *  Payload: Error message
+    *  Purpose: Display an error message to the user.
+    */
+    case RESET_PW_FAILURE:
+      error = action.payload.response.message || 'An unknown error occurred while resetting password';
+      return Object.assign(
+        {},
+        state,
+        {
+          pwResetSpinnerClass: 'spinner__hide',
+          pwResetModalClass: 'modal__show',
+          pwResetModalText: error,
+        },
+      );
+
+    /*
+    *  Called from: <Login />
+    *  Payload: None
+    *  Purpose: Display a spinner to indicate API call in progress
+    */
+    case SEND_RESET_EMAIL_REQUEST:
+    console.log(action);
+      return Object.assign(
+        {},
+        state,
+        {
+          loginSpinnerClass: 'spinner__show',
+          loginModalClass: 'modal__hide',
+          errorMsg: '',
+        },
+      );
+
+    /*
+    *  Called from: <Login />
+    *  Payload: String - a success message
+    *  Purpose: Display success message to user
+    */
+    case SEND_RESET_EMAIL_SUCCESS:
+      return Object.assign(
+        {},
+        state,
+        {
+          loginSpinnerClass: 'spinner__hide',
+          loginModalClass: 'modal__show',
+          loginModalText: 'A password reset link has been sent to your email address',
+        },
+      );
+
+    /*
+    *  Called from: <Login />
+    *  Payload: None
+    *  Purpose: Display a spinner to indicate API call in progress
+    */
+    case SEND_RESET_EMAIL_FAILURE:
+      error = action.payload.response.message || 'An unknown error occurred while sending reset email';
+      return Object.assign(
+        {},
+        state,
+        {
+          loginSpinnerClass: 'spinner__hide',
+          errorMsg: error,
+        },
+      );
+
+    case DISMISS_PWRESET_MODAL:
+      return Object.assign(
+        {},
+        state,
+        {
+          pwResetModalText: '',
+          pwResetModalClass: 'modal__hide',
+        },
+      );
+
     default:
       return state;
   }

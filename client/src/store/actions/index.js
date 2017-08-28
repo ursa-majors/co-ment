@@ -7,6 +7,7 @@ export const CLEAR_LOGIN_PWD = 'CLEAR_LOGIN_PWD';
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 export const SET_PROFILE_VIEW = 'SET_PROFILE_VIEW';
 export const SET_REDIRECT_URL = 'SET_REDIRECT_URL';
+export const DISMISS_PWRESET_MODAL = 'DISMISS_PWRESET_MODAL';
 
 export function login(token, profile) {
   return ({
@@ -54,5 +55,11 @@ export function setRedirectUrl(url) {
   return ({
     type: SET_REDIRECT_URL,
     payload: url,
+  });
+}
+
+export function dismissPWResetModal() {
+  return ({
+    type: DISMISS_PWRESET_MODAL,
   });
 }

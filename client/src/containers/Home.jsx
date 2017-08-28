@@ -11,10 +11,15 @@ class Home extends React.Component {
 
   componentDidMount() {
     // Check for hash-fragment and stash it in redux
+    // if the redirect is "resetpassword" then go immediately
     if (this.props.location.hash) {
       const hash = this.props.location.hash.slice(2);
       const url = `/${hash.split('=')[1]}`;
-      this.props.actions.setRedirectUrl(url);
+      if (url.startsWith('/resetpassword')) {
+        this.props.history.push(url)
+      } else {
+        this.props.actions.setRedirectUrl(url);
+      }
     }
     // If we're not logged in, check local storage for authToken
     // if it doesn't exist, it returns the string "undefined"
