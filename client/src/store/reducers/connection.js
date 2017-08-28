@@ -89,6 +89,7 @@ function connection(state = INITIAL_STATE, action) {
 
     case CONNECTION_SUCCESS:
       const id = action.payload.connectionId;
+      console.log('92', id);
       return Object.assign({}, state, { connect_loading: false, connect_error: null, connectionId: id, });
 
     case CONNECTION_FAILURE:
