@@ -8,6 +8,7 @@ export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 export const SET_PROFILE_VIEW = 'SET_PROFILE_VIEW';
 export const SET_REDIRECT_URL = 'SET_REDIRECT_URL';
 export const DISMISS_PWRESET_MODAL = 'DISMISS_PWRESET_MODAL';
+export const DISMISS_LOGIN_MODAL = 'DISMISS_LOGIN_MODAL';
 
 export function login(token, profile) {
   return ({
@@ -61,5 +62,11 @@ export function setRedirectUrl(url) {
 export function dismissPWResetModal() {
   return ({
     type: DISMISS_PWRESET_MODAL,
+  });
+}
+
+export function dismissLoginModal() {
+  return ({
+    type: DISMISS_LOGIN_MODAL,
   });
 }

@@ -1,5 +1,5 @@
 import { SET_LOGIN_USER, SET_LOGIN_PWD, CLEAR_LOGIN_PWD, SET_LOGIN_ERROR,
-  DISMISS_PWRESET_MODAL } from '../actions';
+  DISMISS_PWRESET_MODAL, DISMISS_LOGIN_MODAL } from '../actions';
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, RESET_PW_REQUEST, RESET_PW_SUCCESS,
   RESET_PW_FAILURE, SEND_RESET_EMAIL_REQUEST, SEND_RESET_EMAIL_SUCCESS, SEND_RESET_EMAIL_FAILURE,
 } from '../actions/apiLoginActions';
@@ -93,7 +93,7 @@ function login(state = INITIAL_STATE, action) {
       );
 
     /*
-    *  Called from: <Login />
+    *  Called from: <ResetPassword />
     *  Payload: None
     *  Purpose: Display a spinner to indicate API call in progress
     */
@@ -109,7 +109,7 @@ function login(state = INITIAL_STATE, action) {
       );
 
     /*
-    *  Called from: <Login />
+    *  Called from: <ResetPassword />
     *  Payload: None
     *  Purpose: Display a spinner to indicate API call in progress
     */
@@ -125,7 +125,7 @@ function login(state = INITIAL_STATE, action) {
       );
 
     /*
-    *  Called from: <Login />
+    *  Called from: <ResetPassword />
     *  Payload: Error message
     *  Purpose: Display an error message to the user.
     */
@@ -147,7 +147,6 @@ function login(state = INITIAL_STATE, action) {
     *  Purpose: Display a spinner to indicate API call in progress
     */
     case SEND_RESET_EMAIL_REQUEST:
-    console.log(action);
       return Object.assign(
         {},
         state,
@@ -170,7 +169,8 @@ function login(state = INITIAL_STATE, action) {
         {
           loginSpinnerClass: 'spinner__hide',
           loginModalClass: 'modal__show',
-          loginModalText: 'A password reset link has been sent to your email address',
+          loginModalText: `A password reset link has been sent to the email registered to ${action.meta.username}.
+          Follow the instructions to complete the password reset`,
         },
       );
 
@@ -190,6 +190,11 @@ function login(state = INITIAL_STATE, action) {
         },
       );
 
+    /*
+    *  Called from: <ResetPassword />
+    *  Payload: None
+    *  Purpose: update state to dismiss the modal box
+    */
     case DISMISS_PWRESET_MODAL:
       return Object.assign(
         {},
@@ -197,6 +202,21 @@ function login(state = INITIAL_STATE, action) {
         {
           pwResetModalText: '',
           pwResetModalClass: 'modal__hide',
+        },
+      );
+
+    /*
+    *  Called from: <Login />
+    *  Payload: None
+    *  Purpose: update state to dismiss the modal box
+    */
+    case DISMISS_LOGIN_MODAL:
+      return Object.assign(
+        {},
+        state,
+        {
+          loginModalText: '',
+          loginModalClass: 'modal__hide',
         },
       );
 
