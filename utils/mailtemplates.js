@@ -8,7 +8,7 @@ const contactTemplate = (to_user, from_user, from_email, bodyText, connectionId)
   console.log('mailtemplatesjs', connectionId);
   return `
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns:v="urn:schemas-microsoft-com:vml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -61,17 +61,17 @@ const contactTemplate = (to_user, from_user, from_email, bodyText, connectionId)
     border-collapse: collapse !important;
   }
 
-  .gradient {
-    background: #22c1c3;
+  .grad {
+    background: #4981C2;
     background: -webkit-linear-gradient(to top, #22c1c3, #4981C2);
     background: linear-gradient(to top, #22c1c3, #4981C2);
   }
 
   .bkg {
-    background: #22c1c3;
+    background: #4981C2;
     background: -webkit-linear-gradient(to top, #22c1c3, #4981C2);
     background: linear-gradient(to top, #22c1c3, #4981C2);
-    background: url(https://raw.githubusercontent.com/ursa-majors/co-ment/51c4075794fdf2f40bfa8e3a1dbbebc0f3441d92/design/email_bkg.png) no-repeat top center;
+    background: url(https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/co-ment_email-bkg_600.png) no-repeat top center;
       -webkit-background-size: cover;
       -moz-background-size: cover;
       -o-background-size: cover;
@@ -157,21 +157,26 @@ const contactTemplate = (to_user, from_user, from_email, bodyText, connectionId)
   <tbody>
     <tr>
       <td align="center" bgcolor="#ffffff" valign="top" width="100%" class="">
-      <center>
-      <table cellpadding="0" cellspacing="0" class="w320" style="margin: 0 auto;" width="600">
+      <center><!-- [if gte mso 9]>
+            <v:background fill="t">
+            <v:fill type="tile" src="https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/co-ment_email-bkg_600.png" ></v:fill>
+            </v:background>
+            <![endif]-->
+      <table background="https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/co-ment_email-bkg_600.png" cellpadding="0" cellspacing="0" class="w320 grad bkg" style="margin: 0 auto;" width="600">
         <tbody>
           <tr>
-            <td align="center" valign="top">
-            <table cellpadding="0" cellspacing="0" style="margin: 0 auto;" width="100%">
-              <tbody>
-              </tbody>
-            </table>
-
-            <table cellpadding="0" cellspacing="0" class="bkg" style="margin: 0 auto;" width="100%">
+            <td background="https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/co-ment_email-bkg_600.png" bgcolor="#4981C2" height="548" style="height:548px; background-image:url(https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/co-ment_email-bkg_600.png);background-repeat:no-repeat;background-color: #4981C2;" valign="top" class=""><!--[if gte mso 9]>
+  <v:image xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style=" border: 0;display: inline-block; width: 600px; height: 548px;" src="https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/co-ment_email-bkg_600.png" ></v:image>
+  <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style=" border: 0;display: inline-block;position: absolute; width: 600px; height: 548px;">
+    <v:fill  opacity="0%" color="#4981C2"  ></v:fill>
+    <v:textbox inset="0,0,0,0">
+      <![endif]-->
+            <div>
+            <table cellpadding="0" cellspacing="0" style="width: 100%;" width="100%">
               <tbody>
                 <tr>
                   <td class=""><br>
-                  <img alt="co/ment" height="129" src="https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/co-ment_logo_400x129.png?raw=true" width="400"></td>
+                  <a href="https://co-ment.glitch.me/connectiondetails/${connectionId}"><img alt="co/ment" height="129" src="https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/co-ment_logo_400x129.png?raw=true" style="padding-top:50px;" width="400"></a></td>
                 </tr>
                 <tr>
                   <td class="headline">Hello ${to_user}!</td>
@@ -183,9 +188,9 @@ const contactTemplate = (to_user, from_user, from_email, bodyText, connectionId)
                     <tbody>
                       <tr>
                         <td style="color:#ffffff;" class="">&nbsp;
-                        <p style="color: white; font-size: 1.4em; line-height: 1.5em;font-weight:100;">Great news! <strong>${from_user}</strong> (<a href="mailto:${from_email}" class="link">${from_email}</a>) has responded to your ad on co/ment!</p>
+                        <p style="color: white; font-size: 1.4em; line-height: 1.5em;font-weight:100;">Great news! <strong>${from_user}</strong> (<a class="link" href="mailto:${from_email}">${from_email}</a>) has responded to your ad on co/ment!</p>
 
-                        <p style="color: white; font-size: 1.2em; line-height: 1.4em;font-weight:100;">${bodyText}</p>
+                        <p style="color: white; font-size: 1.2em; line-height: 1.4em;font-weight:100; text-align: left; padding: 0 20px;">${bodyText}</p>
                         <br>
                         &nbsp;</td>
                       </tr>
@@ -195,7 +200,7 @@ const contactTemplate = (to_user, from_user, from_email, bodyText, connectionId)
                         <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://co-ment.glitch.me/connectiondetails/${connectionId}" style="height:50px;v-text-anchor:middle;width:200px;" arcsize="80%" stroke="f" fillcolor="#178f8f">
                           <w:anchorlock></w:anchorlock>
                           <center>
-                        <![endif]--><a href="http://co-ment.glitch.me/connectiondetails/${connectionId}" class="button">View Connection</a> <!--[if mso]>
+                        <![endif]--><a class="button" href="https://co-ment.glitch.me/connectiondetails/${connectionId}">View Connection</a> <!--[if mso]>
                           </center>
                         </v:roundrect>
                       <![endif]--></div>
@@ -209,7 +214,13 @@ const contactTemplate = (to_user, from_user, from_email, bodyText, connectionId)
                 </tr>
               </tbody>
             </table>
-            </td>
+            </div>
+            <!--[if gte mso 9]>
+    </v:textbox>
+    </v:fill>
+  </v:rect>
+  </v:image>
+  <![endif]--></td>
           </tr>
         </tbody>
       </table>
