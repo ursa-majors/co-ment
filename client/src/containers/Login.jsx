@@ -100,7 +100,7 @@ class Login extends React.Component {
             />
           </div>
           <div className="form__input-group">
-            <button className="form__login-link" onClick={this.resetPassword}>Reset Password</button>
+            <button className="aria-button form__login-link" onClick={this.resetPassword}>Reset Password</button>
           </div>
           <div className="form__input-group">
             <div className={errorClass}>{this.props.login.errorMsg}</div>
