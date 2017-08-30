@@ -9,6 +9,14 @@ import { formatDate } from '../utils/';
 
 class PostFull extends React.Component {
 
+  static adjustCardHeight() {
+    // expand card height to fit content without scrollbar
+    const el = document.getElementById('back');
+    let adjustedHeight = el.clientHeight;
+    adjustedHeight = Math.max(el.scrollHeight, adjustedHeight);
+    if (adjustedHeight > el.clientHeight) { el.style.height = `${adjustedHeight}px`; }
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -66,7 +74,7 @@ class PostFull extends React.Component {
     newState.flip = !this.state.flip;
     this.setState({
       ...newState,
-    })
+    }, ()=>PostFull.adjustCardHeight() )
   }
 
   /**
@@ -231,7 +239,7 @@ class PostFull extends React.Component {
             </div>
             </div>
             {this.props.posts.excerpt &&
-              <div className={this.state.flip ? "side back flip" : "side back"} id="back">
+              <div className={this.state.flip ? "post-full__side back flip" : "post-full__side back"} id="back">
                 <div className="post-full__date">
                 <span className="tag-value">
                   <span className="tag-value__label">
