@@ -41,6 +41,7 @@ class PostsGrid extends React.Component {
           itemSelector: '.post',
           sizer: document.getElementsByClassName('sizer')[0],
           delimeter: ',',
+          group: this.props.gridControls.filterGroup,
         });
         this.shuffle.resetItems();
         this.addShuffleEventListeners();
@@ -48,39 +49,43 @@ class PostsGrid extends React.Component {
   }
 
   componentDidUpdate() {
-    switch (this.props.gridControls.operation) {
-      case 'FILTER':
-        this.shuffle.group = this.props.gridControls.filterGroup;
-        this.shuffle.filter((element, shuffle) => {
-          // If there is a current filter applied, ignore elements that don't match it.
-          if (shuffle.group !== Shuffle.ALL_ITEMS) {
-            // Get the item's groups.
-            const groups = element.getAttribute('data-groups');
-            const isElementInCurrentGroup = groups.indexOf(shuffle.group) !== -1;
-            // Only search elements in the current group
-            if (!isElementInCurrentGroup) {
-              return false;
+    if (this.shuffle) {
+      switch (this.props.gridControls.operation) {
+        case 'FILTER':
+          this.shuffle.group = this.props.gridControls.filterGroup;
+          this.shuffle.filter((element, shuffle) => {
+            // If there is a current filter applied, ignore elements that don't match it.
+            if (shuffle.group !== Shuffle.ALL_ITEMS) {
+              // Get the item's groups.
+              const groups = element.getAttribute('data-groups');
+              const isElementInCurrentGroup = groups.indexOf(shuffle.group) !== -1;
+              // Only search elements in the current group
+              if (!isElementInCurrentGroup) {
+                return false;
+              }
             }
-          }
-          const titleElement = element.querySelector('.post-thumb__title');
-          const titleText = titleElement.textContent.toLowerCase().trim();
-          const bodyElement = element.querySelector('.post-thumb__body');
-          const bodyText = bodyElement.textContent.toLowerCase().trim();
-          // add username ?
-          // in order to make keywords, timezone, gender searchable they have to be output to grid
-          // even if not visible in thumb view
-          const searchBlob = titleText.concat(bodyText);
-          return searchBlob.indexOf(this.props.gridControls.searchText) !== -1;
-        });
-        PostsGrid.adjustBkgSize();
-        break;
+            const titleElement = element.querySelector('.post-thumb__title');
+            const titleText = titleElement.textContent.toLowerCase().trim();
+            const bodyElement = element.querySelector('.post-thumb__body');
+            const bodyText = bodyElement.textContent.toLowerCase().trim();
+            // add username ?
+            // in order to make keywords, timezone, gender searchable they have to be output to grid
+            // even if not visible in thumb view
+            const searchBlob = titleText.concat(bodyText);
+            return searchBlob.indexOf(this.props.gridControls.searchText) !== -1;
+          });
+          PostsGrid.adjustBkgSize();
+          break;
 
-      case 'SORT':
-        this.shuffle.sort(this.props.gridControls.sortOptions);
-        break;
+        case 'SORT':
+          this.shuffle.sort(this.props.gridControls.sortOptions);
+          break;
 
-      default:
+        case 'ADD':
+          this.shuffle.update()
+        default:
 
+      }
     }
   }
 
