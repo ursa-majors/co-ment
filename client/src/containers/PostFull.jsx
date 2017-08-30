@@ -29,7 +29,8 @@ class PostFull extends React.Component {
     const postId = this.props.post._id;
     const token = this.props.appState.authToken;
     this.props.api.deletePost(token, postId);
-    this.props.history.push('/posts');
+    this.props.closeModal();
+    this.props.shuffle();
   }
 
   handleKeyDown(e) {
