@@ -13,6 +13,7 @@ const ModalGuts = (props) => (
               post={props.post}
               closeModal={props.closeModal}
               history={props.history}
+              shuffle={props.shuffle}
           	/>
           </div>
       </div>

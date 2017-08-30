@@ -28,6 +28,7 @@ class PostsGrid extends React.Component {
       post: {},
       modalOpen: false,
     };
+
   }
 
   componentDidMount() {
@@ -79,8 +80,9 @@ class PostsGrid extends React.Component {
           break;
 
         case 'ADD':
-          this.shuffle.update()
+          this.shuffle.update();
         default:
+          this.shuffle.resetItems();
 
       }
     }
@@ -154,6 +156,7 @@ class PostsGrid extends React.Component {
             closeModal={this.closeModal}
             title={title}
             post={this.state.post}
+            shuffle={reset}
             history={this.props.history}
           />
         </Modal>
