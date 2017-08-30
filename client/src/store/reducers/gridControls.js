@@ -33,6 +33,7 @@ function gridControls(state = INITIAL_STATE, action) {
   let newSort;
   let sortKeys;
   let options = {};
+  let reverseSort;
   switch (action.type) {
 
     case SET_SEARCH_TEXT:
@@ -41,21 +42,23 @@ function gridControls(state = INITIAL_STATE, action) {
         state,
         {
           searchText: action.payload.toLowerCase(),
-          operation: 'SEARCH',
+          operation: 'FILTER',
         },
       );
 
     case SET_SORT:
       // set the sort options
       if (action.payload.value === 'date-updated') {
+        reverseSort = (state.sortOptions.by === sortByDate ? !state.sortOptions.reverse : true)
         options = {
           by: sortByDate,
-          reverse: state.sortBtn['date-updated'] !== 'active',
+          reverse: reverseSort,
         };
       } else if (action.payload.value === 'title') {
+        reverseSort = (state.sortOptions.by === sortByTitle ? !state.sortOptions.reverse : false)
         options = {
           by: sortByTitle,
-          reverse: state.sortBtn.title === 'active',
+          reverse: reverseSort,
         };
       }
       newSort = Object.assign({}, state.sortBtn);
@@ -111,33 +114,3 @@ function gridControls(state = INITIAL_STATE, action) {
 }
 
 export default gridControls;
-
-/*
-handleSearchKeyup = (e) => {
-  console.log('hsku')
-  const searchText = e.target.value.toLowerCase();
-  this.shuffle.filter((element, shuffle) => {
-    // If there is a current filter applied, ignore elements that don't match it.
-    if (shuffle.group !== Shuffle.ALL_ITEMS) {
-      // Get the item's groups.
-      var groups = JSON.parse(element.getAttribute('data-groups'));
-      console.log(element.getAtribute('data-groups'));
-      console.log(groups);
-      var isElementInCurrentGroup = groups.indexOf(shuffle.group) !== -1;
-      // Only search elements in the current group
-      if (!isElementInCurrentGroup) {
-        return false;
-      }
-    }
-    const titleElement = element.querySelector('.post-thumb__title');
-    const titleText = titleElement.textContent.toLowerCase().trim();
-    const bodyElement = element.querySelector('.post-thumb__body');
-    const bodyText = bodyElement.textContent.toLowerCase().trim();
-    // add username ?
-    // in order to make keywords, timezone, gender searchable they have to be output to grid even if not visible in thumb view
-    const searchBlob = titleText.concat(bodyText);
-    return searchBlob.indexOf(searchText) !== -1;
-    PostsGrid.adjustBkgSize();
-  });
-};
-*/

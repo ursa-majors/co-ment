@@ -49,12 +49,13 @@ class PostsGrid extends React.Component {
 
   componentDidUpdate() {
     switch (this.props.gridControls.operation) {
-      case 'SEARCH':
+      case 'FILTER':
+        this.shuffle.group = this.props.gridControls.filterGroup;
         this.shuffle.filter((element, shuffle) => {
           // If there is a current filter applied, ignore elements that don't match it.
           if (shuffle.group !== Shuffle.ALL_ITEMS) {
             // Get the item's groups.
-            const groups = JSON.parse(element.getAttribute('data-groups'));
+            const groups = element.getAttribute('data-groups');
             const isElementInCurrentGroup = groups.indexOf(shuffle.group) !== -1;
             // Only search elements in the current group
             if (!isElementInCurrentGroup) {
@@ -71,14 +72,6 @@ class PostsGrid extends React.Component {
           const searchBlob = titleText.concat(bodyText);
           return searchBlob.indexOf(this.props.gridControls.searchText) !== -1;
         });
-        PostsGrid.adjustBkgSize();
-        break;
-
-      case 'FILTER':
-        this.shuffle.filter(this.props.gridControls.filterGroup);
-        // Notify shuffle to dump the elements it's currently holding and consider
-        // all elements matching the `itemSelector` as new.
-        this.shuffle.resetItems();
         PostsGrid.adjustBkgSize();
         break;
 
@@ -142,8 +135,8 @@ class PostsGrid extends React.Component {
         <ModalSm
           modalClass={`${this.props.posts.loadPostsModalClass}`}
           modalText={`${this.props.posts.loadPostsModalText}`}
-          dismiss={() =>
-            {
+          dismiss={
+            () => {
               this.props.actions.setLoadPostsModalText('');
               this.props.actions.setLoadPostsModalClass('modal__hide');
             }
@@ -167,27 +160,28 @@ class PostsGrid extends React.Component {
         <div>
           <PostsGridControls />
           <div ref={element => this.element = element} className="flex-row my-shuffle shuffle posts-grid__cont">
-          <div className="flex-col-1-sp sizer"></div>
-        {this.props.posts.entries.reverse().map((post) => {
-          return (
-          <div
-            key={post._id}
-            className="flex-col-12-xs flex-col-6-sm flex-col-4-md flex-col-3-lg flex-col-2-xl shuffle-item shuffle-item--visible post"
-            data-groups={post.role}
-            data-updated={post.updatedAt}
-            data-title={post.title}
-          >
-            <PostThumb
-              id={post._id}
-              post={post}
-              shuffle={reset}
-              openModal={this.openModal}
-              />
-          </div>
-        )
-        })}
-        <div ref={element => this.sizer = element} className="col-1@xs col-1@sm post-grid__sizer"></div>
-      </div>
+            <div className="flex-col-1-sp sizer" />
+            {this.props.posts.entries.reverse().map((post) => {
+              return (
+                <div
+                  key={post._id}
+                  className="flex-col-12-xs flex-col-6-sm flex-col-4-md flex-col-3-lg flex-col-2-xl shuffle-item shuffle-item--visible post"
+                  data-groups={post.role}
+                  data-updated={post.updatedAt}
+                  data-title={post.title}
+                >
+                  <PostThumb
+                    id={post._id}
+                    post={post}
+                    shuffle={reset}
+                    openModal={this.openModal}
+                  />
+                </div>
+              );
+            },
+          )}
+        <div ref={element => this.sizer = element} className="col-1@xs col-1@sm post-grid__sizer" />
+        </div>
         </div>
       </div>
     );
