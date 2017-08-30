@@ -47,7 +47,7 @@ const PostsGridControls = props => (
               type="radio"
               name="sort-value"
               value="dom"
-              onClick={(e) => {console.log('hi');props.actions.setSort(e.target)}}
+              onClick={(e) => props.actions.setSort(e.target)}
             /> Default
           </label>
           <label className={`btn btn--primary ${props.gridControls.sortBtn.title}`}>
