@@ -123,12 +123,18 @@ class ConnectionDetails extends React.Component {
       <div className="container conn-details">
         <Spinner cssClass={this.props.connection.connDetailsSpinnerClass} />
         <ModalSm
-          modalClass={this.props.connection.connDetailsModalClass}
-          modalText={this.props.connection.connDetailsModalText}
+          modalClass={this.props.connection.connDetailsModal.class}
+          modalText={this.props.connection.connDetailsModal.text}
+          modalTitle={this.props.connection.connDetailsModal.title}
+          modalType={this.props.connection.connDetailsModal.type}
           dismiss={
             () => {
-              this.props.actions.setConnDetailsModalText('');
-              this.props.actions.setConnDetailsModalClass('modal__hide');
+              this.props.actions.setConnDetailsModal({
+                text: '',
+                class: 'modal__hide',
+                type: '',
+                title: '',
+              });
             }
           }
         />

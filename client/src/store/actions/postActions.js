@@ -9,10 +9,8 @@ export const ADD_KEYWORD = 'ADD_KEYWORD';
 export const REMOVE_KEYWORD = 'REMOVE_KEYWORD';
 export const SET_SEARCH_CRITERIA = 'SET_SEARCH_CRITERIA';
 export const CLEAR_SEARCH_CRITERIA = 'CLEAR_SEARCH_CRITERIA';
-export const SET_VIEWPOST_MODAL_TEXT = 'SET_VIEWPOST_MODAL_TEXT';
-export const SET_VIEWPOST_MODAL_CLASS = 'SET_VIEWPOST_MODAL_CLASS';
-export const SET_LOADPOSTS_MODAL_TEXT = 'SET_LOADPOSTS_MODAL_TEXT';
-export const SET_LOADPOSTS_MODAL_CLASS = 'SET_LOADPOSTS_MODAL_CLASS';
+export const SET_VIEWPOST_MODAL = 'SET_VIEWPOST_MODAL';
+export const SET_LOADPOSTS_MODAL = 'SET_LOADPOSTS_MODAL';
 
 export function setPosts(posts) {
   return ({
@@ -83,42 +81,16 @@ export function clearSearchCriteria() {
   });
 }
 
-export function showViewPostSpinner() {
+export function setViewPostModal(options) {
   return ({
-    type: SHOW_VIEW_POST_SPINNER,
+    type: SET_VIEWPOST_MODAL,
+    payload: options,
   });
 }
 
-export function hideViewPostSpinner() {
+export function setLoadPostsModal(options) {
   return ({
-    type: HIDE_VIEW_POST_SPINNER,
-  });
-}
-
-export function setViewPostModalClass(modalClass) {
-  return ({
-    type: SET_VIEWPOST_MODAL_CLASS,
-    payload: modalClass,
-  });
-}
-
-export function setViewPostModalText(text) {
-  return ({
-    type: SET_VIEWPOST_MODAL_TEXT,
-    payload: text,
-  });
-}
-
-export function setLoadPostsModalClass(modalClass) {
-  return ({
-    type: SET_LOADPOSTS_MODAL_CLASS,
-    payload: modalClass,
-  });
-}
-
-export function setLoadPostsModalText(text) {
-  return ({
-    type: SET_LOADPOSTS_MODAL_TEXT,
-    payload: text,
+    type: SET_LOADPOSTS_MODAL,
+    payload: options,
   });
 }

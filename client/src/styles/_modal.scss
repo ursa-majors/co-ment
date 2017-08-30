@@ -1,3 +1,5 @@
+@import './vars';
+
 .modal {
   color: rgba(0, 0, 0, 0.6);
   position: absolute;
@@ -6,8 +8,7 @@
   transform: translate(-50%, -50%);
   border: 1px solid rgba(0,0,0,.6);
   border-radius: 6px;
-  padding: 25px;
-  background-color: #eee;
+  background-color: $color_gray_bkgrd;
   z-index: 20;
   font-family: 'Alegreya Sans', sans-serif;
 
@@ -16,6 +17,34 @@
   }
   &__show {
     display: block;
+  }
+  &__header {
+    color: white;
+    line-height: 2em;
+    background-color: $color_sky_darker;
+    padding: 5px;
+    text-align: center;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
+  &__info {
+    background-color: $color_sky;
+  }
+  &__error {
+    background-color: darken($color_error_bkg,35%);
+  }
+  &__success {
+    background-color: darken($color_success_bkg,35%);
+  }
+  &__body {
+    padding: 20px;
+    white-space: pre-wrap;
+  }
+  &__action {
+    cursor: pointer;
+    padding: 5px 40px;
+    text-align: center;
+    background-color: $color_gray_darker;
   }
 }
 .modal-close {

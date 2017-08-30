@@ -13,6 +13,7 @@ const INITIAL_STATE = {
   loginModalText: '',
   pwResetSpinnerClass: 'spinner__hide',
   pwResetModalClass: 'modal__hide',
+  pwResetModalType: '',
   pwResetModalText: '',
 };
 
@@ -120,7 +121,8 @@ function login(state = INITIAL_STATE, action) {
         {
           pwResetSpinnerClass: 'spinner__hide',
           pwResetModalClass: 'modal__show',
-          pwResetModalText: 'Your password has been reset. Click LOGIN to continue',
+          pwResetModalType: 'modal__success',
+          pwResetModalText: 'Your password has been reset. Click Sign In to continue',
         },
       );
 
@@ -137,6 +139,7 @@ function login(state = INITIAL_STATE, action) {
         {
           pwResetSpinnerClass: 'spinner__hide',
           pwResetModalClass: 'modal__show',
+          pwResetModalType: 'modal__error',
           pwResetModalText: error,
         },
       );
@@ -202,6 +205,7 @@ function login(state = INITIAL_STATE, action) {
         {
           pwResetModalText: '',
           pwResetModalClass: 'modal__hide',
+          pwResetModalType: '',
         },
       );
 

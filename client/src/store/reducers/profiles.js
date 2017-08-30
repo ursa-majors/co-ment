@@ -52,6 +52,7 @@ const INITIAL_STATE = {
   userProfile: {},
   profileSpinnerClass: 'spinner__hide',
   viewProfileModalClass: 'modal__hide',
+  viewProfileModalType: 'modal__info',
   viewProfileModalText: '',
   gettingGHProfile: false,
   getSuccess: null,
@@ -85,7 +86,14 @@ function profiles(state = INITIAL_STATE, action) {
     *  Purpose: set CSS to show/hide the modal on profile edit page.
     */
     case SET_PROFILE_MODAL_CLASS:
-      return Object.assign({}, state, { viewProfileModalClass: action.payload });
+      return Object.assign(
+        {},
+        state,
+        {
+          viewProfileModalClass: action.payload,
+          viewProfileModalType: '',
+        },
+      );
 
     /*
     * Called from: <Home />

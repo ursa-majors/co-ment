@@ -112,12 +112,18 @@ class Connection extends React.Component {
       <div className="container form">
         <Spinner cssClass={this.props.connection.connectionSpinnerClass} />
         <ModalSm
-          modalClass={this.props.connection.connectionModalClass}
-          modalText={this.props.connection.connectionModalText}
+          modalClass={this.props.connection.connectionModal.class}
+          modalText={this.props.connection.connectionModal.text}
+          modalTitle={this.props.connection.connectionModal.title}
+          modalType={this.props.connection.connectionModal.type}
           dismiss={
             () => {
-              this.props.actions.setConnModalText('');
-              this.props.actions.setConnModalClass('modal__hide');
+              this.props.connectActions.setConnModal({
+                text: '',
+                class: 'modal__hide',
+                title: '',
+                type: '',
+              });
             }
           }
         />

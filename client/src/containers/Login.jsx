@@ -118,6 +118,8 @@ class Login extends React.Component {
         <ModalSm
           modalClass={this.props.login.loginModalClass}
           modalText={this.props.login.loginModalText}
+          modalType="modal__info"
+          modalTitle="EMAIL SENT"
           dismiss={
             () => {
               this.props.actions.dismissLoginModal();

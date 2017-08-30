@@ -141,6 +141,8 @@ class ViewProfile extends React.Component {
         <ModalSm
           modalClass={`${this.props.profile.viewProfileModalClass}`}
           modalText={`${this.props.profile.viewProfileModalText}`}
+          modalType={this.props.profile.viewProfileModalType}
+          modalTitle="PROFILE"
           dismiss={() => this.props.actions.dismissViewProfileModal()}
         />
         {this.props.profile.getSuccess &&

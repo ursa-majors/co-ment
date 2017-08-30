@@ -22,12 +22,18 @@ class Connections extends React.Component {
       <div className="container">
         <Spinner cssClass={this.props.connection.getConnectionsSpinnerClass} />
         <ModalSm
-          modalClass={this.props.connection.getConnectionsModalClass}
-          modalText={this.props.connection.getConnectionsModalText}
+          modalClass={this.props.connection.getConnectionsModal.class}
+          modalText={this.props.connection.getConnectionsModal.text}
+          modalTitle={this.props.connection.getConnectionsModal.title}
+          modalType={this.props.connection.getConnectionsModal.type}
           dismiss={
             () => {
-              this.props.actions.setConnectionsModalClass('modal__hide');
-              this.props.actions.setConnectionsModalText('');
+              this.props.actions.setConnectionsModal({
+                class: 'modal__hide',
+                text: '',
+                type: '',
+                title: '',
+              });
             }
           }
         />
@@ -41,7 +47,9 @@ class Connections extends React.Component {
             <div className="conn-preview__header">Status</div>
             <div className="conn-preview__header conn-preview__hide-for-small">Date</div>
           </div>
-            {this.props.connection.connections.map(item => (
+            {this.props.connection.connections.map(item => {
+              console.log(item);
+              return(
               <div className="conn-preview__header-wrap" key={item._id}>
                 <div className="conn-preview__text">{item.mentor.name}</div>
                 <div className="conn-preview__text">{item.mentee.name}</div>
@@ -52,7 +60,8 @@ class Connections extends React.Component {
                 </div>
                 <div className="conn-preview__text conn-preview__hide-for-small">{formatDate(new Date(item.dateStarted))}</div>
               </div>
-            ))}
+            )
+          })}
         </div>
       </div>
     );
