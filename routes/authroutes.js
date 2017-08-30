@@ -14,6 +14,7 @@ const routes    = require('express').Router();
 const passport  = require('passport');
 const crypto    = require('crypto');
 const mailer    = require('../utils/mailer');
+const emailTpl  = require('../utils/mailtemplates');
 const User      = require('../models/user');
 
 
@@ -65,14 +66,7 @@ function sendValidationEmail(params) {
     const subject = 'co/ment - Email verification required';
     const body    = {
         type: 'html',
-        text: `
-            <div style="background-image: linear-gradient(#0e76bc, #5cbeaf); padding: 0 2em 5em">
-                <h1 style="text-align: center; padding: .5em; color: white; font-family: sans-serif; font-weight:100; letter-spacing: .08em; text-shadow: 0 0 20px rgba(0, 0, 0, 0.63);">co/ment</h1>
-                <p style="color: white; font-size: 1.1em; font-family: sans-serif;">Your registration submission has been received - thanks!</p>
-                <p style="color: white; font-size: 1.1em; font-family: sans-serif;">The purpose of this email is to confirm that you are a real person. Until your account is verified you will not be able to update your profile, create or edit posts, or connect with other users.</p>
-                <p style="color: white; font-size: 1.1em; font-family: sans-serif;">Click <a style="color: #fff500; font-family: sans-serif;" href="${url}">this link</a> to validate your account. Or copy and paste the following into a browser tab:</p>
-                <a style="color: #fff500; font-family: sans-serif;" href="${url}">${url}</a>
-            </div>`
+        text: emailTpl.validationTemplate(url)
     };
 
     // send mail using `mailer` util
@@ -92,19 +86,12 @@ function sendValidationEmail(params) {
  * @ params   [string]    * to_email [user/recipient email address]
 */
 function sendPWResetEmail(params) {
-    console.log('pwreset', params)
-    const url     = `https://co-ment.glitch.me/resetpassword/${params.key}`
+    console.log('pwreset', params);
+    const url     = `https://co-ment.glitch.me/resetpassword/${params.key}`;
     const subject = 'co/ment - Password Reset Request';
     const body    = {
         type: 'html',
-        text: `
-            <div style="background-image: linear-gradient(#0e76bc, #5cbeaf); padding: 0 2em 5em">
-                <h1 style="text-align: center; padding: .5em; color: white; font-family: sans-serif; font-weight:100; letter-spacing: .08em; text-shadow: 0 0 20px rgba(0, 0, 0, 0.63);">co/ment</h1>
-                <p style="color: white; font-size: 1.1em; font-family: sans-serif;">A password reset request was submitted for your user ID</p>
-                <p style="color: white; font-size: 1.1em; font-family: sans-serif;">Use the link in this email to reset your password. </p>
-                <p style="color: white; font-size: 1.1em; font-family: sans-serif;">Click <a style="color: #fff500; font-family: sans-serif;" href="${url}">this link</a> to reset your password. Or copy and paste the following into a browser tab:</p>
-                <a style="color: #fff500; font-family: sans-serif;" href="${url}">${url}</a>
-            </div>`
+        text: emailTpl.pwResetTemplate(url)
     };
 
     // send mail using `mailer` util
@@ -307,7 +294,7 @@ routes.post('/api/login', (req, res, next) => {
 
 });
 
-routes.post('/api/sendresetemail', (req, res, next) => {
+routes.post('/api/sendresetemail', (req, res) => {
   //generate a reset key
   const resetKey = makeSignupKey();
 
@@ -339,7 +326,7 @@ routes.post('/api/sendresetemail', (req, res, next) => {
 
         return res
           .status(200)
-          .json( {message: 'Password Reset email sent!'})
+          .json( {message: 'Password Reset email sent!'});
       });
 
     })
@@ -349,14 +336,14 @@ routes.post('/api/sendresetemail', (req, res, next) => {
           .status(400)
           .json({ message: err});
     });
-})
+});
 
 /*
 *  Route: /api/resetpassword
 *  Purpose: Allows password reset, if front end passes a user id and key that match an email sent to
 *  user.
 */
-routes.post('/api/resetpassword', (req, res, next) => {
+routes.post('/api/resetpassword', (req, res) => {
   User.findOne({username: req.body.username})
     .exec()
     .then(user => {
@@ -375,10 +362,10 @@ routes.post('/api/resetpassword', (req, res, next) => {
       }
 
       // if they match, reset password and clear the key
-      user.hashPassword(req.body.password)
-      user.passwordResetKey = {}
+      user.hashPassword(req.body.password);
+      user.passwordResetKey = {};
       user.save( (err, user) => {
-        if (err) throw err
+        if (err) { throw err; }
 
         return res
           .status(200)
@@ -392,7 +379,9 @@ routes.post('/api/resetpassword', (req, res, next) => {
           .status(400)
           .json({ message: err});
     });
-})
+});
+
+
 /* ================================ EXPORT ================================= */
 
 module.exports = routes;
