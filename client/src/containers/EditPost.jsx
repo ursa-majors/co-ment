@@ -32,6 +32,12 @@ class EditPost extends React.Component {
     this.props.actions.setFormField(event.target.id, event.target.value);
   }
 
+  // event handler for checkbox change
+  handleCheckboxChange(e) {
+    const active = e.target.checked;
+    this.props.actions.setFormField('active', active);
+  }
+
   // keywords are entered into a text input, this function pushes them
   // into the array that goes to the DB. Ignore dupes.
   addKeyword() {
@@ -187,6 +193,18 @@ class EditPost extends React.Component {
               onChange={e => this.handleChange(e)}
               placeholder="Add post content"
             />
+          </div>
+          <div className="form__input-group" >
+            <input
+              className="form__input--checkbox"
+              type='checkbox'
+              id='active'
+              name='active'
+              onChange={this.handleCheckboxChange}
+              value={ this.props.posts.editForm.active }
+              checked={ this.props.posts.editForm.active }
+             />
+            <label htmlFor="active" className="form__label--checkbox">Publish this post? (uncheck to deactivate)</label>
           </div>
 
           <div className="form__input-group">

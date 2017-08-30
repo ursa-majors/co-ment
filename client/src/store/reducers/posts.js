@@ -11,6 +11,7 @@ import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE,
 } from '../actions/apiPostActions';
 
 const defaultForm = {
+  active: 'true',
   title: '',
   role: 'mentor',
   keywords: [],
@@ -91,6 +92,7 @@ function posts(state = INITIAL_STATE, action) {
           editForm: {
             title: { $set: action.payload.title },
             role: { $set: action.payload.role },
+            active: { $set: action.payload.active },
             keywords: { $set: action.payload.keywords },
             keyword: { $set: '' },
             content: { $set: action.payload.body },
