@@ -36,8 +36,10 @@ const port          = process.env.PORT || 3001;
 
 /* ============================= CONFIGURATION ============================= */
 
-// enable logger
-app.use(morgan('dev'));
+// enable logger unless NODE_ENV = 'test'
+if (process.env.NODE_ENV !== 'test') {
+    app.use(morgan('dev'));    
+}
 
 // enable http request body parsing
 app.use(bodyParser.json());
@@ -133,3 +135,5 @@ mongoose.Promise = global.Promise;
 app.listen(port, () => {
     console.log(`Server listening on port ${port}.`);
 });
+
+module.exports = app;  // for testing
