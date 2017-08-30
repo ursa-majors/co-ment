@@ -2,7 +2,7 @@
 /* globals describe, it, beforeEach */
 
 /*
-   Unit test for: user profile related routes
+   Unit test for user profile related routes
 */
 
 // During tests, set env variable to 'test' to disable Morgan
@@ -23,7 +23,6 @@ chai.use(chaiHttp);
 // parent block
 describe('User Profiles', () => {
     
-
     // get all user profiles in collection
     describe('/GET api/profiles', () => {
         it('should GET all the user profiles', (done) => {
@@ -38,7 +37,7 @@ describe('User Profiles', () => {
         });
     });
     
-    // register a user
+    // get a single user profile from collection
     describe('/GET /api/profile/:id', () => {
         it('should GET a single user profile', (done) => {
             chai.request(server)
