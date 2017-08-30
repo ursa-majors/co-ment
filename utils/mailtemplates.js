@@ -4,6 +4,59 @@
 
 */
 
+// Common html email attributes
+const attrs = {
+    div : 'style="background-image: linear-gradient(#0e76bc, #5cbeaf); padding: 0 2em 5em"',
+    h1  : 'style="text-align: center; padding: .5em; color: white; font-family: sans-serif; font-weight:100; letter-spacing: .08em; text-shadow: 0 0 20px rgba(0, 0, 0, 0.63);"',
+    p   : 'style="color: white; font-size: 1.1em; font-family: sans-serif;"',
+    a   : 'style="color: #fff500; font-family: sans-serif;"'
+};
+
+
+const pwResetTemplate = (url) => {
+    return `
+        <div ${attrs.div}>
+            <h1 ${attrs.h1}>co/ment</h1>
+            <p ${attrs.p}>
+                A password reset request was submitted for your user ID
+            </p>
+            <p ${attrs.p}>
+                Use the link in this email to reset your password.
+            </p>
+            <p ${attrs.p}>
+                Click <a ${attrs.a} href="${url}">this link</a> to reset your
+                password. Or copy and paste the following into a browser tab:
+            </p>
+            <a ${attrs.a} href="${url}">${url}</a>
+        </div>
+    `;
+};
+
+
+const validationTemplate = (url) => {
+    return `
+        <div ${attrs.div}>
+            <h1 ${attrs.h1}>co/ment</h1>
+            <p ${attrs.p}>
+                Your registration submission has been received - thanks!
+            </p>
+            <p ${attrs.p}>
+                The purpose of this email is to confirm that you are a real
+                person. Until your account is verified you will not be able
+                to update your profile, create or edit posts, or connect with
+                other users.
+            </p>
+            <p ${attrs.p}>
+                Click <a ${attrs.a} href="${url}">this link</a> to validate
+                your account. Or copy and paste the following into a browser
+                tab:
+            </p>
+            <a ${attrs.a} href="${url}">${url}</a>
+        </div>
+    `;
+};
+
+
 const contactTemplate = (to_user, from_user, from_email, bodyText, connectionId) => {
   console.log('mailtemplatesjs', connectionId);
   return `
@@ -237,5 +290,7 @@ const contactTemplate = (to_user, from_user, from_email, bodyText, connectionId)
 
 
 module.exports = {
-  contactTemplate : contactTemplate
+    pwResetTemplate    : pwResetTemplate,
+    validationTemplate : validationTemplate,
+    contactTemplate    : contactTemplate
 };
