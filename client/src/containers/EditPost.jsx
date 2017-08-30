@@ -113,8 +113,6 @@ class EditPost extends React.Component {
       availability: '',
     };
 
-    console.log(body);
-
     if (this.props.posts.editForm.update) {
       this.props.api.modifyPost(this.props.appState.authToken, this.props.match.params.id, body)
         .then(() => {
