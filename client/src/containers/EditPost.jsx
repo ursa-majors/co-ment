@@ -109,8 +109,11 @@ class EditPost extends React.Component {
       title: this.props.posts.editForm.title,
       body: this.props.posts.editForm.content,
       keywords: this.props.posts.editForm.keywords,
+      active: this.props.posts.editForm.active,
       availability: '',
     };
+
+    console.log(body);
 
     if (this.props.posts.editForm.update) {
       this.props.api.modifyPost(this.props.appState.authToken, this.props.match.params.id, body)

@@ -30,9 +30,6 @@ class PostsGrid extends React.Component {
     };
   }
 
-  // need to add a window size event listener to set .posts-grid height to 100% OR 100vh, whichever
-  // is greater, to keep background image covering viewport height on search results display
-
   componentDidMount() {
     this.props.api.getAllPosts(this.props.appState.authToken)
       .then(() => {
@@ -114,8 +111,7 @@ class PostsGrid extends React.Component {
   }
 
   ////////// FILTER SORT SEARCH ////////
-  /// need to add html, add classes for document.queryselector calls, add data-attributes for filtering and sorting
-  ///
+
   addShuffleEventListeners = () => {
     this.shuffle.on(Shuffle.EventType.LAYOUT, (data) => {
       // console.log('layout. data:', data);
@@ -129,7 +125,6 @@ class PostsGrid extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     const modalStyles = { overlay: { zIndex: 10, backgroundColor: 'rgba(0,0,0,.7)', } };
     const title = this.state.post && this.state.post.title ? this.state.post.title : '';
     const reset = this.shuffle ? this.shuffle.resetItems : null;
