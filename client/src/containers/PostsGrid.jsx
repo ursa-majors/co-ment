@@ -138,12 +138,18 @@ class PostsGrid extends React.Component {
       <div className="posts-grid" id="posts-grid">
         <Spinner cssClass={`${this.props.posts.loadPostsSpinnerClass}`} />
         <ModalSm
-          modalClass={`${this.props.posts.loadPostsModalClass}`}
-          modalText={`${this.props.posts.loadPostsModalText}`}
+          modalClass={this.props.posts.loadPostsModal.class}
+          modalText={this.props.posts.loadPostsModal.text}
+          modalTitle={this.props.posts.loadPostsModal.title}
+          modalType={this.props.posts.loadPostsModal.type}
           dismiss={
             () => {
-              this.props.actions.setLoadPostsModalText('');
-              this.props.actions.setLoadPostsModalClass('modal__hide');
+              this.props.actions.setLoadPostsModal({
+                type: '',
+                text: '',
+                class: 'modal__hide',
+                title: '',
+              });
             }
           }
         />

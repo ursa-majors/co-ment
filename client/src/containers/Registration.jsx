@@ -2,9 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-import * as Actions from '../store/actions/regActions';
-import * as apiActions from '../store/actions/apiLoginActions';
+import Spinner from './Spinner';
+import ModalSm from './ModalSm';
+import { setRegError, dismissRegModal } from '../store/actions/regActions';
+import { register } from '../store/actions/apiLoginActions';
 
 class Registration extends React.Component {
 
@@ -26,8 +29,7 @@ class Registration extends React.Component {
   * If valid, call the register route; store token in redux, clear password from state
   * , return to Home
   */
-  handleRegister(e) {
-    e.preventDefault();
+  handleRegister() {
     // clear previous errors
     this.setState({ error: false });
     const username = this.state.username;
@@ -39,8 +41,19 @@ class Registration extends React.Component {
       const body = { username, password, email };
       this.props.api.register(body)
         .then((result) => {
+          if (result.type === 'REGISTRATION_FAILURE') {
+            this.setState({ error: true });
+          }
           if (result.type === 'REGISTRATION_SUCCESS') {
-            this.props.history.push('/');
+            // clear form
+            this.setState({
+              username: '',
+              email: '',
+              password: '',
+              confirmPwd: '',
+              error: false,
+            });
+            // this.props.history.push('/');
           }
         })
         .catch((error) => {
@@ -78,7 +91,7 @@ class Registration extends React.Component {
     const showError = (this.state.error ? '' : 'form__hidden');
     return (
       <div className="container form">
-        <form className="form__body">
+        <div className="form__body">
           <div className="form__header">
             Create account
           </div>
@@ -115,17 +128,54 @@ class Registration extends React.Component {
           </div>
           <div className="form__input-group">
             <div className="form__button-wrap">
-              <button className="splash__button pointer" type="submit" id="btn-register" onClick={event => this.handleRegister(event)} >Register</button>
+              <button className="splash__button pointer" type="submit" id="btn-register" onClick={() => this.handleRegister()} >Register</button>
               <Link to="/login">
                 <button className="splash__button pointer" id="btn-login">Sign In</button>
               </Link>
             </div>
           </div>
-        </form>
+        </div>
+        <Spinner cssClass={this.props.register.registrationSpinnerClass} />
+        <ModalSm
+          modalClass={this.props.register.registrationModalClass}
+          modalText={this.props.register.registrationModalText}
+          modalType="modal__success"
+          modalTitle="SUCCESS"
+          action={
+            () => {
+              this.props.actions.dismissRegModal();
+              this.props.history.push('/');
+            }
+          }
+          dismiss={
+            () => {
+              this.props.actions.dismissRegModal();
+            }
+          }
+        />
       </div>
     );
   }
 }
+
+Registration.propTypes = {
+  api: PropTypes.shape({
+    register: PropTypes.func,
+  }).isRequired,
+  actions: PropTypes.shape({
+    setRegError: PropTypes.func,
+    dismissRegModal: PropTypes.func,
+  }).isRequired,
+  register: PropTypes.shape({
+    registrationSpinnerClass: PropTypes.String,
+    registrationModalText: PropTypes.String,
+    registrationModalClass: PropTypes.String,
+    regErrorMsg: PropTypes.String,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+};
 
 const mapStateToProps = state => ({
   register: state.register,
@@ -133,8 +183,8 @@ const mapStateToProps = state => ({
 
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(Actions, dispatch),
-  api: bindActionCreators(apiActions, dispatch),
+  actions: bindActionCreators({ setRegError, dismissRegModal }, dispatch),
+  api: bindActionCreators({ register }, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Registration);

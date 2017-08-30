@@ -1,7 +1,7 @@
 import update from 'immutability-helper';
-import { SET_POSTS, SAVE_POST, CLEAR_CURRENT_POST, SET_EDIT_POST, SET_FORM_FIELD, RESET_FORM,
-  ADD_KEYWORD, REMOVE_KEYWORD, SET_SEARCH_CRITERIA, CLEAR_SEARCH_CRITERIA, SET_VIEWPOST_MODAL_CLASS,
-  SET_VIEWPOST_MODAL_TEXT, SET_LOADPOSTS_MODAL_CLASS, SET_LOADPOSTS_MODAL_TEXT } from '../actions/postActions';
+import { SET_POSTS, SAVE_POST, CLEAR_CURRENT_POST, SET_EDIT_POST, SET_FORM_FIELD,
+  ADD_KEYWORD, REMOVE_KEYWORD, SET_SEARCH_CRITERIA, CLEAR_SEARCH_CRITERIA,
+  SET_VIEWPOST_MODAL, SET_LOADPOSTS_MODAL } from '../actions/postActions';
 import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE,
   ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE,
   MODIFY_POST_REQUEST, MODIFY_POST_SUCCESS, MODIFY_POST_FAILURE,
@@ -52,12 +52,20 @@ const INITIAL_STATE = {
   savingPost: false,
   saveError: null,
   loadPostsSpinnerClass: 'spinner_hide',
-  loadPostsModalClass: 'modal__hide',
-  loadPostsModalText: '',
+  loadPostsModal: {
+    class: 'modal__hide',
+    text: '',
+    title: '',
+    type: '',
+  },
   loadPostsError: '',
   viewPostSpinnerClass: 'spinner__hide',
-  viewPostModalClass: 'modal__hide',
-  viewPostModalText: '',
+  viewPostModal: {
+    class: 'modal__hide',
+    text: '',
+    type: '',
+    title: '',
+  },
   deletePostSpinnerClass: 'spinner__hide',
   deletePostModalClass: 'modal__hide',
   deletePostModalText: '',
@@ -67,11 +75,14 @@ function posts(state = INITIAL_STATE, action) {
   let error;
   switch (action.type) {
 
-    case SET_VIEWPOST_MODAL_CLASS:
-      return Object.assign({}, state, { viewPostModalClass: action.payload });
-
-    case SET_VIEWPOST_MODAL_TEXT:
-      return Object.assign({}, state, { viewPostModalText: action.payload });
+    case SET_VIEWPOST_MODAL:
+      return Object.assign(
+        {},
+        state,
+        {
+          viewPostModal: action.payload,
+        },
+      );
 
     case SET_POSTS:
       return Object.assign({}, state, { entries: action.payload });
@@ -146,8 +157,12 @@ function posts(state = INITIAL_STATE, action) {
         state,
         {
           loadPostsSpinnerClass: 'spinner__show',
-          loadPostsModalText: '',
-          loadPostsModalClass: 'modal__hide',
+          loadPostsModal: {
+            text: '',
+            class: 'modal__hide',
+            type: '',
+            title: '',
+          },
         },
       );
 
@@ -162,22 +177,29 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case GET_ALL_POSTS_FAILURE:
-      error = action.payload.message;
+      error = action.payload.response.message || 'An unknown error occurred while loading posts';
       return Object.assign(
         {},
         state,
         {
           loadPostsSpinnerClass: 'spinner__hide',
-          loadPostsModalClass: 'modal__show',
-          loadPostsModalText: error,
+          loadPostsModal: {
+            text: error,
+            class: 'modal__show',
+            type: 'modal__error',
+            title: 'ERROR',
+          },
         },
       );
 
-    case SET_LOADPOSTS_MODAL_TEXT:
-      return Object.assign({}, state, { loadPostsModalText: action.payload });
-
-    case SET_LOADPOSTS_MODAL_CLASS:
-      return Object.assign({}, state, { loadPostsModalClass: action.payload });
+    case SET_LOADPOSTS_MODAL:
+      return Object.assign(
+        {},
+        state,
+        {
+          loadPostsModal: action.payload,
+        },
+      );
 
     case ADD_POST_REQUEST:
       return Object.assign({}, state, { addingPost: true, addError: null });
@@ -250,6 +272,7 @@ function posts(state = INITIAL_STATE, action) {
         {
           viewPostSpinnerClass: 'spinner__hide',
           viewPostModalClass: 'modal__show',
+          viewPostModalType: 'modal__error',
           viewPostModalText: error,
         },
       );

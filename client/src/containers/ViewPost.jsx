@@ -96,8 +96,12 @@ class ViewPost extends React.Component {
       for (let i = 0; i < connections.length; i += 1) {
         if (connections[i].initiator === this.props.appState.userId &&
           connections[i][this.props.posts.currentPost.role] === this.props.posts.currentPost.author_id) {
-          this.props.actions.setViewPostModalText('You already have a connection to this poster');
-          this.props.actions.setViewPostModalClass('modal__show');
+          this.props.actions.setViewPostModal({
+            text: 'You already have a connection to this poster',
+            class: 'modal__show',
+            title: 'ERROR',
+            type: 'modal__error',
+          })
           return;
         }
       }
@@ -212,8 +216,10 @@ class ViewPost extends React.Component {
       <div className="post-view">
         <Spinner cssClass={this.props.posts.viewPostSpinnerClass} />
         <ModalSm
-          modalClass={this.props.posts.viewPostModalClass}
-          modalText={this.props.posts.viewPostModalText}
+          modalClass={this.props.posts.viewPostModal.class}
+          modalText={this.props.posts.viewPostModal.text}
+          modalTitle={this.props.posts.viewPostModal.title}
+          modalType={this.props.posts.viewPostModal.type}
           dismiss={
             () => {
               this.props.actions.setViewPostModalText('');

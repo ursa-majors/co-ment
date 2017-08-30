@@ -1,8 +1,7 @@
 import update from 'immutability-helper';
 
-import { SET_VIEW_CONNECTION, CLEAR_VIEW_CONNECTION, SET_CONNECTIONS_MODAL_CLASS,
-  SET_CONNECTIONS_MODAL_TEXT, SET_CONN_DETAILS_MODAL_TEXT, SET_CONN_DETAILS_MODAL_CLASS,
-  SET_CONN_MODAL_CLASS, SET_CONN_MODAL_TEXT } from '../actions/connectionActions';
+import { SET_VIEW_CONNECTION, CLEAR_VIEW_CONNECTION, SET_CONNECTIONS_MODAL, SET_CONN_DETAILS_MODAL,
+  SET_CONN_MODAL } from '../actions/connectionActions';
 import { CONTACT_REQUEST, CONTACT_SUCCESS, CONTACT_FAILURE } from '../actions/apiActions';
 import { CONNECTION_REQUEST, CONNECTION_SUCCESS, CONNECTION_FAILURE, GET_ALL_CONNECTIONS_REQUEST,
   GET_ALL_CONNECTIONS_SUCCESS, GET_ALL_CONNECTIONS_FAILURE, UPDATE_CONNECTION_STATUS_REQUEST,
@@ -44,17 +43,29 @@ const INITIAL_STATE = {
   // ConnectionDetails state
   viewConnection: defaultConn,
   connDetailsSpinnerClass: 'spinner__hide',
-  connDetailsModalClass: 'modal__hide',
-  connDetailsModalText: '',
+  connDetailsModal: {
+    title: '',
+    text: '',
+    type: '',
+    class: 'modal__hide',
+  },
   // Connections state
   getConnectionsSpinnerClass: 'spinner__hide',
-  getConnectionsModalClass: 'modal__hide',
-  getConnectionsModalText: '',
+  getConnectionsModal: {
+    class: 'modal__hide',
+    text: '',
+    type: '',
+    title: '',
+  },
   connections: [],
   // Connection Request state
   connectionSpinnerClass: 'spinner__hide',
-  connectionModalClass: 'modal__hide',
-  connectionModalText: '',
+  connectionModal: {
+    type: '',
+    text: '',
+    class: 'modal__hide',
+    title: '',
+  },
 };
 
 function connection(state = INITIAL_STATE, action) {
@@ -105,7 +116,7 @@ function connection(state = INITIAL_STATE, action) {
     case UPDATE_CONNECTION_STATUS_SUCCESS:
       index = -1;
       for (index = 0; index < state.connections.length; index += 1) {
-        if (state.connections[index]._id === action.payload._id) {
+        if (state.connections[index]._id === action.payload.conn._id) {
           break;
         }
       }
@@ -113,8 +124,12 @@ function connection(state = INITIAL_STATE, action) {
         state,
         {
           connDetailsSpinnerClass: { $set: 'spinner__hide' },
-          connDetailsModalClass: { $set: 'modal__show' },
-          connDetailsModalText: { $set: 'Connection status updated!' },
+          connDetailsModal: {
+            class: { $set: 'modal__show' },
+            type: { $set: 'modal__success' },
+            text: { $set: 'Connection Status Updated!' },
+            title: { $set: 'SUCCESS' },
+          },
           connections: { $splice: [[index, 1, action.payload.conn]] },
           viewConnection: { $set: action.payload.conn },
         },
@@ -132,8 +147,12 @@ function connection(state = INITIAL_STATE, action) {
         state,
         {
           connDetailsSpinnerClass: 'spinner__hide',
-          connDetailsModalClass: 'modal__show',
-          connDetailsModalText: error,
+          connDetailsModal: {
+            class: { $set: 'modal__show' },
+            type: { $set: 'modal__error' },
+            text: { $set: error },
+            title: { $set: 'ERROR' },
+          },
         },
       );
 
@@ -142,16 +161,14 @@ function connection(state = INITIAL_STATE, action) {
     *  Payload: Text to show in the modal
     *  Purpose: Set/Unset the text for the modal.
     */
-    case SET_CONN_DETAILS_MODAL_TEXT:
-      return Object.assign({}, state, { connDetailsModalText: action.payload });
-
-    /*
-    *  Called From: <ConnectionDetails />
-    *  Payload: CSS Class to show/hide the modal
-    *  Purpose: Show/Hide the modal.
-    */
-    case SET_CONN_DETAILS_MODAL_CLASS:
-      return Object.assign({}, state, { connDetailsModalClass: action.payload });
+    case SET_CONN_DETAILS_MODAL:
+      return Object.assign(
+        {},
+        state,
+        {
+          connDetailsModal: action.payload,
+        },
+      );
 
 /*---------------------------------------------------------------------------------*/
 
@@ -167,7 +184,6 @@ function connection(state = INITIAL_STATE, action) {
         state,
         {
           getConnectionsSpinnerClass: 'spinner__show',
-          getConnectionsModalClass: 'modal__hide',
         },
       );
 
@@ -186,7 +202,6 @@ function connection(state = INITIAL_STATE, action) {
           {
             connections: action.payload.connections,
             getConnectionsSpinnerClass: 'spinner__hide',
-            getConnectionsModalClass: 'modal__hide',
           },
         );
       }
@@ -195,8 +210,12 @@ function connection(state = INITIAL_STATE, action) {
         state,
         {
           getConnectionsSpinnerClass: 'spinner__hide',
-          getConnectionsModalClass: 'modal__show',
-          getConnectionsModalText: 'You haven\'t made any connections yet. Search our posts to find a Mentor or Mentee connection.',
+          getConnectionsModal: {
+            class: 'modal__show',
+            text: 'You haven\'t made any connections yet. Search our posts to find a Mentor or Mentee connection.',
+            type: 'modal__info',
+            title: 'CONNECTIONS',
+          },
         },
       );
 
@@ -206,14 +225,18 @@ function connection(state = INITIAL_STATE, action) {
     *  Purpose: Called when the API call fails. Set the state to display a message to user.
     */
     case GET_ALL_CONNECTIONS_FAILURE:
-      error = action.payload.message || 'An error occurred while fetching connections';
+      error = action.payload.response.message || 'An error occurred while fetching connections';
       return Object.assign(
         {},
         state,
         {
           getConnectionsSpinnerClass: 'spinner__hide',
-          getConnectionsModalClass: 'modal__show',
-          getConnectionsModalText: error,
+          getConnectionsModal: {
+            class: 'modal__show',
+            text: error,
+            type: 'modal__error',
+            title: 'ERROR',
+          },
         },
       );
 
@@ -222,16 +245,8 @@ function connection(state = INITIAL_STATE, action) {
     *  Payload: CSS class to show/hide the modal
     *  Purpose: Called from the modal to dismiss the modal
     */
-    case SET_CONNECTIONS_MODAL_CLASS:
-      return Object.assign({}, state, { getConnectionsModalClass: action.payload });
-
-    /*
-    *  Called From: <Connections />
-    *  Payload: Text to display in the modal.
-    *  Purpose: Set the text to display in the modal
-    */
-    case SET_CONNECTIONS_MODAL_TEXT:
-      return Object.assign({}, state, { getConnectionsModalText: action.payload });
+    case SET_CONNECTIONS_MODAL:
+      return Object.assign({}, state, { getConnectionsModal: action.payload });
 
 /*---------------------------------------------------------------------------------*/
 
@@ -295,8 +310,14 @@ function connection(state = INITIAL_STATE, action) {
     *   so no modal is shown, and return connectionId to use in connection request email template.
     */
     case CONNECTION_SUCCESS:
-      const id = action.payload.connectionId;
-      return Object.assign({}, state, { connectionSpinnerClass: 'spinner__hide',  connectionId: id, });
+      return Object.assign(
+        {},
+        state,
+        {
+          connectionSpinnerClass: 'spinner__hide',
+          connectionId: action.payload.connectionId,
+        },
+      );
 
     /*
     *  Called From: <Connection />
@@ -310,8 +331,12 @@ function connection(state = INITIAL_STATE, action) {
         state,
         {
           connectionSpinnerClass: 'spinner__hide',
-          connectionModalClass: 'modal__show',
-          connectionModalText: error,
+          connectionModal: {
+            type: 'modal__error',
+            title: 'ERROR',
+            text: error,
+            class: 'modal__show',
+          },
         },
       );
 
@@ -320,16 +345,19 @@ function connection(state = INITIAL_STATE, action) {
     *  Payload: Text message
     *  Purpose: Display modal with text message
     */
-    case SET_CONN_MODAL_TEXT:
-      return Object.assign({}, state, { connectionModalText: action.payload });
-
-    /*
-    *  Called From: <Connection />
-    *  Payload: CSS Class
-    *  Purpose: Show/Hide the connection modal
-    */
-    case SET_CONN_MODAL_CLASS:
-      return Object.assign({}, state, { connectionModalClass: action.payload });
+    case SET_CONN_MODAL:
+      return Object.assign(
+        {},
+        state,
+        {
+          connectionModal: {
+            type: 'modal__error',
+            title: 'ERROR',
+            text: error,
+            class: 'modal__show',
+          },
+        },
+      );
 
     default:
       return state;

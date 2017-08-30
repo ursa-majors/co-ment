@@ -1,11 +1,8 @@
 export const SET_VIEW_CONNECTION = 'SET_VIEW_CONNECTION';
 export const CLEAR_VIEW_CONNECTION = 'CLEAR_VIEW_CONNECTION';
-export const SET_CONNECTIONS_MODAL_CLASS = 'SET_CONNECTIONS_MODAL_CLASS';
-export const SET_CONNECTIONS_MODAL_TEXT = 'SET_CONNECTIONS_MODAL_TEXT';
-export const SET_CONN_DETAILS_MODAL_CLASS = 'SET_CONN_DETAILS_MODAL_CLASS';
-export const SET_CONN_DETAILS_MODAL_TEXT = 'SET_CONN_DETAILS_MODAL_TEXT';
-export const SET_CONN_MODAL_CLASS = 'SET_CONN_MODAL_CLASS';
-export const SET_CONN_MODAL_TEXT = 'SET_CONN_MODAL_TEXT';
+export const SET_CONNECTIONS_MODAL = 'SET_CONNECTIONS_MODAL';
+export const SET_CONN_DETAILS_MODAL = 'SET_CONN_DETAILS_MODAL';
+export const SET_CONN_MODAL = 'SET_CONN_MODAL';
 
 export function setViewConnection(conn) {
   return ({
@@ -20,44 +17,23 @@ export function clearViewConnection() {
   });
 }
 
-export function setConnectionsModalText(text) {
+export function setConnectionsModal(options) {
   return ({
-    type: SET_CONNECTIONS_MODAL_TEXT,
-    payload: text,
+    type: SET_CONNECTIONS_MODAL,
+    payload: options,
   });
 }
 
-export function setConnectionsModalClass(css) {
+export function setConnDetailsModal(options) {
   return ({
-    type: SET_CONNECTIONS_MODAL_CLASS,
-    payload: css,
+    type: SET_CONN_DETAILS_MODAL,
+    payload: options,
   });
 }
 
-export function setConnDetailsModalText(text) {
+export function setConnModal(options) {
   return ({
-    type: SET_CONN_DETAILS_MODAL_TEXT,
-    payload: text,
-  });
-}
-
-export function setConnDetailsModalClass(css) {
-  return ({
-    type: SET_CONN_DETAILS_MODAL_CLASS,
-    payload: css,
-  });
-}
-
-export function setConnModalClass(css) {
-  return ({
-    type: SET_CONN_MODAL_CLASS,
-    payload: css,
-  });
-}
-
-export function setConnModalText(text) {
-  return ({
-    type: SET_CONN_MODAL_TEXT,
-    payload: text,
+    type: SET_CONN_MODAL,
+    payload: options,
   });
 }

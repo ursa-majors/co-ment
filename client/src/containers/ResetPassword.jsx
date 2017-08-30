@@ -22,9 +22,7 @@ class ResetPassword extends React.Component {
     };
   }
 
-  handleReset = (event) => {
-    event.preventDefault();
-
+  handleReset = () => {
     const key = this.props.match.params.key;
     const username = this.state.username;
     const password = this.state.password;
@@ -35,7 +33,6 @@ class ResetPassword extends React.Component {
         username, password, key,
       };
       this.props.api.resetPassword(body);
-
     } else {
       if (!username) {
         this.setState({
@@ -65,7 +62,7 @@ class ResetPassword extends React.Component {
   handleInput(event) {
     this.setState({ [event.target.id]: event.target.value, error: false });
     if (event.which === 13) {
-      this.handleSubmit();
+      this.handleReset();
     }
   }
 
@@ -73,7 +70,7 @@ class ResetPassword extends React.Component {
     const showError = (this.state.error ? '' : 'form__hidden');
     return (
       <div className="container form">
-        <form className="form__body">
+        <div className="form__body">
           <div className="form__header">
             Reset Password
           </div>
@@ -114,17 +111,19 @@ class ResetPassword extends React.Component {
           </div>
           <div className="form__input-group">
             <div className="form__button-wrap">
-              <button className="splash__button pointer" id="btn-reset" onClick={(e) => this.handleReset(e)}>Reset</button>
+              <button className="splash__button pointer" id="btn-reset" onClick={() => this.handleReset()}>Reset</button>
               <Link to="/login">
                 <button className="splash__button pointer" id="btn-login">Sign In</button>
               </Link>
             </div>
           </div>
-        </form>
+        </div>
         <Spinner cssClass={this.props.login.pwResetSpinnerClass} />
         <ModalSm
           modalClass={this.props.login.pwResetModalClass}
           modalText={this.props.login.pwResetModalText}
+          modalTitle="RESET PASSWORD"
+          modalType={this.props.login.pwResetModalType}
           dismiss={
             () => {
               this.props.actions.dismissPWResetModal();
