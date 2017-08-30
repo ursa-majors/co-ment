@@ -113,12 +113,16 @@ class EditPost extends React.Component {
     };
 
     if (this.props.posts.editForm.update) {
-      this.props.api.modifyPost(this.props.appState.authToken, this.props.match.params.id, body);
+      this.props.api.modifyPost(this.props.appState.authToken, this.props.match.params.id, body)
+        .then(() => {
+          this.props.history.push('/posts');
+        });
     } else {
-      this.props.api.addPost(this.props.appState.authToken, body);
+      this.props.api.addPost(this.props.appState.authToken, body)
+      .then(() => {
+        this.props.history.push('/posts');
+      });
     }
-
-    this.props.history.push('/posts');;
   }
 
   render() {

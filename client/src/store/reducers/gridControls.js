@@ -1,6 +1,7 @@
 import update from 'immutability-helper';
 
 import { SET_SEARCH_TEXT, SET_FILTER, SET_SORT } from '../actions/gridControlActions';
+import { ADD_POST_SUCCESS } from '../actions/apiPostActions';
 
 const INITIAL_STATE = {
   searchText: '',
@@ -35,6 +36,9 @@ function gridControls(state = INITIAL_STATE, action) {
   let options = {};
   let reverseSort;
   switch (action.type) {
+
+    case ADD_POST_SUCCESS:
+      return Object.assign({}, state, { operation: 'ADD' });
 
     case SET_SEARCH_TEXT:
       return Object.assign(
