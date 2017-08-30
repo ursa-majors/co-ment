@@ -2,6 +2,11 @@
 
    Service to dispatch emails from our API
    
+   Gmail OAuth2 help:
+   https://stackoverflow.com/questions/45665349/trying-to-use-nodemailer-to-send-emails-using-gmail-and-am-receiving-the-error
+   
+   https://medium.com/@pandeysoni/nodemailer-service-in-node-js-using-smtp-and-xoauth2-7c638a39a37e
+   
 */
 
 const dotenv        = require('dotenv').config();
@@ -9,16 +14,19 @@ const nodeMailer    = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
 
 
-/** create nodemailer transporter
+/** create Gmail Oauth2 transporter
 */
-const transporter   = nodeMailer.createTransport(smtpTransport({
-    secure   : true,
-    service  : 'Gmail',
-    auth     : {
-        user : process.env.EMAIL_USER,
-        pass : process.env.EMAIL_PASS
+const gmailTransporter = nodeMailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        type         : 'OAuth2',
+        user         : process.env.EMAIL_USER,
+        clientId     : process.env.GM_CLIENT_ID,
+        clientSecret : process.env.GM_CLIENT_SECRET,
+        refresToken  : process.env.GM_REFRESH_TOKEN,
+        accessToken  : process.env.GM_ACCESS_TOKEN
     }
-}));
+});
 
 
 /** send email message
@@ -41,7 +49,7 @@ function mailer(to, subject, body) {
         mailObj.html = body.text;
     }
     
-    transporter.sendMail(mailObj, (err, info) => {
+    gmailTransporter.sendMail(mailObj, (err, info) => {
         if (err) {
             console.log(err);
         } else {
@@ -49,5 +57,6 @@ function mailer(to, subject, body) {
         }
     });
 }
+
 
 module.exports = mailer;
