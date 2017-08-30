@@ -109,6 +109,7 @@ class EditPost extends React.Component {
       title: this.props.posts.editForm.title,
       body: this.props.posts.editForm.content,
       keywords: this.props.posts.editForm.keywords,
+      active: this.props.posts.editForm.active,
       availability: '',
     };
 
