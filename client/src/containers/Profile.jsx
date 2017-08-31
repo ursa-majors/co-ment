@@ -372,7 +372,9 @@ class Profile extends React.Component {
                     placeholder="http://... "
                   />
                 </div>
-              </div> }
+              </div>
+            </div> 
+            }
             {this.state.page === 2 &&
             <div className="profile__pageTwo">
               <div className="profile__column-L">
