@@ -20,7 +20,7 @@ export const CONNECTION_FAILURE = 'CONNECTION_FAILURE';
 export function connect(token, details) {
   return {
     [CALL_API]: {
-      endpoint: 'https://co-ment.glitch.me/api/connect',
+      endpoint: 'https://co-ment.glitch.me/api/connections',
       method: 'POST',
       types: [CONNECTION_REQUEST, CONNECTION_SUCCESS, CONNECTION_FAILURE],
       headers: { Authorization: `Bearer ${token}`,
@@ -52,30 +52,9 @@ export function getConnections(token) {
 }
 
 /*
-* Function getConnections - retrieve all connections where the given ID is either mentor or mentee
+* Function updateConnectionStatus
 * @param {string} token - the authToken that allows API actions
-* @param {string} id - a string representing the user ID
-*/
-export const GET_CONNECTION_REQUEST = 'GET_CONNECTION_REQUEST';
-export const GET_CONNECTION_SUCCESS = 'GET_CONNECTION_SUCCESS';
-export const GET_CONNECTION_FAILURE = 'GET_CONNECTION_FAILURE';
-
-export function getConnection(token, id) {
-  return {
-    [CALL_API]: {
-      endpoint: `https://co-ment.glitch.me/api/connection/${id}`,
-      method: 'GET',
-      types:
-        [GET_CONNECTION_REQUEST, GET_CONNECTION_SUCCESS, GET_CONNECTION_FAILURE],
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  };
-}
-
-/*
-* Function getConnections - retrieve all connections where the given ID is either mentor or mentee
-* @param {string} token - the authToken that allows API actions
-* @param {string} id - a string representing the user ID
+* @param {string} update - a string representing the new status
 */
 export const UPDATE_CONNECTION_STATUS_REQUEST = 'UPDATE_CONNECTION_STATUS_REQUEST';
 export const UPDATE_CONNECTION_STATUS_SUCCESS = 'UPDATE_CONNECTION_STATUS_SUCCESS';
@@ -84,8 +63,8 @@ export const UPDATE_CONNECTION_STATUS_FAILURE = 'UPDATE_CONNECTION_STATUS_FAILUR
 export function updateConnectionStatus(token, update) {
   return {
     [CALL_API]: {
-      endpoint: 'https://co-ment.glitch.me/api/updateconnection/',
-      method: 'POST',
+      endpoint: 'https://co-ment.glitch.me/api/connections/',
+      method: 'PUT',
       types: [
         UPDATE_CONNECTION_STATUS_REQUEST,
         UPDATE_CONNECTION_STATUS_SUCCESS,
