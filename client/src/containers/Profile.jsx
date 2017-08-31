@@ -60,14 +60,20 @@ class Profile extends React.Component {
   }
 
   handleInput = (e) => {
-    // send form field values to editForm object
+    // // send form field values to editForm object
     this.props.actions.setFormField(e.target.name, e.target.value);
   }
 
   handleTextAreaInput(e) {
-    // handle input and expand textarea height to match content
-    this.props.actions.setFormField(e.target.name, e.target.value);
-    Profile.adjustTextArea(e.target);
+    // limit length to 620 characters
+     if (e.target.value.length > 620) {
+      return null;
+    } else {
+      // handle input
+      this.props.actions.setFormField(e.target.name, e.target.value);
+      // expand textarea height to match content
+      Profile.adjustTextArea(e.target);
+    }
   }
 
   handleRadioChange(e) {
@@ -75,21 +81,21 @@ class Profile extends React.Component {
     this.props.actions.setFormField('gender', e.target.value);
   }
 
-  checkGHProfile() {
-    // check to see if user has entered valid github username.
-    // if field is empty or gh profile not found, OR if field is filled but no profile found, display error message (TODO)
-    const ghUserName = document.getElementById('ghUserName').value;
-    if (ghUserName) {
-      const ghProfile = this.props.api.githubProfile(ghUserName);
-      console.log(ghProfile);
-      if (ghProfile === undefined || this.props.profiles.getGHError) {
-        console.log('user not found');
-        // need error handling here
-      }
-    } else {
-        console.log('enter gh username first');
-      }
-  }
+  // checkGHProfile() {
+  //   // check to see if user has entered valid github username.
+  //   // if field is empty or gh profile not found, OR if field is filled but no profile found, display error message (TODO)
+  //   const ghUserName = document.getElementById('ghUserName').value;
+  //   if (ghUserName) {
+  //     const ghProfile = this.props.api.githubProfile(ghUserName);
+  //     console.log(ghProfile);
+  //     if (ghProfile === undefined || this.props.profiles.getGHError) {
+  //       console.log('user not found');
+  //       // need error handling here
+  //     }
+  //   } else {
+  //       console.log('enter gh username first');
+  //     }
+  // }
 
   addLanguage() {
     // add field value to array of languages, display tags above input field, clear input
@@ -204,6 +210,7 @@ class Profile extends React.Component {
   handleSubmit() {
     // clear previous errors
     this.props.actions.setFormField('hideErr', 'posts__hidden');
+    this.props.actions.setFormField('saveErr', null);
 
     // if user has entered a tag, but not added it to the array, add it now
     if (this.props.profiles.editForm.skill !== '') {
@@ -305,16 +312,6 @@ class Profile extends React.Component {
                     placeholder="GitHub User Name"
                   />
                 </div>
-                <div className="form__input-group profile__button-wrap">
-                {this.props.profiles.editForm.ghUserName &&
-                  <button
-                    className="profile__button profile__button--github"
-                    onClick={(e) => this.checkGHProfile(e)}
-                    >
-                    <i className="fa fa-github profile__icon--github" aria-hidden="true" />
-                   {this.props.profiles.gettingGHProfile ? ' loading profile' : ' Import Data'}
-                  </button> }
-                </div>
                 <div className="form__input-group">
                   <label htmlFor="name" className="form__label">Full name
                   </label>
@@ -353,7 +350,7 @@ class Profile extends React.Component {
                     name="avatarUrl"
                     value={this.props.profiles.editForm.avatarUrl || ''}
                     onChange={e => this.handleInput(e)}
-                    placeholder="Paste URL to profile image"
+                    placeholder="http://... "
                   />
                 </div>
               </div>
@@ -463,7 +460,16 @@ class Profile extends React.Component {
                 <div className="form__input-group">
                   <label htmlFor="about" className="form__label">About
                   </label>
-                  <textarea className="form__input form__input--textarea" id="about" name="about" value={this.props.profiles.editForm.about} onChange={e => this.handleTextAreaInput(e)} placeholder="Introduce yourself" ref={(input) => { this.textInput = input; }} rows="3"/>
+                  <textarea
+                    className="form__input form__input--textarea"
+                    id="about"
+                    name="about"
+                    value={this.props.profiles.editForm.about}
+                    onChange={e => this.handleTextAreaInput(e)}
+                    placeholder="Introduce yourself! (limit 620 characters)"
+                    ref={(input) => { this.textInput = input; }}
+                    rows="3"
+                    maxlength="620"/>
                 </div>
               </div>
             </div> }
@@ -574,8 +580,7 @@ class Profile extends React.Component {
           }
         <div className="form__input-group">
             <div className={msgClass}>
-            {this.props.profiles.saveError &&
-              this.props.profiles.saveError.message }
+            {this.props.profiles.saveError }
             </div>
           </div>
         </div>

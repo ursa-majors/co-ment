@@ -10,6 +10,14 @@ import ModalSm from './ModalSm';
 
 class ViewProfile extends React.Component {
 
+  static adjustCardHeight() {
+    // expand card height to fit content without scrollbar
+    const el1 = document.getElementById('back');
+    let adjustedHeight1 = el1.clientHeight;
+    adjustedHeight1 = Math.max(el1.scrollHeight, adjustedHeight1);
+    if (adjustedHeight1 > el1.clientHeight) { el1.style.height = `${adjustedHeight1}px`; }
+  }
+
   constructor(props) {
     super(props);
 
@@ -41,7 +49,7 @@ class ViewProfile extends React.Component {
     newState.flip = !this.state.flip;
     this.setState({
       ...newState,
-    })
+    }, ()=>ViewProfile.adjustCardHeight())
   }
 
   toggleThumb() {
@@ -136,7 +144,7 @@ class ViewProfile extends React.Component {
     let cardSize = this.state.thumb ? 'thumb' : 'full';
 
     return (
-      <div className="view-profile">
+      <div className="view-profile" id="view-profile">
         <Spinner cssClass={`${this.props.profile.profileSpinnerClass}`} />
         <ModalSm
           modalClass={`${this.props.profile.viewProfileModalClass}`}

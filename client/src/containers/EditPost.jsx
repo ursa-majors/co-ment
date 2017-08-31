@@ -29,7 +29,13 @@ class EditPost extends React.Component {
 
   // event handler for form inputs...sets the state value based on element id
   handleChange(event) {
+    // limit post body to 620 chars
+    if (event.target.id === 'content' && event.target.value.length > 620) {
+      return null;
+    } else {
+      // handle input
     this.props.actions.setFormField(event.target.id, event.target.value);
+  }
   }
 
   // event handler for checkbox change
@@ -196,7 +202,8 @@ class EditPost extends React.Component {
               name="content"
               value={this.props.posts.editForm.content}
               onChange={e => this.handleChange(e)}
-              placeholder="Add post content"
+              placeholder="Add post content (limit 620 characters)"
+              maxlength="620"
             />
           </div>
           <div className="form__input-group" >
