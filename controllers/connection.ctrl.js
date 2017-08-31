@@ -3,7 +3,7 @@
 const Connection = require('../models/connection');
 
 
-/* ============================ PUBLIC METHODS ============================= */
+/* ============================ ROUTE HANDLERS ============================= */
 
 /* GET CONNECTIONS
    Expects the user's _id from the JWT token

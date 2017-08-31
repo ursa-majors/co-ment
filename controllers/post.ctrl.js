@@ -3,23 +3,23 @@
 const User = require('../models/user');
 const Post = require('../models/post');
 
-const user_projection = {
-    signupKey : 0, passwordResetKey: 0, hash: 0, salt: 0
-};
 
+/* ============================ ROUTE HANDLERS ============================= */
 
-/* ============================ PUBLIC METHODS ============================= */
-
-/* GET ALL POSTS
-   Query params for filtering requests:
-     'role'   Return only 'mentor' or 'mentee' wanted posts
-     'id'     Return single specific post object '_id'
-   Example: GET > `/api/posts?role=mentor&id=12345689`
-*/
+// GET POSTS
+//   Example: GET >> /api/posts?role=mentor&id=12345689
+//   Secured: yes, valid JWT required
+//   Query params for filtering requests:
+//     role        Return only 'mentor' or 'mentee' wanted posts
+//     id          Return single specific post object '_id'
+//     author_id   Return only posts by a specific author
+//   Returns JSON array of 'post' objects on success.
+//
 function getPosts(req, res) {
     
     const query = {
-        deleted : false  // find only non-deleted posts
+        active  : true,
+        deleted : false
     };
 
     // check for 'id' query param & add to 'query' map
@@ -39,8 +39,6 @@ function getPosts(req, res) {
         query.author_id = req.query.author_id;
     }
 
-    console.log(query);
-
     Post.find(query, (err, posts) => {
        if (!posts || !posts.length) {
             return res
@@ -53,13 +51,27 @@ function getPosts(req, res) {
             .json(posts);
 
     });
-
 }
 
-/* NEW POST
-   Grabs 'author_id' from JWT token parsed by 'auth' middleware.
-   Example: POST > `/api/posts`
-*/
+
+// NEW POST
+//   Example: POST >> /api/posts
+//   Secured: yes, valid JWT required
+//   Expects:
+//     1) 'author_id' from JWT token
+//     2) request body properties : {
+//          author        : String
+//          author_id     : String
+//          author_name   : String
+//          author_avatar : String
+//          role          : String
+//          title         : String
+//          body          : String
+//          keywords      : Array
+//          availability  : String
+//        }
+//   Returns new post object on success.
+//
 function createPost(req, res) {
         
     // Check if exists non-deleted post with same author_id, role & title
@@ -120,7 +132,26 @@ function createPost(req, res) {
 
 }
 
+
 // UPDATE A POST
+//   Example: PUT >> /api/posts/597dd8665229970e99c6ab55
+//   Secured: yes, valid JWT required
+//   Expects:
+//     1) '_id' from JWT token
+//     2) request body properties : {
+//          action        : Boolean
+//          author        : String
+//          author_id     : String
+//          author_name   : String
+//          author_avatar : String
+//          role          : String
+//          title         : String
+//          body          : String
+//          keywords      : Array
+//          availability  : String
+//        }
+//   Returns updated post on success.
+//
 function updatePost(req, res) {
 
     // target post by post '_id' and post 'author_id'.
@@ -179,7 +210,15 @@ function updatePost(req, res) {
 
 }
 
+
 // DELETE A POST
+//   Example: DELETE > /api/posts/597dd8665229970e99c6ab55
+//   Secured: yes, valid JWT required
+//   Expects:
+//     1) '_id' from JWT token
+//     2) 'id' from request params
+//   Returns deleted post on success.
+//
 function deletePost(req, res) {
 
     // target post by post '_id' and post 'author_id'.
@@ -223,9 +262,4 @@ function deletePost(req, res) {
 
 /* ============================== EXPORT API =============================== */
 
-module.exports = {
-  getPosts   : getPosts,
-  createPost : createPost,
-  updatePost : updatePost,
-  deletePost : deletePost
-};
+module.exports = { getPosts, createPost, updatePost, deletePost };

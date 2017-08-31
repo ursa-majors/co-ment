@@ -1,44 +1,13 @@
 /* ================================= SETUP ================================= */
 
-const passport = require('passport');
-const crypto   = require('crypto');
-const mailer   = require('../utils/mailer');
-const emailTpl = require('../utils/mailtemplates');
-const User     = require('../models/user');
+const passport  = require('passport');
+const mailer    = require('../utils/mailer');
+const emailTpl  = require('../utils/mailtemplates');
+const mailUtils = require('../utils/mailutils');
+const User      = require('../models/user');
 
 
 /* =============================== UTILITIES =============================== */
-
-/* Generate random signup key
- *
- * @params    [none]
- * @returns   [object]    [signup key]
-*/
-function makeSignupKey() {
-    const buf     = crypto.randomBytes(24);
-    const created = Date.now();
-
-    return {
-        key : buf.toString('hex'),
-        ts  : created,            // created time (in millisecond)
-        exp : created + 86400000  // expires in 1 day (86400000 ms)
-    };
-}
-
-
-/* Generate registration email validation url w/custom key
- * Makes sure key is unique & saves to DB
- *
- * @params    [string]   user_id   [id of user to validate]
- * @params    [string]   key       [custom validation key]
- * @returns   [object]             [custom validation URL]
-*/
-function makeValidationUrl(user_id, key) {
-    const baseUrl = 'https://co-ment.glitch.me/api/validate';
-
-    return `${baseUrl}?uid=${user_id}&key=${key}`;
-
-}
 
 
 /* Dispatch new user validation email
@@ -50,7 +19,7 @@ function makeValidationUrl(user_id, key) {
 */
 function sendValidationEmail(params) {
 
-    const url     = makeValidationUrl(params.to_uid, params.key);
+    const url     = mailUtils.makeValidationUrl(params.to_uid, params.key);
     const subject = 'co/ment - Email verification required';
     const body    = {
         type: 'html',
@@ -93,7 +62,7 @@ function sendPWResetEmail(params) {
 }
 
 
-/* ============================ PUBLIC METHODS ============================= */
+/* ============================ ROUTE HANDLERS ============================= */
 
 // REGISTER
 function register(req, res) {
@@ -119,7 +88,7 @@ function register(req, res) {
             newUser.username   = req.body.username;
             newUser.email      = req.body.email;
             newUser.validated  = false;
-            newUser.signupKey  = makeSignupKey();
+            newUser.signupKey  = mailUtils.makeSignupKey();
             newUser.hashPassword(req.body.password);
 
             return newUser;
@@ -281,7 +250,7 @@ function login(req, res, next) {
 function sendReset(req, res) {
     
     //generate a reset key
-    const resetKey = makeSignupKey();
+    const resetKey = mailUtils.makeSignupKey();
     
     //look up user with user name
     User.findOne({username: req.body.username})
@@ -367,10 +336,4 @@ function resetPass(req, res) {
 
 /* ============================== EXPORT API =============================== */
 
-module.exports = {
-  register  : register,
-  validate  : validate,
-  login     : login,
-  sendReset : sendReset,
-  resetPass : resetPass
-};
+module.exports = { register, validate, login, sendReset, resetPass };

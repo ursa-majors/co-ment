@@ -57,7 +57,7 @@ const validationTemplate = (url) => {
 };
 
 
-const contactTemplate = (to_user, from_user, from_email, bodyText, connectionId) => {
+const contactTemplate = (toUser, fromUser, fromEmail, bodyText, connectionId) => {
   console.log('mailtemplatesjs', connectionId);
   return `
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -232,7 +232,7 @@ const contactTemplate = (to_user, from_user, from_email, bodyText, connectionId)
                   <a href="https://co-ment.glitch.me/connectiondetails/${connectionId}"><img alt="co/ment" height="129" src="https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/co-ment_logo_400x129.png?raw=true" style="padding-top:50px;" width="400"></a></td>
                 </tr>
                 <tr>
-                  <td class="headline">Hello ${to_user}!</td>
+                  <td class="headline">Hello ${toUser}!</td>
                 </tr>
                 <tr>
                   <td class="">
@@ -241,7 +241,7 @@ const contactTemplate = (to_user, from_user, from_email, bodyText, connectionId)
                     <tbody>
                       <tr>
                         <td style="color:#ffffff;" class="">&nbsp;
-                        <p style="color: white; font-size: 1.4em; line-height: 1.5em;font-weight:100;">Great news! <strong>${from_user}</strong> (<a class="link" href="mailto:${from_email}">${from_email}</a>) has responded to your ad on co/ment!</p>
+                        <p style="color: white; font-size: 1.4em; line-height: 1.5em;font-weight:100;">Great news! <strong>${fromUser}</strong> (<a class="link" href="mailto:${fromEmail}">${fromEmail}</a>) has responded to your ad on co/ment!</p>
 
                         <p style="color: white; font-size: 1.2em; line-height: 1.4em;font-weight:100; text-align: left; padding: 0 20px;">${bodyText}</p>
                         <br>

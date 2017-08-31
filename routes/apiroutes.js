@@ -16,6 +16,22 @@ const auth   = jwt({ secret: secret, requestProperty: 'token' });
 router.use(auth);
 
 
+// Check wheather user has validated their account
+function checkValidated(req, res, next) {
+    
+    const validatedErrMsg = 'You need to validate your account before you can access this resource. Please visit your Profile and generate a new validation email.';
+    
+    if (!req.token.validated) {
+        return res
+            .status(400)  // bad request
+            .json({ message : validatedErrMsg });
+    } else {
+        next();
+    }
+    
+}
+
+
 /* =========================== INIT CONTROLLERS ============================ */
 
 const profileCtrl    = require('../controllers/profile.ctrl');
@@ -25,10 +41,6 @@ const connectionCtrl = require('../controllers/connection.ctrl');
 
 
 /* ================================ ROUTES ================================= */
-
-// Get all user profiles
-// Returns an array of user profile objects
-router.get('/api/profiles', profileCtrl.getProfiles);
 
 
 // Get a user's profile
@@ -51,6 +63,15 @@ router.delete('/api/profile/:id', profileCtrl.deleteProfile);
 router.get('/api/posts', postCtrl.getPosts);
 
 
+// INIT MIDDLEWARE - check for `validated: true` on routes below
+router.use(checkValidated);
+
+
+// Get all user profiles
+// Returns an array of user profile objects
+router.get('/api/profiles', profileCtrl.getProfiles);
+
+
 // Create a post
 // Returns new post object
 router.post('/api/posts', postCtrl.createPost);
@@ -66,9 +87,14 @@ router.put('/api/posts/:id', postCtrl.updatePost);
 router.delete('/api/posts/:id', postCtrl.deletePost);
 
 
-// Send ontact email to another user
+// Send contact email to another user
 // Returns success message
 router.post('/api/contact/:id', contactCtrl.sendEmail);
+
+
+// Resend user validation email
+// Returns success message
+router.get('/api/resendvalidation', contactCtrl.resendValidation);
 
 
 // Get all connections where the user is either a mentor or mentee
