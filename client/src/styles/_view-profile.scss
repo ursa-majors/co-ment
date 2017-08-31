@@ -4,7 +4,8 @@
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    height: 100vh;
+    min-height: 100vh;
+    height: 100%;
     display: flex;
     justify-content: center;
 
@@ -229,7 +230,7 @@
     }
 
     &__about-wrap {
-      padding:50px;
+      padding: 0 40px 40px 40px;
     }
 
     &__icon--flip {
@@ -476,7 +477,7 @@
   position: absolute;
   top:0;
   left:0;
-  overflow-y: auto;
+  // overflow-y: auto;
 }
 
 #front.flip  {

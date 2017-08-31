@@ -66,14 +66,20 @@ class Profile extends React.Component {
   }
 
   handleInput = (e) => {
-    // send form field values to editForm object
+    // // send form field values to editForm object
     this.props.actions.setFormField(e.target.name, e.target.value);
   }
 
   handleTextAreaInput(e) {
-    // handle input and expand textarea height to match content
-    this.props.actions.setFormField(e.target.name, e.target.value);
-    Profile.adjustTextArea(e.target);
+    // limit length to 620 characters
+     if (e.target.value.length > 620) {
+      return null;
+    } else {
+      // handle input
+      this.props.actions.setFormField(e.target.name, e.target.value);
+      // expand textarea height to match content
+      Profile.adjustTextArea(e.target);
+    }
   }
 
   handleRadioChange(e) {
@@ -81,22 +87,21 @@ class Profile extends React.Component {
     this.props.actions.setFormField('gender', e.target.value);
   }
 
-  checkGHProfile() {
-    // check to see if user has entered valid github username.
-    // if field is empty or gh profile not found, OR if field is filled but no profile found,
-    // display error message (TODO)
-    const ghUserName = document.getElementById('ghUserName').value;
-    if (ghUserName) {
-      const ghProfile = this.props.api.githubProfile(ghUserName);
-      console.log(ghProfile);
-      if (ghProfile === undefined || this.props.profiles.getGHError) {
-        console.log('user not found');
-        // need error handling here
-      }
-    } else {
-        console.log('enter gh username first');
-      }
-  }
+  // checkGHProfile() {
+  //   // check to see if user has entered valid github username.
+  //   // if field is empty or gh profile not found, OR if field is filled but no profile found, display error message (TODO)
+  //   const ghUserName = document.getElementById('ghUserName').value;
+  //   if (ghUserName) {
+  //     const ghProfile = this.props.api.githubProfile(ghUserName);
+  //     console.log(ghProfile);
+  //     if (ghProfile === undefined || this.props.profiles.getGHError) {
+  //       console.log('user not found');
+  //       // need error handling here
+  //     }
+  //   } else {
+  //       console.log('enter gh username first');
+  //     }
+  // }
 
   addLanguage() {
     // add field value to array of languages, display tags above input field, clear input
@@ -310,73 +315,62 @@ class Profile extends React.Component {
         <div className="profile__body">
           <div className="form__header">Update Profile: {this.props.profiles.userProfile.username}</div>
           <div className="profile__column-wrap">
-            {this.state.page === 1 &&
-              <div className="profile__pageOne">
-                <div className="profile__column-L">
-                  <div className="form__input-group">
-                    <label htmlFor="ghUserName" className="form__label">GitHub User Name
-                    </label>
-                    <input
-                      className="form__input"
-                      type="text"
-                      id="ghUserName"
-                      name="ghUserName"
-                      value={this.props.profiles.editForm.ghUserName}
-                      onChange={e => this.handleInput(e)}
-                      placeholder="GitHub User Name"
-                    />
-                  </div>
-                  <div className="form__input-group profile__button-wrap">
-                  {this.props.profiles.editForm.ghUserName &&
-                    <button
-                      className="profile__button profile__button--github"
-                      onClick={e => this.checkGHProfile(e)}
-                    >
-                      <i className="fa fa-github profile__icon--github" aria-hidden="true" />
-                      {this.props.profiles.gettingGHProfile ? ' loading profile' : ' Import Data'}
-                    </button> }
-                  </div>
-                  <div className="form__input-group">
-                    <label htmlFor="name" className="form__label">Full name
-                    </label>
-                    <input
-                      className="form__input"
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={this.props.profiles.editForm.name || ''}
-                      onChange={e => this.handleInput(e)}
-                      placeholder="Full name"
-                    />
-                  </div>
+          {this.state.page === 1 &&
+            <div className="profile__pageOne">
+              <div className="profile__column-L">
+                <div className="form__input-group">
+                  <label htmlFor="ghUserName" className="form__label">GitHub User Name
+                  </label>
+                  <input
+                    className="form__input"
+                    type="text"
+                    id="ghUserName"
+                    name="ghUserName"
+                    value={this.props.profiles.editForm.ghUserName}
+                    onChange={e => this.handleInput(e)}
+                    placeholder="GitHub User Name"
+                  />
                 </div>
-                <div className="profile__column-R">
-                  <div className="form__input-group">
-                    <label htmlFor="location" className="form__label">Location
-                    </label>
-                    <input
-                      className="form__input"
-                      type="text"
-                      id="location"
-                      name="location"
-                      value={this.props.profiles.editForm.location || ''}
-                      onChange={e => this.handleInput(e)}
-                      placeholder="Location"
-                    />
-                  </div>
-                  <div className="form__input-group">
-                    <label htmlFor="name" className="form__label">Link to profile image
-                    </label>
-                    <input
-                      className="form__input"
-                      type="text"
-                      id="avatarUrl"
-                      name="avatarUrl"
-                      value={this.props.profiles.editForm.avatarUrl || ''}
-                      onChange={e => this.handleInput(e)}
-                      placeholder="Paste URL to profile image"
-                    />
-                  </div>
+                <div className="form__input-group">
+                  <label htmlFor="name" className="form__label">Full name
+                  </label>
+                  <input
+                    className="form__input"
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={this.props.profiles.editForm.name || ''}
+                    onChange={e => this.handleInput(e)}
+                    placeholder="Full name"
+                  />
+                </div>
+              </div>
+              <div className="profile__column-R">
+                <div className="form__input-group">
+                  <label htmlFor="location" className="form__label">Location
+                  </label>
+                  <input
+                    className="form__input"
+                    type="text"
+                    id="location"
+                    name="location"
+                    value={this.props.profiles.editForm.location || ''}
+                    onChange={e => this.handleInput(e)}
+                    placeholder="Location"
+                  />
+                </div>
+                <div className="form__input-group">
+                  <label htmlFor="name" className="form__label">Link to profile image
+                  </label>
+                  <input
+                    className="form__input"
+                    type="text"
+                    id="avatarUrl"
+                    name="avatarUrl"
+                    value={this.props.profiles.editForm.avatarUrl || ''}
+                    onChange={e => this.handleInput(e)}
+                    placeholder="http://... "
+                  />
                 </div>
               </div> }
             {this.state.page === 2 &&
