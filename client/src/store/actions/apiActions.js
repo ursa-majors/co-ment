@@ -5,11 +5,10 @@ export const CONTACT_SUCCESS = 'CONTACT_SUCCESS';
 export const CONTACT_FAILURE = 'CONTACT_FAILURE';
 
 export function contact(token, msg, connectionId, recipient) {
-
   const body = {
-        connectionId: connectionId,
-        bodyText: msg,
-    };
+    connectionId,
+    bodyText: msg,
+  };
 
   return {
     [CALL_API]: {
@@ -18,7 +17,7 @@ export function contact(token, msg, connectionId, recipient) {
       types: [CONTACT_REQUEST, CONTACT_SUCCESS, CONTACT_FAILURE],
       headers: { Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     },
   };
 }
@@ -44,7 +43,6 @@ export const MODIFY_PROFILE_SUCCESS = 'MODIFY_PROFILE_SUCCESS';
 export const MODIFY_PROFILE_FAILURE = 'MODIFY_PROFILE_FAILURE';
 
 export function modifyProfile(token, profileId, body) {
-  console.log('136',body);
   return {
     [CALL_API]: {
       endpoint: `https://co-ment.glitch.me/api/profile/${profileId}`,
@@ -71,6 +69,25 @@ export function githubProfile(username) {
         Accept: 'application/vnd.github.v3+json',
         'User-Agent': 'request',
       },
+    },
+  };
+}
+
+export const RESEND_ACCT_VALIDATION_REQUEST = 'RESEND_ACCT_VALIDATION_REQUEST';
+export const RESEND_ACCT_VALIDATION_SUCCESS = 'RESEND_ACCT_VALIDATION_SUCCESS';
+export const RESEND_ACCT_VALIDATION_FAILURE = 'RESEND_ACCT_VALIDATION_FAILURE';
+
+export function resendAcctValidation(token) {
+  return {
+    [CALL_API]: {
+      endpoint: 'https://co-ment.glitch.me/api/resendvalidation',
+      method: 'GET',
+      headers: { Authorization: `Bearer ${token}` },
+      types: [
+        RESEND_ACCT_VALIDATION_REQUEST,
+        RESEND_ACCT_VALIDATION_SUCCESS,
+        RESEND_ACCT_VALIDATION_FAILURE,
+      ],
     },
   };
 }

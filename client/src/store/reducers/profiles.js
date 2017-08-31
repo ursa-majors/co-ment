@@ -1,10 +1,11 @@
 import update from 'immutability-helper';
 import { SET_EDIT_PROFILE, SET_FORM_FIELD, ADD_LANGUAGE, ADD_SKILL, REMOVE_LANGUAGE,
   REMOVE_SKILL, DISMISS_VIEWPROFILE_MODAL, SET_PROFILE_MODAL_CLASS, SET_PROFILE_MODAL_TEXT,
-} from '../actions/profileActions';
+  SET_UPD_PROFILE_MODAL } from '../actions/profileActions';
 import { GET_PROFILE_REQUEST, GET_PROFILE_SUCCESS, GET_PROFILE_FAILURE,
   MODIFY_PROFILE_REQUEST, MODIFY_PROFILE_SUCCESS, MODIFY_PROFILE_FAILURE,
   GITHUB_PROFILE_REQUEST, GITHUB_PROFILE_SUCCESS, GITHUB_PROFILE_FAILURE,
+  RESEND_ACCT_VALIDATION_REQUEST, RESEND_ACCT_VALIDATION_SUCCESS, RESEND_ACCT_VALIDATION_FAILURE,
 } from '../actions/apiActions';
 import { VALIDATE_TOKEN_SUCCESS, LOGIN_SUCCESS, REGISTRATION_SUCCESS } from '../actions/apiLoginActions';
 
@@ -63,6 +64,13 @@ const INITIAL_STATE = {
   addError: null,
   savingProfile: false,
   saveError: null,
+  updProfileSpinnerClass: 'spinner__hide',
+  updProfileModal: {
+    class: 'modal__hide',
+    text: '',
+    title: '',
+    type: '',
+  },
 };
 
 function profiles(state = INITIAL_STATE, action) {
@@ -297,13 +305,17 @@ function profiles(state = INITIAL_STATE, action) {
     * Purpose: Display an error message to the user.
     */
     case MODIFY_PROFILE_FAILURE:
-      error = action.payload.data || 'An unknown error occurred while modifying profile';
+    console.log(action);
+      error = action.payload.response.message || 'An unknown error occurred while modifying profile';
       return Object.assign(
         {},
         state,
         {
           savingProfile: false,
           saveError: error,
+          editForm: {
+            errMsg: error,
+          },
         },
       );
 
@@ -363,6 +375,43 @@ function profiles(state = INITIAL_STATE, action) {
           viewProfileModalClass: 'modal__show',
           viewProfileModalText: error,
         });
+
+    case RESEND_ACCT_VALIDATION_REQUEST:
+      return Object.assign({}, state, { updProfileSpinnerClass: 'spinner__show' });
+
+    case RESEND_ACCT_VALIDATION_SUCCESS:
+      return Object.assign(
+        {},
+        state,
+        {
+          updProfileSpinnerClass: 'spinner__hide',
+          updProfileModal: {
+            class: 'modal__show',
+            text: 'A validation email has been sent to your account.  Use the link to complete the validation',
+            type: 'modal__success',
+            title: 'EMAIL SENT',
+          },
+        },
+      );
+
+    case RESEND_ACCT_VALIDATION_FAILURE:
+      error = action.payload.response.message || 'An unknown error occurred while sending message';
+      return Object.assign(
+        {},
+        state,
+        {
+          updProfileSpinnerClass: 'spinner__hide',
+          updProfileModal: {
+            class: 'modal__show',
+            text: error,
+            type: 'modal__success',
+            title: 'EMAIL SENT',
+          },
+        },
+      );
+
+    case SET_UPD_PROFILE_MODAL:
+      return Object.assign({}, state, { updProfileModal: action.payload });
 
     default:
       return state;
