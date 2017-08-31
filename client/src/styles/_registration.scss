@@ -87,6 +87,64 @@
       white-space: nowrap;
     }
 
+    &--option {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      -ms-appearance: none;
+      -o-appearance: none;
+      appearance: none;
+      position: relative;
+      top: 4px;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 20px;
+      width: 20px;
+      transition: all 0.15s ease-out 0s;
+      background: $color_aqua;
+      border: none;
+      color: rgba(255,255,255,.8);
+      cursor: pointer;
+      display: inline-block;
+      margin-right: 0.5rem;
+      outline: none;
+      position: relative;
+      z-index: 1000;
+
+      &:hover {
+        background: $color_aqua_lighter;
+      }
+
+      &:checked {
+        background: #40e0d0;
+
+        &::before {
+          height: 20px;
+          width: 20px;
+          position: absolute;
+          content: '\2714';
+          display: inline-block;
+          font-size: 16px;
+          text-align: center;
+          line-height: 20px;
+            &:focus {
+            border-radius: 50%;
+            outline: 2px solid $color_focus_ring !important; /* for non-webkit browsers */
+            outline: 2px auto -webkit-focus-ring-color !important;
+          }
+        }
+        ::after {
+          background: #40e0d0;
+          content: '';
+          display: block;
+          position: relative;
+          z-index: 100;
+        }
+      }
+
+
+    }
+
     &--checkbox {
       font-size: 2em;
       margin-right: 5px;
@@ -99,11 +157,18 @@
     &--radio {
       margin: 0 5px 0 0;
       padding: 1px;
+      border-radius: 50%;
+
+      ::after {
+        border-radius: 50%;
+      }
 
       &:focus {
         border-radius: 50%;
-        outline: 2px solid $color_focus_ring !important; /* for non-webkit browsers */
-        outline: 2px auto -webkit-focus-ring-color !important;
+        border: 1px solid #7AACFE !important; /* for non-webkit browsers */
+        border: 1px auto -webkit-focus-ring-color !important;
+        box-shadow: 0 0 10px #7AACFE !important;
+        box-shadow: 0 0 10px -webkit-focus-ring-color;
       }
 
     }

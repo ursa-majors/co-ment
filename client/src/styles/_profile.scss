@@ -299,7 +299,7 @@
 
     &:hover, &:focus, &:active {
         background: $color_aqua;
-        box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.4);
+        box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.4) !important;
         transition: all 300ms ease-in-out;
         // border: 1px solid rgba(255,255,255,.8);
         color: rgba(255,255,255,1);

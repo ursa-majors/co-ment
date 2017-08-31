@@ -208,7 +208,7 @@ class EditPost extends React.Component {
           </div>
           <div className="form__input-group" >
             <input
-              className="form__input--checkbox"
+              className="form__input--checkbox form__input--option"
               type='checkbox'
               id='active'
               name='active'

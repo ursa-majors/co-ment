@@ -8,7 +8,7 @@ const RadioGroup = (props) => (
 				return (
 						<label key={option} className="form__input--radio-label" htmlFor={props.setName}>
 							<input
-								className="form__input--radio"
+								className="form__input--radio form__input--option radio"
 								id={props.setName}
 								name={props.setName}
 								onChange={props.controlFunc}
