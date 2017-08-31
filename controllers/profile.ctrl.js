@@ -1,3 +1,7 @@
+/*
+   functions to handle user profile retrieval, creation, update, and deletion
+*/
+
 /* ================================= SETUP ================================= */
 
 const User       = require('../models/user');
@@ -11,7 +15,7 @@ const projection = { signupKey: 0, passwordResetKey: 0, hash: 0, salt: 0 };
 // GET ALL PROFILES
 //   Example: GET >> /api/profiles
 //   Secured: yes, valid JWT required.
-//   Returns an array of user profile objects on success.
+//   Returns: an array of user profile objects on success
 //
 function getProfiles(req, res) {
 
@@ -36,7 +40,7 @@ function getProfiles(req, res) {
 //   Secured: yes, valid JWT required.
 //   Expects:
 //     1) '_id' from request params
-//   Returns user profile JSON object on success.
+//   Returns: user profile object on success
 //
 function getOneProfile(req, res) {
 
@@ -80,7 +84,7 @@ function getOneProfile(req, res) {
 //          linkedin   : String
 //          codepen    : String
 //        }
-//   Returns updated JSON user profile object on success.
+//   Returns: success message & updated profile object on success
 //
 function updateProfile(req, res) {
 
@@ -148,13 +152,13 @@ function updateProfile(req, res) {
 
 
 // DELETE A PROFILE
-//   Example: DELETE > /api/profile/597e3dca8167330add4be737
+//   Example: DELETE >> /api/profile/597e3dca8167330add4be737
 //   Secured: yes, valid JWT required
 //   Expects:
 //     1) '_id' from request params
 //     2) '_id' from JWT
 //     3) 'username' from JWT
-//   Returns deleted user profile on success.
+//   Returns: success message & deleted user profile on success
 //
 function deleteProfile(req, res) {
     

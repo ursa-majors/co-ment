@@ -1,6 +1,9 @@
+/*
+   functions to handle post retrieval, creation, update, and deletion
+*/
+
 /* ================================= SETUP ================================= */
 
-const User = require('../models/user');
 const Post = require('../models/post');
 
 
@@ -13,10 +16,11 @@ const Post = require('../models/post');
 //     role        Return only 'mentor' or 'mentee' wanted posts
 //     id          Return single specific post object '_id'
 //     author_id   Return only posts by a specific author
-//   Returns JSON array of 'post' objects on success.
+//   Returns: JSON array of 'post' objects on success.
 //
 function getPosts(req, res) {
     
+    // request only active, non-deleted posts
     const query = {
         active  : true,
         deleted : false
@@ -54,7 +58,7 @@ function getPosts(req, res) {
 }
 
 
-// NEW POST
+// CREATE NEW POST
 //   Example: POST >> /api/posts
 //   Secured: yes, valid JWT required
 //   Expects:
@@ -70,7 +74,7 @@ function getPosts(req, res) {
 //          keywords      : Array
 //          availability  : String
 //        }
-//   Returns new post object on success.
+//   Returns: success message & new post object on success
 //
 function createPost(req, res) {
         
@@ -150,12 +154,12 @@ function createPost(req, res) {
 //          keywords      : Array
 //          availability  : String
 //        }
-//   Returns updated post on success.
+//   Returns: success message & updated post on success
 //
 function updatePost(req, res) {
 
-    // target post by post '_id' and post 'author_id'.
-    // this way, users can only update their own posts.
+    // Target post by post '_id' and 'author_id'.
+    // This way, users can only update posts they authored.
     const target = {
         _id       : req.params.id,
         author_id : req.token._id
@@ -163,21 +167,20 @@ function updatePost(req, res) {
 
     // build new post object from request body and parsed token
     const updates = {
-        active          : req.body.active,
-        author          : req.body.author,
-        author_id       : req.token._id,
-        author_name     : req.body.author_name,
-        author_avatar   : req.body.author_avatar,
-        role            : req.body.role,
-        title           : req.body.title,
-        body            : req.body.body,
-        keywords        : req.body.keywords,
-        availability    : req.body.availability
+        active        : req.body.active,
+        author        : req.body.author,
+        author_id     : req.token._id,
+        author_name   : req.body.author_name,
+        author_avatar : req.body.author_avatar,
+        role          : req.body.role,
+        title         : req.body.title,
+        body          : req.body.body,
+        keywords      : req.body.keywords,
+        availability  : req.body.availability
     };
 
     const options = {
-        // 'new' returns the updated document rather than the original
-        new: true
+        new: true  // return the updated document rather than the original
     };
 
     Post.findOneAndUpdate(target, updates, options)
@@ -212,32 +215,31 @@ function updatePost(req, res) {
 
 
 // DELETE A POST
-//   Example: DELETE > /api/posts/597dd8665229970e99c6ab55
+//   Example: DELETE >> /api/posts/597dd8665229970e99c6ab55
 //   Secured: yes, valid JWT required
 //   Expects:
 //     1) '_id' from JWT token
 //     2) 'id' from request params
-//   Returns deleted post on success.
+//   Returns: success message & deleted post on success
 //
 function deletePost(req, res) {
 
-    // target post by post '_id' and post 'author_id'.
-    // this way, users can only delete their own posts.
+    // Target post by post '_id' and post 'author_id'.
+    // This way, users can only delete their own posts.
     const target = {
         _id       : req.params.id,
         author_id : req.token._id
     };
-    
+
     const updates = {
         deleted : true,
         active  : false
     };
 
-    // findOneAndUpdate(conditions, update, callback) 
     Post.findOneAndUpdate(target, updates, (err, post) => {
-        
+
         if (err) { throw err; }
-        
+
         if (!post) {
 
             return res
@@ -254,7 +256,7 @@ function deletePost(req, res) {
                 });
 
         }
-        
+
     });
 
 }

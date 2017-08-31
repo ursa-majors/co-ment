@@ -1,3 +1,7 @@
+/*
+   functions to handle sending contact & validation email
+*/
+
 /* ================================= SETUP ================================= */
 
 const User      = require('../models/user');
@@ -10,12 +14,12 @@ const emailTpl  = require('../utils/mailtemplates');
 /* ============================ ROUTE HANDLERS ============================= */
 
 // SEND EMAIL
-//   Example: POST > /api/contact/597dd8665229970e99c6ab55
+//   Example: POST >> /api/contact/597dd8665229970e99c6ab55
 //   Secured: yes, valid JWT required
 //   Expects:
 //     1) '_id' from JWT token
 //     2) 'id' from request params
-//   Returns success message on success.
+//   Returns: success message on success
 //
 function sendEmail(req, res) {
 
@@ -26,11 +30,11 @@ function sendEmail(req, res) {
             .json({ message : 'You cannot contact yourself!'});
     }
 
-    const target = req.params.id;
-    const sender = req.token._id;
+    const target = { _id: req.params.id };
+    const fromId = { _id: req.token._id };
 
     // find the target recipient
-    User.findOne({_id: target})
+    User.findOne(target)
         .exec()
         .then(recipient => {
 
@@ -45,7 +49,7 @@ function sendEmail(req, res) {
         .then(recipient => {
 
             // find the sender (we need their email address)
-            User.findOne({_id: sender}, (err, sender) => {
+            User.findOne(fromId, (err, sender) => {
 
                 if (err) { throw err; }
                              
@@ -84,15 +88,15 @@ function sendEmail(req, res) {
 
 
 // RESEND VALIDATION EMAIL
-//   Example: GET > /api/resendvalidation
+//   Example: GET >> /api/resendvalidation
 //   Secured: yes, valid JWT required
 //   Expects:
 //     1) '_id' from JWT token
-//   Returns success message on success.
+//   Returns: success message on success
 //
 function resendValidation(req, res) {
     
-    const target  = { _id: req.token._id };
+    const target  = { _id : req.token._id };
     const updates = { signupKey : mailUtils.makeSignupKey() };
     const options = { new : true };
     

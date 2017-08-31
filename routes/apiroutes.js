@@ -16,7 +16,8 @@ const auth   = jwt({ secret: secret, requestProperty: 'token' });
 router.use(auth);
 
 
-// Check wheather user has validated their account
+// Checks wheather user has validated their account.
+// If `validated: false`, bail out early.
 function checkValidated(req, res, next) {
     
     const validatedErrMsg = 'You need to validate your account before you can access this resource. Please visit your Profile and generate a new validation email.';
@@ -63,7 +64,12 @@ router.delete('/api/profile/:id', profileCtrl.deleteProfile);
 router.get('/api/posts', postCtrl.getPosts);
 
 
-// INIT MIDDLEWARE - check for `validated: true` on routes below
+// Resend user validation email
+// Returns success message
+router.get('/api/resendvalidation', contactCtrl.resendValidation);
+
+
+// ===== INIT MIDDLEWARE FOR FOLLOWING ROUTES =====
 router.use(checkValidated);
 
 
@@ -90,11 +96,6 @@ router.delete('/api/posts/:id', postCtrl.deletePost);
 // Send contact email to another user
 // Returns success message
 router.post('/api/contact/:id', contactCtrl.sendEmail);
-
-
-// Resend user validation email
-// Returns success message
-router.get('/api/resendvalidation', contactCtrl.resendValidation);
 
 
 // Get all connections where the user is either a mentor or mentee

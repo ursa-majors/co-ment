@@ -1,3 +1,7 @@
+/*
+   functions to handle user signup, login and password reset
+*/
+
 /* ================================= SETUP ================================= */
 
 const passport  = require('passport');
@@ -12,7 +16,7 @@ const User      = require('../models/user');
 
 /* Dispatch new user validation email
  *
- * @ params   [object]   params      [map of the following params]
+ * @ params   [object]   params
  * @ params   [string]    * key      [randomly generated key]
  * @ params   [string]    * to_email [user/recipient email address]
  * @ params   [string]    * to_uid   [new user's _id ]
@@ -36,9 +40,10 @@ function sendValidationEmail(params) {
 
 }
 
+
 /* Dispatch new password reset email
  *
- * @ params   [object]   params      [map of the following params]
+ * @ params   [object]   params
  * @ params   [string]    * key      [randomly generated key]
  * @ params   [string]    * to_email [user/recipient email address]
 */
@@ -64,7 +69,18 @@ function sendPWResetEmail(params) {
 
 /* ============================ ROUTE HANDLERS ============================= */
 
-// REGISTER
+// NEW_USER REGISTRATION
+// Dispatches new user validation email
+//   Example: POST >> /api/register
+//   Secured: no
+//   Expects:
+//     1) request body properties : {
+//          username : String
+//          password : String
+//          email    : String
+//        }
+//   Returns: user profile object & JWT on success
+//
 function register(req, res) {
 
     // fail if missing required inputs
@@ -140,7 +156,16 @@ function register(req, res) {
 }
 
 
-// VALIDATE
+// HANDLE EMAIL VALIDATION LINKS
+// Toggles user's `validated` property to `true`
+//   Example: GET >> /api/validate
+//   Secured: no
+//   Expects:
+//     1) request query params
+//        * uid : String
+//        * key : String
+//   Returns: redirect to client-side validation landing page
+//
 function validate(req, res) {
 
     const user_id  = req.query.uid;
@@ -171,12 +196,12 @@ function validate(req, res) {
                 .json({ message: 'Registration key mismatch.' });
 
         } else {
+
             // build hash fragment for client-side routing
             const hash = '#/redirect=validate';
-            // const id = user._id
             return res
-                // status 302 = “Found"
-                .redirect(302, `/${hash}`);  // you made it, go to validation page!
+                // redirect to client-side validation landing page
+                .redirect(302, `/${hash}`);
 
         }
     })
@@ -191,6 +216,15 @@ function validate(req, res) {
 
 
 // LOGIN
+//   Example: POST >> /api/login
+//   Secured: no
+//   Expects:
+//     1) request body params : {
+//          username : String
+//          password : String
+//        }
+//   Returns: success status, user profile & JWT on success
+//
 function login(req, res, next) {
 
     // fail if missing required inputs
@@ -247,29 +281,38 @@ function login(req, res, next) {
 
 
 // SEND PW RESET EMAIL
+// Dispatches password reset email
+//   Example: POST >> /api/sendresetemail
+//   Secured: no
+//   Expects:
+//     1) request body params : {
+//          username : String
+//        }
+//   Returns: success status & message on success
+//
 function sendReset(req, res) {
-    
-    //generate a reset key
+
+    // generate reset key
     const resetKey = mailUtils.makeSignupKey();
-    
-    //look up user with user name
-    User.findOne({username: req.body.username})
+
+    // find user by username
+    User.findOne({ username: req.body.username })
         .exec()
         .then(user => {
-        
+
             if (!user) {
                 return res
                     .status(400)
                     .json({ message: 'No user with that username' });
             }
-        
-            //store key in user
+
+            //store key on user
             user.passwordResetKey = resetKey;
+
             user.save((err, user) => {
 
                 if (err) { throw err; }
 
-                //generate an email that contains a link to /resetpassword and the key
                 // build email parameter map
                 const emailParams = {
                     key      : user.passwordResetKey.key,
@@ -278,12 +321,12 @@ function sendReset(req, res) {
 
                 // send validation email, passing email param map
                 sendPWResetEmail(emailParams);
-                
+
                 return res
                     .status(200)
                     .json( {message: 'Password Reset email sent!'});
             });
-    
+
         })
         .catch( err => {
             console.log('Error!!!', err);
@@ -295,35 +338,48 @@ function sendReset(req, res) {
 
 
 // RESET PASSWORD
+//   Example: POST >> /api/resetpassword
+//   Secured: no
+//   Expects:
+//     1) request body params : {
+//          username : String
+//          password : String
+//          key      : String
+//        }
+//   Returns: success status & message on success
+//
 function resetPass(req, res) {
-    console.log(req.body);
-    
-    User.findOne({username: req.body.username})
+
+    const target = { username: req.body.username };
+
+    User.findOne(target)
         .exec()
         .then(user => {
+
             if (!user) {
                 return res
                     .status(400)
                     .json({ message: 'No user with that username' });
             }
-        
+
             if (user.passwordResetKey.key !== req.body.key) {
                 return res
                     .status(400)
                     .json({ message: 'Invalid password reset key' });
             }
-        
-            // reset password and clear the key
+
+            // reset password, clear the key, save the user
             user.hashPassword(req.body.password);
             user.passwordResetKey = {};
             user.save( (err, user) => {
-                
+
                 if (err) { throw err; }
-                
+
                 return res
                     .status(200)
                     .json({ message: 'Password reset successful' });
             });
+
         })
         .catch(err => {
             console.log('Error!!!', err);
