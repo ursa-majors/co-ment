@@ -3,19 +3,19 @@
 const User       = require('../models/user');
 const Post       = require('../models/post');
 const parseSKill = require('../utils/skillsparser');
-
-const user_projection = {
-    signupKey : 0, passwordResetKey: 0, hash: 0, salt: 0
-};
+const projection = { signupKey: 0, passwordResetKey: 0, hash: 0, salt: 0 };
 
 
-/* ============================ PUBLIC METHODS ============================= */
+/* ============================ ROUTE HANDLERS ============================= */
 
 // GET ALL PROFILES
+//   Example: GET >> /api/profiles
+//   Secured: yes, valid JWT required.
+//   Returns an array of user profile objects on success.
+//
 function getProfiles(req, res) {
-    const target = req.params.id;
 
-    User.find({}, user_projection, (err, profiles) => {
+    User.find({}, projection, (err, profiles) => {
 
         if (!profiles) {
             return res
@@ -30,12 +30,19 @@ function getProfiles(req, res) {
     });
 }
 
+
 // GET ONE PROFILE
+//   Example: GET >> /api/profile/597dccac7017890bd8d13cc7
+//   Secured: yes, valid JWT required.
+//   Expects:
+//     1) '_id' from request params
+//   Returns user profile JSON object on success.
+//
 function getOneProfile(req, res) {
 
     const target = req.params.id;
 
-    User.findOne({_id: target}, user_projection, (err, profile) => {
+    User.findOne({_id: target}, projection, (err, profile) => {
 
         if (!profile) {
             return res
@@ -52,6 +59,29 @@ function getOneProfile(req, res) {
 }
 
 // UPDATE PROFILE
+//   Example: PUT >> /api/profile/597dccac7017890bd8d13cc7
+//   Secured: yes, valid JWT required.
+//   Expects:
+//     1) 'username' from JWT token
+//     2) '_id' from request params
+//     3) optional request body properties : {
+//          name       : String
+//          ghUserName : String
+//          avatarUrl  : String
+//          languages  : Array
+//          location   : String
+//          gender     : String
+//          about      : String
+//          skills     : Array
+//          time_zone  : String
+//          twitter    : String
+//          facebook   : String
+//          link       : String
+//          linkedin   : String
+//          codepen    : String
+//        }
+//   Returns updated JSON user profile object on success.
+//
 function updateProfile(req, res) {
 
     const target = {
@@ -72,27 +102,18 @@ function updateProfile(req, res) {
     })
     .then( () => {
 
+        // map enumerable req body properties to updates object
+        const updates = Object.assign({}, req.body);
+        
+        // parse skills array if update includes skills
+        if (updates.skills) {
+            updates.skills = (updates.skills).map( skill => parseSKill(skill) );
+        }
+
         const options = {
             new: true  // return updated document rather than the original
         };
-
-        const updates = {
-            ghUserName : req.body.ghUserName,
-            name       : req.body.name,
-            avatarUrl  : req.body.avatarUrl,
-            location   : req.body.location,
-            languages  : req.body.languages,
-            gender     : req.body.gender,
-            about      : req.body.about,
-            skills     : (req.body.skills).map( skill => parseSKill(skill) ),
-            time_zone  : req.body.time_zone,
-            twitter    : req.body.twitter,
-            facebook   : req.body.facebook,
-            link       : req.body.link,
-            linkedin   : req.body.linkedin,
-            codepen    : req.body.codepen,
-        };
-
+        
         User.findOneAndUpdate(target, updates, options)
             .exec()
             .then( user => {
@@ -125,7 +146,16 @@ function updateProfile(req, res) {
 
 }
 
+
 // DELETE A PROFILE
+//   Example: DELETE > /api/profile/597e3dca8167330add4be737
+//   Secured: yes, valid JWT required
+//   Expects:
+//     1) '_id' from request params
+//     2) '_id' from JWT
+//     3) 'username' from JWT
+//   Returns deleted user profile on success.
+//
 function deleteProfile(req, res) {
     
     const targetUser = {
@@ -200,9 +230,4 @@ function deleteProfile(req, res) {
 
 /* ============================== EXPORT API =============================== */
 
-module.exports = {
-  getProfiles   : getProfiles,
-  getOneProfile : getOneProfile,
-  updateProfile : updateProfile,
-  deleteProfile : deleteProfile
-};
+module.exports = { getProfiles, getOneProfile, updateProfile, deleteProfile };
