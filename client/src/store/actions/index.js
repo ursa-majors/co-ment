@@ -1,4 +1,3 @@
-export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const SET_LOGIN_USER = 'SET_LOGIN_USER';
 export const SET_LOGIN_PWD = 'SET_LOGIN_PWD';
@@ -9,14 +8,6 @@ export const SET_PROFILE_VIEW = 'SET_PROFILE_VIEW';
 export const SET_REDIRECT_URL = 'SET_REDIRECT_URL';
 export const DISMISS_PWRESET_MODAL = 'DISMISS_PWRESET_MODAL';
 export const DISMISS_LOGIN_MODAL = 'DISMISS_LOGIN_MODAL';
-
-export function login(token, profile) {
-  return ({
-    type: LOGIN,
-    token,
-    profile,
-  });
-}
 
 export function logout() {
   return ({

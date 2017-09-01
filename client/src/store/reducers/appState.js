@@ -1,7 +1,6 @@
-import update from 'immutability-helper';
-import { LOGIN, LOGOUT, SET_REDIRECT_URL } from '../actions';
+import { LOGOUT, SET_REDIRECT_URL } from '../actions';
 import { VALIDATE_TOKEN_REQUEST, VALIDATE_TOKEN_SUCCESS, VALIDATE_TOKEN_FAILURE, LOGIN_SUCCESS,
-  REGISTRATION_SUCCESS } from '../actions/apiLoginActions';
+  REGISTRATION_SUCCESS, REFRESH_TOKEN_SUCCESS } from '../actions/apiLoginActions';
 
 const INITIAL_STATE = {
   loggedIn: false,
@@ -126,6 +125,11 @@ function appState(state = INITIAL_STATE, action) {
     */
     case SET_REDIRECT_URL:
       return Object.assign({}, state, { redirectUrl: action.payload });
+
+
+    case REFRESH_TOKEN_SUCCESS:
+      window.localStorage.setItem('authToken', JSON.stringify(action.payload.token));
+      return Object.assign({}, state, { authToken: action.payload.token });
 
     default:
       return state;
