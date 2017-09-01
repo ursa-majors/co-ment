@@ -135,3 +135,32 @@ export function sendResetEmail(username) {
     },
   };
 }
+
+export const REFRESH_TOKEN_REQUEST = 'REFRESH_TOKEN_REQUEST';
+export const REFRESH_TOKEN_SUCCESS = 'REFRESH_TOKEN_SUCCESS';
+export const REFRESH_TOKEN_FAILURE = 'REFRESH_TOKEN_FAILURE';
+/*
+* Function: refreshToken
+* @param {token} - This function gets a new token from the server after Validation
+*  Validation status is coded within the token, and used by the server
+*  We are passing the old token, which is valid, but has user_validated=false
+*  And we will receive a new valid token with user_validated=true
+*/
+export function refreshToken(token) {
+  return {
+    [CALL_API]: {
+      endpoint: 'https://co-ment.glitch.me/api/refreshToken',
+      method: 'GET',
+      types: [REFRESH_TOKEN_REQUEST, REFRESH_TOKEN_SUCCESS, REFRESH_TOKEN_FAILURE],
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  };
+}
+
+export const RESET_VALIDATE_MODAL = 'RESET_VALIDATE_MODAL';
+export function resetValidateModal(options) {
+  return ({
+    type: RESET_VALIDATE_MODAL,
+    payload: options,
+  });
+}
