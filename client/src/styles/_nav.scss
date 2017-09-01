@@ -22,13 +22,14 @@
   &__side-bkg {
     position: fixed;
     width: 100vw;
-    background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
-    background: linear-gradient(to top, $color_aqua, $color_sky);
     z-index: 1000;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     min-height: 60px;
   }
-
+  &__side-bkg-noscroll {
+    background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
+    background: linear-gradient(to top, $color_aqua, $color_sky);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  }
   &__icon {
       height: 22px;
       width: 24px;
@@ -160,14 +161,16 @@
     &__side-bkg {
       position: fixed;
       width: 100vw;
-      background: -webkit-linear-gradient(to bottom, $color_sky, $color_sky_nav);
-      background: linear-gradient(to bottom, $color_sky, $color_sky_nav);
       z-index: 1000;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
       height: 60px;
     }
 
-
+    &__side-bkg-noscroll {
+      background: -webkit-linear-gradient(to bottom, $color_sky, $color_sky_nav);
+      background: linear-gradient(to bottom, $color_sky, $color_sky_nav);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+    
     &__nav {
       position: absolute;
       left: 0;

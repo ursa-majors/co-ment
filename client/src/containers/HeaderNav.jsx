@@ -10,6 +10,7 @@ class Nav extends React.Component {
     this.state = {
       menu: 'closed',
       width: window.innerWidth,
+      menuBackground: '',
     };
   }
 
@@ -18,6 +19,7 @@ class Nav extends React.Component {
   }
   componentDidMount() {
     window.addEventListener('resize', this.updateDimensions);
+    window.addEventListener('scroll', this.throttle(this.setBackground, 100));
   }
 
   componentDidUpdate(prevProps) {
@@ -31,6 +33,17 @@ class Nav extends React.Component {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateDimensions);
+    window.removeEventListener('scroll', this.setBackground);
+  }
+
+  setBackground = () => {
+    let menuBackground = '';
+    if (window.scrollY) {
+      menuBackground = 'h-nav__side-bkg-noscroll';
+    }
+    if (this.state.menuBackground !== menuBackground) {
+      this.setState({ menuBackground });
+    }
   }
 
   updateDimensions = () => {
@@ -51,6 +64,21 @@ class Nav extends React.Component {
         }, 300);
       }
     }
+  }
+
+  throttle(callback, wait, context = this) {
+    let timeout = null;
+
+    const later = () => {
+      callback.apply(context);
+      timeout = null;
+    };
+
+    return function () {
+      if (!timeout) {
+        timeout = setTimeout(later, wait);
+      }
+    };
   }
 
   render() {
@@ -83,7 +111,7 @@ class Nav extends React.Component {
         },
       };
   return (
-    <div className="h-nav__side-bkg">
+    <div className={`h-nav__side-bkg ${this.state.menuBackground}`}>
     <button className="h-nav__icon" aria-expanded={classObj[this.state.menu].ariaE} aria-controls="nav" onClick={this.navToggle} >
       <span className="sr-only">Toggle navigation</span>
       <div className={classObj[this.state.menu].bar1} />
