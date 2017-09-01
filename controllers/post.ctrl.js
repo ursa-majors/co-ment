@@ -262,6 +262,38 @@ function deletePost(req, res) {
 }
 
 
+// INCREMENT A POST'S VIEW COUNT
+//   Example: PUT >> /api/postviews/597dd8665229970e99c6ab55
+//   Secured: yes, valid JWT required
+//   Expects:
+//     1) 'id' from request params
+//   Returns: success status only
+//
+function incPostViews(req, res) {
+
+    const target = req.params.id;
+
+    const updates = { $inc: { 'meta.views': 1 } };
+  
+    Post.findByIdAndUpdate(target, updates)
+        .exec()
+        .then( () => {
+      
+            return res
+                .status(200)
+                .end();
+        })
+        .catch(err => {
+            console.log(err);
+            return res
+                .status(400)
+                .json({ message: 'Post could not be updated' });
+        });
+}
+
+
 /* ============================== EXPORT API =============================== */
 
-module.exports = { getPosts, createPost, updatePost, deletePost };
+module.exports = {
+    getPosts, createPost, updatePost, deletePost, incPostViews
+};

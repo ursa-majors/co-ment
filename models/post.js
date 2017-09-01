@@ -64,6 +64,11 @@ const postSchema = new mongoose.Schema({
     deleted : {
         type     : Boolean,
         default  : false
+    },
+  
+    meta : {
+        views    : { type : Number, default  : 0 },
+        likes    : { type : Number, default  : 0 }
     }
 
 },
