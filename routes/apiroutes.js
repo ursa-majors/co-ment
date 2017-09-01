@@ -64,6 +64,11 @@ router.delete('/api/profile/:id', profileCtrl.deleteProfile);
 router.get('/api/posts', postCtrl.getPosts);
 
 
+// Increment Post views
+// Returns success status code; returns no data
+router.put('/api/postviews/:id', postCtrl.incPostViews);
+
+
 // Resend user validation email
 // Returns success message
 router.get('/api/resendvalidation', contactCtrl.resendValidation);
