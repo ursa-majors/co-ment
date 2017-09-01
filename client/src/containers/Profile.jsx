@@ -42,15 +42,21 @@ class Profile extends React.Component {
   componentWillMount() {
     // copy the current profile properties into the editable object
     this.props.actions.setEditProfile(this.props.profiles.userProfile);
+    // show error messages for users that are not validated yet.
+    if (!this.props.profiles.userProfile.validated) {
+      const msg = 'You need to validate your account before you can access this resource. Check your inbox for a validation email.';
+      this.props.actions.setFormField('errMsg', msg);
+      this.props.actions.setFormField('hideErr', '');
+    }
   }
 
-  togglePage(direction){
+  togglePage(direction) {
     // navigate between form pages
     const newState = { ...this.state }
-    if (direction === "fwd") {
+    if (direction === 'fwd') {
       newState.page = this.state.page + 1;
     } else {
-      newState.page = this.state.page -1;
+      newState.page = this.state.page - 1;
     }
     this.setState({ ...newState }, () => {
       if (this.state.page === 2) {
@@ -146,21 +152,19 @@ class Profile extends React.Component {
     }
   }
 
- removeLanguage(e) {
+  removeLanguage(e) {
   // remove language from array
-  const newArray = this.props.profiles.editForm.languages;
-  for (let i = 0; i < this.props.profiles.editForm.languages.length; i ++ ) {
-    if (this.props.profiles.editForm.languages[i] === e.target.id) {
-      this.props.actions.removeLanguage(i);
-      break;
+    for (let i = 0; i < this.props.profiles.editForm.languages.length; i += 1) {
+      if (this.props.profiles.editForm.languages[i] === e.target.id) {
+        this.props.actions.removeLanguage(i);
+        break;
+      }
     }
   }
-}
 
   removeSkill(e) {
     // remove skill from array
-    const newArray = this.props.profiles.editForm.skills;
-    for (let i = 0; i < this.props.profiles.editForm.skills.length; i ++ ) {
+    for (let i = 0; i < this.props.profiles.editForm.skills.length; i += 1) {
       if (this.props.profiles.editForm.skills[i] === e.target.id) {
         this.props.actions.removeSkill(i);
         break;
@@ -170,34 +174,37 @@ class Profile extends React.Component {
 
   validateInputs() {
     let msg = '';
+    if (!this.props.profiles.userProfile.validated) {
+      msg = 'You need to validate your account before you can access this resource. Check your inbox for a validation email.';
+    }
     if (this.props.profiles.editForm.name === '') {
-      msg = 'Name is required.  ';
+      msg += 'Name is required.  ';
     }
     if (this.props.profiles.editForm.time_zone === 'Choose your time zone' || this.props.profiles.editForm.time_zone === '') {
-      msg = 'Time zone is required.  ';
+      msg += 'Time zone is required.  ';
     }
     if (this.props.profiles.editForm.skills.length === 0) {
       msg += 'At least one skill is required.  ';
     }
     if (this.props.profiles.editForm.languages.length === 0) {
-        msg += 'At least one language is required.  ';
-      }
+      msg += 'At least one language is required.  ';
+    }
 
     // use html5 validation to check for valid urls in social media fields
     if (this.props.profiles.editForm.twitter && document.getElementById('twitter').checkValidity() === false) {
-        msg += 'Twitter URL is invalid.  ';
+      msg += 'Twitter URL is invalid.  ';
     }
     if (this.props.profiles.editForm.facebook && document.getElementById('facebook').checkValidity() === false) {
-        msg += 'Facebook URL is invalid.  ';
+      msg += 'Facebook URL is invalid.  ';
     }
     if (this.props.profiles.editForm.link && document.getElementById('link').checkValidity() === false) {
-        msg += 'Portfolio URL is invalid.  ';
+      msg += 'Portfolio URL is invalid.  ';
     }
     if (this.props.profiles.editForm.linkedin && document.getElementById('linkedin').checkValidity() === false) {
-        msg += 'LinkedIn URL is invalid.  ';
+      msg += 'LinkedIn URL is invalid.  ';
     }
     if (this.props.profiles.editForm.codepen && document.getElementById('codepen').checkValidity() === false) {
-        msg += 'CodePen URL is invalid.  ';
+      msg += 'CodePen URL is invalid.  ';
     }
     if (msg.length > 0) {
       this.props.actions.setFormField( 'errMsg', msg);
@@ -207,10 +214,14 @@ class Profile extends React.Component {
     return true;
   }
 
+  resendEmail = () => {
+    this.props.api.resendAcctValidation(this.props.appState.authToken);
+  }
+
   handleSubmit() {
     // clear previous errors
     this.props.actions.setFormField('hideErr', 'hidden');
-    this.props.actions.setFormField('saveErr', null);
+    this.props.actions.setFormField('errMsg', '');
 
     // if user has entered a tag, but not added it to the array, add it now
     if (this.props.profiles.editForm.skill !== '') {
@@ -244,11 +255,13 @@ class Profile extends React.Component {
     console.log(body);
 
     // write data to db
-    this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.userId, body);
-
-    // redirect to profile card if successful
-    this.props.history.push(`/viewprofile/${this.props.appState.userId}`);
-
+    this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.userId, body)
+      .then(result => {
+        // redirect to profile card if successful
+        if (result.type === 'MODIFY_PROFILE_SUCCESS') {
+          this.props.history.push(`/viewprofile/${this.props.appState.userId}`);
+        }
+      })
   }
 
   onChange(id, newValue) {
@@ -282,14 +295,20 @@ class Profile extends React.Component {
 
     return (
       <div className="container profile" id="profile-form">
-      <Spinner cssClass={this.props.profiles.profileSpinnerClass} />
+      <Spinner cssClass={this.props.profiles.updProfileSpinnerClass} />
         <ModalSm
-          modalClass={this.props.profiles.viewProfileModalClass}
-          modalText={this.props.profiles.viewProfileModalText}
+          modalClass={this.props.profiles.updProfileModal.class}
+          modalText={this.props.profiles.updProfileModal.text}
+          modalType={this.props.profiles.updProfileModal.type}
+          modalTitle={this.props.profiles.updProfileModal.title}
           dismiss={
             () => {
-              this.props.actions.setProfileModalText('');
-              this.props.actions.setProfileModalClass('modal__hide');
+              this.props.actions.setUpdProfileModal({
+                type: '',
+                text: '',
+                title: '',
+                class: 'modal__hide',
+              });
             }
           }
         />
@@ -354,7 +373,8 @@ class Profile extends React.Component {
                   />
                 </div>
               </div>
-            </div> }
+            </div> 
+            }
             {this.state.page === 2 &&
             <div className="profile__pageTwo">
               <div className="profile__column-L">
@@ -375,26 +395,26 @@ class Profile extends React.Component {
                   <label htmlFor="language" className="form__label">Languages you speak fluently
                   </label>
                   <div className="skill-value__wrapper">
-                      {this.props.profiles.editForm.languages && this.props.profiles.editForm.languages.map(lang => (
-                        <span className="skill-value" key={lang}>
-                          <span className="skill-value__icon" aria-hidden="true">
-                            <span
-                              className="language"
-                              id={lang}
-                              role="button"
-                              tabIndex="0"
-                              onClick={e => this.removeLanguage(e)}
-                              onKeyDown={e => this.handleKeyDownRemove(e)}
-                            >
-                               &times;
-                              </span>
-                          </span>
-                          <span className="skill-value__label" role="option" aria-selected="true">
-                            {lang}
-                            <span className="skill-aria-only">&nbsp;</span>
-                          </span>
+                    {this.props.profiles.editForm.languages && this.props.profiles.editForm.languages.map(lang => (
+                      <span className="skill-value" key={lang}>
+                        <span className="skill-value__icon" aria-hidden="true">
+                          <span
+                            className="language"
+                            id={lang}
+                            role="button"
+                            tabIndex="0"
+                            onClick={e => this.removeLanguage(e)}
+                            onKeyDown={e => this.handleKeyDownRemove(e)}
+                          >
+                             &times;
+                            </span>
                         </span>
-                       ))}
+                        <span className="skill-value__label" role="option" aria-selected="true">
+                          {lang}
+                          <span className="skill-aria-only">&nbsp;</span>
+                        </span>
+                      </span>
+                     ))}
                   </div>
                   <InputAutosuggest
                     id="language"
@@ -402,23 +422,38 @@ class Profile extends React.Component {
                     placeholder="Add Languages"
                     onChange={this.onChange}
                     list={languages}
-                    onKeyPress={(e) => this.handleKeyPressAdd(e)}
+                    onKeyPress={e => this.handleKeyPressAdd(e)}
                     value={this.props.profiles.editForm.language}
                     addTag={this.addLanguage}
                     removeTag={this.removeLanguage}
                     ref={instance => { this.languageInput = instance; }}
                   />
                 </div>
+                <div className="form__input-group">
+                  <label htmlFor="about" className="form__label">About
+                  </label>
+                  <textarea
+                    className="form__input form__input--textarea"
+                    id="about"
+                    name="about"
+                    value={this.props.profiles.editForm.about}
+                    onChange={e => this.handleTextAreaInput(e)}
+                    placeholder="Introduce yourself"
+                    ref={(input) => { this.textInput = input; }}
+                    rows="3"
+                  />
+                </div>
               </div>
               <div className="profile__column-R">
                 <div className="form__input-group" >
-                 <RadioGroup
-                  title={'Gender'}
-                  setName={'gender'}
-                  type={'radio'}
-                  controlFunc={this.handleRadioChange}
-                  options={['Male', 'Female', 'Other']}
-                  selectedOptions={this.props.profiles.editForm.gender} />
+                  <RadioGroup
+                    title={'Gender'}
+                    setName={'gender'}
+                    type={'radio'}
+                    controlFunc={this.handleRadioChange}
+                    options={['Male', 'Female', 'Other']}
+                    selectedOptions={this.props.profiles.editForm.gender}
+                  />
                 </div>
                 <div className="form__input-group">
                   <label className="form__label" htmlFor="skills">Skills</label>
@@ -450,26 +485,12 @@ class Profile extends React.Component {
                     placeholder="Add Skills"
                     onChange={this.onChange}
                     list={skills}
-                    onKeyPress={(e) => this.handleKeyPressAdd(e)}
+                    onKeyPress={e => this.handleKeyPressAdd(e)}
                     value={this.props.profiles.editForm.skill}
                     addTag={this.addSkill}
                     removeTag={this.removeSkill}
                     ref={instance => { this.skillInput = instance; }}
                   />
-                </div>
-                <div className="form__input-group">
-                  <label htmlFor="about" className="form__label">About
-                  </label>
-                  <textarea
-                    className="form__input form__input--textarea"
-                    id="about"
-                    name="about"
-                    value={this.props.profiles.editForm.about}
-                    onChange={e => this.handleTextAreaInput(e)}
-                    placeholder="Introduce yourself! (limit 620 characters)"
-                    ref={(input) => { this.textInput = input; }}
-                    rows="3"
-                    maxlength="620"/>
                 </div>
               </div>
             </div> }
@@ -553,38 +574,47 @@ class Profile extends React.Component {
             }
           </div>
           <div className="form__input-group">
-            <div className={formError}>{this.props.profiles.editForm.errMsg}</div>
+            <div className={formError}>
+              {this.props.profiles.editForm.errMsg}
+            </div>
           </div>
           {this.state.page > 1 &&
             <button
               className="pageBack pageNav"
               onClick={()=>this.togglePage('back')}
-              >
+            >
               <i className="fa fa-chevron-left pageBack__icon" aria-hidden="true" />
             </button>
           }
-          {this.state.page === 3 &&
+
           <div className="form__input-group">
-          <div className="form__button-wrap">
-            <button className="form__button pointer" id="btn-edit" onClick={() => this.handleSubmit()}>
-            {this.props.profiles.savingProfile ? 'Saving...' : 'Save'}</button>
+            <div className="form__button-wrap">
+              {
+                this.props.profiles.userProfile.validated ?
+                  (
+                    <button className="form__button pointer" id="btn-edit" onClick={() => this.handleSubmit()}>
+                      {this.props.profiles.savingProfile ? 'Saving...' : 'Save'}
+                    </button>
+                  )
+                  :
+                  (
+                    <button className="form__button pointer" id="btn-edit" onClick={() => this.resendEmail()}>
+                      Resend Acct Validation
+                    </button>
+                  )
+              }
+            </div>
           </div>
-        </div>}
-        {this.state.page < 3 &&
+          {this.state.page < 3 &&
             <button
               className="pageFwd pageNav"
-              onClick={()=>this.togglePage('fwd')}
-              >
+              onClick={() => this.togglePage('fwd')}
+            >
               <i className="fa fa-chevron-right pageBack__icon" aria-hidden="true" />
             </button>
           }
-        <div className="form__input-group">
-            <div className={msgClass}>
-            {this.props.profiles.saveError }
-            </div>
-          </div>
         </div>
-        </div>
+      </div>
     );
   }
 }

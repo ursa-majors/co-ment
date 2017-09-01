@@ -5,6 +5,7 @@ export const ADD_LANGUAGE = 'ADD_LANGUAGE';
 export const REMOVE_SKILL = 'REMOVE_SKILL';
 export const REMOVE_LANGUAGE = 'REMOVE_LANGUAGE';
 export const DISMISS_VIEWPROFILE_MODAL = 'DISMISS_VIEWPROFILE_MODAL';
+export const SET_UPD_PROFILE_MODAL = 'SET_UPD_PROFILE_MODAL';
 export const SET_PROFILE_MODAL_CLASS = 'SET_PROFILE_MODAL_CLASS';
 export const SET_PROFILE_MODAL_TEXT = 'SET_PROFILE_MODAL_TEXT';
 
@@ -68,5 +69,12 @@ export function setProfileModalText(text) {
   return ({
     type: SET_PROFILE_MODAL_TEXT,
     payload: text,
+  });
+}
+
+export function setUpdProfileModal(options) {
+  return ({
+    type: SET_UPD_PROFILE_MODAL,
+    payload: options,
   });
 }

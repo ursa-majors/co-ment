@@ -23,7 +23,7 @@ const gmailTransporter = nodeMailer.createTransport({
         user         : process.env.EMAIL_USER,
         clientId     : process.env.GM_CLIENT_ID,
         clientSecret : process.env.GM_CLIENT_SECRET,
-        refresToken  : process.env.GM_REFRESH_TOKEN,
+        refreshToken  : process.env.GM_REFRESH_TOKEN,
         accessToken  : process.env.GM_ACCESS_TOKEN
     }
 });

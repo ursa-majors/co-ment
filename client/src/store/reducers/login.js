@@ -2,6 +2,7 @@ import { SET_LOGIN_USER, SET_LOGIN_PWD, CLEAR_LOGIN_PWD, SET_LOGIN_ERROR,
   DISMISS_PWRESET_MODAL, DISMISS_LOGIN_MODAL } from '../actions';
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, RESET_PW_REQUEST, RESET_PW_SUCCESS,
   RESET_PW_FAILURE, SEND_RESET_EMAIL_REQUEST, SEND_RESET_EMAIL_SUCCESS, SEND_RESET_EMAIL_FAILURE,
+  REFRESH_TOKEN_REQUEST, REFRESH_TOKEN_SUCCESS, REFRESH_TOKEN_FAILURE, RESET_VALIDATE_MODAL,
 } from '../actions/apiLoginActions';
 
 const INITIAL_STATE = {
@@ -15,6 +16,14 @@ const INITIAL_STATE = {
   pwResetModalClass: 'modal__hide',
   pwResetModalType: '',
   pwResetModalText: '',
+  validateSpinnerClass: 'spinner__hide',
+  validateModal: {
+    class: 'modal__hide',
+    text: '',
+    title: '',
+    type: '',
+  },
+  tokenRefreshComplete: undefined,
 };
 
 function login(state = INITIAL_STATE, action) {
@@ -223,6 +232,46 @@ function login(state = INITIAL_STATE, action) {
           loginModalClass: 'modal__hide',
         },
       );
+
+    case REFRESH_TOKEN_REQUEST:
+      return Object.assign(
+        {},
+        state,
+        {
+          validateSpinnerClass: 'spinner__show',
+          tokenRefreshComplete: undefined,
+        },
+      );
+
+    case REFRESH_TOKEN_SUCCESS:
+      return Object.assign(
+        {},
+        state,
+        {
+          validateSpinnerClass: 'spinner__hide',
+          tokenRefreshComplete: true,
+        },
+      );
+
+    case REFRESH_TOKEN_FAILURE:
+      error = action.payload.response.message || 'An unknown error occurred while refreshing token';
+      return Object.assign(
+        {},
+        state,
+        {
+          validateSpinnerClass: 'spinner__hide',
+          tokenRefreshComplete: false,
+          validateModal: {
+            type: 'modal__error',
+            text: error,
+            title: 'ERROR',
+            class: 'modal__show',
+          },
+        },
+      );
+
+    case RESET_VALIDATE_MODAL:
+      return Object.assign({}, state, { validateModal: action.payload });
 
     default:
       return state;
