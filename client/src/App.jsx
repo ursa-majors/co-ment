@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import HeaderNav from './containers/HeaderNav';
 import Home from './containers/Home';
-import FooterNav from './containers/FooterNav';
 import About from './containers/About';
 import Login from './containers/Login';
 import Registration from './containers/Registration';
@@ -51,7 +50,6 @@ class App extends React.Component {
               <Route path="/resetpassword/:key" component={ResetPassword} />
             </Switch>
           </main>
-          <FooterNav />
         </div>
       </BrowserRouter>
     );

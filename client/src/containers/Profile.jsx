@@ -220,7 +220,7 @@ class Profile extends React.Component {
 
   handleSubmit() {
     // clear previous errors
-    this.props.actions.setFormField('hideErr', 'posts__hidden');
+    this.props.actions.setFormField('hideErr', 'hidden');
     this.props.actions.setFormField('errMsg', '');
 
     // if user has entered a tag, but not added it to the array, add it now

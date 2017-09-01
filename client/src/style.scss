@@ -10,7 +10,6 @@ $fa-font-path: "~font-awesome/fonts";
 @import 'styles/profile';
 @import 'styles/posts';
 @import 'styles/posts-grid';
-@import 'styles/react-table';
 @import 'styles/autosuggest';
 @import 'styles/connectionresult';
 @import 'styles/connections';
@@ -156,4 +155,8 @@ body.user-is-tabbing *:focus {
 .unstyled-link {
     color: inherit;
     text-decoration: none;
+  }
+
+.hidden {
+    display: none;
   }
