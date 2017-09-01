@@ -166,7 +166,7 @@ class PostsGrid extends React.Component {
             history={this.props.history}
           />
         </Modal>
-        <div>
+        <div className="posts-grid__wrap">
           <PostsGridControls />
           <div ref={element => this.element = element} className="flex-row my-shuffle shuffle posts-grid__cont">
             <div className="flex-col-1-sp sizer" />

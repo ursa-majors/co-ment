@@ -26,6 +26,7 @@
     background: linear-gradient(to top, $color_aqua, $color_sky);
     z-index: 1000;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    min-height: 60px;
   }
 
   &__icon {
@@ -155,6 +156,16 @@
     justify-content: flex-start;
     height: 30px;
     list-style: none;
+
+    &__side-bkg {
+      position: fixed;
+      width: 100vw;
+      background: -webkit-linear-gradient(to bottom, $color_sky, $color_sky_nav);
+      background: linear-gradient(to bottom, $color_sky, $color_sky_nav);
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      height: 60px;
+    }
 
 
     &__nav {
