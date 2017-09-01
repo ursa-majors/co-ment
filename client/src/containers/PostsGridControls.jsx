@@ -69,11 +69,11 @@ const PostsGridControls = props => (
         </div>
       </div>
       <div className="filters-group filters-group__btn">
-        <div className="posts__button-wrap">
+        <div className="posts-grid__button-wrap">
           <Link to="/editpost">
-            <button className="posts__button pointer" aria-label="New Post" >
-              <span className="posts__btn--big">New Post</span>
-              <span className="posts__btn--sm">+</span>
+            <button className="posts-grid__button pointer" aria-label="New Post" >
+              <span className="posts-grid__btn--big">New Post</span>
+              <span className="posts-grid__btn--sm">+</span>
             </button>
           </Link>
         </div>

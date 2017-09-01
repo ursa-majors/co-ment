@@ -96,7 +96,7 @@ class EditPost extends React.Component {
 
   savePost() {
     // clear previous errors
-    this.props.actions.setFormField('hideErr', 'posts__hidden');
+    this.props.actions.setFormField('hideErr', 'hidden');
 
     // if user has entered a keyword, but not added it to the array, add it now
     if (this.props.posts.editForm.keyword !== '') {
