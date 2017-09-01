@@ -53,7 +53,7 @@ class Nav extends React.Component {
     }
   }
 
-  navToggle = () => {
+  navToggle = (e) => {
     if (this.state.width < 650) {
       if (this.state.menu === 'closed') {
         this.setState({ menu: 'open' });
@@ -84,40 +84,54 @@ class Nav extends React.Component {
   render() {
       const classObj = {
         closed: {
+          menu: 'h-nav__item-menu',
           nav: 'h-nav__nav',
           ul: 'h-nav',
           bar1: 'h-nav__bar h-nav__bar--top',
           bar2: 'h-nav__bar h-nav__bar--mid',
           bar3: 'h-nav__bar h-nav__bar--bot',
+          span: 'h-nav__item-link--menu',
+          menuspan: 'h-nav__menuspan',
           ariaE: false,
         },
 
         open: {
+          menu: 'h-nav__item-menu--open',
           nav: 'h-nav__nav--side',
           ul: 'h-nav__side',
           bar1: 'h-nav__bar h-nav__bar--top h-nav__bar--top-active',
           bar2: 'h-nav__bar h-nav__bar--mid h-nav__bar--mid-active',
           bar3: 'h-nav__bar h-nav__bar--bot h-nav__bar--bot-active',
+          span: 'h-nav__item-link--menu-open',
+          menuspan: 'h-nav__menuspan--open',
           ariaE: true,
         },
 
         closing: {
+          menu: 'h-nav__item-menu',
           nav: 'h-nav__nav h-nav__nav--hidden',
           ul: 'h-nav',
           bar1: 'h-nav__bar h-nav__bar--top',
           bar2: 'h-nav__bar h-nav__bar--mid',
           bar3: 'h-nav__bar h-nav__bar--bot',
+          span: 'h-nav__item-link--menu',
+          menuspan: 'h-nav__menuspan',
           ariaE: false,
         },
       };
   return (
     <div className={`h-nav__side-bkg ${this.state.menuBackground}`}>
-    <button className="h-nav__icon" aria-expanded={classObj[this.state.menu].ariaE} aria-controls="nav" onClick={this.navToggle} >
-      <span className="sr-only">Toggle navigation</span>
-      <div className={classObj[this.state.menu].bar1} />
-      <div className={classObj[this.state.menu].bar2} />
-      <div className={classObj[this.state.menu].bar3} />
-    </button>
+    <div className={classObj[this.state.menu].menu} aria-expanded={classObj[this.state.menu].ariaE} aria-controls="nav" onClick={this.navToggle}>
+      <span className={classObj[this.state.menu].span}>
+        <button className="h-nav__icon" >
+          <span className="sr-only">Toggle navigation</span>
+          <div className={classObj[this.state.menu].bar1} />
+          <div className={classObj[this.state.menu].bar2} />
+          <div className={classObj[this.state.menu].bar3} />
+        </button>
+        <span className={classObj[this.state.menu].menuspan}>
+        Menu</span></span>
+    </div>
     <nav className={classObj[this.state.menu].nav}>
       <ul className={classObj[this.state.menu].ul}>
             <li className="h-nav__item">

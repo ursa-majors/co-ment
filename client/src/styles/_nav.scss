@@ -31,10 +31,10 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   }
   &__icon {
-      height: 22px;
-      width: 24px;
-      left: 20px;
-      top: 20px;
+      height: 14px;
+      width: 16px;
+      left: 36px;
+      top: 23px;
       cursor: pointer;
       position: absolute;
       z-index: 100;
@@ -53,8 +53,8 @@
 
   &__bar {
     position: absolute;
-    width: 24px;
-    height: 4px;
+    width: 16px;
+    height: 2px;
     border-radius: 1px;
     background-color: rgba(255,255,255,.7);
     transition: all 300ms ease-in-out;
@@ -99,6 +99,43 @@
 
     }
 
+  &__item-menu {
+    margin: 13px 0 0 20px;
+    width: 110px;
+    border-radius: 40px;
+    padding: 3px 10px 5px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+
+        &:hover, &:focus {
+        // border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        transition: box-shadow 300ms ease-in-out;
+      }
+
+    &--open {
+      margin: 13px 0 0 20px;
+      width: 40px;
+      border-radius: 40px;
+      padding: 3px 10px 5px 10px;
+      // border: 1px solid rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+
+    }
+
+
+  }
+
+  &__menuspan {
+    color: rgba(255,255,255,1);
+    width: 56px;
+
+    &--open {
+    color: rgba(255,255,255,0);
+    width: 56px;
+    }
+  }
+
   &__item-link {
     color: white;
     font-family: 'Alegreya Sans SC', sans-serif;
@@ -111,6 +148,7 @@
     border: 1px solid transparent;
     width: 100vw;
     padding: 20px;
+    margin-left: 13px;
 
       &--login {
         // border: 1px solid rgba(255, 255, 255, 0.6);
@@ -119,6 +157,28 @@
 
       &:hover, &:focus {
         text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+      }
+
+      &--menu {
+        color: white;
+        font-family: 'Alegreya Sans SC', sans-serif;
+        text-transform: lowercase;
+        letter-spacing: 2px;
+        font-size: 20px;
+        font-weight: 100;
+        text-decoration: none;
+        padding: 0 0 0 30px;
+
+        &-open {
+          color: white;
+          font-family: 'Alegreya Sans SC', sans-serif;
+          text-transform: lowercase;
+          letter-spacing: 2px;
+          font-size: 20px;
+          font-weight: 100;
+          text-decoration: none;
+          padding: 0 0 0 30px;
+        }
       }
     }
 
@@ -134,6 +194,7 @@
       opacity: 1;
       pointer-events: auto;
       transition: opacity 300ms ease-in;
+      margin-top: -40px;
       padding: 60px 0 7px 0;
 
     }
@@ -158,6 +219,10 @@
     height: 30px;
     list-style: none;
 
+    &__item-menu {
+      display: none;
+    }
+
     &__side-bkg {
       position: fixed;
       width: 100vw;
@@ -170,7 +235,7 @@
       background: linear-gradient(to bottom, $color_sky, $color_sky_nav);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
-    
+
     &__nav {
       position: absolute;
       left: 0;
