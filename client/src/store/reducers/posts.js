@@ -8,6 +8,8 @@ import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE,
   GET_ALL_POSTS_REQUEST, GET_ALL_POSTS_SUCCESS, GET_ALL_POSTS_FAILURE,
   VIEW_POST_REQUEST, VIEW_POST_SUCCESS, VIEW_POST_FAILURE,
   DELETE_POST_REQUEST, DELETE_POST_SUCCESS, DELETE_POST_FAILURE,
+  INCREMENT_POSTVIEW_REQUEST, INCREMENT_POSTVIEW_SUCCESS, INCREMENT_POSTVIEW_FAILURE,
+  LIKE_POST_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE,
 } from '../actions/apiPostActions';
 
 const defaultForm = {
@@ -73,6 +75,7 @@ const INITIAL_STATE = {
 
 function posts(state = INITIAL_STATE, action) {
   let error;
+  let index;
   switch (action.type) {
 
     case SET_VIEWPOST_MODAL:
@@ -297,7 +300,7 @@ function posts(state = INITIAL_STATE, action) {
       break;
 
     case DELETE_POST_FAILURE:
-      error = action.payload.message || 'An unknown error occurred';
+      error = action.payload.response.message || 'An unknown error occurred';
       return Object.assign(
         {},
         state,
@@ -323,6 +326,63 @@ function posts(state = INITIAL_STATE, action) {
           },
         },
       );
+
+    case INCREMENT_POSTVIEW_REQUEST:
+      return state;
+
+    case INCREMENT_POSTVIEW_SUCCESS:
+      for (let i = 0; i < state.entries.length; i += 1) {
+        if (state.entries[i]._id === action.meta.postId) {
+          index = i;
+          break;
+        }
+      }
+      return update(
+        state,
+        {
+          entries: {
+            [index]: {
+              meta: {
+                views: {
+                  $apply: x => x + 1,
+                },
+              },
+            },
+          },
+        },
+      );
+
+    case INCREMENT_POSTVIEW_FAILURE:
+      return state;
+
+    case LIKE_POST_REQUEST:
+      return state;
+
+    case LIKE_POST_SUCCESS:
+      for (let i = 0; i < state.entries.length; i += 1) {
+        if (action.meta.postId === state.entries[i]._id) {
+          index = 1;
+          break;
+        }
+      }
+      return update(
+        state,
+        {
+          entries: {
+            [index]: {
+              meta: {
+                likes: {
+                  $apply: x => x + 1,
+                },
+              },
+            },
+          },
+        },
+      );
+
+    case LIKE_POST_FAILURE:
+      error = action.payload.response.message || 'An unknown error occurred';
+      return Object.assign({}, state);
 
     default:
       return state;

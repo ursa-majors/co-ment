@@ -92,3 +92,69 @@ export function deletePost(token, postId) {
     },
   };
 }
+
+export const INCREMENT_POSTVIEW_REQUEST = 'INCREMENT_POSTVIEW_REQUEST';
+export const INCREMENT_POSTVIEW_SUCCESS = 'INCREMENT_POSTVIEW_SUCCESS';
+export const INCREMENT_POSTVIEW_FAILURE = 'INCREMENT_POSTVIEW_FAILURE';
+
+export function incrementPostView(token, postId) {
+  return {
+    [CALL_API]: {
+      endpoint: `https://co-ment.glitch.me/api/posts/${postId}/viewsplusplus`,
+      method: 'PUT',
+      types: [
+        INCREMENT_POSTVIEW_REQUEST,
+        {
+          type: INCREMENT_POSTVIEW_SUCCESS,
+          meta: { postId },
+        },
+        INCREMENT_POSTVIEW_FAILURE,
+      ],
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  };
+}
+
+export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
+export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
+export const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE';
+
+export function likePost(token, postId) {
+  return {
+    [CALL_API]: {
+      endpoint: `https://co-ment.glitch.me/api/posts/${postId}/likesplusplus`,
+      method: 'PUT',
+      types: [
+        LIKE_POST_REQUEST,
+        {
+          type: LIKE_POST_SUCCESS,
+          meta: { postId },
+        },
+        LIKE_POST_FAILURE,
+      ],
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  };
+}
+
+export const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST';
+export const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS';
+export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
+
+export function unlikePost(token, postId) {
+  return {
+    [CALL_API]: {
+      endpoint: `https://co-ment.glitch.me/api/posts/${postId}/likesminusminus`,
+      method: 'PUT',
+      types: [
+        UNLIKE_POST_REQUEST,
+        {
+          type: UNLIKE_POST_SUCCESS,
+          meta: { postId },
+        },
+        UNLIKE_POST_FAILURE,
+      ],
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  };
+}

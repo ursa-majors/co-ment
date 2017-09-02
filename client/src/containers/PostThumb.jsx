@@ -6,8 +6,6 @@ import { Link } from 'react-router-dom';
 import * as Actions from '../store/actions/postActions';
 import * as apiActions from '../store/actions/apiPostActions';
 import { formatDate } from '../utils/';
-import Spinner from '../containers/Spinner';
-import ModalSm from '../containers/ModalSm';
 
 class PostThumb extends React.Component {
 
@@ -80,9 +78,17 @@ class PostThumb extends React.Component {
                   aria-label="expand"
                   name="expand"
                   onKeyDown={e => this.handleKeyDown(e)}
-                  onClick={() => this.props.openModal(this.props.post)}>
-                    <i className={`fa fa-expand post-thumb__icon--expand`}
-                    aria-label="expand" />
+                  onClick={
+                    () => {
+                      this.props.api.incrementPostView(this.props.appState.authToken, this.props.post._id);
+                      this.props.openModal(this.props.post);
+                    }
+                  }
+                >
+                  <i
+                    className={`fa fa-expand post-thumb__icon--expand`}
+                    aria-label="expand"
+                  />
                 </button>
               </div>
             </div>
