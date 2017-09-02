@@ -42,14 +42,6 @@ const PostsGridControls = props => (
       <div className="filters-group">
         <label className="form__label--white">Sort</label>
         <div className="btn-group sort-options">
-          <label className={`btn btn--primary ${props.gridControls.sortBtn.dom}`}>
-            <input
-              type="radio"
-              name="sort-value"
-              value="dom"
-              onClick={(e) => props.actions.setSort(e.target)}
-            /> Default
-          </label>
           <label className={`btn btn--primary ${props.gridControls.sortBtn.title}`}>
             <input
               type="radio"

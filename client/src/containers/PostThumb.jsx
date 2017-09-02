@@ -41,7 +41,7 @@ class PostThumb extends React.Component {
             {word}
           </span>
         </span>
-       ))}{keywordsRest && keywordsRest.map(word => (<span className="sr-only" key={word}>{word}</span>))}</div>
+       ))}{keywordsRest && keywordsRest.map(word => (<span className="tag-value__label sr-only" key={word}>{word}</span>))}</div>
       )
     }
 

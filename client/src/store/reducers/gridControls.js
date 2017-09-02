@@ -11,7 +11,6 @@ const INITIAL_STATE = {
   },
   filterGroup: 'all',
   sortBtn: {
-    dom: 'active',
     title: '',
     'date-updated': '',
   },
