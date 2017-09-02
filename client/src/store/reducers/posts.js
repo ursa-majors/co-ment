@@ -10,6 +10,7 @@ import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE,
   DELETE_POST_REQUEST, DELETE_POST_SUCCESS, DELETE_POST_FAILURE,
   INCREMENT_POSTVIEW_REQUEST, INCREMENT_POSTVIEW_SUCCESS, INCREMENT_POSTVIEW_FAILURE,
   LIKE_POST_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE,
+  UNLIKE_POST_REQUEST, UNLIKE_POST_SUCCESS, UNLIKE_POST_FAILURE,
 } from '../actions/apiPostActions';
 
 const defaultForm = {
@@ -327,9 +328,21 @@ function posts(state = INITIAL_STATE, action) {
         },
       );
 
+    /*
+    *  Called From: <PostFull />
+    *  Payload: None
+    *  Purpose: Dispatched when user clicks on a post to view it.  This action does
+    *  nothing because we do not block operations when this request is dispatched.
+    */
     case INCREMENT_POSTVIEW_REQUEST:
       return state;
 
+    /*
+    *  Called From: <PostFull />
+    *  Payload: {string} Meta: PostId - the id of the post that was viewed.
+    *  Purpose: This will increment the viewcounter on the local copy of the post.
+    *   If post ID is not found, return previous state.
+    */
     case INCREMENT_POSTVIEW_SUCCESS:
       for (let i = 0; i < state.entries.length; i += 1) {
         if (state.entries[i]._id === action.meta.postId) {
@@ -355,34 +368,86 @@ function posts(state = INITIAL_STATE, action) {
     case INCREMENT_POSTVIEW_FAILURE:
       return state;
 
+    /*
+    *  Called From: <PostFull />
+    *  Payload: None
+    *  Purpose: Dispatched when user clicks on a post to 'like' it.  This action does
+    *  nothing because we do not block operations when this request is dispatched.
+    */
     case LIKE_POST_REQUEST:
       return state;
 
+    /*
+    *  Called From: <PostFull />
+    *  Payload: {string} Meta: PostId - the id of the post that was liked.
+    *  Purpose: This will increment the like counter on the local copy of the post.
+    *   If post ID is not found, return previous state.
+    */
     case LIKE_POST_SUCCESS:
       for (let i = 0; i < state.entries.length; i += 1) {
         if (action.meta.postId === state.entries[i]._id) {
-          index = 1;
-          break;
-        }
-      }
-      return update(
-        state,
-        {
-          entries: {
-            [index]: {
-              meta: {
-                likes: {
-                  $apply: x => x + 1,
+          index = i;
+          return update(
+            state,
+            {
+              entries: {
+                [index]: {
+                  meta: {
+                    likes: {
+                      $apply: x => x + 1,
+                    },
+                  },
                 },
               },
             },
-          },
-        },
-      );
+          );
+        }
+      }
+      return state;
 
     case LIKE_POST_FAILURE:
       error = action.payload.response.message || 'An unknown error occurred';
       return Object.assign({}, state);
+
+    /*
+    *  Called From: <PostFull />
+    *  Payload: None
+    *  Purpose: Dispatched when user clicks on a post to 'un-like' it.  This action does
+    *  nothing because we do not block operations when this request is dispatched.
+    */
+    case UNLIKE_POST_REQUEST:
+      return state;
+
+    /*
+    *  Called From: <PostFull />
+    *  Payload: {string} Meta: PostId - the id of the post that was un-liked.
+    *  Purpose: This will decrement the like counter on the local copy of the post.
+    *   If post ID is not found, return previous state.
+    */
+    case UNLIKE_POST_SUCCESS:
+      for (let i = 0; i < state.entries.length; i += 1) {
+        if (action.meta.postId === state.entries[i]._id) {
+          index = i;
+          return update(
+            state,
+            {
+              entries: {
+                [index]: {
+                  meta: {
+                    likes: {
+                      $apply: x => x - 1,
+                    },
+                  },
+                },
+              },
+            },
+          );
+        }
+      }
+      return state;
+
+    case UNLIKE_POST_FAILURE:
+      return state;
 
     default:
       return state;
