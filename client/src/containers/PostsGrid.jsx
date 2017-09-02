@@ -127,7 +127,7 @@ class PostsGrid extends React.Component {
   }
 
   render() {
-    const modalStyles = { overlay: { zIndex: 10, backgroundColor: 'rgba(0,0,0,.7)', } };
+    const modalStyles = { overlay: { zIndex: 1001, backgroundColor: 'rgba(0,0,0,.7)', } };
     const title = this.state.post && this.state.post.title ? this.state.post.title : '';
     const reset = this.shuffle ? this.shuffle.resetItems : null;
 

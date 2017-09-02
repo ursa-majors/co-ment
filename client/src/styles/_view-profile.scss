@@ -401,6 +401,12 @@
   margin: 0 8px 8px 0;
   vertical-align: top;
 
+  &--thumb{
+    font-size: .8em;
+    line-height: 1.2em;
+    margin: 0 4px 4px 0;
+  }
+
 
   &__label {
     border-bottom-right-radius: 2px;
@@ -409,6 +415,10 @@
     padding: 2px 5px;
     display: inline-block;
     vertical-align: middle;
+
+    &--thumb {
+      padding: 0 3px;
+    }
   }
 
   &__wrapper {
