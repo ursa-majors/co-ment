@@ -45,6 +45,10 @@ class UserPosts extends React.Component {
           }
         />
         <div className="user-posts__wrap">
+          <div className="user-posts__header">
+          posts
+          </div>
+        {this.props.posts.entries &&
           <table className="user-posts__table">
             <thead className="user-posts__thead">
               <th className="user-posts__th">Role</th>
@@ -66,7 +70,7 @@ class UserPosts extends React.Component {
                   );
                 })}
             </tbody>
-          </table>
+          </table> }
         </div>
       </div>
     );

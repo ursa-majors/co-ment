@@ -11,7 +11,7 @@
     min-width: 50%;
     margin: auto;
 
-    @include for-tablet-portrait-up {
+    @include for-tablet-landscape-up {
     min-height: 100vh;
   }
 

@@ -2,7 +2,7 @@
 	display:flex;
   flex-wrap: wrap;
 
-	@include for-tablet-portrait-up {
+	@include for-tablet-landscape-up {
 		flex-wrap: nowrap;
 	}
 }
@@ -16,6 +16,19 @@
 
 	&__wrap {
 
+	}
+
+	&__header {
+		color: white;
+		text-shadow: 0 0 20px rgba(0, 0, 0, 0.63);
+	  font-weight: 100;
+	  font-size: 2em;
+	  text-align: center;
+	  width: 100%;
+	  margin: auto;
+	  font-family: 'Alegreya Sans SC', sans-serif;
+	  text-transform: lowercase;
+	  letter-spacing: 2px;
 	}
 
 	&__table {
