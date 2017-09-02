@@ -37,24 +37,20 @@ function getPosts(req, res) {
 
         query.role = req.query.role;
     }
-
-   // check for 'author_id' & add to query map
+    
+    // check for 'author_id' & add to query map
     if (req.query.hasOwnProperty('author_id')) {
         query.author_id = req.query.author_id;
     }
 
-    Post.find(query, (err, posts) => {
-       if (!posts || !posts.length) {
+    Post.find(query)
+        .exec()
+        .then( posts => res.status(200).json(posts) )
+        .catch( err => {
             return res
-                .status(404)
-                .json({ message : 'No posts found!'});
-        }
-
-        return res
-            .status(200)
-            .json(posts);
-
-    });
+                .status(400)
+                .json({ message: err });
+        });
 }
 
 
@@ -131,7 +127,7 @@ function createPost(req, res) {
             console.log('Error!!!', err);
             return res
                 .status(400)
-                .json({ message: err});
+                .json({ message: err });
         });
 
 }
@@ -208,7 +204,7 @@ function updatePost(req, res) {
         console.log('Error!!!', err);
             return res
                 .status(400)
-                .json({ message: err});
+                .json({ message: err });
     });
 
 }

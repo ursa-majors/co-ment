@@ -19,19 +19,15 @@ const projection = { signupKey: 0, passwordResetKey: 0, hash: 0, salt: 0 };
 //
 function getProfiles(req, res) {
 
-    User.find({}, projection, (err, profiles) => {
-
-        if (!profiles) {
+    User.find({}, projection)
+        .exec()
+        .then( profiles => res.status(200).json(profiles) )
+        .catch( err => {
             return res
-                .status(404)
-                .json({ message : 'No profiles found!'});
-        }
-
-        return res
-            .status(200)
-            .json(profiles);
-
-    });
+                .status(400)
+                .json({ message: err });
+        });
+    
 }
 
 
