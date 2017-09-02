@@ -4,11 +4,16 @@
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    min-height: 100vh;
+    min-height: 90vh;
     height: 100%;
     display: flex;
     justify-content: center;
     min-width: 50%;
+    margin: auto;
+
+    @include for-tablet-portrait-up {
+    min-height: 100vh;
+  }
 
     }
 

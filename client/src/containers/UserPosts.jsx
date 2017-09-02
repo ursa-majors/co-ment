@@ -1,12 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 
 import * as Actions from '../store/actions/postActions';
 import * as apiActions from '../store/actions/apiPostActions';
 import PostFull from './PostFull';
 import Spinner from './Spinner';
 import ModalSm from './ModalSm';
+import { formatDate } from '../utils/';
 
 class UserPosts extends React.Component {
 
@@ -19,7 +21,6 @@ class UserPosts extends React.Component {
 
   componentDidMount() {
     const userId = this.props.appState.userId;
-    console.log(`&token=${this.props.appState.authToken}&author_id=${userId}`);
     this.props.api.getUserPosts(this.props.appState.authToken, userId);
   }
 
@@ -45,18 +46,22 @@ class UserPosts extends React.Component {
         />
         <div className="user-posts__wrap">
           <table className="user-posts__table">
-            <thead>
-              <th>Role</th>
-              <th>Title</th>
-              <th>Date</th>
+            <thead className="user-posts__thead">
+              <th className="user-posts__th">Role</th>
+              <th className="user-posts__th">Title</th>
+              <th className="user-posts__th">Date</th>
             </thead>
-            <tbody>
+            <tbody className="user-posts__tbody">
               {this.props.posts.entries && this.props.posts.entries.reverse().map((post) => {
                 return (
-                  <tr key={post._id} className="user-posts__row">
-                    <td className="user-posts__cell"> {post.role} </td>
-                    <td className="user-posts__cell"> {post.title} </td>
-                    <td className="user-posts__cell"> {post.dateUpdated} </td>
+                  <tr key={post._id} className="user-posts__tr">
+                    <td className="user-posts__td"> {post.role} </td>
+                    <td className="user-posts__td">
+                      <Link to={`/editpost/${post._id}`} className="user-posts__link">
+                        {post.title}
+                      </Link>
+                    </td>
+                    <td className="user-posts__td"> {formatDate(new Date(post.updatedAt))} </td>
                   </tr>
                   );
                 })}

@@ -1,11 +1,18 @@
 .user-admin {
 	display:flex;
+  flex-wrap: wrap;
+
+	@include for-tablet-portrait-up {
+		flex-wrap: nowrap;
+	}
 }
 
 .user-posts {
 	display:flex;
 	flex-direction: column;
 	justify-content: center;
+	padding: 20px;
+	margin: auto;
 
 	&__wrap {
 
@@ -15,6 +22,66 @@
 		background: rgba(255, 255, 255, 0.75);
     border-radius: 10px;
     box-shadow: 0 16px 24px rgba(0, 0, 0, 0.4);
-		padding: 20px;
+		border-collapse: collapse;
+	}
+
+	&__thead{
+		border-bottom: 1px dotted $color_gray_darker;
+	}
+
+	&__tr {
+		border-bottom: 1px dotted $color_gray_darker;
+
+		&:nth-child(odd) {
+   		background-color: rgba(255, 255, 255, 0.75);
+		}
+		&:last-child > .user-posts__td {
+   		padding-bottom:20px;
+		}
+	}
+
+	&__th {
+		font-family: 'Alegreya Sans SC', sans-serif;
+  	color: $color_gray_darker;
+  	font-weight: 400;
+  	text-transform: lowercase;
+  	letter-spacing: 2px;
+  	font-size: 1.2em;
+  	padding: 15px;
+  	padding-top:20px;
+
+  	&:first-child {
+   		padding-left:30px;
+		}
+		&:last-child {
+   		padding-right:30px;
+		}
+	}
+
+	&__td {
+		font-family: 'Alegreya Sans', sans-serif;
+  	color: $color_gray_darker;
+  	font-weight: 400;
+  	padding: 15px;
+  	border: none;
+  	&:first-child {
+   		padding-left:30px;
+   		font-family: 'Alegreya Sans SC', sans-serif;
+   		text-transform: lowercase;
+   		letter-spacing: 2px;
+		}
+		&:last-child {
+   		padding-right:30px;
+		}
+	}
+
+	&__link {
+		text-decoration: none;
+		border-bottom: 1px dotted $color_gray_darker;
+
+		&:hover, &:active, &:focus {
+			color: $color_aqua;
+			border-bottom: 1px dotted $color_aqua;
+			}
 	}
 }
