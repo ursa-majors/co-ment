@@ -66,10 +66,19 @@ class PostsGrid extends React.Component {
             const titleText = titleElement.textContent.toLowerCase().trim();
             const bodyElement = element.querySelector('.post-thumb__body');
             const bodyText = bodyElement.textContent.toLowerCase().trim();
+            const keywordsElements = element.querySelectorAll('.tag-value__label'); //returns NodeList, have to convert to array
+            let keywordsElementsArray = [];
+            for (var i = 0; i < keywordsElements.length; i++) {
+                keywordsElementsArray.push(keywordsElements[i]);
+            }
+            const keywordsText = keywordsElementsArray.map((el) => el.textContent.toLowerCase().trim());
+            console.log('71', keywordsText);
+
             // add username ?
             // in order to make keywords, timezone, gender searchable they have to be output to grid
             // even if not visible in thumb view
-            const searchBlob = titleText.concat(bodyText);
+            const searchBlob = titleText.concat(bodyText).concat(keywordsText);
+            console.log('76', searchBlob);
             return searchBlob.indexOf(this.props.gridControls.searchText) !== -1;
           });
           PostsGrid.adjustBkgSize();
@@ -171,11 +180,12 @@ class PostsGrid extends React.Component {
           <div ref={element => this.element = element} className="flex-row my-shuffle shuffle posts-grid__cont">
             <div className="flex-col-1-sp sizer" />
             {this.props.posts.entries.reverse().map((post) => {
+              let languages = post.languages || [];
               return (
                 <div
                   key={post._id}
                   className="flex-col-12-xs flex-col-6-sm flex-col-4-md flex-col-3-lg flex-col-2-xl shuffle-item shuffle-item--visible post"
-                  data-groups={post.role}
+                  data-groups={[post.role, post.gender, post.time_zone, languages.map((language) => language)]}
                   data-updated={post.updatedAt}
                   data-title={post.title}
                 >
