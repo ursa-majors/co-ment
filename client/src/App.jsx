@@ -20,6 +20,7 @@ import ConnectionResult from './containers/ConnectionResult';
 import ConnectionDetails from './containers/ConnectionDetails';
 import Validate from './containers/Validate';
 import ResetPassword from './containers/ResetPassword';
+import UserAdmin from './containers/UserAdmin';
 
 class App extends React.Component {
 
@@ -35,7 +36,7 @@ class App extends React.Component {
               <Route path="/register" component={Registration} />
               <Route path="/login" component={Login} />
               <Route path="/about" component={About} />
-              <Route path="/profile" component={Profile} />
+              <Route path="/profile" component={UserAdmin} />
               <Route path="/posts" component={PostsGrid} />
               <Route path="/logout" component={Logout} />
               <Route path="/viewpost/:id" component={ViewPost} />

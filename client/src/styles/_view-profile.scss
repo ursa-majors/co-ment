@@ -1,13 +1,19 @@
 .view-profile {
-    background: url(./img/splash_pfl.svg) no-repeat top center;
+    // background: url(./img/splash_pfl.svg) no-repeat top center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    min-height: 100vh;
+    min-height: 90vh;
     height: 100%;
     display: flex;
     justify-content: center;
+    min-width: 50%;
+    margin: auto;
+
+    @include for-tablet-landscape-up {
+    min-height: 100vh;
+  }
 
     }
 
