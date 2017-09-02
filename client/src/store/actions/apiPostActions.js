@@ -14,6 +14,22 @@ export function getPost(token, userId, role) {
     },
   };
 }
+
+export const GET_USERPOSTS_REQUEST = 'GET_USERPOSTS_REQUEST';
+export const GET_USERPOSTS_SUCCESS = 'GET_USERPOSTS_SUCCESS';
+export const GET_USERPOSTS_FAILURE = 'GET_USERPOSTS_FAILURE';
+
+export function getUserPosts(token, userId) {
+  return {
+    [CALL_API]: {
+      endpoint: `https://co-ment.glitch.me/api/posts?author_id=${userId}`,
+      method: 'GET',
+      types: [GET_USERPOSTS_REQUEST, GET_USERPOSTS_SUCCESS, GET_USERPOSTS_FAILURE],
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  };
+}
+
 export const GET_ALL_POSTS_REQUEST = 'GET_ALL_POSTS_REQUEST';
 export const GET_ALL_POSTS_SUCCESS = 'GET_ALL_POSTS_SUCCESS';
 export const GET_ALL_POSTS_FAILURE = 'GET_ALL_POSTS_FAILURE';

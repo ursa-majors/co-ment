@@ -30,7 +30,7 @@ class ViewProfile extends React.Component {
 
   componentDidMount() {
     // copy requested profile data into currentProfile
-    const profileId = this.props.match.params.id;
+    const profileId = this.props.appState.userId;
     this.props.api.getProfile(this.props.appState.authToken, profileId);
   }
 
@@ -156,16 +156,14 @@ class ViewProfile extends React.Component {
         {this.props.profile.getSuccess &&
           <div className={cardSize}>
             <div className={this.state.flip ? "side front flip" : "side front"} id="front">
-            { this.props.appState.userId === this.props.match.params.id &&
-              !this.state.thumb &&
+            { !this.state.thumb &&
               <Link
                 className="full__edit"
                 to={'/profile'} >
                 <i className="fa fa-pencil full__icon--edit" aria-label="edit" />
               </Link> /* edit link */
             } {/* post owner, full size */}
-            {/* this.props.appState.userId !== this.props.match.params.id &&
-              !this.state.thumb &&
+            {/* !this.state.thumb &&
               <div className="thumb__compress">
                 <i className="compress fa fa-compress thumb__icon--compress"
                   aria-label="compress"

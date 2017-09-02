@@ -5,7 +5,7 @@ import { SET_POSTS, SAVE_POST, CLEAR_CURRENT_POST, SET_EDIT_POST, SET_FORM_FIELD
 import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE,
   ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE,
   MODIFY_POST_REQUEST, MODIFY_POST_SUCCESS, MODIFY_POST_FAILURE,
-  GET_ALL_POSTS_REQUEST, GET_ALL_POSTS_SUCCESS, GET_ALL_POSTS_FAILURE,
+  GET_ALL_POSTS_REQUEST, GET_ALL_POSTS_SUCCESS, GET_ALL_POSTS_FAILURE, GET_USERPOSTS_REQUEST, GET_USERPOSTS_SUCCESS, GET_USERPOSTS_FAILURE,
   VIEW_POST_REQUEST, VIEW_POST_SUCCESS, VIEW_POST_FAILURE,
   DELETE_POST_REQUEST, DELETE_POST_SUCCESS, DELETE_POST_FAILURE,
 } from '../actions/apiPostActions';
@@ -177,6 +177,49 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case GET_ALL_POSTS_FAILURE:
+      error = action.payload.response.message || 'An unknown error occurred while loading posts';
+      return Object.assign(
+        {},
+        state,
+        {
+          loadPostsSpinnerClass: 'spinner__hide',
+          loadPostsModal: {
+            text: error,
+            class: 'modal__show',
+            type: 'modal__error',
+            title: 'ERROR',
+          },
+        },
+      );
+
+    case GET_USERPOSTS_REQUEST:
+      return Object.assign(
+        {},
+        state,
+        {
+          loadPostsSpinnerClass: 'spinner__show',
+          loadPostsModal: {
+            text: '',
+            class: 'modal__hide',
+            type: '',
+            title: '',
+          },
+        },
+      );
+
+    case GET_USERPOSTS_SUCCESS:
+    console.log('211', action.payload);
+      return update(
+        state,
+        {
+          loadPostsSpinnerClass: { $set: 'spinner__hide' },
+          loadPostsError: { $set: null },
+          entries: { $set: action.payload },
+        },
+      );
+
+    case GET_USERPOSTS_FAILURE:
+    console.log('221', action.payload);
       error = action.payload.response.message || 'An unknown error occurred while loading posts';
       return Object.assign(
         {},
