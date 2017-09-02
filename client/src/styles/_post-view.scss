@@ -696,7 +696,7 @@
   &__body{
     display: block;
     display: -webkit-box;
-    height: 64px; /* Fallback for non-webkit */
+    max-height: 64px; /* Fallback for non-webkit */
     font-size: 16px;
     line-height: 1.4;
     -webkit-line-clamp: 3;
@@ -704,6 +704,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 0 20px 0 0;
+    margin-bottom: 10px;
   }
 
   &__back-wrap {
