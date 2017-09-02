@@ -259,19 +259,27 @@ function deletePost(req, res) {
 
 
 // INCREMENT A POST'S VIEW COUNT
-//   Example: PUT >> /api/postviews/597dd8665229970e99c6ab55
+//   Example: PUT >> /api/posts/597dd8665229970e99c6ab55/viewsplusplus
 //   Secured: yes, valid JWT required
 //   Expects:
-//     1) 'id' from request params
+//     1) post 'id' from request params
+//     2) user '_id' from JWT
 //   Returns: success status only
 //
 function incPostViews(req, res) {
 
-    const target = req.params.id;
+    const conditions = {
+        
+        // the post _id
+        _id       : req.params.id,
+        
+        // match only if post author NOT EQUAL to requesting user
+        author_id : { $ne: req.token._id }
+    };
 
     const updates = { $inc: { 'meta.views': 1 } };
   
-    Post.findByIdAndUpdate(target, updates)
+    Post.findOneAndUpdate(conditions, updates)
         .exec()
         .then( () => {
       
@@ -285,11 +293,51 @@ function incPostViews(req, res) {
                 .status(400)
                 .json({ message: 'Post could not be updated' });
         });
+    
+}
+
+
+// INCREMENT A POST'S LIKE COUNT
+//   Example: PUT >> /api/posts/597dd8665229970e99c6ab55/likessplusplus
+//   Secured: yes, valid JWT required
+//   Expects:
+//     1) post 'id' from request params
+//     2) user '_id' from JWT
+//   Returns: success status only
+//
+function incPostLikes(req, res) {
+
+    const conditions = {
+        
+        // the post _id
+        _id       : req.params.id,
+        
+        // match only if post author NOT EQUAL to requesting user
+        author_id : { $ne: req.token._id }
+    };
+
+    const updates = { $inc: { 'meta.likes': 1 } };
+  
+    Post.findOneAndUpdate(conditions, updates)
+        .exec()
+        .then( () => {
+      
+            return res
+                .status(200)
+                .end();
+        })
+        .catch(err => {
+            console.log(err);
+            return res
+                .status(400)
+                .json({ message: 'Post could not be updated' });
+        });
+    
 }
 
 
 /* ============================== EXPORT API =============================== */
 
 module.exports = {
-    getPosts, createPost, updatePost, deletePost, incPostViews
+    getPosts, createPost, updatePost, deletePost, incPostViews, incPostLikes
 };
