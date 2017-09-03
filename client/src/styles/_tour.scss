@@ -15,4 +15,11 @@
   width: 80vw;
   margin: 0 auto;
   border-radius: 7px;
+
+  &__controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
 }
