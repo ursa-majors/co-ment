@@ -17,32 +17,27 @@ const User = require('../models/user');
 //     role        Return only 'mentor' or 'mentee' wanted posts
 //     id          Return single specific post object '_id'
 //     author_id   Return only posts by a specific author
+//     active=all   Return all posts, active and inactive
 //   Returns: JSON array of 'post' objects on success.
 //
 function getPosts(req, res) {
-    
+
     // request only active, non-deleted posts
     const query = {
         active  : true,
         deleted : false
     };
 
-    // check for 'id' query param & add to 'query' map
-    if (req.query.hasOwnProperty('id')) {
-        query._id = req.query.id;
-    }
-
-    // check for 'role', accept only 'mentor' or 'mentee' values
-    if (req.query.hasOwnProperty('role') &&
-       (req.query.role === 'mentor' || req.query.role === 'mentee')) {
-
-        query.role = req.query.role;
-    }
-    
-    // check for 'author_id' & add to query map
-    if (req.query.hasOwnProperty('author_id')) {
-        query.author_id = req.query.author_id;
-    }
+    // iterate over req params, adding any params to the query
+    Object.keys(req.query).forEach( key => {
+        if (key === 'id') {
+            query._id = req.query.id;
+        } else if (key === 'active' && req.query.active === 'all') {
+            delete query.active;
+        } else {
+            query[key] = req.query[key];
+        }
+    });
 
     Post.find(query)
         .exec()
@@ -61,20 +56,23 @@ function getPosts(req, res) {
 //   Expects:
 //     1) 'author_id' from JWT token
 //     2) request body properties : {
-//          author        : String
-//          author_id     : String
-//          author_name   : String
-//          author_avatar : String
-//          role          : String
-//          title         : String
-//          body          : String
-//          keywords      : Array
-//          availability  : String
+//          author              : String
+//          author_id           : String
+//          author_name         : String
+//          author_avatar       : String
+//          author_timezone     : String
+//          author_languages    : Array
+//          author_gemder       : String
+//          role                : String
+//          title               : String
+//          body                : String
+//          keywords            : Array
+//          availability        : String
 //        }
 //   Returns: success message & new post object on success
 //
 function createPost(req, res) {
-        
+
     // Check if exists non-deleted post with same author_id, role & title
     Post
         .findOne({
@@ -103,6 +101,9 @@ function createPost(req, res) {
                 myPost.author_id        = req.token._id;
                 myPost.author_name      = req.body.author_name;
                 myPost.author_avatar    = req.body.author_avatar;
+                myPost.author_timezone  = req.body.author_timezone;
+                myPost.author_languages = req.body.author_languages;
+                myPost.author_gender    = req.body.author_gender;
                 myPost.role             = req.body.role;
                 myPost.title            = req.body.title;
                 myPost.body             = req.body.body;
@@ -140,16 +141,19 @@ function createPost(req, res) {
 //   Expects:
 //     1) '_id' from JWT token
 //     2) request body properties : {
-//          action        : Boolean
-//          author        : String
-//          author_id     : String
-//          author_name   : String
-//          author_avatar : String
-//          role          : String
-//          title         : String
-//          body          : String
-//          keywords      : Array
-//          availability  : String
+//          action              : Boolean
+//          author              : String
+//          author_id           : String
+//          author_name         : String
+//          author_avatar       : String
+//          author_timezone     : String
+//          author_languages    : Array
+//          author_gender       : String
+//          role                : String
+//          title               : String
+//          body                : String
+//          keywords            : Array
+//          availability        : String
 //        }
 //   Returns: success message & updated post on success
 //
@@ -164,16 +168,19 @@ function updatePost(req, res) {
 
     // build new post object from request body and parsed token
     const updates = {
-        active        : req.body.active,
-        author        : req.body.author,
-        author_id     : req.token._id,
-        author_name   : req.body.author_name,
-        author_avatar : req.body.author_avatar,
-        role          : req.body.role,
-        title         : req.body.title,
-        body          : req.body.body,
-        keywords      : req.body.keywords,
-        availability  : req.body.availability
+        active              : req.body.active,
+        author              : req.body.author,
+        author_id           : req.token._id,
+        author_name         : req.body.author_name,
+        author_avatar       : req.body.author_avatar,
+        author_timezone     : req.body.author_timezone,
+        author_languages    : req.body.author_languages,
+        author_gender       : req.body.author_gender,
+        role                : req.body.role,
+        title               : req.body.title,
+        body                : req.body.body,
+        keywords            : req.body.keywords,
+        availability        : req.body.availability
     };
 
     const options = {
@@ -270,16 +277,16 @@ function deletePost(req, res) {
 function incPostViews(req, res) {
 
     const conditions = {
-        
+
         // the post _id
         _id       : req.params.id,
-        
+
         // match only if post author NOT EQUAL to requesting user
         author_id : { $ne: req.token._id }
     };
 
     const updates = { $inc: { 'meta.views': 1 } };
-  
+
     Post.findOneAndUpdate(conditions, updates)
         .exec()
         .then( () => {
@@ -289,24 +296,20 @@ function incPostViews(req, res) {
             console.log(err);
             return res.status(400).end();
         });
-    
+
 }
 
 
-// UPDATE A POST'S LIKE COUNT
-// Adds post _id to user's `likedposts` array
-//   Example: PUT >> /api/posts/597dd8665229970e99c6ab55/likes?action=plusplus
+// INCREMENT A POST'S LIKE COUNT
+//   Example: PUT >> /api/posts/597dd8665229970e99c6ab55/likessplusplus
 //   Secured: yes, valid JWT required
 //   Expects:
 //     1) post 'id' from request params
 //     2) user '_id' from JWT
-//     3) query parameter:
-//        * action=plusplus    : increments post's like count
-//        * action=minusminus  : decrements post's like count
 //   Returns: success status only
 //
 function updatePostLikes(req, res) {
-    
+
     const postId = req.params.id;
     const userId = req.token._id;
     const action = req.query.action;
