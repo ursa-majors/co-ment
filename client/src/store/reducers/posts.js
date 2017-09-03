@@ -30,6 +30,9 @@ const defaultPost = {
   author_id: '',
   author_name: '',
   author_avatar: '',
+  author_timezone: '',
+  author_languages: [],
+  author_gender: '',
   availability: '',
   keywords: [],
   body: '',
@@ -212,7 +215,6 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case GET_USERPOSTS_SUCCESS:
-    console.log('211', action.payload);
       return update(
         state,
         {
@@ -223,7 +225,6 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case GET_USERPOSTS_FAILURE:
-    console.log('221', action.payload);
       error = action.payload.response.message || 'An unknown error occurred while loading posts';
       return Object.assign(
         {},

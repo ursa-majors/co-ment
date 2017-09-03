@@ -31,7 +31,7 @@ class ViewProfile extends React.Component {
   componentDidMount() {
     // copy requested profile data into currentProfile
     let profileId;
-    if (this.props.match.params.id) {
+    if (this.props.match && this.props.match.params.id) {
      profileId = this.props.match.params.id;
     } else {
      profileId = this.props.appState.userId;

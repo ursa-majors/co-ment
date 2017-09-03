@@ -120,6 +120,9 @@ class EditPost extends React.Component {
       author_id: this.props.profiles.userProfile._id,
       author_name: this.props.profiles.userProfile.name,
       author_avatar: this.props.profiles.userProfile.avatarUrl,
+      author_timezone: this.props.profiles.userProfile.time_zone,
+      author_languages: this.props.profiles.userProfile.languages,
+      author_gender: this.props.profiles.userProfile.gender,
       role: this.props.posts.editForm.role,
       title: this.props.posts.editForm.title,
       body: this.props.posts.editForm.content,
@@ -149,7 +152,7 @@ class EditPost extends React.Component {
     return (
       <div className="posts">
         <div className="form__body">
-          <div className="form__header">Create an Ad</div>
+          <div className="form__header">{this.props.match.params.id ? 'Edit Post' : 'New Post'}</div>
           <div className="form__input-group">
             <label htmlFor="ghUserName" className="form__label">Title
             </label>
@@ -239,7 +242,7 @@ class EditPost extends React.Component {
               value={this.props.posts.editForm.active}
               checked={this.props.posts.editForm.active}
             />
-            <label htmlFor="active" className="form__label--checkbox">`Publish this post? (uncheck to deactivate)`</label>
+            <label htmlFor="active" className="form__label--checkbox">Publish this post? (uncheck to deactivate)</label>
           </div>
 
           <div className="form__input-group">

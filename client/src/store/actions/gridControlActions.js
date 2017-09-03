@@ -1,5 +1,7 @@
 export const SET_SEARCH_TEXT = 'SET_SEARCH_TEXT';
 export const SET_FILTER = 'SET_FILTER';
+export const RUN_FILTER = 'RUN_FILTER';
+export const CLEAR_FILTER = 'CLEAR_FILTER';
 export const SET_SORT = 'SET_SORT';
 
 export function setSearchText(txt) {
@@ -9,12 +11,25 @@ export function setSearchText(txt) {
   });
 }
 
-export function setFilter(filter) {
+export function setFilter(id, value) {
   return ({
     type: SET_FILTER,
-    payload: filter,
+    payload: { id, value },
   });
 }
+
+export function runFilter() {
+  return ({
+    type: RUN_FILTER,
+  });
+}
+
+export function clearFilter() {
+  return ({
+    type: CLEAR_FILTER,
+  });
+}
+
 
 export function setSort(sort) {
   return ({
