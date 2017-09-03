@@ -5,6 +5,7 @@
 /* ================================= SETUP ================================= */
 
 const Post = require('../models/post');
+const User = require('../models/user');
 
 
 /* ============================ ROUTE HANDLERS ============================= */
@@ -282,62 +283,91 @@ function incPostViews(req, res) {
     Post.findOneAndUpdate(conditions, updates)
         .exec()
         .then( () => {
-      
-            return res
-                .status(200)
-                .end();
+            return res.status(200).end();
         })
         .catch(err => {
             console.log(err);
-            return res
-                .status(400)
-                .json({ message: 'Post could not be updated' });
+            return res.status(400).end();
         });
     
 }
 
 
-// INCREMENT A POST'S LIKE COUNT
-//   Example: PUT >> /api/posts/597dd8665229970e99c6ab55/likessplusplus
+// UPDATE A POST'S LIKE COUNT
+// Adds post _id to user's `likedposts` array
+//   Example: PUT >> /api/posts/597dd8665229970e99c6ab55/likes?action=plusplus
 //   Secured: yes, valid JWT required
 //   Expects:
 //     1) post 'id' from request params
 //     2) user '_id' from JWT
+//     3) query parameter:
+//        * action=plusplus    : increments post's like count
+//        * action=minusminus  : decrements post's like count
 //   Returns: success status only
 //
-function incPostLikes(req, res) {
+function updatePostLikes(req, res) {
+    
+    const postId = req.params.id;
+    const userId = req.token._id;
+    const action = req.query.action;
 
-    const conditions = {
-        
-        // the post _id
-        _id       : req.params.id,
-        
-        // match only if post author NOT EQUAL to requesting user
-        author_id : { $ne: req.token._id }
-    };
-
-    const updates = { $inc: { 'meta.likes': 1 } };
-  
-    Post.findOneAndUpdate(conditions, updates)
+    User.findById(userId)
         .exec()
-        .then( () => {
-      
-            return res
-                .status(200)
-                .end();
+        .then( user => {
+
+            const likedPosts = user.likedPosts;
+
+            // fail on already liked post
+            if (action === 'plusplus' && likedPosts.indexOf(postId) > -1) {
+                return res.end();
+            }
+
+            // fail on unlike a post the user doesn't already like
+            if (action === 'minusminus' && likedPosts.indexOf(postId) === -1) {
+                return res.end();
+            }
+
+            // add/remove post _id from array depending on action
+            if (action === 'plusplus' && likedPosts.indexOf(postId) === -1) {
+                user.likedPosts.push(postId);
+            } else if (action === 'minusminus' && likedPosts.indexOf(postId) > -1) {
+                let postIdx = user.likedPosts.indexOf(postId);
+                user.likedPosts.splice(postIdx, 1);
+            }
+
+            Post.findById(postId)
+                .exec()
+                .then( post => {
+
+                    // fail if author tries to like their own post
+                    if (post.author_id === userId) {
+                        return res.end();
+                    } else if (action === 'plusplus') {
+                        post.meta.likes += 1;
+                    } else if (action === 'minusminus') {
+                        post.meta.likes -= 1;
+                    }
+
+                    // save user and post documents
+                    user.save();
+                    post.save();
+
+                    // send success status and terminate
+                    return res.status(200).end();
+
+                });
+
         })
         .catch(err => {
             console.log(err);
-            return res
-                .status(400)
-                .json({ message: 'Post could not be updated' });
+            return res.status(400).end();
         });
-    
+
 }
 
 
 /* ============================== EXPORT API =============================== */
 
 module.exports = {
-    getPosts, createPost, updatePost, deletePost, incPostViews, incPostLikes
+    getPosts, createPost, updatePost, deletePost, incPostViews, updatePostLikes
 };
