@@ -14,9 +14,10 @@ const User = require('../models/user');
 //   Example: GET >> /api/posts?role=mentor&id=12345689
 //   Secured: yes, valid JWT required
 //   Query params for filtering requests:
-//     role        Return only 'mentor' or 'mentee' wanted posts
-//     id          Return single specific post object '_id'
-//     author_id   Return only posts by a specific author
+//     role         Return only 'mentor' or 'mentee' wanted posts
+//     _id          Return single specific post object '_id'
+//     author_id    Return only posts by a specific author
+//     active=all   Return all posts, active and inactive
 //   Returns: JSON array of 'post' objects on success.
 //
 function getPosts(req, res) {
@@ -26,24 +27,17 @@ function getPosts(req, res) {
         active  : true,
         deleted : false
     };
-
-    // check for 'id' query param & add to 'query' map
-    if (req.query.hasOwnProperty('id')) {
-        query._id = req.query.id;
-    }
-
-    // check for 'role', accept only 'mentor' or 'mentee' values
-    if (req.query.hasOwnProperty('role') &&
-       (req.query.role === 'mentor' || req.query.role === 'mentee')) {
-
-        query.role = req.query.role;
-    }
     
-    // check for 'author_id' & add to query map
-    if (req.query.hasOwnProperty('author_id')) {
-        query.author_id = req.query.author_id;
-    }
-
+    // iterate over req params, adding any params to the query    
+    Object.keys(req.query).forEach( key => {
+        // if `active=all` was requested, delete `query.active`
+        if (key === 'active' && req.query.active === 'all') {
+            delete query.active;
+        } else {
+            query[key] = req.query[key];
+        }
+    });
+    
     Post.find(query)
         .exec()
         .then( posts => res.status(200).json(posts) )
