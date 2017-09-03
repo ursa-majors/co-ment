@@ -136,6 +136,7 @@ class InputAutosuggest extends React.Component {
       <Autosuggest
         id={id}
         name={name}
+        className={this.props.className}
         suggestions={suggestions}
         onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
         onSuggestionsClearRequested={this.onSuggestionsClearRequested}
