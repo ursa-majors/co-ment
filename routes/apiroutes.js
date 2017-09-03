@@ -93,9 +93,9 @@ router.post('/api/posts', postCtrl.createPost);
 router.put('/api/posts/:id', postCtrl.updatePost);
 
 
-// Increment a post's likes counter
+// Increment or decrement a post's likes
 // Returns sucess status code only
-router.put('/api/posts/:id/likesplusplus', postCtrl.incPostLikes);
+router.put('/api/posts/:id/likes', postCtrl.updatePostLikes);
 
 
 // Delete a post
