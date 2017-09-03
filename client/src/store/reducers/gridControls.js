@@ -1,17 +1,19 @@
 import update from 'immutability-helper';
 
-import { SET_SEARCH_TEXT, SET_FILTER, SET_SORT } from '../actions/gridControlActions';
+import { SET_SEARCH_TEXT, SET_FILTER, SET_SORT, RUN_FILTER, CLEAR_FILTER } from '../actions/gridControlActions';
 import { ADD_POST_SUCCESS } from '../actions/apiPostActions';
 
 const INITIAL_STATE = {
   searchText: '',
   filterBtn: {
-    mentor: '',
-    mentee: '',
+    role: 'Role',
+    gender: 'Gender',
+    timezone: 'Time zone',
+    language: '',
+    keyword: '',
   },
-  filterGroup: 'all',
+  filterGroup: ['all'],
   sortBtn: {
-    dom: 'active',
     title: '',
     'date-updated': '',
   },
@@ -19,6 +21,14 @@ const INITIAL_STATE = {
   },
   operation: '',
 };
+
+const clearFilters = {
+  role: 'Role',
+  gender: 'Gender',
+  timezone: 'Time zone',
+  language: '',
+  keyword: '',
+}
 
 const sortByDate = (element) => {
   return element.getAttribute('data-updated');
@@ -30,7 +40,9 @@ const sortByTitle = (element) => {
 
 function gridControls(state = INITIAL_STATE, action) {
   let newFilter;
+  let newFilterGroup;
   let filtKeys;
+  let filtValues;
   let newSort;
   let sortKeys;
   let options = {};
@@ -88,14 +100,12 @@ function gridControls(state = INITIAL_STATE, action) {
       );
 
     case SET_FILTER:
-      // set active class on filterBtn
+      // set value of filter key to user-selected value
       newFilter = Object.assign({}, state.filterBtn);
       filtKeys = Object.keys(newFilter);
       for (let i = 0; i < filtKeys.length; i += 1) {
         if (action.payload.id === filtKeys[i]) {
-          newFilter[filtKeys[i]] = (newFilter[filtKeys[i]] === 'active' ? '' : 'active');
-        } else {
-          newFilter[filtKeys[i]] = '';
+          newFilter[filtKeys[i]] = action.payload.value;
         }
       }
       return update(
@@ -104,8 +114,55 @@ function gridControls(state = INITIAL_STATE, action) {
           filterBtn: {
             $set: newFilter,
           },
+        },
+      );
+
+    case RUN_FILTER:
+      // set state.filterGroup to array of object values of state.FilterBtn
+      newFilter = Object.assign({}, state.filterBtn);
+      console.log('gridControls > 123 newFilter', newFilter );
+      filtKeys = Object.keys(newFilter);
+      console.log('gridControls > 125 filtKeys', filtKeys );
+      filtValues = Object.values(newFilter);
+      console.log('gridControls > 127 filtValues', filtValues );
+      newFilterGroup = [];
+      for (let i = 0; i < filtValues.length; i += 1) {
+        // don't push placeholder or empty values
+        if (filtValues[i] !== 'Time zone' && filtValues[i] !== 'Gender' && filtValues[i] !== 'Role' && filtValues[i] !== '') {
+          console.log('gridControls > 132 non-placeholder filter value:', filtValues[i] );
+          if (filtKeys[i] === 'timezone') {
+            // don't convert time zones to lowercase
+              newFilterGroup.push(filtValues[i]);
+              } else {
+              // for all other values, convert to lowercase
+              newFilterGroup.push(filtValues[i].toLowerCase());
+            }
+          }
+        }
+      console.log('gridControls.js > 138', newFilterGroup);
+      return update(
+        state,
+        {
           filterGroup: {
-            $set: state.filterGroup === action.payload.id ? 'all' : action.payload.id,
+            $set: newFilterGroup,
+          },
+          operation: {
+            $set: 'FILTER',
+          },
+        },
+      );
+
+    case CLEAR_FILTER:
+      // reset filterBtn values to empty string, filterGroup to empty array
+      newFilterGroup = [];
+      return update(
+        state,
+        {
+          filterBtn: {
+            $set: clearFilters,
+          },
+          filterGroup: {
+            $set: newFilterGroup,
           },
           operation: {
             $set: 'FILTER',

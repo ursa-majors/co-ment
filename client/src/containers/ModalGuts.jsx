@@ -4,7 +4,7 @@ import PostFull from './PostFull';
 const ModalGuts = (props) => (
 
       <div className="modal__dialog">
-          <div className="modal__header">
+          <div className="modalbig__header">
             <h2 className="sr-only" id="modalTitle">{props.title}</h2>
           </div>
           <div className="modal__body">

@@ -86,9 +86,24 @@
     max-width: 50%;
     width: 50%;
   }
+  .flex-col-3-sm {
+    flex: 0 0 25%;
+    max-width: 25%;
+    width: 25%;
+  }
+  .flex-col-4-sm {
+    flex: 0 0 33.333%;
+    max-width: 33.333%;
+    width: 33.333%;
+  }
 }
 
 @include for-tablet-portrait-up {
+  .flex-col-2-md {
+    flex: 0 0 16.667%;
+    max-width: 16.667%;
+    width: 16.667%;
+  }
   .flex-col-4-md {
     flex: 0 0 33.333%;
     max-width: 33.333%;
@@ -102,6 +117,16 @@
 }
 
 @include for-desktop-up {
+  .flex-col-1-lg {
+    flex: 0 0 8.333%;
+    max-width: 8.333%;
+    width: 8.333%;
+  }
+  .flex-col-2-lg {
+    flex: 0 0 16.667%;
+    max-width: 16.667%;
+    width: 16.667%;
+}
   .flex-col-3-lg {
     flex: 0 0 25%;
     max-width: 25%;
@@ -116,6 +141,11 @@
 }
 
 @include for-big-desktop-up {
+  .flex-col-1-xl {
+    flex: 0 0 8.333%;
+    max-width: 8.333%;
+    width: 8.333%;
+  }
   .flex-col-2-xl {
       flex: 0 0 16.667%;
       max-width: 16.667%;

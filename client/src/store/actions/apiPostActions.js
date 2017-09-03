@@ -22,7 +22,7 @@ export const GET_USERPOSTS_FAILURE = 'GET_USERPOSTS_FAILURE';
 export function getUserPosts(token, userId) {
   return {
     [CALL_API]: {
-      endpoint: `https://co-ment.glitch.me/api/posts?author_id=${userId}`,
+      endpoint: `https://co-ment.glitch.me/api/posts?author_id=${userId}&active=all`,
       method: 'GET',
       types: [GET_USERPOSTS_REQUEST, GET_USERPOSTS_SUCCESS, GET_USERPOSTS_FAILURE],
       headers: { Authorization: `Bearer ${token}` },

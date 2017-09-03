@@ -51,12 +51,14 @@ class UserPosts extends React.Component {
         {this.props.posts.entries &&
           <table className="user-posts__table">
             <thead className="user-posts__thead">
-              <th className="user-posts__th">Role</th>
-              <th className="user-posts__th">Title</th>
-              <th className="user-posts__th">Date</th>
+              <tr>
+                <th className="user-posts__th">Role</th>
+                <th className="user-posts__th">Title</th>
+                <th className="user-posts__th">Date</th>
+              </tr>
             </thead>
             <tbody className="user-posts__tbody">
-              {this.props.posts.entries && this.props.posts.entries.reverse().map((post) => {
+              {this.props.posts.entries && this.props.posts.entries.sort((a, b) => { return Date.parse(a.updatedAt) - Date.parse(b.updatedAt); }).reverse().map((post) => {
                 return (
                   <tr key={post._id} className="user-posts__tr">
                     <td className="user-posts__td"> {post.role} </td>

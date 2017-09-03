@@ -26,6 +26,24 @@ class PostThumb extends React.Component {
 
   render() {
     const roleText = (this.props.post.role === 'mentor' ? 'mentor' : 'mentee');
+    let keywordsDisp;
+    let keywordsFirstThree;
+    let keywordsRest = null;
+    // need to render the whole list to make them searchable, but display only first 3 tags in thumb view
+    if (this.props.post.keywords) {
+      keywordsFirstThree = this.props.post.keywords.slice(0,3);
+      if (this.props.post.keywords.length > 3) {
+      keywordsRest = this.props.post.keywords.slice(3, this.props.post.keywords.length); }
+      keywordsDisp = (<div>
+      {keywordsFirstThree.map(word => (
+        <span className="tag-value tag-value--thumb" key={word}>
+          <span className="tag-value__label tag-value__label--thumb">
+            {word}
+          </span>
+        </span>
+       ))}{keywordsRest && keywordsRest.map(word => (<span className="tag-value__label sr-only" key={word}>{word}</span>))}</div>
+      )
+    }
 
     return (
       <div>
@@ -55,6 +73,9 @@ class PostThumb extends React.Component {
                       {this.props.post.body}
                     </div>
                     }
+                    <div className="tag-value__wrapper">
+                    {keywordsDisp ? keywordsDisp : ''}
+                </div>
                 </div>
                 <div className={`post-thumb__image-wrap`}>
                   <Link className="unstyled-link post-thumb__img-link" to={`/viewprofile/${this.props.post.author_id}`}>
