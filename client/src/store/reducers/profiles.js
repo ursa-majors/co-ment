@@ -8,6 +8,7 @@ import { GET_PROFILE_REQUEST, GET_PROFILE_SUCCESS, GET_PROFILE_FAILURE,
   RESEND_ACCT_VALIDATION_REQUEST, RESEND_ACCT_VALIDATION_SUCCESS, RESEND_ACCT_VALIDATION_FAILURE,
 } from '../actions/apiActions';
 import { VALIDATE_TOKEN_SUCCESS, LOGIN_SUCCESS, REGISTRATION_SUCCESS } from '../actions/apiLoginActions';
+import { LIKE_POST_SUCCESS, UNLIKE_POST_SUCCESS } from '../actions/apiPostActions';
 
 const defaultForm = {
   skill: '',
@@ -412,6 +413,35 @@ function profiles(state = INITIAL_STATE, action) {
 
     case SET_UPD_PROFILE_MODAL:
       return Object.assign({}, state, { updProfileModal: action.payload });
+
+    case LIKE_POST_SUCCESS:
+      return update(
+        state,
+        {
+          userProfile: {
+            likedPosts: {
+              $push: [action.meta.postId],
+            },
+          },
+        },
+      );
+
+    case UNLIKE_POST_SUCCESS:
+      for (let i = 0; i < state.userProfile.likedPosts.length; i += 1) {
+        if (state.userProfile.likedPosts[i] === action.meta.postId) {
+          return update(
+            state,
+            {
+              userProfile: {
+                likedPosts: {
+                  $splice: [[i, 1]],
+                },
+              },
+            },
+          );
+        }
+      }
+      return state;
 
     default:
       return state;

@@ -108,3 +108,105 @@ export function deletePost(token, postId) {
     },
   };
 }
+
+/*
+* Function: incrementPostView - Sends a request to the server to increment the
+*  counter for views on a post.
+* @param {string} token - the JWT authToken
+* @param {string} postId - the post ID to be incremented
+* This action dispatches additional actions as it executes:
+*   INCREMENT_POSTVIEW_REQUEST: Does nothing - we don't initiate a spinner
+*    because this is not a blocking operation.
+*   INCREMENT_POSTVIEW_SUCCESS: The server does not return on object on success.  If client receives
+*    the success action, it will increment its local viewcounter for the post.
+*   INCREMENT_POSTVIEW_FAILURE: Initial implementation: ignore failures.
+*/
+export const INCREMENT_POSTVIEW_REQUEST = 'INCREMENT_POSTVIEW_REQUEST';
+export const INCREMENT_POSTVIEW_SUCCESS = 'INCREMENT_POSTVIEW_SUCCESS';
+export const INCREMENT_POSTVIEW_FAILURE = 'INCREMENT_POSTVIEW_FAILURE';
+
+export function incrementPostView(token, postId) {
+  return {
+    [CALL_API]: {
+      endpoint: `https://co-ment.glitch.me/api/postviews/${postId}`,
+      method: 'PUT',
+      types: [
+        INCREMENT_POSTVIEW_REQUEST,
+        {
+          type: INCREMENT_POSTVIEW_SUCCESS,
+          meta: { postId },
+        },
+        INCREMENT_POSTVIEW_FAILURE,
+      ],
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  };
+}
+
+/*
+* Function: likePost - Sends a request to the server for a user to 'like' a post
+* @param {string} token - the JWT authToken
+* @param {string} postId - the post ID to be liked
+* This action dispatches additional actions as it executes:
+*   LIKE_POST_REQUEST: Does nothing - we don't initiate a spinner
+*    because this is not a blocking operation.
+*   LIKE_POST_SUCCESS: The server does not return on object on success.  This action is handled
+*    in 2 reducers.  The posts reducer increments the like counter on the individual post.  The
+*    profiles reducer adds this post to the user's array of liked posts.
+*   LIKE_POST_FAILURE: Initial implementation: ignore failures.
+*/
+export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
+export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
+export const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE';
+
+export function likePost(token, postId) {
+  return {
+    [CALL_API]: {
+      endpoint: `https://co-ment.glitch.me/api/posts/${postId}/likes?action=plusplus`,
+      method: 'PUT',
+      types: [
+        LIKE_POST_REQUEST,
+        {
+          type: LIKE_POST_SUCCESS,
+          meta: { postId },
+        },
+        LIKE_POST_FAILURE,
+      ],
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  };
+}
+
+/*
+* Function: likePost - Sends a request to the server for a user to 'un-like' a post
+* @param {string} token - the JWT authToken
+* @param {string} postId - the post ID to be un-liked
+* This action dispatches additional actions as it executes:
+*   UNLIKE_POST_REQUEST: Does nothing - we don't initiate a spinner
+*    because this is not a blocking operation.
+*   UNLIKE_POST_SUCCESS: The server does not return on object on success.  This action is handled
+*    in 2 reducers.  The posts reducer decrements the like counter on the individual post.  The
+*    profiles reducer removes this post from the user's array of liked posts.
+*   UNLIKE_POST_FAILURE: Initial implementation: ignore failures.
+*/
+export const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST';
+export const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS';
+export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
+
+export function unlikePost(token, postId) {
+  return {
+    [CALL_API]: {
+      endpoint: `https://co-ment.glitch.me/api/posts/${postId}/likes?action=minusminus`,
+      method: 'PUT',
+      types: [
+        UNLIKE_POST_REQUEST,
+        {
+          type: UNLIKE_POST_SUCCESS,
+          meta: { postId },
+        },
+        UNLIKE_POST_FAILURE,
+      ],
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  };
+}

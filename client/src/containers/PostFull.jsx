@@ -59,8 +59,13 @@ class PostFull extends React.Component {
           break;
         case 'delete':
           this.deletePost();
+          break;
         case 'close':
           this.props.closeModal();
+          break;
+        case 'like':
+          this.props.api.likePost(this.props.appState.authToken, this.props.post._id);
+          break;
         default:
           return null;
       }
@@ -101,6 +106,9 @@ class PostFull extends React.Component {
   render() {
     const roleText = (this.props.post.role === 'mentor' ? 'mentor' : 'mentee');
     const owner = (this.props.appState.userId === this.props.post.author_id);
+    const isLiked = this.props.profiles.userProfile.likedPosts.includes(this.props.post._id) ?
+      'post-full__liked' :
+      '';
     let actions;
     if (owner) {
       actions = (
@@ -146,6 +154,27 @@ class PostFull extends React.Component {
               onClick={()=>this.props.closeModal()}>
                   <i className="close fa fa-compress thumb__icon--compress"
                     aria-label="close"/>
+          </button>
+          <button
+            className="like post-full__like"
+            aria-label="like"
+            name="like"
+            data-dismiss="modal"
+            onKeyDown={e => this.handleKeyDown(e)}
+            onClick={
+               () => {
+                 if (!this.props.profiles.userProfile.likedPosts.includes(this.props.post._id)) {
+                   this.props.api.likePost(this.props.appState.authToken, this.props.post._id);
+                 } else {
+                   this.props.api.unlikePost(this.props.appState.authToken, this.props.post._id);
+                 }
+               }
+             }
+          >
+            <i
+              className={`fa fa-heart heart__icon--compress ${isLiked}`}
+              aria-label="like"
+            />
           </button>
           <button
             className={`connect post-full__connect`}
@@ -264,7 +293,8 @@ class PostFull extends React.Component {
                       aria-label='flip'
                       onKeyDown={e => this.handleKeyDown(e)}
                       onClick={() => this.flip()}
-                      tabIndex={0}>
+                      tabIndex={0}
+                    >
                       <i className="fa fa-refresh post-full__icon--flip" aria-hidden="true" />
                     </div>
                   </div>
@@ -280,6 +310,7 @@ const mapStateToProps = state => ({
   appState: state.appState,
   posts: state.posts,
   connection: state.connection,
+  profiles: state.profiles,
 });
 
 const mapDispatchToProps = dispatch => ({

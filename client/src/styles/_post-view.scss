@@ -433,7 +433,7 @@
   }
 
 
-  &__edit, &__connect, &__delete, &__compress, &__expand {
+  &__edit, &__connect, &__delete, &__compress, &__expand, &__like {
     padding: 12px 15px;
     border-radius: 30px;
     margin: 0 0 0 10px;
@@ -453,6 +453,10 @@
 
   }
 
+  &__liked {
+    color: crimson;
+  }
+
   &__nav-item--flip {
     display: flex;
     justify-content: center;
@@ -468,7 +472,7 @@
 
   }
 
-    &__icon--edit, &__icon--connect,
+    &__icon--edit, &__icon--connect, &__icon--like,
     &__icon--delete, &__icon--compess, &__icon--expand {
       color: inherit;
 
@@ -757,7 +761,7 @@
   }
 
 
-  &__edit, &__connect,
+  &__edit, &__connect, &__like,
   &__delete, &__expand, &__compress {
     padding: 12px 15px;
     border-radius: 30px;
