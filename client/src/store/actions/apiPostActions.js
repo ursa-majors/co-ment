@@ -112,7 +112,7 @@ export const INCREMENT_POSTVIEW_FAILURE = 'INCREMENT_POSTVIEW_FAILURE';
 export function incrementPostView(token, postId) {
   return {
     [CALL_API]: {
-      endpoint: `https://co-ment.glitch.me/api/posts/${postId}/views?action=plusplus`,
+      endpoint: `https://co-ment.glitch.me/api/postviews/${postId}`,
       method: 'PUT',
       types: [
         INCREMENT_POSTVIEW_REQUEST,

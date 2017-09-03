@@ -420,7 +420,7 @@ function profiles(state = INITIAL_STATE, action) {
         {
           userProfile: {
             likedPosts: {
-              $push: [[action.meta.postId]],
+              $push: [action.meta.postId],
             },
           },
         },
@@ -434,7 +434,7 @@ function profiles(state = INITIAL_STATE, action) {
             {
               userProfile: {
                 likedPosts: {
-                  $slice: [[i, 1]],
+                  $splice: [[i, 1]],
                 },
               },
             },

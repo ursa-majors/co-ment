@@ -161,7 +161,15 @@ class PostFull extends React.Component {
             name="like"
             data-dismiss="modal"
             onKeyDown={e => this.handleKeyDown(e)}
-            onClick={()=>this.props.api.likePost(this.props.appState.authToken, this.props.post._id)}
+            onClick={
+               () => {
+                 if (!this.props.profiles.userProfile.likedPosts.includes(this.props.post._id)) {
+                   this.props.api.likePost(this.props.appState.authToken, this.props.post._id);
+                 } else {
+                   this.props.api.unlikePost(this.props.appState.authToken, this.props.post._id);
+                 }
+               }
+             }
           >
             <i
               className={`fa fa-heart heart__icon--compress ${isLiked}`}
