@@ -38,10 +38,15 @@
     flex: 1 0 auto;
     height: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+
+    @include for-tablet-portrait-up {
+      flex-direction: row;
+    }
   }
 
   &__slide-header {
+    position: relative;
     flex: 0 0 auto;
     color: white;
     font-family: 'Alegreya Sans SC', sans-serif;
@@ -76,7 +81,7 @@
     height: 100%;
 
     img {
-      height: 100%;
+      max-width: 100%;
     }
   }
   &__controls {
@@ -86,6 +91,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    font-size: 18px;
   }
   &__dot, &__dot-active, {
     cursor: pointer;

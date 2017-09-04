@@ -16,6 +16,52 @@ const About = (props) => {
       <div className="tour__slide">
         <div className="tour__slide-header">
           {props.tour.slides[props.tour.imageIndex].title}
+          {/* Dot-controls for carousel */}
+          <div className="tour__controls">
+            {
+              props.tour.slides.map((slide, index) => {
+                const active = (props.tour.imageIndex === index ? '-active' : '');
+                return (
+                  <div
+                    className={`tour__dot${active}`}
+                    key={slide.slideId}
+                    id={index}
+                    onClick={(e) => { props.actions.setIndex(parseInt(e.target.id)); }}
+                  >
+                    <i className="fa fa-circle" id={index} />
+                  </div>
+                );
+              })
+            }
+          </div>
+          <div className="tour__chevron-left">
+            <i
+              className="fa fa-chevron-left"
+              onClick={
+                () => {
+                  let newIndex = props.tour.imageIndex - 1;
+                  if (newIndex < 0) {
+                    newIndex = props.tour.slides.length - 1;
+                  }
+                  props.actions.setIndex(newIndex);
+                }
+              }
+            />
+          </div>
+          <div className="tour__chevron-right">
+            <i
+              className="fa fa-chevron-right"
+              onClick={
+                () => {
+                  let newIndex = props.tour.imageIndex + 1;
+                  if (newIndex > props.tour.slides.length - 1) {
+                    newIndex = 0;
+                  }
+                  props.actions.setIndex(newIndex);
+                }
+              }
+            />
+          </div>
         </div>
         <div className="tour__slide-content">
           <div className="tour__slide-text" dangerouslySetInnerHTML={props.tour.slides[props.tour.imageIndex]}>
@@ -23,52 +69,6 @@ const About = (props) => {
           <div className="tour__image">
             <img src={`${props.tour.slides[props.tour.imageIndex].image}`} alt={props.tour.slides[props.tour.imageIndex].imageAlt} />
           </div>
-        </div>
-        <div className="tour__chevron-left">
-          <i
-            className="fa fa-chevron-left"
-            onClick={
-              () => {
-                let newIndex = props.tour.imageIndex - 1;
-                if (newIndex < 0) {
-                  newIndex = props.tour.slides.length - 1;
-                }
-                props.actions.setIndex(newIndex);
-              }
-            }
-          />
-        </div>
-        <div className="tour__chevron-right">
-          <i
-            className="fa fa-chevron-right"
-            onClick={
-              () => {
-                let newIndex = props.tour.imageIndex + 1;
-                if (newIndex > props.tour.slides.length - 1) {
-                  newIndex = 0;
-                }
-                props.actions.setIndex(newIndex);
-              }
-            }
-          />
-        </div>
-        {/* Dot-controls for carousel */}
-        <div className="tour__controls">
-          {
-            props.tour.slides.map((slide, index) => {
-              const active = (props.tour.imageIndex === index ? '-active' : '');
-              return (
-                <div
-                  className={`tour__dot${active}`}
-                  key={slide.slideId}
-                  id={index}
-                  onClick={(e) => { props.actions.setIndex(parseInt(e.target.id)); }}
-                >
-                  <i className="fa fa-circle" id={index} />
-                </div>
-              );
-            })
-          }
         </div>
       </div>
     </div>
