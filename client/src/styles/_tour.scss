@@ -10,40 +10,111 @@
   text-transform: lowercase;
 }
 .tour {
-  position: relative;
-  border: 1px solid white;
-  height: 70vh;
-  width: 80vw;
-  margin: 0 auto;
-  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+	justify-content: center;
+	background: $color_aqua;
+	background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
+	background: linear-gradient(to top, $color_aqua, $color_sky);
+  min-height: 100vh;
+	height: 100%;
+  padding: 60px 0 0 0;
 
   &__slide {
-    height: 100%;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    flex: 1 0 auto;
+    position: relative;
+    border: 1px solid white;
+    height: 70vh;
+    width: 80vw;
+    max-width: 675px;
+    margin: 5px auto;
+    border-radius: 7px;
     text-align: center;
     color: white;
   }
-  &__image {
+
+  &__slide-content {
+    flex: 1 0 auto;
     height: 100%;
+    display: flex;
+    flex-direction: row;
+  }
+
+  &__slide-header {
+    flex: 0 0 auto;
+    color: white;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-align: center;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    font-size: 1.6em;
+    padding: 0px 0px 10px 0px;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.6);
+    @include for-phone-portrait-up {
+      font-size: 2em;
+    }
+    @include for-phone-landscape-up {
+      font-size: 2.5em;
+    }
+  }
+
+  &__slide-text {
+    flex: 1 1 auto;
+    font-size: 18px;
+    @include for-phone-landscape-up {
+      font-size: 23px;
+    }
+    p {
+      padding: 15px;
+    }
+  }
+  &__image {
+    flex: 1 0 auto;
     margin: 0 auto;
+    max-height: 100%;
+    height: 100%;
+
+    img {
+      height: 100%;
+    }
   }
   &__controls {
-    position: absolute;
-    left: 0;
-    bottom: 0;
+    flex: 0 0 auto;
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
   }
-  &__dot {
+  &__dot, &__dot-active, {
     cursor: pointer;
     margin: 0 10px 10px 10px;
     padding: 5px;
-    color: white;
+    color: grey;
 
     @include for-phone-landscape-up {
       margin: 0 15px 15px 15px;
     }
+
+    &-active {
+      color: white;
+    }
+  }
+  &__chevron-left{
+    color: white;
+    cursor: pointer;
+    font-size: 30px;
+    position: absolute;
+    top: 50%;
+    left: -30px;
+  }
+  &__chevron-right {
+    color: white;
+    cursor: pointer;
+    font-size: 30px;
+    position: absolute;
+    top: 50%;
+    right: -30px;
   }
 }
