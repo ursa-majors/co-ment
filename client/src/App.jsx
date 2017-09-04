@@ -7,7 +7,7 @@ import Home from './containers/Home';
 import About from './containers/About';
 import Login from './containers/Login';
 import Registration from './containers/Registration';
-import Profile from './containers/Profile';
+import EditProfile from './containers/EditProfile';
 import PostsGrid from './containers/PostsGrid';
 import EditPost from './containers/EditPost';
 import Logout from './containers/Logout';
@@ -41,6 +41,7 @@ class App extends React.Component {
               <Route path="/logout" component={Logout} />
               <Route path="/viewpost/:id" component={ViewPost} />
               <Route path="/viewprofile/:id" component={ViewProfile} />
+              <Route path="/editprofile/:id" component={EditProfile} />
               <Route path="/editpost/:id?" component={EditPost} />
               <Route path="/mentorpath" component={MentorPath} />
               <Route path="/connection" component={Connection} />

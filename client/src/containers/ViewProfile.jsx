@@ -98,7 +98,7 @@ class ViewProfile extends React.Component {
     let skillsDisp;
     let smDisp;
     let smArr = [];
-    const { skills, languages, twitter, facebook, link, linkedin, codepen, ghProfile } = this.props.profile.currentProfile;
+    const { skills, languages, twitter, facebook, link, linkedin, codepen, github } = this.props.profile.currentProfile;
     // render skills tags for profile card
     if (skills) {
       skillsDisp = this.props.profile.currentProfile.skills.map(skill => (
@@ -120,7 +120,7 @@ class ViewProfile extends React.Component {
                  ));
     }
     // generate a 2d array of social media links
-    if (ghProfile) { smArr.push([ 'github', ghProfile.html_url ]); }
+    if (github) { smArr.push([ 'github', github ]); }
     if (twitter) { smArr.push([ 'twitter', twitter]); }
     if (facebook) { smArr.push([ 'facebook', facebook]); }
     if (link) { smArr.push([ 'link', link]); }
@@ -164,7 +164,7 @@ class ViewProfile extends React.Component {
             { !this.state.thumb &&
               <Link
                 className="full__edit"
-                to={'/profile'} >
+                to={`/editprofile/${this.props.appState.userId}`} >
                 <i className="fa fa-pencil full__icon--edit" aria-label="edit" />
               </Link> /* edit link */
             } {/* post owner, full size */}
@@ -185,7 +185,7 @@ class ViewProfile extends React.Component {
                     src={this.props.profile.currentProfile.avatarUrl}
                     alt={this.props.profile.currentProfile.username} /> :
                   <i
-                    className={`fa-user-circle fa-5x ${cardSize}__icon--avatar`}
+                    className={`fa fa-user-circle fa-5x ${cardSize}__icon--avatar`}
                     aria-hidden="true" />
                 }
               </div> {/* images-wrap */}

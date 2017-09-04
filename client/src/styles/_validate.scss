@@ -1,10 +1,13 @@
 .validate {
   display: flex;
   flex-direction: column;
-  font-family: 'Alegreya Sans SC', sans-serif;
 
   h2 {
     margin: 25px auto;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    font-weight: 100;
+    text-transform: lowercase;
+    letter-spacing: 2px;
   }
   &__quote-wrap {
     color: white;
@@ -16,6 +19,8 @@
 
   &__quote {
     font-size: 14px;
+    font-family: 'Alegreya Sans', sans-serif;
+    font-weight: 100;
 
     @include for-phone-portrait-up {
       font-size: 16px;
@@ -31,6 +36,8 @@
     color: white;
     margin: 15px 40px;
     font-size: 20px;
+    font-family: 'Alegreya Sans', sans-serif;
+    font-weight: 100;
 
     @include for-phone-portrait-up {
       margin: 40px;
@@ -41,6 +48,8 @@
     line-height: 1.5em;
     margin: 0 30px;
     font-size: 14px;
+    font-family: 'Alegreya Sans', sans-serif;
+    font-weight: 100;
 
     @include for-phone-portrait-up {
       margin: 0 40px;

@@ -44,36 +44,36 @@ class UserPosts extends React.Component {
             }
           }
         />
-        <div className="user-posts__wrap">
-          <div className="user-posts__header">
-          posts
-          </div>
-        {this.props.posts.entries &&
-          <table className="user-posts__table">
-            <thead className="user-posts__thead">
-              <tr>
-                <th className="user-posts__th">Role</th>
-                <th className="user-posts__th">Title</th>
-                <th className="user-posts__th">Date</th>
-              </tr>
-            </thead>
-            <tbody className="user-posts__tbody">
-              {this.props.posts.entries && this.props.posts.entries.sort((a, b) => { return Date.parse(a.updatedAt) - Date.parse(b.updatedAt); }).reverse().map((post) => {
-                return (
-                  <tr key={post._id} className="user-posts__tr">
-                    <td className="user-posts__td"> {post.role} </td>
-                    <td className="user-posts__td">
-                      <Link to={`/editpost/${post._id}`} className="user-posts__link">
-                        {post.title}
-                      </Link>
-                    </td>
-                    <td className="user-posts__td"> {formatDate(new Date(post.updatedAt))} </td>
-                  </tr>
-                  );
-                })}
-            </tbody>
-          </table> }
-        </div>
+        {this.props.posts.entries.length &&
+          <div className="user-posts__wrap">
+            <div className="user-posts__header">
+              posts
+            </div>
+            <table className="user-posts__table">
+              <thead className="user-posts__thead">
+                <tr>
+                  <th className="user-posts__th">Role</th>
+                  <th className="user-posts__th">Title</th>
+                  <th className="user-posts__th">Date</th>
+                </tr>
+              </thead>
+              <tbody className="user-posts__tbody">
+                {this.props.posts.entries && this.props.posts.entries.sort((a, b) => { return Date.parse(a.updatedAt) - Date.parse(b.updatedAt); }).reverse().map((post) => {
+                  return (
+                    <tr key={post._id} className="user-posts__tr">
+                      <td className="user-posts__td"> {post.role} </td>
+                      <td className="user-posts__td">
+                        <Link to={`/editpost/${post._id}`} className="user-posts__link">
+                          {post.title}
+                        </Link>
+                      </td>
+                      <td className="user-posts__td"> {formatDate(new Date(post.updatedAt))} </td>
+                    </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div> }
       </div>
     );
   }

@@ -56,6 +56,7 @@
   }
   &__subhead {
     font-family: 'Alegreya Sans SC', sans-serif;
+    text-transform: lowercase;
     text-shadow: 0 0 20px rgba(0, 0, 0, 0.63);
     font-weight: 100;
     font-size: 5vw;
@@ -107,7 +108,6 @@
 
     @include for-tablet-portrait-up {
       padding: 20px;
-      border: 2px solid white;
       font-size: 20px;
     }
 

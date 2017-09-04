@@ -128,9 +128,9 @@ class Registration extends React.Component {
           </div>
           <div className="form__input-group">
             <div className="form__button-wrap">
-              <button className="splash__button pointer" type="submit" id="btn-register" onClick={() => this.handleRegister()} >Register</button>
+              <button className="form__button pointer" type="submit" id="btn-register" onClick={() => this.handleRegister()} >Register</button>
               <Link to="/login">
-                <button className="splash__button pointer" id="btn-login">Sign In</button>
+                <button className="form__button pointer" id="btn-login">Sign In</button>
               </Link>
             </div>
           </div>
