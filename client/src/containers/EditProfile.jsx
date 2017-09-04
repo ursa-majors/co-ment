@@ -60,7 +60,7 @@ class EditProfile extends React.Component {
     }
     this.setState({ ...newState }, () => {
       if (this.state.page === 2) {
-        Profile.adjustTextArea(this.textInput);
+        EditProfile.adjustTextArea(this.textInput);
       }
     });
   }
