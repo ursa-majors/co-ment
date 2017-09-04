@@ -8,16 +8,29 @@ const About = props => (
   <div className="container">
     <h2 className="tour-title">About</h2>
     <div className="tour">
-      <div className="tour__image">
-        {props.tour.images[props.tour.imageIndex]}
+      <div className="tour__slide">
+        <div className="tour__slide-header">
+          {props.tour.slides[props.tour.imageIndex].title}
+        </div>
+        <div>
+          <img className="tour__image" src={props.tour.slides[props.tour.imageIndex].image} />
+        </div>
       </div>
+      {/* Dot-controls for carousel */}
       <div className="tour__controls">
         {
-          props.tour.images.map((image,index) => (
-            <div className="tour__dot" key={image+index} onClick={(index) => {props.actions.setIndex(index)}}>
-              <i className="fa fa-circle" />
-            </div>
-          ))
+          props.tour.slides.map((slide,index) => {
+            return (
+              <div
+                className="tour__dot"
+                key={slide+index}
+                id={index}
+                onClick={(e) => { props.actions.setIndex(e.target.id); }}
+              >
+                <i className="fa fa-circle" id={index}/>
+              </div>
+            );
+          })
         }
       </div>
     </div>

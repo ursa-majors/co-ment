@@ -1,4 +1,4 @@
-import { LOGOUT, SET_REDIRECT_URL } from '../actions';
+import { LOGOUT, SET_REDIRECT_URL, SET_WINDOW_SIZE } from '../actions';
 import { VALIDATE_TOKEN_REQUEST, VALIDATE_TOKEN_SUCCESS, VALIDATE_TOKEN_FAILURE, LOGIN_SUCCESS,
   REGISTRATION_SUCCESS, REFRESH_TOKEN_SUCCESS } from '../actions/apiLoginActions';
 
@@ -8,6 +8,10 @@ const INITIAL_STATE = {
   userId: '',
   loginSpinnerClass: 'spinner__hide',
   redirectUrl: '',
+  windowSize: {
+    width: undefined,
+    mobile: false,
+  },
 };
 
 /*
@@ -130,6 +134,16 @@ function appState(state = INITIAL_STATE, action) {
     case REFRESH_TOKEN_SUCCESS:
       window.localStorage.setItem('authToken', JSON.stringify(action.payload.token));
       return Object.assign({}, state, { authToken: action.payload.token });
+
+
+    /*
+    * This action is issued from <App/> component.
+    * When the client window is resized, this action will be dispatched.
+    * The action payload contains the window width, and a boolean to
+    * determine mobile status: windowWidth < 480 = true
+    */
+    case SET_WINDOW_SIZE:
+      return Object.assign({}, state, { windowSize: action.payload });
 
     default:
       return state;

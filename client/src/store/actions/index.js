@@ -8,6 +8,7 @@ export const SET_PROFILE_VIEW = 'SET_PROFILE_VIEW';
 export const SET_REDIRECT_URL = 'SET_REDIRECT_URL';
 export const DISMISS_PWRESET_MODAL = 'DISMISS_PWRESET_MODAL';
 export const DISMISS_LOGIN_MODAL = 'DISMISS_LOGIN_MODAL';
+export const SET_WINDOW_SIZE = 'SET_WINDOW_SIZE';
 
 export function logout() {
   return ({
@@ -59,5 +60,12 @@ export function dismissPWResetModal() {
 export function dismissLoginModal() {
   return ({
     type: DISMISS_LOGIN_MODAL,
+  });
+}
+
+export function setWindowSize(size) {
+  return ({
+    type: SET_WINDOW_SIZE,
+    payload: size,
   });
 }

@@ -1,15 +1,15 @@
 import { SET_INDEX } from '../actions/tourActions';
+import slides from '../../utils/slides';
 
 const INITIAL_STATE = {
   imageIndex: 0,
-  images: ['test1', 'test2', 'test3'],
+  slides,
 };
 
 function tour(state = INITIAL_STATE, action) {
   switch (action.type) {
 
     case SET_INDEX:
-    console.log(action)
       return Object.assign({}, state, { imageIndex: action.payload });
 
     default:
