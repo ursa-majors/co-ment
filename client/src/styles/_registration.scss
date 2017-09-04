@@ -296,8 +296,6 @@
     background: transparent;
 
     @include for-tablet-portrait-up {
-      // padding: 20px 40px;
-      border: 2px solid white;
       font-size: 20px;
     }
 

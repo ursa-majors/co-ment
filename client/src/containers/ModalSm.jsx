@@ -18,7 +18,7 @@ const ModalSm = props => (
       {props.modalText}
     </div>
     <div className="modal__action">
-      <div className="h-nav__item-link" onClick={props.action || props.dismiss}>Continue</div>
+      <div className="modal__button" onClick={props.action || props.dismiss}>Continue</div>
     </div>
   </div>
 );
