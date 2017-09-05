@@ -353,6 +353,16 @@ class EditProfile extends React.Component {
                     placeholder="Full name"
                   />
                 </div>
+                <div className="form__input-group" >
+                  <RadioGroup
+                    title={'Gender'}
+                    setName={'gender'}
+                    type={'radio'}
+                    controlFunc={this.handleRadioChange}
+                    options={['Male', 'Female', 'Other']}
+                    selectedOptions={this.props.profiles.editForm.gender}
+                  />
+                </div>
               </div>
               <div className="profile__column-R">
                 <div className="form__input-group">
@@ -367,6 +377,19 @@ class EditProfile extends React.Component {
                     onChange={e => this.handleInput(e)}
                     placeholder="Location"
                   />
+                </div>
+                <div className="form__input-group">
+                  <label htmlFor="timezone" className="form__label">Time Zone</label>
+                  <select
+                    className="form__input form__input--select"
+                    id="time_zone"
+                    name="time_zone"
+                    value={this.props.profiles.editForm.time_zone || 'Choose your time zone'}
+                    onChange={e => this.handleInput(e)}
+                  >
+                    <option disabled>Choose your time zone</option>
+                    {tzList}
+                  </select>
                 </div>
                 <div className="form__input-group">
                   <label htmlFor="name" className="form__label">Link to profile image
@@ -387,19 +410,6 @@ class EditProfile extends React.Component {
             {this.state.page === 2 &&
             <div className="profile__pageTwo">
               <div className="profile__column-L">
-                <div className="form__input-group">
-                  <label htmlFor="timezone" className="form__label">Time Zone</label>
-                  <select
-                    className="form__input form__input--select"
-                    id="time_zone"
-                    name="time_zone"
-                    value={this.props.profiles.editForm.time_zone || 'Choose your time zone'}
-                    onChange={e => this.handleInput(e)}
-                  >
-                    <option disabled>Choose your time zone</option>
-                    {tzList}
-                  </select>
-                </div>
                 <div className="form__input-group">
                   <label htmlFor="language" className="form__label">Languages you speak fluently
                   </label>
@@ -454,16 +464,6 @@ class EditProfile extends React.Component {
                 </div>
               </div>
               <div className="profile__column-R">
-                <div className="form__input-group" >
-                  <RadioGroup
-                    title={'Gender'}
-                    setName={'gender'}
-                    type={'radio'}
-                    controlFunc={this.handleRadioChange}
-                    options={['Male', 'Female', 'Other']}
-                    selectedOptions={this.props.profiles.editForm.gender}
-                  />
-                </div>
                 <div className="form__input-group">
                   <label className="form__label" htmlFor="skills">Skills</label>
                   <div className="skill-value__wrapper">
@@ -601,7 +601,7 @@ class EditProfile extends React.Component {
               {this.props.profiles.editForm.errMsg}
             </div>
           </div>
-          {this.state.page > 1 &&
+          {this.state.page > 1 && this.props.profiles.userProfile.validated &&
             <button
               className="pageBack pageNav"
               onClick={()=>this.togglePage('back')}
@@ -613,22 +613,23 @@ class EditProfile extends React.Component {
           <div className="form__input-group">
             <div className="form__button-wrap">
               {
-                this.props.profiles.userProfile.validated ?
+                this.props.profiles.userProfile.validated  && this.state.page === 3 ?
                   (
                     <button className="form__button pointer" id="btn-edit" onClick={() => this.handleSubmit()}>
                       {this.props.profiles.savingProfile ? 'Saving...' : 'Save'}
                     </button>
                   )
-                  :
+                  : !this.props.profiles.userProfile.validated ?
                   (
                     <button className="form__button pointer" id="btn-edit" onClick={() => this.resendEmail()}>
                       Resend Acct Validation
                     </button>
                   )
+                  : ('')
               }
             </div>
           </div>
-          {this.state.page < 3 &&
+          {this.state.page < 3 && this.props.profiles.userProfile.validated &&
             <button
               className="pageFwd pageNav"
               onClick={() => this.togglePage('fwd')}

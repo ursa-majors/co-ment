@@ -1,6 +1,11 @@
 .pointer {
   cursor: pointer;
 }
+
+input:not([type=checkbox]):not([type=radio]) {
+  -webkit-appearance: none;
+}
+
 .form {
   font-family: 'Alegreya Sans', sans-serif;
   flex-direction: column;
@@ -282,14 +287,14 @@
   }
 
   &__button {
-    color: white;
+    color: rgba(255,255,255,1);
     font-family: 'Alegreya Sans SC', sans-serif;
     text-transform: lowercase;
     letter-spacing: 2px;
     font-size: 16px;
     text-decoration: none;
     margin-right: 3vw;
-    font-weight: 100;
+    font-weight: 400;
     border-radius: 50px;
     padding: 10px 20px;
     border: 1px solid white;
@@ -297,6 +302,7 @@
 
     @include for-tablet-portrait-up {
       font-size: 20px;
+      font-weight: 100;
     }
 
     &:hover, &:active, &:focus {
@@ -313,15 +319,20 @@
 
   &__login-link {
     cursor: pointer;
-    color: rgba(255,255,255,.7);
+    color: rgba(255,255,255,1);
     background-color: transparent;
     font-family: 'Alegreya Sans SC', sans-serif;
     text-transform: lowercase;
     letter-spacing: 1px;
-    font-weight: 100;
+    font-weight: 400;
     font-size: 15px;
     margin: 5px 0 0 5px;
     border: 1px transparent !important;
+
+    @include for-tablet-portrait-up {
+      font-weight: 100;
+      color: rgba(255,255,255,.7);
+    }
 
     &:hover, &:active{
       color: rgba(255,255,255,1);

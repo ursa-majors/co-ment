@@ -42,10 +42,10 @@ class ViewProfile extends React.Component {
   onClick(e) {
     // handle tab navigation in bottom half of profile card
     const newState = { ...this.state };
-    newState.tab = e.target.id;
+    newState.tab = e.target.className.split(" ")[0];
     this.setState({
       ...newState,
-    })
+    }, ()=>{console.log(this.state.tab);})
   }
 
   flip() {
@@ -205,48 +205,55 @@ class ViewProfile extends React.Component {
               { !this.state.thumb &&
                 <div className={"full__card-nav"}>
                   <div
-                    className={this.state.tab === 'skills' ? 'skills full__nav-item full__nav-item--active' : 'skills full__nav-item'}
-                    name='skills'
+                    className='skills'
                     tabIndex={0}
                     onClick={e => this.onClick(e)}
                     onKeyDown={(e)=>this.handleKeyDown(e)}>
-                    <i className="fa fa-code full__icon--nav" aria-hidden="true" />
-                    <span
-                      className={this.state.tab === 'skills' ?
-                      'full__nav-item-text--active' :
-                      'full__nav-item-text'}
-                      id='skills'>Skills</span>
-                  </div> {/* skills */}
+                    <div
+                      className={this.state.tab === 'skills' ? 'skills full__nav-item full__nav-item--active' : 'skills full__nav-item'}
+                      >
+                      <i className="skills fa fa-code full__icon--nav" aria-hidden="true"/>
+                      <span
+                        className={this.state.tab === 'skills' ?
+                        'skills full__nav-item-text--active' :
+                        'skills full__nav-item-text'}
+                        id='skills'>Skills</span>
+                    </div> {/* skills */}
+                  </div>
                   <div
-                    className={this.state.tab === 'languages' ?
-                    'languages full__nav-item full__nav-item--active':
-                    'languages full__nav-item'}
-                    name='languages'
+                    className='languages'
                     tabIndex={0}
                     onClick={e => this.onClick(e)}
-                    onKeyDown={(e)=>this.handleKeyDown(e)}
-                    >
-                    <i className="fa fa-commenting-o full__icon--nav" aria-hidden="true" />
-                    <span
+                    onKeyDown={(e)=>this.handleKeyDown(e)}>
+                    <div
                       className={this.state.tab === 'languages' ?
-                        'full__nav-item-text--active' :
-                        'full__nav-item-text'}
-                      id='languages'>Languages</span>
-                  </div> {/* languages */}
+                      'languages full__nav-item full__nav-item--active':
+                      'languages full__nav-item'}
+                      >
+                      <i className="languages fa fa-commenting-o full__icon--nav" aria-hidden="true"/>
+                      <span
+                        className={this.state.tab === 'languages' ?
+                          'languages full__nav-item-text--active' :
+                          'languages full__nav-item-text'}
+                        id='languages'>Languages</span>
+                    </div> {/* languages */}
+                  </div>
                   <div
-                    className={this.state.tab === 'about' ?
-                    'flip-it full__nav-item full__nav-item--active' :
-                    'flip-it full__nav-item'}
-                    name='about'
+                    className='about'
                     tabIndex={0}
                     onClick={e => this.flip()}
                     onKeyDown={(e)=>this.handleKeyDown(e)}>
-                    <i className="fa fa-user full__icon--nav" aria-hidden="true" />
-                    <span className={this.state.tab === 'about' ?
-                    'full__nav-item-text--active' :
-                    'full__nav-item-text'}
-                    id='about'>About</span>
-                  </div> {/* about */}
+                    <div
+                      className={this.state.tab === 'about' ?
+                      'about flip-it full__nav-item full__nav-item--active' :
+                      'about flip-it full__nav-item'}>
+                      <i className="about fa fa-user full__icon--nav" aria-hidden="true"/>
+                      <span className={this.state.tab === 'about' ?
+                      'about full__nav-item-text--active' :
+                      'about full__nav-item-text'}
+                      id='about'>About</span>
+                    </div> {/* about */}
+                  </div>
                 </div> /* card-nav */
               } {/* !this.state.thumb */}
               { !this.state.thumb &&

@@ -1,4 +1,11 @@
 /* MEDIA QUERIES */
+
+@mixin profile-card-breakpoint {
+  @media (min-width: 360px) {
+    @content;
+  }
+}
+
 @mixin for-phone-portrait-up {
   @media (min-width: 400px) {
     @content;

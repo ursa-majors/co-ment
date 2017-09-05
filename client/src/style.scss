@@ -35,8 +35,7 @@ $fa-font-path: "~font-awesome/fonts";
 /* a subtle focus style for keyboard-input elements */
 input[type="text"]:focus,
 textarea:focus {
-  border: 1px solid $color_focus_ring;
-  box-shadow: 0 0 5px $color_focus_ring;
+  box-shadow: inset 0 0 .2em $color_aqua, 0 0 .5em $color_focus_ring !important;
 }
 
 /* no focus style for non-keyboard-inputs elements */
@@ -48,8 +47,7 @@ select:focus {
 /* and for keyboard users, override everything with
    a border when focused on any element */
 body.user-is-tabbing *:focus {
-  border: 1px solid $color_focus_ring important; /* for non-webkit browsers */
-  box-shadow: 0 0 10px $color_focus_ring !important;
+  box-shadow: inset 0 0 .2em $color_aqua, 0 0 1em $color_focus_ring !important;
 }
 
 .app-root {

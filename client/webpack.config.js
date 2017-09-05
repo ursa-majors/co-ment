@@ -33,6 +33,7 @@ module.exports = {
     port: '3000',
     hot: true,
     overlay: true,
+    disableHostCheck: true,
     headers: {
       'Access-Control-Allow-Origin': '*',
     },

@@ -143,12 +143,16 @@
     letter-spacing: 2px;
     padding: 5px;
     font-size: 16px;
-    font-weight: 100;
+    font-weight: 400;
     text-decoration: none;
     border: 1px solid transparent;
     width: 100vw;
     padding: 20px;
     margin-left: 13px;
+
+    @include for-tablet-portrait-up {
+      font-weight: 100;
+    }
 
       &--login {
         // border: 1px solid rgba(255, 255, 255, 0.6);
