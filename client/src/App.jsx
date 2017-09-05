@@ -27,9 +27,12 @@ import UserAdmin from './containers/UserAdmin';
 
 class App extends React.Component {
 
+  componentWillMount() {
+    this.updateDimensions();
+  }
+
   componentDidMount() {
     window.addEventListener('resize', this.debounce(this.updateDimensions, 100));
-    this.updateDimensions();
   }
 
   componentWillUnmount() {
