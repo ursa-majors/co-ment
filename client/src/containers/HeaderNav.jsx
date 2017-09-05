@@ -25,6 +25,10 @@ class Nav extends React.Component {
           this.setState({ menu: 'closed' }, ()=>{this.setBackground();});
         }, 300);
     }
+
+    if (this.state.menu === 'open' && this.props.appState.windowSize.width > 650) {
+      this.setState({ menu: 'closed' }, () => { this.setBackground(); });
+    }
   }
 
   componentWillUnmount() {
