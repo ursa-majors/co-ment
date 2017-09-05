@@ -42,7 +42,7 @@ export const GET_ALL_CONNECTIONS_FAILURE = 'GET_ALL_CONNECTIONS_FAILURE';
 export function getConnections(token) {
   return {
     [CALL_API]: {
-      endpoint: `https://co-ment.glitch.me/api/connections`,
+      endpoint: 'https://co-ment.glitch.me/api/connections',
       method: 'GET',
       types:
         [GET_ALL_CONNECTIONS_REQUEST, GET_ALL_CONNECTIONS_SUCCESS, GET_ALL_CONNECTIONS_FAILURE],

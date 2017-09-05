@@ -9,13 +9,15 @@ export const SET_REDIRECT_URL = 'SET_REDIRECT_URL';
 export const DISMISS_PWRESET_MODAL = 'DISMISS_PWRESET_MODAL';
 export const DISMISS_LOGIN_MODAL = 'DISMISS_LOGIN_MODAL';
 export const SET_WINDOW_SIZE = 'SET_WINDOW_SIZE';
+export const SET_MENU_STATE = 'SET_MENU_STATE';
+export const SET_MENU_BACKGROUND = 'SET_MENU_BACKGROUND';
+export const SET_SCROLLED = 'SET_SCROLLED';
 
 export function logout() {
   return ({
     type: LOGOUT,
   });
 }
-
 
 export function setLoginUser(user) {
   return ({
@@ -67,5 +69,26 @@ export function setWindowSize(size) {
   return ({
     type: SET_WINDOW_SIZE,
     payload: size,
+  });
+}
+
+export function setMenuBackground(bg) {
+  return ({
+    type: SET_MENU_BACKGROUND,
+    payload: bg,
+  });
+}
+
+export function setMenuState(menu) {
+  return ({
+    type: SET_MENU_STATE,
+    payload: menu,
+  });
+}
+
+export function setScrolled(bool) {
+  return ({
+    type: SET_SCROLLED,
+    payload: bool,
   });
 }

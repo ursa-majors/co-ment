@@ -3,7 +3,7 @@ import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { setWindowSize } from './store/actions';
+import { setWindowSize, setMenuState, setMenuBackground, setScrolled } from './store/actions';
 
 import HeaderNav from './containers/HeaderNav';
 import Home from './containers/Home';
@@ -27,31 +27,71 @@ import UserAdmin from './containers/UserAdmin';
 
 class App extends React.Component {
 
-  componentDidMount() {
-    window.addEventListener('resize', this.debounce(this.updateDimensions, 100));
+  componentWillMount() {
     this.updateDimensions();
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.debounce(this.updateDimensions, 100, true));
+    window.addEventListener('scroll', this.throttle(this.setScrolledStatus, 100));
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateDimensions);
+    window.removeEventListener('scroll', throttled, false);
   }
 
+  setScrolledStatus = () => {
+    const s = (window.scrollY > 0);
+    if (s !== this.props.appState.windowScrolled) {
+      this.props.actions.setScrolled(s);
+      this.props.actions.setMenuBackground();
+    }
+  }
+
+  // Limit the scroll event handler
+  throttle(callback, wait, context = this) {
+    let timeout = null;
+
+    const later = () => {
+      callback.apply(context);
+      timeout = null;
+    };
+
+    return function throttled() {
+      if (!timeout) {
+        timeout = setTimeout(later, wait);
+      }
+    };
+  }
+
+  // Wait till resize finishes before calling again
+  debounce(func, wait, immediate) {
+    let timeout;
+    return () => {
+      const context = this;
+      const later = () => {
+        timeout = null;
+        if (!immediate) func.apply(context);
+      };
+      const callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context);
+    };
+  }
+
+  // Set window dimensions / mobile status in Redux
   updateDimensions = () => {
     const size = {
       width: window.innerWidth,
       mobile: (window.innerWidth < 480),
     };
     this.props.actions.setWindowSize(size);
-  }
-
-  debounce(callback, wait, context = this) {
-    let timeout = null;
-    const later = () => callback.apply(context);
-
-    return () => {
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
+    if (this.props.appState.windowSize.width > 650 && this.props.appState.menuState === 'open') {
+      this.props.actions.setMenuState('closed');
+      this.props.actions.setMenuBackground();
+    }
   }
 
   render() {
@@ -91,9 +131,16 @@ class App extends React.Component {
 App.propTypes = {
   appState: PropTypes.shape({
     loggedIn: PropTypes.boolean,
+    menuState: PropTypes.String,
+    menuBackground: PropTypes.String,
+    windowSize: PropTypes.shape({
+      width: PropTypes.Number,
+    }).isRequired,
   }).isRequired,
   actions: PropTypes.shape({
     setWindowSize: PropTypes.func,
+    setMenuState: PropTypes.func,
+    setMenuBackground: PropTypes.func,
   }).isRequired,
 };
 
@@ -102,7 +149,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({ setWindowSize }, dispatch),
+  actions: bindActionCreators({
+    setWindowSize,
+    setMenuBackground,
+    setMenuState,
+    setScrolled,
+  }, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
