@@ -45,4 +45,26 @@ const slides = [
   },
 ];
 
-export default slides;
+const faq = [
+  { question: 'What is required to be a mentor?',
+    answer: 'Anyone can be a mentor! The only major requirement is a willingness to share what you\'ve learned.  ',
+    id: 'q1',
+  },
+  { question: 'How does the mentor/mentee relationship work?',
+    answer: 'Once the connection request has been accepted, you will be notified via email.  At that point, the Mentor and Mentee will agree on the best way to continue the relationship.  Communication will take place outside the Co/Ment platform, but can use any format that works for both parties - phone, email, Slack, hangouts, in-person - the possibilities are endless',
+    id: 'q2',
+  },
+  { question: 'How long does a mentorship last?',
+    answer: 'There is no set time for a Mentorship.  Depending on your goals, you may have a single meeting or meet for an entire year.  Keep it up as long as your connection is productive for you.',
+    id: 'q3',
+  },
+  { question: 'I can\'t find a mentor for skill XYZ. What do I do?',
+    answer: 'Send us an email at guidingstar@gmail.com and we\'ll do our best to find you a mentor.',
+    id: 'q4',
+  },
+];
+
+export {
+  slides,
+  faq,
+};

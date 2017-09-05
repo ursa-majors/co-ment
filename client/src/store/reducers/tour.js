@@ -1,9 +1,10 @@
 import { SET_INDEX } from '../actions/tourActions';
-import slides from '../../utils/slides';
+import { slides, faq } from '../../utils/slides';
 
 const INITIAL_STATE = {
   imageIndex: 0,
   slides,
+  faq,
 };
 
 function tour(state = INITIAL_STATE, action) {

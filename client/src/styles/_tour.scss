@@ -25,7 +25,6 @@
     flex: 1 0 auto;
     position: relative;
     border: 1px solid white;
-    height: 70vh;
     width: 80vw;
     max-width: 675px;
     margin: 5px auto;
@@ -91,16 +90,23 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    font-size: 18px;
+    font-size: 14px;
+
+    @include for-phone-landscape-up {
+      font-size: 16px;
+    }
+    @include for-tablet-portrait-up {
+      font-size: 18px;
+    }
   }
   &__dot, &__dot-active, {
     cursor: pointer;
-    margin: 0 10px 10px 10px;
+    margin: 0 10px;
     padding: 5px;
     color: grey;
 
     @include for-phone-landscape-up {
-      margin: 0 15px 15px 15px;
+      margin: 0 15px;
     }
 
     &-active {
@@ -122,5 +128,50 @@
     position: absolute;
     top: 50%;
     right: -30px;
+  }
+}
+.faq {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: $color_sky;
+  background: -webkit-linear-gradient(to top, $color_sky, $color_aqua);
+  background: linear-gradient(to top, $color_sky, $color_aqua);
+  min-height: 100vh;
+  height: 100%;
+  color: white;
+  font-family: 'Alegreya Sans SC', sans-serif;
+
+  &__header {
+    text-align: center;
+    letter-spacing: 2px;
+    font-size: 1.6em;
+    padding: 20px 10px;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.6);
+    @include for-phone-portrait-up {
+      font-size: 2em;
+    }
+    @include for-phone-landscape-up {
+      font-size: 2.5em;
+    }
+  }
+
+  &__question {
+    font-style: italic;
+    font-size: 26px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  &__answer {
+    height: 0;
+    display: none;
+    color: rgba(75,75,75,1);
+    font-size: 20px;
+    padding: 0 15px;
+  }
+  &__answer-expanded {
+    height: auto;
+    display: block;
   }
 }
