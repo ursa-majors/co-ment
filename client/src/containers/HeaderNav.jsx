@@ -24,9 +24,9 @@ class Nav extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
-      this.setState({ menu: 'closing' });
+      this.setState({ menu: 'closing' }, ()=>{this.setBackground();});
         setTimeout(() => {
-          this.setState({ menu: 'closed' });
+          this.setState({ menu: 'closed' }, ()=>{this.setBackground();});
         }, 300);
     }
   }
@@ -38,7 +38,8 @@ class Nav extends React.Component {
 
   setBackground = () => {
     let menuBackground = '';
-    if (window.scrollY) {
+    // need background for open menu on mobile, even if not scrolled
+    if (window.scrollY || (this.state.width < 650 && this.state.menu !== 'closed')) {
       menuBackground = 'h-nav__side-bkg-noscroll';
     }
     if (this.state.menuBackground !== menuBackground) {
@@ -49,18 +50,18 @@ class Nav extends React.Component {
   updateDimensions = () => {
     this.setState({ width: window.innerWidth });
     if (this.state.width > 650 && this.state.menu === 'open') {
-      this.setState({ menu: 'closed' });
+      this.setState({ menu: 'closed' }, ()=>{this.setBackground();});
     }
   }
 
   navToggle = (e) => {
     if (this.state.width < 650) {
       if (this.state.menu === 'closed') {
-        this.setState({ menu: 'open' });
+        this.setState({ menu: 'open' }, ()=>{this.setBackground();});
       } else {
-        this.setState({ menu: 'closing' });
+        this.setState({ menu: 'closing' }, ()=>{this.setBackground();});
         setTimeout(() => {
-          this.setState({ menu: 'closed' });
+          this.setState({ menu: 'closed' }, ()=>{this.setBackground();});
         }, 300);
       }
     }
