@@ -22,6 +22,7 @@ $fa-font-path: "~font-awesome/fonts";
 @import 'styles/shuffle.scss';
 @import 'styles/validate';
 @import 'styles/user-admin';
+@import 'styles/tour';
 
 * {
   -moz-box-sizing: border-box;
@@ -72,7 +73,7 @@ body.user-is-tabbing *:focus {
 	background: linear-gradient(to top, $color_aqua, $color_sky);
   min-height: 100vh;
 	height: 100%;
-  padding: 80px 0 0 0;
+  padding: 60px 0 0 0;
 }
 
 .main {

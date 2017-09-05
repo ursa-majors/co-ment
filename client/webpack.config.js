@@ -55,7 +55,7 @@ module.exports = {
       },
       {
         test:/\.(jpg|png|gif|bmp|svg|woff|woff2|ttf|eot)$/,
-        loader: require.resolve("file-loader"),
+        loader: require.resolve("url-loader"),
       },
     ],
   },

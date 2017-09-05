@@ -1,6 +1,9 @@
 import React from 'react';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
+import { setWindowSize } from './store/actions';
 
 import HeaderNav from './containers/HeaderNav';
 import Home from './containers/Home';
@@ -23,6 +26,33 @@ import ResetPassword from './containers/ResetPassword';
 import UserAdmin from './containers/UserAdmin';
 
 class App extends React.Component {
+
+  componentDidMount() {
+    window.addEventListener('resize', this.debounce(this.updateDimensions, 100));
+    this.updateDimensions();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateDimensions);
+  }
+
+  updateDimensions = () => {
+    const size = {
+      width: window.innerWidth,
+      mobile: (window.innerWidth < 480),
+    };
+    this.props.actions.setWindowSize(size);
+  }
+
+  debounce(callback, wait, context = this) {
+    let timeout = null;
+    const later = () => callback.apply(context);
+
+    return () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
 
   render() {
     const links = (this.props.appState.loggedIn ? ['posts', 'profile', 'connections', 'logout'] : ['login']);
@@ -58,8 +88,21 @@ class App extends React.Component {
   }
 }
 
+App.propTypes = {
+  appState: PropTypes.shape({
+    loggedIn: PropTypes.boolean,
+  }).isRequired,
+  actions: PropTypes.shape({
+    setWindowSize: PropTypes.func,
+  }).isRequired,
+};
+
 const mapStateToProps = state => ({
   appState: state.appState,
 });
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators({ setWindowSize }, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

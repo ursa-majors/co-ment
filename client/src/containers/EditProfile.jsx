@@ -320,7 +320,10 @@ class EditProfile extends React.Component {
           }
         />
         <div className="profile__body">
-          <div className="form__header">Update Profile: {this.props.profiles.userProfile.username}</div>
+          <div className="form__header">
+            {this.props.appState.windowSize.mobile ? '' : 'Update Profile: '}
+            {this.props.profiles.userProfile.username}
+          </div>
           <div className="profile__column-wrap">
           {this.state.page === 1 &&
             <div className="profile__pageOne">
