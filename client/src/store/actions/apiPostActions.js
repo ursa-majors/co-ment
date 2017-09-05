@@ -7,7 +7,7 @@ export const GET_POST_FAILURE = 'GET_POST_FAILURE';
 export function getPost(token, userId, role) {
   return {
     [CALL_API]: {
-      endpoint: `https://co-ment.glitch.me/api/posts&author_id=${userId}&role=${role}`,
+      endpoint: `https://co-ment.glitch.me/api/posts?author_id=${userId}&role=${role}`,
       method: 'GET',
       types: [GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE],
       headers: { Authorization: `Bearer ${token}` },
