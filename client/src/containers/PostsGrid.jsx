@@ -32,7 +32,7 @@ class PostsGrid extends React.Component {
   }
 
   componentDidMount() {
-    let filterGroup = ['all'];
+    let filterGroup;
     if (this.props.gridControls.filterGroup === []) {
       filterGroup = 'all';
     } else {
@@ -53,7 +53,7 @@ class PostsGrid extends React.Component {
             by: sortByDate,
             reverse: true,
           },
-          // group: filterGroup,
+          group: filterGroup,
         });
         this.shuffle.resetItems();
         this.addShuffleEventListeners();

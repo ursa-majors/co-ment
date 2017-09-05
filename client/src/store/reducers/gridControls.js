@@ -12,7 +12,7 @@ const INITIAL_STATE = {
     language: '',
     keyword: '',
   },
-  filterGroup: ['all'],
+  filterGroup: 'all',
   sortBtn: {
     title: '',
     'date-updated': '',
@@ -28,7 +28,7 @@ const clearFilters = {
   timezone: 'Time zone',
   language: '',
   keyword: '',
-}
+};
 
 const sortByDate = (element) => {
   return element.getAttribute('data-updated');
@@ -65,13 +65,13 @@ function gridControls(state = INITIAL_STATE, action) {
     case SET_SORT:
       // set the sort options
       if (action.payload.value === 'date-updated') {
-        reverseSort = (state.sortOptions.by === sortByDate ? !state.sortOptions.reverse : true)
+        reverseSort = (state.sortOptions.by === sortByDate ? !state.sortOptions.reverse : true);
         options = {
           by: sortByDate,
           reverse: reverseSort,
         };
       } else if (action.payload.value === 'title') {
-        reverseSort = (state.sortOptions.by === sortByTitle ? !state.sortOptions.reverse : false)
+        reverseSort = (state.sortOptions.by === sortByTitle ? !state.sortOptions.reverse : false);
         options = {
           by: sortByTitle,
           reverse: reverseSort,
