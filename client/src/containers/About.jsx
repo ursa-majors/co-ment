@@ -11,26 +11,10 @@ const About = props => (
       <div className="tour__slide-header">
         {props.tour.slides[props.tour.imageIndex].title}
         {/* Dot-controls for carousel */}
-        <div className="tour__controls">
-          {
-            props.tour.slides.map((slide, index) => {
-              const active = (props.tour.imageIndex === index ? '-active' : '');
-              return (
-                <div
-                  className={`tour__dot${active}`}
-                  key={slide.slideId}
-                  id={index}
-                  onClick={(e) => { props.actions.setIndex(parseInt(e.target.id, 10)); }}
-                >
-                  <i className="fa fa-circle" id={index} />
-                </div>
-              );
-            })
-          }
-        </div>
-        <div className="tour__chevron-left">
-          <i
-            className="fa fa-chevron-left"
+        <button
+          className="tour__chevron-left aria-button"
+          tabIndex={0}
+            aria-label="previous slide"
             onClick={
               () => {
                 let newIndex = props.tour.imageIndex - 1;
@@ -40,12 +24,47 @@ const About = props => (
                 props.actions.setIndex(newIndex);
               }
             }
-          />
+            onKeyDown={
+              (e) => {
+                if (e.keyCode === 13 || e.which === 13 ) {
+                  let newIndex = props.tour.imageIndex - 1;
+                  if (newIndex < 0) {
+                    newIndex = props.tour.slides.length - 1;
+                  }
+                  props.actions.setIndex(newIndex);
+                }
+              }
+            }>
+          <i className="fa fa-chevron-left"/>
+        </button>
+        <div className="tour__controls">
+          {
+            props.tour.slides.map((slide, index) => {
+              const active = (props.tour.imageIndex === index ? '-active' : '');
+              return (
+                <div
+                  className={`tour__dot${active}`}
+                  key={slide.slideId}
+                  id={index}
+                  tabIndex={0}
+                  onClick={(e) => { props.actions.setIndex(parseInt(e.target.id, 10)); }}
+                  onKeyDown={
+                    (e) => {
+                      if (e.keyCode === 13 || e.which === 13 ) {
+                        props.actions.setIndex(parseInt(e.target.id, 10));
+                        }
+                      }}>
+                  <i className="fa fa-circle" id={index} />
+                </div>
+              );
+            })
+          }
         </div>
-        <div className="tour__chevron-right">
-          <i
-            className="fa fa-chevron-right"
-            onClick={
+        <button
+          className="tour__chevron-right aria-button"
+          tabIndex={0}
+          aria-label="next slide"
+          onClick={
               () => {
                 let newIndex = props.tour.imageIndex + 1;
                 if (newIndex > props.tour.slides.length - 1) {
@@ -54,8 +73,19 @@ const About = props => (
                 props.actions.setIndex(newIndex);
               }
             }
-          />
-        </div>
+          onKeyDown={
+              (e) => {
+                if (e.keyCode === 13 || e.which === 13 ) {
+                  let newIndex = props.tour.imageIndex + 1;
+                if (newIndex > props.tour.slides.length - 1) {
+                  newIndex = 0;
+                }
+                props.actions.setIndex(newIndex);
+              }
+            }
+          }>
+          <i className="fa fa-chevron-right"/>
+        </button>
       </div>
       <div className="tour__slide-content">
         <div className="tour__slide-text" dangerouslySetInnerHTML={props.tour.slides[props.tour.imageIndex]}>

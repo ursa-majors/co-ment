@@ -4,9 +4,9 @@ const slides = [
     image: '',
     imageAlt: '',
     __html: `<div>
-    <p>Welcome to Co/Ment - a community to connect Mentors and Mentees to accelerate their code journey</p>
-    <p>The site features the tools to help you find a coding partner tailored to your needs - from matching your technical background, to your spoken language...even your timezone.</p>
-    <p>No matter where you stand on the coding path, there are others both ahead of you and behind.  There's no requirement to becoming a mentor - just a willingness to share your knowledge.</p>
+    <p>Welcome to <strong>co/ment</strong> &mdash; a community to connect mentors and mentees to accelerate your coding journey</p>
+    <p><strong>co/ment</strong> offers tools to help you find a coding partner tailored to your needs: search for a specific technical background, skill set, spoken language, or time zone.</p>
+    <p>No matter where you stand on the coding path, there are others both ahead of you and behind. There are no requirements to become a mentor except a willingness to share your knowledge.</p>
     </div>`,
     slideId: 1,
   },
@@ -16,8 +16,8 @@ const slides = [
     imageAlt: 'Profile',
     __html: `<div>
     <p>Begin by filling out your profile</p>
-    <p>Add skills, languages, timezone and links to your social profiles</p>
-    <p>This information will help you find the perfect contact</p>
+    <p>Add skills, languages, time zone, and links to your social profiles</p>
+    <p>This information will help you find the perfect coding partner.</p>
     </div>`,
     slideId: 2,
   },
@@ -26,9 +26,9 @@ const slides = [
     image: './src/img/post.png',
     imageAlt: 'Posts',
     __html: `<div>
-    <p>Next, create a post advertising your desired match.</p>
-    <p>Other users can connect to you through your post.</p>
-    <p>You will be notified by an email when a user wants to connect.</p>
+    <p>Next, create a post that describes the match you're seeking.</p>
+    <p>Other users can connect with you through your post.</p>
+    <p>You'll get an email from <strong>co/ment</strong> when a user wants to connect.</p>
     </div>`,
     slideId: 3,
   },
@@ -37,29 +37,29 @@ const slides = [
     image: './src/img/connection.gif',
     imageAlt: 'Connections',
     __html: `<div>
-    <p>You can request a connection when you a find a post that matches your needs.</p>
+    <p>When you a find match, request a connection!</p>
     <p>The user will receive an email with your request</p>
-    <p>Once you are connected, the mentorship can proceed through eMail, Slack or even in-person meetings.</p>
+    <p>Once you are connected, you decide how to move forward. Set up a video chat, a pair-programming session, or share your skills via email or Slack.</p>
     </div>`,
     slideId: 4,
   },
 ];
 
 const faq = [
-  { question: 'What is required to be a mentor?',
-    answer: 'Anyone can be a mentor! The only major requirement is a willingness to share what you\'ve learned.  ',
+  { question: 'Who can be a mentor?',
+    answer: 'Anyone! The only requirement is a willingness to share your skills.',
     id: 'q1',
   },
   { question: 'How does the mentor/mentee relationship work?',
-    answer: 'Once the connection request has been accepted, you will be notified via email.  At that point, the Mentor and Mentee will agree on the best way to continue the relationship.  Communication will take place outside the Co/Ment platform, but can use any format that works for both parties - phone, email, Slack, hangouts, in-person - the possibilities are endless',
+    answer: 'Once a user accepts your connection request, you will be notified by email. At that point, the mentor and mentee will agree on the best way to continue the relationship. Communication will take place outside the <strong>co/ment</strong> platform, and can use any format that works for you&mdash;phone, email, Slack, hangouts, in-person&mdash;the possibilities are endless.',
     id: 'q2',
   },
   { question: 'How long does a mentorship last?',
-    answer: 'There is no set time for a Mentorship.  Depending on your goals, you may have a single meeting or meet for an entire year.  Keep it up as long as your connection is productive for you.',
+    answer: 'It\'s up to  you! Depending on your goals, you may have a single meeting or work together for an entire year. Keep it up as long as the connection is productive for you.',
     id: 'q3',
   },
   { question: 'I can\'t find a mentor for skill XYZ. What do I do?',
-    answer: 'Send us an email at guidingstar@gmail.com and we\'ll do our best to find you a mentor.',
+    answer: 'Contact us at <a href="mailto:findyourguidingstar@gmail.com">findyourguidingstar@gmail.com</a> and we\'ll do our best to find you a mentor.',
     id: 'q4',
   },
 ];
