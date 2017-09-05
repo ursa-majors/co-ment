@@ -19,7 +19,7 @@ class UserAdmin extends React.Component {
     return (
       <div className="user-admin">
 	      <ViewProfile />
-	      {this.props.posts.entries.length && <UserPosts /> }
+	      {this.props.posts.entries.length ? <UserPosts /> : ''}
       </div>
       );
   }}

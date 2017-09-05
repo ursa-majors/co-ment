@@ -10,6 +10,7 @@
     justify-content: center;
     min-width: 50%;
     margin: auto;
+    padding-top: 60px;
 
     @include for-tablet-landscape-up {
     min-height: 100vh;
@@ -27,7 +28,6 @@
     z-index:1;
     perspective: 600px;
     transition: $transition_card;
-    padding-top: 60px;
 
     @include profile-card-breakpoint {
       padding-top: 0;
@@ -521,7 +521,7 @@
 .side {
   border-radius:10px;
   height:100%;
-  width:100%;
+  width:100vw;
   transform-style:preserve-3d;
   backface-visibility:hidden !important;
   -webkit-backface-visibility:hidden !important;
@@ -533,6 +533,7 @@
   position: relative;
 
   @include profile-card-breakpoint {
+    width:100%;
     border-radius: 10px;
     background: rgba(255,255,255,.75);
   }

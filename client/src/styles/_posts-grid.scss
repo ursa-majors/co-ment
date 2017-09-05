@@ -11,7 +11,11 @@
   background-size: cover;
   min-height: 100vh;
   height: 100%;
-  padding: 60px 20px;
+  padding: 60px 0;
+
+  @include profile-card-breakpoint {
+    padding: 60px 20px;
+  }
 
   &__wrap {
 
