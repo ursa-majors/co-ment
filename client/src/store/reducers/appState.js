@@ -1,4 +1,5 @@
-import { LOGOUT, SET_REDIRECT_URL, SET_WINDOW_SIZE } from '../actions';
+import { LOGOUT, SET_REDIRECT_URL, SET_WINDOW_SIZE, SET_MENU_STATE, SET_SCROLLED,
+  SET_MENU_BACKGROUND } from '../actions';
 import { VALIDATE_TOKEN_REQUEST, VALIDATE_TOKEN_SUCCESS, VALIDATE_TOKEN_FAILURE, LOGIN_SUCCESS,
   REGISTRATION_SUCCESS, REFRESH_TOKEN_SUCCESS } from '../actions/apiLoginActions';
 
@@ -12,6 +13,9 @@ const INITIAL_STATE = {
     width: undefined,
     mobile: false,
   },
+  menuState: 'closed',
+  menuBackground: '',
+  windowScrolled: false,
 };
 
 /*
@@ -24,6 +28,7 @@ const INITIAL_STATE = {
 *    Client will attempt to load the expected page for the user.
 */
 function appState(state = INITIAL_STATE, action) {
+  let newBG='';
   switch (action.type) {
 
     /*
@@ -144,6 +149,36 @@ function appState(state = INITIAL_STATE, action) {
     */
     case SET_WINDOW_SIZE:
       return Object.assign({}, state, { windowSize: action.payload });
+
+    /*
+    * This action is issued from <HeaderNav/> component.
+    * Toggles the mobile menu between open/closed states
+    */
+    case SET_MENU_STATE:
+      return Object.assign({}, state, { menuState: action.payload });
+
+    /*
+    * This action is issued from <HeaderNav/> and <App/> components.
+    * Sets the background CSS on the menu.  If it is scrolled, the background must be set
+    * If it is mobile and open, the background must be set
+    * If it's not scrolled and the background is set, it must be cleared.
+    */
+    case SET_MENU_BACKGROUND:
+      if (state.windowScrolled && state.menuBackground === '') {
+        return Object.assign({}, state, { menuBackground: 'h-nav__side-bkg-noscroll' });
+      } else if (state.windowSize.width < 650 && state.menuState === 'open') {
+        return Object.assign({}, state, { menuBackground: 'h-nav__side-bkg-noscroll' });
+      } else if (!state.windowScrolled && state.menuBackground) {
+        return Object.assign({}, state, { menuBackground: '' });
+      }
+      return state;
+
+    /* Called from <App/> component
+    * Used to set a boolean to indicate whether the screen is scrolled
+    * This value is used by the Nav menu to properly set the background
+    */
+    case SET_SCROLLED:
+      return Object.assign({}, state, { windowScrolled: action.payload });
 
     default:
       return state;
