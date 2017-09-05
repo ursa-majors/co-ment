@@ -178,9 +178,9 @@
   transition: $transition_card;
 
   &__side {
-    border-radius:10px;
+    border-radius: 0;
     height:100%;
-    width:100%;
+    width: 100vw;
     transform-style:preserve-3d;
     backface-visibility:hidden;
     background: $color_sky_lighter;
@@ -191,6 +191,11 @@
     box-shadow: 0 16px 24px rgba(0, 0, 0, 0.4);
     transition: .5s ease-in-out;
     position: relative;
+
+    @include profile-card-breakpoint {
+      border-radius:10px;
+      width:100%;
+    }
     }
 
   &__ribbon {
