@@ -32,6 +32,20 @@ const postSchema = new mongoose.Schema({
         required : true
     },
 
+    author_timezone : {
+        type     : String,
+        required : true
+    },
+
+    author_languages : {
+        type     : [String],  // array of strings
+        required : true       // at least 1 element required
+    },
+
+    author_gender : {
+        type     : String
+    },
+
     availability : {
         type     : String,
         trim     : true
@@ -60,15 +74,15 @@ const postSchema = new mongoose.Schema({
         required : true,
         trim     : true
     },
-    
+
     deleted : {
         type     : Boolean,
         default  : false
     },
-  
+
     meta : {
-        views    : { type : Number, default  : 0 },
-        likes    : { type : Number, default  : 0 }
+        views    : { type : Number, default  : 0, min : 0 },
+        likes    : { type : Number, default  : 0, min : 0 }
     }
 
 },

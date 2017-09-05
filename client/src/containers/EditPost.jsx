@@ -1,6 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
+import InputAutosuggest from './InputAutosuggest';
+import { languages, skills, timezones } from '../utils';
+import parseSKill from '../utils/skillsparser';
+
 import * as Actions from '../store/actions/postActions';
 import * as apiActions from '../store/actions/apiPostActions';
 
@@ -20,7 +25,7 @@ class EditPost extends React.Component {
   }
 
   // Add Keywords on Comma or Enter
-  handleKeyPressAdd(e) {
+  handleKeyPressAdd = (e) => {
     if (e.charCode === 44 || e.which === 44 || e.charCode === 13 || e.which === 13) {
       e.preventDefault();
       this.addKeyword();
@@ -28,25 +33,29 @@ class EditPost extends React.Component {
   }
 
   // event handler for form inputs...sets the state value based on element id
-  handleChange(event) {
+  handleChange = (event) => {
     // limit post body to 620 chars
     if (event.target.id === 'content' && event.target.value.length > 620) {
       return null;
-    } else {
-      // handle input
+    }
+    // handle input
     this.props.actions.setFormField(event.target.id, event.target.value);
   }
+
+  // handle autosuggest selection
+  onChange = (id, newValue) => {
+    this.props.actions.setFormField(id, newValue);
   }
 
   // event handler for checkbox change
-  handleCheckboxChange(e) {
+  handleCheckboxChange = (e) => {
     const active = e.target.checked;
     this.props.actions.setFormField('active', active);
   }
 
   // keywords are entered into a text input, this function pushes them
   // into the array that goes to the DB. Ignore dupes.
-  addKeyword() {
+  addKeyword = () => {
     const newWord = this.props.posts.editForm.keyword;
     for (let i = 0; i < this.props.posts.editForm.keywords.length; i += 1) {
       if (this.props.posts.editForm.keywords[i] === newWord) {
@@ -54,18 +63,18 @@ class EditPost extends React.Component {
         return;
       }
     }
-    this.props.actions.addKeyword(newWord);
+    this.props.actions.addKeyword(parseSKill(newWord));
   }
 
   // remove keyword with keyboard
-  handleKeyPressRemove(event) {
+  handleKeyPressRemove = (event) => {
     if (event.charCode === 13 || event.which === 13) {
       this.removeKeyword(event);
     }
   }
 
   // allow user to remove the keywords
-  removeKeyword(event) {
+  removeKeyword = (event) => {
     const newArray = this.props.posts.editForm.keywords;
     for (let i = 0; i < this.props.posts.editForm.keywords.length; i += 1) {
       if (this.props.posts.editForm.keywords[i] === event.target.id) {
@@ -75,7 +84,7 @@ class EditPost extends React.Component {
     }
   }
 
-  validateInputs() {
+  validateInputs = () => {
     let msg = '';
     if (this.props.posts.editForm.title === '') {
       msg = 'Title is required.  ';
@@ -94,7 +103,7 @@ class EditPost extends React.Component {
     return true;
   }
 
-  savePost() {
+  savePost = () => {
     // clear previous errors
     this.props.actions.setFormField('hideErr', 'hidden');
 
@@ -111,6 +120,9 @@ class EditPost extends React.Component {
       author_id: this.props.profiles.userProfile._id,
       author_name: this.props.profiles.userProfile.name,
       author_avatar: this.props.profiles.userProfile.avatarUrl,
+      author_timezone: this.props.profiles.userProfile.time_zone,
+      author_languages: this.props.profiles.userProfile.languages,
+      author_gender: this.props.profiles.userProfile.gender,
       role: this.props.posts.editForm.role,
       title: this.props.posts.editForm.title,
       body: this.props.posts.editForm.content,
@@ -133,10 +145,14 @@ class EditPost extends React.Component {
   }
 
   render() {
+    // seed values for autosuggest fields
+    const languageList = languages.map(i => (<option key={i}>{i}</option>));
+    const skillsList = skills.map(i => (<option key={i}>{i}</option>));
+
     return (
       <div className="posts">
         <div className="form__body">
-          <div className="form__header">Create an Ad</div>
+          <div className="form__header">{this.props.match.params.id ? 'Edit Post' : 'New Post'}</div>
           <div className="form__input-group">
             <label htmlFor="ghUserName" className="form__label">Title
             </label>
@@ -158,41 +174,51 @@ class EditPost extends React.Component {
               <option value="mentee" id="mentee">Mentee</option>
             </select>
           </div>
+
+
           <div className="form__input-group">
-            <label htmlFor="keyword" className="form__label">Keywords
+            <label htmlFor="keyword" className="form__label">
+              Keywords
             </label>
             <div>
-              {this.props.posts.editForm.keywords.map(item => (
-                <span className="skill-value" key={item}>
+              {this.props.posts.editForm.keywords.map(skill => (
+                <span className="skill-value" key={skill}>
                   <span className="skill-value__icon" aria-hidden="true">
                     <span
-                      id={item}
+                      className="skill"
+                      id={skill}
                       role="button"
                       tabIndex="0"
                       onClick={e => this.removeKeyword(e)}
-                      onKeyPress={e => this.handleKeyPressRemove(e)}
+                      onKeyDown={e => this.handleKeyPressRemove(e)}
                     >
-                        &times;
-                      </span>
+                       &times;
+                    </span>
                   </span>
                   <span className="skill-value__label" role="option" aria-selected="true">
-                    {item}
+                    {skill}
                     <span className="skill-aria-only">&nbsp;</span>
                   </span>
                 </span>
-                ))}
+              ))}
             </div>
-            <input
+            <InputAutosuggest
               className="form__input"
-              type="text"
               id="keyword"
               name="keyword"
-              value={this.props.posts.editForm.keyword}
-              onChange={e => this.handleChange(e)}
-              onKeyPress={e => this.handleKeyPressAdd(e)}
               placeholder="Add Keywords"
+              onChange={this.onChange}
+              list={skills}
+              onKeyPress={e => this.handleKeyPressAdd(e)}
+              value={this.props.posts.editForm.keyword}
+              addTag={this.addKeyword}
+              removeTag={this.removeKeyword}
+              ref={instance => { this.skillInput = instance; }}
             />
           </div>
+
+
+
           <div className="form__input-group">
             <label htmlFor="content" className="form__label">Post Body
             </label>
@@ -203,7 +229,7 @@ class EditPost extends React.Component {
               value={this.props.posts.editForm.content}
               onChange={e => this.handleChange(e)}
               placeholder="Add post content (limit 620 characters)"
-              maxlength="620"
+              maxLength="620"
             />
           </div>
           <div className="form__input-group" >
@@ -213,14 +239,16 @@ class EditPost extends React.Component {
               id='active'
               name='active'
               onChange={this.handleCheckboxChange}
-              value={ this.props.posts.editForm.active }
-              checked={ this.props.posts.editForm.active }
-             />
+              value={this.props.posts.editForm.active}
+              checked={this.props.posts.editForm.active}
+            />
             <label htmlFor="active" className="form__label--checkbox">Publish this post? (uncheck to deactivate)</label>
           </div>
 
           <div className="form__input-group">
-            <div className={`form__error ${this.props.posts.editForm.hideErr}`}>{this.props.posts.editForm.errMsg}</div>
+            <div className={`form__error ${this.props.posts.editForm.hideErr}`}>
+              {this.props.posts.editForm.errMsg}
+            </div>
           </div>
           <div className="form__input-group">
             <div className="form__button-wrap">

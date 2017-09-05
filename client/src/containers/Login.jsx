@@ -107,9 +107,9 @@ class Login extends React.Component {
           </div>
           <div className="form__input-group">
             <div className="form__button-wrap">
-              <button className="splash__button pointer" id="btn-login" onClick={() => this.handleLogin()}>Sign In</button>
+              <button className="form__button pointer" id="btn-login" onClick={() => this.handleLogin()}>Sign In</button>
               <Link to='/register'>
-                <button className="splash__button pointer" id="btn-register">Register</button>
+                <button className="form__button pointer" id="btn-register">Register</button>
               </Link>
             </div>
           </div>

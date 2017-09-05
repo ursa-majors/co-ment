@@ -10,7 +10,7 @@ import Home from './containers/Home';
 import About from './containers/About';
 import Login from './containers/Login';
 import Registration from './containers/Registration';
-import Profile from './containers/Profile';
+import EditProfile from './containers/EditProfile';
 import PostsGrid from './containers/PostsGrid';
 import EditPost from './containers/EditPost';
 import Logout from './containers/Logout';
@@ -23,6 +23,7 @@ import ConnectionResult from './containers/ConnectionResult';
 import ConnectionDetails from './containers/ConnectionDetails';
 import Validate from './containers/Validate';
 import ResetPassword from './containers/ResetPassword';
+import UserAdmin from './containers/UserAdmin';
 
 class App extends React.Component {
 
@@ -65,11 +66,12 @@ class App extends React.Component {
               <Route path="/register" component={Registration} />
               <Route path="/login" component={Login} />
               <Route path="/about" component={About} />
-              <Route path="/profile" component={Profile} />
+              <Route path="/profile" component={UserAdmin} />
               <Route path="/posts" component={PostsGrid} />
               <Route path="/logout" component={Logout} />
               <Route path="/viewpost/:id" component={ViewPost} />
               <Route path="/viewprofile/:id" component={ViewProfile} />
+              <Route path="/editprofile/:id" component={EditProfile} />
               <Route path="/editpost/:id?" component={EditPost} />
               <Route path="/mentorpath" component={MentorPath} />
               <Route path="/connection" component={Connection} />

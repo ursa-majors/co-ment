@@ -1,13 +1,19 @@
 .view-profile {
-    background: url(./img/splash_pfl.svg) no-repeat top center;
+    // background: url(./img/splash_pfl.svg) no-repeat top center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    min-height: 100vh;
+    min-height: 90vh;
     height: 100%;
     display: flex;
     justify-content: center;
+    min-width: 50%;
+    margin: auto;
+
+    @include for-tablet-landscape-up {
+    min-height: 100vh;
+  }
 
     }
 
@@ -395,6 +401,12 @@
   margin: 0 8px 8px 0;
   vertical-align: top;
 
+  &--thumb{
+    font-size: .8em;
+    line-height: 1.2em;
+    margin: 0 4px 4px 0;
+  }
+
 
   &__label {
     border-bottom-right-radius: 2px;
@@ -403,6 +415,10 @@
     padding: 2px 5px;
     display: inline-block;
     vertical-align: middle;
+
+    &--thumb {
+      padding: 0 3px;
+    }
   }
 
   &__wrapper {

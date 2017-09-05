@@ -433,7 +433,7 @@
   }
 
 
-  &__edit, &__connect, &__delete, &__compress, &__expand {
+  &__edit, &__connect, &__delete, &__compress, &__expand, &__like {
     padding: 12px 15px;
     border-radius: 30px;
     margin: 0 0 0 10px;
@@ -453,6 +453,10 @@
 
   }
 
+  &__liked {
+    color: crimson;
+  }
+
   &__nav-item--flip {
     display: flex;
     justify-content: center;
@@ -468,7 +472,7 @@
 
   }
 
-    &__icon--edit, &__icon--connect,
+    &__icon--edit, &__icon--connect, &__icon--like,
     &__icon--delete, &__icon--compess, &__icon--expand {
       color: inherit;
 
@@ -692,7 +696,7 @@
   &__body{
     display: block;
     display: -webkit-box;
-    height: 64px; /* Fallback for non-webkit */
+    max-height: 64px; /* Fallback for non-webkit */
     font-size: 16px;
     line-height: 1.4;
     -webkit-line-clamp: 3;
@@ -700,6 +704,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 0 20px 0 0;
+    margin-bottom: 10px;
   }
 
   &__back-wrap {
@@ -757,7 +762,7 @@
   }
 
 
-  &__edit, &__connect,
+  &__edit, &__connect, &__like,
   &__delete, &__expand, &__compress {
     padding: 12px 15px;
     border-radius: 30px;

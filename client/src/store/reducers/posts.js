@@ -5,9 +5,12 @@ import { SET_POSTS, SAVE_POST, CLEAR_CURRENT_POST, SET_EDIT_POST, SET_FORM_FIELD
 import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE,
   ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE,
   MODIFY_POST_REQUEST, MODIFY_POST_SUCCESS, MODIFY_POST_FAILURE,
-  GET_ALL_POSTS_REQUEST, GET_ALL_POSTS_SUCCESS, GET_ALL_POSTS_FAILURE,
+  GET_ALL_POSTS_REQUEST, GET_ALL_POSTS_SUCCESS, GET_ALL_POSTS_FAILURE, GET_USERPOSTS_REQUEST, GET_USERPOSTS_SUCCESS, GET_USERPOSTS_FAILURE,
   VIEW_POST_REQUEST, VIEW_POST_SUCCESS, VIEW_POST_FAILURE,
   DELETE_POST_REQUEST, DELETE_POST_SUCCESS, DELETE_POST_FAILURE,
+  INCREMENT_POSTVIEW_REQUEST, INCREMENT_POSTVIEW_SUCCESS, INCREMENT_POSTVIEW_FAILURE,
+  LIKE_POST_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE,
+  UNLIKE_POST_REQUEST, UNLIKE_POST_SUCCESS, UNLIKE_POST_FAILURE,
 } from '../actions/apiPostActions';
 
 const defaultForm = {
@@ -27,6 +30,9 @@ const defaultPost = {
   author_id: '',
   author_name: '',
   author_avatar: '',
+  author_timezone: '',
+  author_languages: [],
+  author_gender: '',
   availability: '',
   keywords: [],
   body: '',
@@ -73,6 +79,7 @@ const INITIAL_STATE = {
 
 function posts(state = INITIAL_STATE, action) {
   let error;
+  let index;
   switch (action.type) {
 
     case SET_VIEWPOST_MODAL:
@@ -177,6 +184,47 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case GET_ALL_POSTS_FAILURE:
+      error = action.payload.response.message || 'An unknown error occurred while loading posts';
+      return Object.assign(
+        {},
+        state,
+        {
+          loadPostsSpinnerClass: 'spinner__hide',
+          loadPostsModal: {
+            text: error,
+            class: 'modal__show',
+            type: 'modal__error',
+            title: 'ERROR',
+          },
+        },
+      );
+
+    case GET_USERPOSTS_REQUEST:
+      return Object.assign(
+        {},
+        state,
+        {
+          loadPostsSpinnerClass: 'spinner__show',
+          loadPostsModal: {
+            text: '',
+            class: 'modal__hide',
+            type: '',
+            title: '',
+          },
+        },
+      );
+
+    case GET_USERPOSTS_SUCCESS:
+      return update(
+        state,
+        {
+          loadPostsSpinnerClass: { $set: 'spinner__hide' },
+          loadPostsError: { $set: null },
+          entries: { $set: action.payload },
+        },
+      );
+
+    case GET_USERPOSTS_FAILURE:
       error = action.payload.response.message || 'An unknown error occurred while loading posts';
       return Object.assign(
         {},
@@ -297,7 +345,7 @@ function posts(state = INITIAL_STATE, action) {
       break;
 
     case DELETE_POST_FAILURE:
-      error = action.payload.message || 'An unknown error occurred';
+      error = action.payload.response.message || 'An unknown error occurred';
       return Object.assign(
         {},
         state,
@@ -323,6 +371,127 @@ function posts(state = INITIAL_STATE, action) {
           },
         },
       );
+
+    /*
+    *  Called From: <PostFull />
+    *  Payload: None
+    *  Purpose: Dispatched when user clicks on a post to view it.  This action does
+    *  nothing because we do not block operations when this request is dispatched.
+    */
+    case INCREMENT_POSTVIEW_REQUEST:
+      return state;
+
+    /*
+    *  Called From: <PostFull />
+    *  Payload: {string} Meta: PostId - the id of the post that was viewed.
+    *  Purpose: This will increment the viewcounter on the local copy of the post.
+    *   If post ID is not found, return previous state.
+    */
+    case INCREMENT_POSTVIEW_SUCCESS:
+      for (let i = 0; i < state.entries.length; i += 1) {
+        if (state.entries[i]._id === action.meta.postId) {
+          index = i;
+          break;
+        }
+      }
+      return update(
+        state,
+        {
+          entries: {
+            [index]: {
+              meta: {
+                views: {
+                  $apply: x => x + 1,
+                },
+              },
+            },
+          },
+        },
+      );
+
+    case INCREMENT_POSTVIEW_FAILURE:
+      return state;
+
+    /*
+    *  Called From: <PostFull />
+    *  Payload: None
+    *  Purpose: Dispatched when user clicks on a post to 'like' it.  This action does
+    *  nothing because we do not block operations when this request is dispatched.
+    */
+    case LIKE_POST_REQUEST:
+      return state;
+
+    /*
+    *  Called From: <PostFull />
+    *  Payload: {string} Meta: PostId - the id of the post that was liked.
+    *  Purpose: This will increment the like counter on the local copy of the post.
+    *   If post ID is not found, return previous state.
+    */
+    case LIKE_POST_SUCCESS:
+      for (let i = 0; i < state.entries.length; i += 1) {
+        if (action.meta.postId === state.entries[i]._id) {
+          index = i;
+          return update(
+            state,
+            {
+              entries: {
+                [index]: {
+                  meta: {
+                    likes: {
+                      $apply: x => x + 1,
+                    },
+                  },
+                },
+              },
+            },
+          );
+        }
+      }
+      return state;
+
+    case LIKE_POST_FAILURE:
+      error = action.payload.response.message || 'An unknown error occurred';
+      return Object.assign({}, state);
+
+    /*
+    *  Called From: <PostFull />
+    *  Payload: None
+    *  Purpose: Dispatched when user clicks on a post to 'un-like' it.  This action does
+    *  nothing because we do not block operations when this request is dispatched.
+    */
+    case UNLIKE_POST_REQUEST:
+      return state;
+
+    /*
+    *  Called From: <PostFull />
+    *  Payload: {string} Meta: PostId - the id of the post that was un-liked.
+    *  Purpose: This will decrement the like counter on the local copy of the post.
+    *   If post ID is not found, return previous state.
+    */
+    case UNLIKE_POST_SUCCESS:
+      for (let i = 0; i < state.entries.length; i += 1) {
+        if (action.meta.postId === state.entries[i]._id) {
+          index = i;
+          return update(
+            state,
+            {
+              entries: {
+                [index]: {
+                  meta: {
+                    likes: {
+                      $apply: x => x - 1,
+                    },
+                  },
+                },
+              },
+            },
+          );
+        }
+      }
+      return state;
+
+    case UNLIKE_POST_FAILURE:
+      return state;
 
     default:
       return state;

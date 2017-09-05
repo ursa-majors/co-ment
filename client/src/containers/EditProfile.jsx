@@ -11,7 +11,7 @@ import ModalSm from '../containers/ModalSm';
 import { languages, skills, timezones } from '../utils';
 import parseSKill from '../utils/skillsparser';
 
-class Profile extends React.Component {
+class EditProfile extends React.Component {
 
   static adjustTextArea(target) {
     // expand input height to fit content without scrollbar
@@ -60,7 +60,7 @@ class Profile extends React.Component {
     }
     this.setState({ ...newState }, () => {
       if (this.state.page === 2) {
-        Profile.adjustTextArea(this.textInput);
+        EditProfile.adjustTextArea(this.textInput);
       }
     });
   }
@@ -78,7 +78,7 @@ class Profile extends React.Component {
       // handle input
       this.props.actions.setFormField(e.target.name, e.target.value);
       // expand textarea height to match content
-      Profile.adjustTextArea(e.target);
+      EditProfile.adjustTextArea(e.target);
     }
   }
 
@@ -180,6 +180,9 @@ class Profile extends React.Component {
     if (this.props.profiles.editForm.name === '') {
       msg += 'Name is required.  ';
     }
+    if (this.props.profiles.editForm.email === '') {
+      msg += 'Email is required.  ';
+    }
     if (this.props.profiles.editForm.time_zone === 'Choose your time zone' || this.props.profiles.editForm.time_zone === '') {
       msg += 'Time zone is required.  ';
     }
@@ -191,6 +194,9 @@ class Profile extends React.Component {
     }
 
     // use html5 validation to check for valid urls in social media fields
+    if (this.props.profiles.editForm.github && document.getElementById('github').checkValidity() === false) {
+      msg += 'Github URL is invalid.  ';
+    }
     if (this.props.profiles.editForm.twitter && document.getElementById('twitter').checkValidity() === false) {
       msg += 'Twitter URL is invalid.  ';
     }
@@ -236,7 +242,7 @@ class Profile extends React.Component {
     if (!this.validateInputs()) { return; }
 
     const body = {
-      ghUserName: this.props.profiles.editForm.ghUserName,
+      email: this.props.profiles.editForm.email,
       name: this.props.profiles.editForm.name,
       languages: this.props.profiles.editForm.languages,
       skills: this.props.profiles.editForm.skills,
@@ -245,6 +251,7 @@ class Profile extends React.Component {
       avatarUrl: this.props.profiles.editForm.avatarUrl,
       location: this.props.profiles.editForm.location,
       about: this.props.profiles.editForm.about,
+      github: this.props.profiles.editForm.github,
       twitter: this.props.profiles.editForm.twitter,
       facebook: this.props.profiles.editForm.facebook,
       link: this.props.profiles.editForm.link,
@@ -322,17 +329,16 @@ class Profile extends React.Component {
             <div className="profile__pageOne">
               <div className="profile__column-L">
                 <div className="form__input-group">
-                  <label htmlFor="ghUserName" className="form__label">GitHub User Name
+                  <label htmlFor="email" className="form__label">Email
                   </label>
                   <input
                     className="form__input"
-                    type="text"
-                    id="ghUserName"
-                    name="ghUserName"
-                    value={this.props.profiles.editForm.ghUserName}
-                    onChange={e => this.handleInput(e)}
-                    placeholder="GitHub User Name"
-                  />
+                    type="email"
+                    placeholder="Email"
+                    id="email"
+                    name="email"
+                    value={this.props.profiles.editForm.email || ''}
+                    onChange={e => this.handleInput(e)} required />
                 </div>
                 <div className="form__input-group">
                   <label htmlFor="name" className="form__label">Full name
@@ -501,6 +507,20 @@ class Profile extends React.Component {
             <div className="profile__pageThree">
               <div className="profile__column-L">
                 <div className="form__input-group">
+                  <label htmlFor="location" className="form__label">GitHub
+                  </label>
+                  <input
+                    className="form__input"
+                    type="url"
+                    pattern="https?://.+"
+                    id="github"
+                    name="github"
+                    value={this.props.profiles.editForm.github}
+                    onChange={e => this.handleInput(e)}
+                    placeholder="GitHub URL"
+                  />
+                </div>
+                <div className="form__input-group">
                   <label htmlFor="location" className="form__label">Twitter
                   </label>
                   <input
@@ -526,20 +546,6 @@ class Profile extends React.Component {
                     value={this.props.profiles.editForm.facebook}
                     onChange={e => this.handleInput(e)}
                     placeholder="Facebook URL"
-                  />
-                </div>
-                <div className="form__input-group">
-                  <label htmlFor="location" className="form__label">Portfolio link
-                  </label>
-                  <input
-                    className="form__input"
-                    type="url"
-                    pattern="https?://.+"
-                    id="link"
-                    name="link"
-                    value={this.props.profiles.editForm.link}
-                    onChange={e => this.handleInput(e)}
-                    placeholder="Portfolio URL"
                   />
                 </div>
               </div>
@@ -570,6 +576,20 @@ class Profile extends React.Component {
                     value={this.props.profiles.editForm.codepen}
                     onChange={e => this.handleInput(e)}
                     placeholder="CodePen URL"
+                  />
+                </div>
+                <div className="form__input-group">
+                  <label htmlFor="location" className="form__label">Portfolio link
+                  </label>
+                  <input
+                    className="form__input"
+                    type="url"
+                    pattern="https?://.+"
+                    id="link"
+                    name="link"
+                    value={this.props.profiles.editForm.link}
+                    onChange={e => this.handleInput(e)}
+                    placeholder="Portfolio URL"
                   />
                 </div>
               </div>
@@ -632,4 +652,4 @@ const mapDispatchToProps = dispatch => ({
   api: bindActionCreators(apiActions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);

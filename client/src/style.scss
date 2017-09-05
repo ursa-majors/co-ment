@@ -21,6 +21,7 @@ $fa-font-path: "~font-awesome/fonts";
 @import 'styles/connectiondetails';
 @import 'styles/shuffle.scss';
 @import 'styles/validate';
+@import 'styles/user-admin';
 @import 'styles/tour';
 
 * {
@@ -34,7 +35,8 @@ $fa-font-path: "~font-awesome/fonts";
 /* a subtle focus style for keyboard-input elements */
 input[type="text"]:focus,
 textarea:focus {
-  border: 1px solid #aaa;
+  border: 1px solid $color_focus_ring;
+  box-shadow: 0 0 5px $color_focus_ring;
 }
 
 /* no focus style for non-keyboard-inputs elements */
@@ -46,10 +48,8 @@ select:focus {
 /* and for keyboard users, override everything with
    a border when focused on any element */
 body.user-is-tabbing *:focus {
-  border: 1px solid #7AACFE !important; /* for non-webkit browsers */
-  border: 1px auto -webkit-focus-ring-color !important;
-  box-shadow: 0 0 10px #7AACFE !important;
-  box-shadow: 0 0 10px -webkit-focus-ring-color;
+  border: 1px solid $color_focus_ring important; /* for non-webkit browsers */
+  box-shadow: 0 0 10px $color_focus_ring !important;
 }
 
 .app-root {

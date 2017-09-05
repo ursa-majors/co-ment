@@ -98,15 +98,19 @@ class InputAutosuggest extends React.Component {
 
   // comma or enter or tab in skill field triggers addSkill
   handleKeyPressAdd(e) {
-    if (e.charCode === 44 || e.which === 44
-      || e.charCode === 13 || e.which === 13
-      || e.keyCode === 9 || e.which === 9
-      ) {
-      e.preventDefault();
-      this.props.addTag();
-      this.setState({
-        value: ''
-      });
+    if (!this.props.gridControls) {
+      if (e.charCode === 44 || e.which === 44
+        || e.charCode === 13 || e.which === 13
+        || e.keyCode === 9 || e.which === 9
+        ) {
+        e.preventDefault();
+        this.props.addTag();
+        this.setState({
+          value: ''
+        });
+      }
+    } else {
+      return null;
     }
   }
 
@@ -131,6 +135,8 @@ class InputAutosuggest extends React.Component {
     return (
       <Autosuggest
         id={id}
+        name={name}
+        className={this.props.className}
         suggestions={suggestions}
         onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
         onSuggestionsClearRequested={this.onSuggestionsClearRequested}

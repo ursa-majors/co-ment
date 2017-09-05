@@ -55,6 +55,11 @@ const userSchema = new mongoose.Schema({
         trim     : true
     },
 
+    github    : {
+        type     : String,
+        trim     : true
+    },
+
     twitter    : {
         type     : String,
         trim     : true
@@ -97,16 +102,18 @@ const userSchema = new mongoose.Schema({
         default  : false
     },
 
-    languages  : [String],  // array of strings
+    languages  : [String],
 
-    certs      : [String],  // array of strings
+    certs      : [String],
 
-    skills     : [String],  // array of strings
+    skills     : [String],
 
     time_zone  : {
         type     : String,
         trim     : true
     },
+
+    likedPosts : [String],
 
     hash       : String,
 
