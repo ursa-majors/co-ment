@@ -63,21 +63,21 @@ class PostsGridControls extends React.Component {
           <div className="filters-group">
             <label className="form__label--white">Sort</label>
             <div className="btn-group sort-options">
-              <label className={`btn btn--primary ${this.props.gridControls.sortBtn.title}`}>
-                <input
-                  type="radio"
-                  name="sort-value"
-                  value="title"
-                  onClick={e => this.props.actions.setSort(e.target)}
-                /> Title
-              </label>
               <label className={`btn btn--primary ${this.props.gridControls.sortBtn['date-updated']}`}>
                 <input
                   type="radio"
                   name="sort-value"
                   value="date-updated"
                   onClick={e => this.props.actions.setSort(e.target)}
-                /> Date Updated
+                /> New
+              </label>
+              <label className={`btn btn--primary ${this.props.gridControls.sortBtn.title}`}>
+                <input
+                  type="radio"
+                  name="sort-value"
+                  value="popular"
+                  onClick={e => this.props.actions.setSort(e.target)}
+                /> Popular
               </label>
             </div>
           </div>
