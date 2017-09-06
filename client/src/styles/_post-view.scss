@@ -386,6 +386,17 @@
     line-height: .9em;
     text-align: left !important;
   }
+  &__metadata {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    color: $color_gray_lighter;
+    font-weight: 400;
+    text-align: center;
+    font-size: 18px;
+    margin: 4px 0 0 10px;
+    width: 100%;
+  }
 
   &__body{
     line-height: 1.4em;
@@ -696,6 +707,17 @@
     font-size: 1.8em;
     margin: 60px 0 15px 0;
     line-height: .9em;
+  }
+  &__metadata {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    color: $color_gray_lighter;
+    font-weight: 400;
+    text-align: center;
+    font-size: 18px;
+    margin: 4px 0 0 10px;
+    width: 100%;
   }
 
   &__body{

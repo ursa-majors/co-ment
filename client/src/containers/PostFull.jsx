@@ -235,6 +235,14 @@ class PostFull extends React.Component {
               <div className={`post-full__text-wrap`}>
                 <div className={`post-full__title`}>
                   {this.props.post.title}
+                  <div className="post-full__metadata">
+                    <span>
+                       <i className="fa fa-eye" /> &nbsp;{this.props.post.meta.views + 1}
+                    </span>
+                    <span>
+                      <i className="fa fa-heart" />&nbsp;{this.props.post.meta.likes}
+                    </span>
+                  </div>
                 </div>
                 { this.props.posts.excerpt ?
                   <div className={`post-full__body post-full__excerpt`}>
