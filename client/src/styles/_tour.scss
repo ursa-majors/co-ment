@@ -12,7 +12,6 @@
 .tour {
   display: flex;
   flex-direction: column;
-	justify-content: center;
 	background: $color_aqua;
 	background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
 	background: linear-gradient(to top, $color_aqua, $color_sky);
@@ -51,7 +50,7 @@
     }
   }
 
-  &__slide-header {
+  &__slide-header, &__slide-footer {
     position: relative;
     flex: 0 0 auto;
     color: white;
@@ -70,6 +69,10 @@
     @include for-phone-landscape-up {
       font-size: 2.5em;
     }
+  }
+
+  &__slide-footer {
+    padding-top: 0;
   }
 
   &__slide-text {
@@ -184,6 +187,17 @@
     }
   }
 }
+
+.tour__slide-footer .tour__chevron-left {
+  top: 3px;
+  left: 10px;
+}
+.tour__slide-footer .tour__chevron-right {
+  top: 3px;
+  right: 10px;
+}
+
+
 .faq {
   display: flex;
   flex-direction: column;
@@ -258,11 +272,12 @@
     font-size: 20px;
     transition: height 400ms ease-in;
     & a {
+      color: $color_sky;
       text-decoration: none;
       border-bottom: 1px dotted white;
 
       &:hover {
-      color: $color_sky;
+      color: $color_aqua;
       border-bottom: 1px dotted $color_sky;
     }
 
