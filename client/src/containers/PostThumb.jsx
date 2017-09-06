@@ -109,7 +109,9 @@ class PostThumb extends React.Component {
                   onKeyDown={e => this.handleKeyDown(e)}
                   onClick={
                     () => {
-                      this.props.api.incrementPostView(this.props.appState.authToken, this.props.post._id);
+                      if( this.props.appState.userId !== this.props.post.author_id) {
+                        this.props.api.incrementPostView(this.props.appState.authToken, this.props.post._id);
+                      }
                       this.props.openModal(this.props.post);
                     }
                   }
