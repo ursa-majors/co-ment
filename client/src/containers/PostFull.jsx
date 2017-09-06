@@ -207,12 +207,22 @@ class PostFull extends React.Component {
             <span className={this.props.post.role === 'mentor' ? `post-full__ribbon-span` : `post-full__ribbon-span--green`}>{roleText}</span>
           </div> }
           <div className={this.state.flip ? "post-full__side front flip" : "post-full__side front"} id="front">
-            <div className={`post-full__date`}>
-              <span className="tag-value">
-                <span className="tag-value__label">
-                  {formatDate(new Date(this.props.post.updatedAt))}
-                </span>
+            <div className="post-full__metadata">
+              <span className="post-full__views">
+                <i className="fa fa-eye" />
+                &nbsp;
+                {this.props.appState.userId === this.props.post.author_id ? this.props.post.meta.views  : this.props.post.meta.views + 1}
               </span>
+              <span className="post-full__likes">
+                <i className="fa fa-heart" />&nbsp;{this.props.post.meta.likes}
+              </span>
+              <div className={`post-full__date`}>
+                <span className="tag-value">
+                  <span className="tag-value__label">
+                    {formatDate(new Date(this.props.post.updatedAt))}
+                  </span>
+                </span>
+              </div>
             </div>
             <div className={`post-full__card-body`}>
               <div className={`post-full__image-wrap`}>
@@ -235,16 +245,6 @@ class PostFull extends React.Component {
               <div className={`post-full__text-wrap`}>
                 <div className={`post-full__title`}>
                   {this.props.post.title}
-                  <div className="post-full__metadata">
-                    <span>
-                       <i className="fa fa-eye" />
-                       &nbsp;
-                       {this.props.appState.userId === this.props.post.author_id ? this.props.post.meta.views  : this.props.post.meta.views + 1}
-                    </span>
-                    <span>
-                      <i className="fa fa-heart" />&nbsp;{this.props.post.meta.likes}
-                    </span>
-                  </div>
                 </div>
                 { this.props.posts.excerpt ?
                   <div className={`post-full__body post-full__excerpt`}>
