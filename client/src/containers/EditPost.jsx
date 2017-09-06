@@ -216,9 +216,6 @@ class EditPost extends React.Component {
               ref={instance => { this.skillInput = instance; }}
             />
           </div>
-
-
-
           <div className="form__input-group">
             <label htmlFor="content" className="form__label">Post Body
             </label>

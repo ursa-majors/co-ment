@@ -1,7 +1,7 @@
 import update from 'immutability-helper';
-import { SET_POSTS, SAVE_POST, CLEAR_CURRENT_POST, SET_EDIT_POST, SET_FORM_FIELD,
-  ADD_KEYWORD, REMOVE_KEYWORD, SET_SEARCH_CRITERIA, CLEAR_SEARCH_CRITERIA,
-  SET_VIEWPOST_MODAL, SET_LOADPOSTS_MODAL } from '../actions/postActions';
+import { SET_POSTS, SAVE_POST, CLEAR_CURRENT_POST, SET_EDIT_POST, SET_FORM_FIELD, ADD_KEYWORD,
+  REMOVE_KEYWORD, SET_SEARCH_CRITERIA, CLEAR_SEARCH_CRITERIA, SET_VIEWPOST_MODAL,
+  SET_LOADPOSTS_MODAL, SET_CURRENT_POST } from '../actions/postActions';
 import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE, ADD_POST_REQUEST, ADD_POST_SUCCESS,
   ADD_POST_FAILURE, MODIFY_POST_REQUEST, MODIFY_POST_SUCCESS, MODIFY_POST_FAILURE,
   GET_ALL_POSTS_REQUEST, GET_ALL_POSTS_SUCCESS, GET_ALL_POSTS_FAILURE, GET_USERPOSTS_REQUEST,
@@ -96,11 +96,11 @@ function posts(state = INITIAL_STATE, action) {
     case SAVE_POST:
       return update(state, { entries: { $push: action.payload } });
 
-    case CLEAR_CURRENT_POST:
-      return Object.assign({}, state, { currentPost: defaultPost });
+    case SET_CURRENT_POST:
+      return Object.assign({}, state, { currentPost: action.payload });
 
     case CLEAR_CURRENT_POST:
-      return Object.assign({}, state, { editForm: defaultPost });
+      return Object.assign({}, state, { currentPost: defaultPost, editForm: defaultPost });
 
     case SET_EDIT_POST:
       return update(

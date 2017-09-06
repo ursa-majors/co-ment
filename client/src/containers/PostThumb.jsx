@@ -64,6 +64,14 @@ class PostThumb extends React.Component {
                 <div className={`post-thumb__text-wrap`}>
                     <div className={`post-thumb__title`}>
                       {this.props.post.title}
+                      <div className="post-thumb__metadata">
+                        <span>
+                           <i className="fa fa-eye" /> &nbsp;{this.props.post.meta.views}
+                        </span>
+                        <span>
+                          <i className="fa fa-heart" />&nbsp;{this.props.post.meta.likes}
+                        </span>
+                      </div>
                     </div>
                     { this.props.posts.excerpt ?
                     <div className={`post-thumb__body post-thumb__excerpt`}>

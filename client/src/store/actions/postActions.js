@@ -11,6 +11,7 @@ export const SET_SEARCH_CRITERIA = 'SET_SEARCH_CRITERIA';
 export const CLEAR_SEARCH_CRITERIA = 'CLEAR_SEARCH_CRITERIA';
 export const SET_VIEWPOST_MODAL = 'SET_VIEWPOST_MODAL';
 export const SET_LOADPOSTS_MODAL = 'SET_LOADPOSTS_MODAL';
+export const SET_CURRENT_POST = 'SET_CURRENT_POST';
 
 export function setPosts(posts) {
   return ({
@@ -92,5 +93,12 @@ export function setLoadPostsModal(options) {
   return ({
     type: SET_LOADPOSTS_MODAL,
     payload: options,
+  });
+}
+
+export function setCurrentPost(post) {
+  return ({
+    type: SET_CURRENT_POST,
+    payload: post,
   });
 }
