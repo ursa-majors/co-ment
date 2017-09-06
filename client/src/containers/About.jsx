@@ -17,12 +17,12 @@ class About extends React.Component {
 
   componentDidMount() {
     adjustBkgSize(document.querySelector('.faq'));
-    adjustBkgSize(document.querySelector('.tour'));
+    adjustBkgSize(document.querySelector('.tour'))
   }
 
   componentDidUpdate() {
     adjustBkgSize(document.querySelector('.faq'));
-    adjustBkgSize(document.querySelector('.tour'));
+    adjustBkgSize(document.querySelector('.tour'))
   }
 
 
@@ -222,7 +222,7 @@ class About extends React.Component {
                         el.classList.add('faq__answer-expanded');
                         el.style.height = `${el.scrollHeight}px`;
                         adjustBkgSize(document.querySelector('.faq'));
-                        adjustBkgSize(document.querySelector('.tour'));
+                        adjustBkgSize(document.querySelector('.tour'))
                       }
                     }
                   }
