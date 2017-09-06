@@ -202,7 +202,7 @@ class PostsGrid extends React.Component {
                   className="flex-col-12-xs flex-col-6-sm flex-col-4-md flex-col-3-lg flex-col-2-xl shuffle-item shuffle-item--visible post"
                   data-groups={[post.role, gender, post.author_timezone, languages, keywords]}
                   data-updated={post.updatedAt}
-                  data-title={post.title}
+                  data-popular={Number(post.meta.likes) + Number(post.meta.views)}
                 >
                   <PostThumb
                     id={post._id}

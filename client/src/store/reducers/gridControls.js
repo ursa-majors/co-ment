@@ -34,8 +34,8 @@ const sortByDate = (element) => {
   return element.getAttribute('data-updated');
 };
 
-const sortByTitle = (element) => {
-  return element.getAttribute('data-title').toLowerCase();
+const sortByPopularity = (element) => {
+  return Number(element.getAttribute('data-popular'));
 };
 
 function gridControls(state = INITIAL_STATE, action) {
@@ -65,15 +65,15 @@ function gridControls(state = INITIAL_STATE, action) {
     case SET_SORT:
       // set the sort options
       if (action.payload.value === 'date-updated') {
-        reverseSort = (state.sortOptions.by === sortByDate ? !state.sortOptions.reverse : true);
+        reverseSort = (state.sortOptions.by === sortByDate ? !state.sortOptions.reverse : false);
         options = {
           by: sortByDate,
           reverse: reverseSort,
         };
-      } else if (action.payload.value === 'title') {
-        reverseSort = (state.sortOptions.by === sortByTitle ? !state.sortOptions.reverse : false);
+      } else if (action.payload.value === 'popular') {
+        reverseSort = (state.sortOptions.by === sortByPopularity ? !state.sortOptions.reverse : false);
         options = {
-          by: sortByTitle,
+          by: sortByPopularity,
           reverse: reverseSort,
         };
       }
