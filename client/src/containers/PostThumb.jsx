@@ -52,26 +52,26 @@ class PostThumb extends React.Component {
             <span className={this.props.post.role === 'mentor' ? `post-thumb__ribbon-span` : `post-thumb__ribbon-span--green`}>{roleText}</span>
           </div>
           <div className="side front" id="front">
-          {this.props.post.updatedAt &&
-            <div className={`post-thumb__date`}>
-              <span className="tag-value">
-                <span className="tag-value__label">
-                  {formatDate(new Date(this.props.post.updatedAt))}
-                </span>
+            <div className="post-thumb__metadata">
+              <span className="post-thumb__views">
+                 <i className="fa fa-eye" /> &nbsp;{this.props.post.meta.views}
               </span>
-            </div> }
+              <span className="post-thumb__likes">
+                <i className="fa fa-heart" />&nbsp;{this.props.post.meta.likes}
+              </span>
+              {this.props.post.updatedAt &&
+              <div className={`post-thumb__date`}>
+                <span className="tag-value">
+                  <span className="tag-value__label">
+                    {formatDate(new Date(this.props.post.updatedAt))}
+                  </span>
+                </span>
+              </div> }
+            </div>
               <div className={`post-thumb__card-body`}>
                 <div className={`post-thumb__text-wrap`}>
                     <div className={`post-thumb__title`}>
                       {this.props.post.title}
-                      <div className="post-thumb__metadata">
-                        <span>
-                           <i className="fa fa-eye" /> &nbsp;{this.props.post.meta.views}
-                        </span>
-                        <span>
-                          <i className="fa fa-heart" />&nbsp;{this.props.post.meta.likes}
-                        </span>
-                      </div>
                     </div>
                     { this.props.posts.excerpt ?
                     <div className={`post-thumb__body post-thumb__excerpt`}>

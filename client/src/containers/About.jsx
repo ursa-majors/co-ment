@@ -9,7 +9,6 @@ const adjustBkgSize = (target) => {
     const el = target;
     let adjustedHeight = el.clientHeight;
     adjustedHeight = Math.max(el.scrollHeight, adjustedHeight);
-    console.log(`el.scrollHeight = ${el.scrollHeight}, el.clientHeight = ${el.clientHeight}, setting adjustedHeight (minHeight) to ${adjustedHeight + 60}px`);
     if (adjustedHeight > el.clientHeight) { el.style.minHeight = `${adjustedHeight + 60}px`; }
   }
 
