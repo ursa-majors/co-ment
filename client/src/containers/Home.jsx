@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import Spinner from './Spinner';
 import * as apiActions from '../store/actions/apiLoginActions';
 import { setRedirectUrl } from '../store/actions';
+import { setFilter, runFilter } from '../store/actions/gridControlActions';
 
 class Home extends React.Component {
 
@@ -47,7 +48,18 @@ class Home extends React.Component {
     if (this.props.appState.loggedIn) {
       links = (
         <div className="splash__button-wrap">
-          <Link to="/about"className="splash__button">Find a Mentor</Link>
+          <button
+            className="splash__button"
+            onClick={
+              () => {
+                this.props.actions.setFilter('role', 'Mentor');
+                this.props.actions.runFilter();
+                this.props.history.push('/posts');
+              }
+            }
+          >
+            Find a Mentor
+          </button>
           <Link to="/mentorpath" className="splash__button">Be a Mentor</Link>
         </div>
       );
@@ -62,7 +74,6 @@ class Home extends React.Component {
 
     return (
       <div className="splash">
-        <Spinner cssClass={this.props.appState.loginSpinnerClass}/>
         <div className="splash__image" />
         <div className="splash__wrapper">
           <div className="splash__text-wrap">
@@ -80,6 +91,7 @@ class Home extends React.Component {
               </p>
           <div className="splash__bracket--r" />
         </div>
+        <Spinner cssClass={this.props.appState.loginSpinnerClass}/>
       </div>
     );
   }
@@ -91,7 +103,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   api: bindActionCreators(apiActions, dispatch),
-  actions: bindActionCreators({ setRedirectUrl }, dispatch),
+  actions: bindActionCreators({
+    setRedirectUrl,
+    setFilter,
+    runFilter,
+  }, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
