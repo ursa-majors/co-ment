@@ -54,7 +54,7 @@ const About = props => (
                         props.actions.setIndex(parseInt(e.target.id, 10));
                         }
                       }}>
-                  <i className="fa fa-circle" id={index} />
+                  <i className={active? "fa fa-circle" : "fa fa-circle-o"} id={index} />
                 </div>
               );
             })
@@ -99,32 +99,34 @@ const About = props => (
       <div className="faq__header">
         FAQ
       </div>
-      {props.tour.faq.map(question => (
-        <div key={question.id}>
-          <div
-            className="faq__question"
-            onClick={
-              () => {
-                const el = document.getElementById(`${question.id}-answer`)
-                const classes = el.classList
-                console.log(classes)
-                if (classes.contains('faq__answer-expanded')) {
-                  console.log('removing')
-                  el.classList.remove('faq__answer-expanded')
-                } else {
-                  console.log('adding')
-                  el.classList.add('faq__answer-expanded')
+      <div className="faq__content faq__row">
+        {props.tour.faq.map(question => (
+          <div key={question.id} className="faq__card">
+            <div
+              className="faq__question"
+              onClick={
+                () => {
+                  const el = document.getElementById(`${question.id}-answer`)
+                  const classes = el.classList
+                  if (classes.contains('faq__answer-expanded')) {
+                    el.classList.remove('faq__answer-expanded');
+                    el.style.height = 0;
+                  } else {
+                    el.classList.add('faq__answer-expanded');
+                    el.style.height = `${el.scrollHeight}px`;
+                  }
                 }
               }
-            }
-          >
-            {question.question}
+            >
+              {question.question}
+            </div>
+            <div
+              id={`${question.id}-answer`}
+              className="faq__answer "
+              dangerouslySetInnerHTML={question} />
           </div>
-          <div id={`${question.id}-answer`} className="faq__answer ">
-            {question.answer}
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   </div>
 );

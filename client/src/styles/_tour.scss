@@ -100,9 +100,11 @@
     margin: 0 auto;
     max-height: 100%;
     height: 100%;
+    padding: 10px;
 
     img {
       max-width: 100%;
+      border-radius: 6px;
     }
   }
   &__controls {
@@ -125,14 +127,20 @@
   &__dot, &__dot-active, {
     cursor: pointer;
     margin: 0 10px;
-    padding: 5px 6px;
+    padding: 5px 8px;
     color: $color_sky;
     opacity: .4;
     border-radius: 100%;
 
+    &:last-child {
+      & i {
+
+      }
+    }
+
 
     & i {
-      margin: -.5px 0 0 -.5px;
+      font-size: 16px;
     }
 
     @include for-phone-landscape-up {
@@ -141,13 +149,7 @@
 
     &-active {
       color: white;
-      border: 1px solid white;
       border-radius: 100%;
-      height: 25px;
-      width: 25px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
       opacity: 1;
     }
   }
@@ -163,7 +165,7 @@
     height: 40px;
     @include profile-card-breakpoint {
       top: 50%;
-      left: -30px;
+      left: -45px;
     }
   }
   &__chevron-right {
@@ -178,7 +180,7 @@
     height: 40px;
     @include profile-card-breakpoint {
       top: 50%;
-      right: -30px;
+      right: -45px;
     }
   }
 }
@@ -186,44 +188,84 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  background: $color_sky;
-  background: -webkit-linear-gradient(to top, $color_sky, $color_aqua);
-  background: linear-gradient(to top, $color_sky, $color_aqua);
   min-height: 100vh;
   height: 100%;
   color: white;
-  font-family: 'Alegreya Sans SC', sans-serif;
+  font-family: 'Alegreya Sans', sans-serif;
 
   &__header {
     text-align: center;
     letter-spacing: 2px;
+    font-weight: 300;
     font-size: 1.6em;
     padding: 20px 10px;
     border-bottom: 1px dotted rgba(255, 255, 255, 0.6);
     @include for-phone-portrait-up {
       font-size: 2em;
+      font-weight: 100;
     }
     @include for-phone-landscape-up {
       font-size: 2.5em;
     }
   }
 
+  &__content {
+    padding: 20px;
+  }
+
+  &__row {
+    // display: flex;
+    // flex-wrap: wrap;
+    // justify-content: center;
+    // padding: 0 20px;
+  }
+
+  &__card {
+    background: rgba(255,255,255,.7);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,.6);
+    margin: 20px auto;
+    max-width: 675px;
+  }
+
   &__question {
-    font-style: italic;
     font-size: 26px;
+    color: $color_gray_text;
     cursor: pointer;
-    text-decoration: underline;
+    text-decoration: none;
+    border-bottom: 1px dotted white;
+    display: inline-block;
+
+    &:hover {
+      color: $color_sky;
+      border-bottom: 1px dotted $color_sky;
+    }
   }
 
   &__answer {
-    height: 0;
-    display: none;
-    color: rgba(75,75,75,1);
+    padding: 15px 0 0 0;
+    color: $color_gray_text;
     font-size: 20px;
-    padding: 0 15px;
+    overflow: hidden;
+    height: 0;
+    transition: height 400ms ease-out;
   }
+
   &__answer-expanded {
-    height: auto;
-    display: block;
+    padding: 15px 0 0 0;
+    color: $color_gray_text;
+    font-size: 20px;
+    transition: height 400ms ease-in;
+    & a {
+      text-decoration: none;
+      border-bottom: 1px dotted white;
+
+      &:hover {
+      color: $color_sky;
+      border-bottom: 1px dotted $color_sky;
+    }
+
+    }
   }
 }
