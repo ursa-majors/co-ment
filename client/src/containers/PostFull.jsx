@@ -237,7 +237,9 @@ class PostFull extends React.Component {
                   {this.props.post.title}
                   <div className="post-full__metadata">
                     <span>
-                       <i className="fa fa-eye" /> &nbsp;{this.props.post.meta.views + 1}
+                       <i className="fa fa-eye" />
+                       &nbsp;
+                       {this.props.appState.userId === this.props.post.author_id ? this.props.post.meta.views  : this.props.post.meta.views + 1}
                     </span>
                     <span>
                       <i className="fa fa-heart" />&nbsp;{this.props.post.meta.likes}
