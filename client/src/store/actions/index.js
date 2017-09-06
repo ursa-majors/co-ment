@@ -86,9 +86,12 @@ export function setMenuState(menu) {
   });
 }
 
-export function setScrolled(bool) {
+export function setScrolled(bool, scrollPosition) {
   return ({
     type: SET_SCROLLED,
-    payload: bool,
+    payload: {
+      windowScrolled: bool,
+      scrollPosition: scrollPosition,
+    }
   });
 }

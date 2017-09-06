@@ -59,7 +59,7 @@ const faq = [
     id: 'q3',
   },
   { question: 'I can\'t find a mentor for skill XYZ. What do I do?',
-    __html: `<div>Contact us at <a href="mailto:findyourguidingstar@gmail.com">findyourguidingstar@gmail.com</a> and we'll do our best to find you a mentor.</div>`,
+    __html: `<div><a href="mailto:findyourguidingstar@gmail.com">Contact us</a> and we'll do our best to find you a mentor.</div>`,
     id: 'q4',
   },
 ];

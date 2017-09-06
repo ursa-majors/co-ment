@@ -43,8 +43,10 @@ class App extends React.Component {
 
   setScrolledStatus = () => {
     const s = (window.scrollY > 0);
+    // save scroll position to use for about page mobile background bug
+    const sp = (window.scrollY);
     if (s !== this.props.appState.windowScrolled) {
-      this.props.actions.setScrolled(s);
+      this.props.actions.setScrolled(s, sp);
       this.props.actions.setMenuBackground();
     }
   }
@@ -85,6 +87,7 @@ class App extends React.Component {
   updateDimensions = () => {
     const size = {
       width: window.innerWidth,
+      height: window.innerHeight,
       mobile: (window.innerWidth < 480),
     };
     this.props.actions.setWindowSize(size);

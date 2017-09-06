@@ -11,11 +11,13 @@ const INITIAL_STATE = {
   redirectUrl: '',
   windowSize: {
     width: undefined,
+    height: undefined,
     mobile: false,
   },
   menuState: 'closed',
   menuBackground: '',
   windowScrolled: false,
+  scrollPosition: 0,
 };
 
 /*
@@ -178,7 +180,10 @@ function appState(state = INITIAL_STATE, action) {
     * This value is used by the Nav menu to properly set the background
     */
     case SET_SCROLLED:
-      return Object.assign({}, state, { windowScrolled: action.payload });
+      return Object.assign({}, state, {
+          windowScrolled: action.payload.windowScrolled,
+          scrollPosition: action.payload.scrollPosition,
+        });
 
     default:
       return state;

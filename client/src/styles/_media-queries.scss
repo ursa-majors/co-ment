@@ -6,6 +6,12 @@
   }
 }
 
+@mixin for-short-viewports-only {
+  @media (max-height: 480px) {
+    @content;
+  }
+}
+
 @mixin for-phone-portrait-up {
   @media (min-width: 400px) {
     @content;
