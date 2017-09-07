@@ -135,6 +135,15 @@ export const formatDate = (date) => {
   return `${day} ${monthNames[monthIndex]} ${year}`;
 };
 
+////// adjust textarea size to fit content ///////
+export const adjustTextArea = (target) => {
+    // expand input height to fit content without scrollbar
+    const el = target;
+    let adjustedHeight = el.clientHeight;
+    adjustedHeight = Math.max(el.scrollHeight, adjustedHeight);
+    if (adjustedHeight > el.clientHeight) { el.style.height = `${adjustedHeight + 20}px`; }
+  }
+
 ////// page scrolling for slide footer nav in about/tour section //////
 ////// source: https://codepen.io/pawelgrzybek/pen/ZeomJB
 

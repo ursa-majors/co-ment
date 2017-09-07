@@ -199,7 +199,7 @@ class PostsGrid extends React.Component {
               return (
                 <div
                   key={post._id}
-                  className="flex-col-12-xs flex-col-6-sm flex-col-4-md flex-col-3-lg flex-col-2-xl shuffle-item shuffle-item--visible post"
+                  className="flex-col-12-xs flex-col-6-md flex-col-4-lg flex-col-3-xl flex-col-2-xxl shuffle-item shuffle-item--visible post"
                   data-groups={[post.role, gender, post.author_timezone, languages, keywords]}
                   data-updated={post.updatedAt}
                   data-popular={Number(post.meta.likes) + Number(post.meta.views)}

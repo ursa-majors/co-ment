@@ -85,7 +85,13 @@ class PostsGridControls extends React.Component {
             <label className="form__label--white">Filter</label>
             <div className="btn-group sort-options">
               <button className="btn btn--primary" onClick={()=>this.toggleFilters()}>
-                <i className="fa fa-filter" aria-label="filter" />
+                <span className="label-tiny">show </span>
+                <i className="fa fa-filter" aria-label="show filter options" />
+              </button>
+              <button className="btn btn--primary" onClick={()=>this.props.actions.clearFilter()}>
+                <span className="label-tiny">clear </span>
+                <i className="fa fa-filter" aria-label="clear filters">
+                </i>
               </button>
             </div>
           </div>

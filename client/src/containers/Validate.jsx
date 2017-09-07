@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -16,11 +17,11 @@ class Validate extends React.Component {
   render() {
     let valStatus;
     if (this.props.login.tokenRefreshComplete === undefined) {
-      valStatus = 'Validating';
+      valStatus = 'Validating...';
     } else if (!this.props.login.tokenRefreshComplete) {
       valStatus = 'Validation Failed';
     } else {
-      valStatus = 'Validation Successful';
+      valStatus = 'Welcome!';
     }
     return (
       <div className="container validate">
@@ -37,7 +38,7 @@ class Validate extends React.Component {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Robert Frost
+              &mdash;Robert Frost
             </a>
           </div>
         </div>
@@ -50,15 +51,17 @@ class Validate extends React.Component {
               {`Congratulations ${this.props.profile.userProfile.username}!`}
             </div>
             <div className="validate__text">
-              {`You have validated your account and started your Co/Ment journey.
-              The next step is to decide your path.  Are you looking for an adviser,
-              or are you ready to be a guiding star?
-
-              Whichever path you choose, get started by updating your profile,
-              then head over to the Posts page.`}
+              <p>This is the beginning of your Co/Ment journey.<br/>
+              Next step: Choose your path. <br/>
+              Are you <Link to='/posts'>looking for an adviser</Link>,<br/>
+              or are you ready to <Link to='/mentorpath'>be a guiding star</Link>?</p>
+              <p>Get started by <Link to='/profile'>building your profile</Link>,<br/>
+              then <Link to='/posts'>browse posts made by other users</Link>, <br/>or create one yourself.</p>
+              <p>Or <Link to='/about'>take a tour of the site</Link> <br/>
+              and then blaze your own trail.</p>
             </div>
           </div>
-        }
+       }
         <Spinner cssClass={this.props.login.validateSpinnerClass} />
         <ModalSm
           modalClass={this.props.login.validateModal.class}

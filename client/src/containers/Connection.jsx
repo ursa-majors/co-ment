@@ -6,6 +6,7 @@ import Spinner from './Spinner';
 import ModalSm from './ModalSm';
 import * as Actions from '../store/actions/apiActions';
 import * as connectActions from '../store/actions/apiConnectionActions';
+import { adjustTextArea } from '../utils';
 
 class Connection extends React.Component {
 
@@ -24,6 +25,10 @@ class Connection extends React.Component {
   }
 
   handleChange = (event) => {
+    if (event.target.id === 'body') {
+      adjustTextArea(event.target);
+    }
+
     this.setState(
       {
         [event.target.id]: event.target.value,
