@@ -109,6 +109,11 @@
     max-width: 33.333%;
     width: 33.333%;
   }
+  .flex-col-6-md {
+    flex: 0 0 50%;
+    max-width: 50%;
+    width: 50%;
+  }
   .flex-col-8-md {
     flex: 0 0 66.667%;
     max-width: 66.667%;
@@ -116,23 +121,46 @@
   }
 }
 
-@include for-desktop-up {
-  .flex-col-1-lg {
-    flex: 0 0 8.333%;
-    max-width: 8.333%;
-    width: 8.333%;
-  }
+@include for-tablet-landscape-up {
   .flex-col-2-lg {
     flex: 0 0 16.667%;
     max-width: 16.667%;
     width: 16.667%;
+  }
+  .flex-col-4-lg {
+    flex: 0 0 33.333%;
+    max-width: 33.333%;
+    width: 33.333%;
+  }
+  .flex-col-6-lg {
+    flex: 0 0 50%;
+    max-width: 50%;
+    width: 50%;
+  }
+  .flex-col-8-lg {
+    flex: 0 0 66.667%;
+    max-width: 66.667%;
+    width: 66.667%;
+  }
 }
-  .flex-col-3-lg {
+
+@include for-desktop-up {
+  .flex-col-1-xl {
+    flex: 0 0 8.333%;
+    max-width: 8.333%;
+    width: 8.333%;
+  }
+  .flex-col-2-xl {
+    flex: 0 0 16.667%;
+    max-width: 16.667%;
+    width: 16.667%;
+}
+  .flex-col-3-xl{
     flex: 0 0 25%;
     max-width: 25%;
     width: 25%;
   }
-  .flex-col-9-lg {
+  .flex-col-9-xl {
     flex: 0 0 75%;
     max-width: 75%;
     width: 75%;
@@ -140,13 +168,13 @@
 
 }
 
-@include for-big-desktop-up {
-  .flex-col-1-xl {
+@include for-honkin-huge-screens {
+  .flex-col-1-xxl {
     flex: 0 0 8.333%;
     max-width: 8.333%;
     width: 8.333%;
   }
-  .flex-col-2-xl {
+  .flex-col-2-xxl {
       flex: 0 0 16.667%;
       max-width: 16.667%;
       width: 16.667%;
