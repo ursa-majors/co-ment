@@ -47,9 +47,19 @@ class PostsGridControls extends React.Component {
 
   render() {
     const filterClass = this.state.showFilters ? "flex-row posts-grid__adv-filter-wrap" : "hidden";
+    console.log(this.props.gridControls.filterGroup);
+    let filtersAppliedList;
+    if (this.props.gridControls.filterGroup === 'all') {
+      filtersAppliedList = "No Filters Applied"
+    } else {
+      filtersAppliedList = this.props.gridControls.filterGroup.map(filter => (
+        <span className="posts-grid__filter-item" key={filter}>{filter}</span>
+        ));
+    }
+
     return (
       <div className="posts-grid__controls">
-        <div className="flex-row">
+        <div className="flex-row no-wrap">
           <div className="filters-group">
             <label htmlFor="filters-search-input" className="form__label--white">Search</label>
             <input
@@ -86,12 +96,13 @@ class PostsGridControls extends React.Component {
             <div className="btn-group sort-options">
               <button className="btn btn--primary" onClick={()=>this.toggleFilters()}>
                 <span className="label-tiny">show </span>
-                <i className="fa fa-filter" aria-label="show filter options" />
+                {this.props.appState.width>675 &&
+                  <i className="fa fa-filter" aria-label="show filter options" /> }
               </button>
               <button className="btn btn--primary" onClick={()=>this.props.actions.clearFilter()}>
                 <span className="label-tiny">clear </span>
-                <i className="fa fa-filter" aria-label="clear filters">
-                </i>
+                {this.props.appState.width>675 &&
+                  <i className="fa fa-filter" aria-label="clear filters" /> }
               </button>
             </div>
           </div>
@@ -104,6 +115,13 @@ class PostsGridControls extends React.Component {
                 </button>
               </Link>
             </div>
+          </div>
+        </div>
+        <div className="flex-row">
+          <div className="posts-grid__filters-applied">
+          {filtersAppliedList !== "No Filters Applied" ?
+            <span>Filtered by: </span> : ''}
+            {filtersAppliedList}
           </div>
         </div>
         <div className={filterClass}>
@@ -197,6 +215,7 @@ class PostsGridControls extends React.Component {
 
 const mapStateToProps = state => ({
   gridControls: state.gridControls,
+  appState: state.appState,
 });
 
 const mapDispatchToProps = dispatch => ({

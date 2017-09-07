@@ -73,6 +73,14 @@ input:not([type=checkbox]):not([type=radio]), textarea {
     }
 
     &--search {
+      padding: 8px;
+      font-size: .8em;
+
+      @include for-tablet-landscape-up {
+        padding: 12px;
+        font-size: .9em;
+      }
+
       @include for-big-desktop-up {
       padding: 12px;
       font-size: 1em;
