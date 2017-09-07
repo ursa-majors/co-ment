@@ -12,7 +12,7 @@ const ModalSm = props => (
   <div className={`modal ${props.modalClass}`} >
     <div className={`modal__header ${props.modalType}`}>
       {props.modalTitle}
-      <i className="fa fa-times modal-close" onClick={props.dismiss} role="button" tabIndex="0" />
+      <span className="modal-close modal-close-sm" onClick={props.dismiss} role="button" tabIndex="0">&times;</span>
     </div>
     <div className="modal__body">
       {props.modalText}
