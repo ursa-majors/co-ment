@@ -6,7 +6,7 @@
   margin: 0;
   z-index: 5;
   width: 100%;
-  font-weight: 300;
+  font-weight: 700;
   letter-spacing: 2px;
   display: flex;
   justify-content: flex-start;
@@ -140,10 +140,10 @@
     color: white;
     font-family: 'Alegreya Sans SC', sans-serif;
     text-transform: lowercase;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     padding: 5px;
-    font-size: 16px;
-    font-weight: 300;
+    font-size: 24px;
+    font-weight: 400;
     text-decoration: none;
     border: 1px solid transparent;
     width: 100vw;
@@ -151,7 +151,8 @@
     margin-left: 13px;
 
     @include for-tablet-portrait-up {
-      font-weight: 100;
+      font-weight: 400;
+      font-size: 24px;
     }
 
       &--login {
