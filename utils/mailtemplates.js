@@ -149,7 +149,7 @@ const pwResetTemplate = (url) => {
                           <a href="${url}"><img alt="co/ment" height="129" src="https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/co-ment_logo_400x129.png?raw=true" style="padding-top:50px;" width="400"></a></td>
                         </tr>
                   <tr>
-                    <td class="headline">Welcome to co/ment!</td>
+                    <td class="headline">WForgot your password?</td>
                   </tr>
                   <tr>
                     <td class="">
@@ -158,9 +158,6 @@ const pwResetTemplate = (url) => {
                       <tbody>
                         <tr>
                           <td style="color:#ffffff;" class="">&nbsp;
-                            <p style="color: white; font-size: 1.4em; line-height: 1.5em;font-weight:100;">
-                              Forgot your password?
-                            </p>
                             <p style="color: white; font-size: 1.4em; line-height: 1.5em;font-weight:100;">
                               No problem! Click below to reset it!
                             </p>
