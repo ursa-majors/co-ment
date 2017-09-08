@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { setWindowSize, setMenuState, setMenuBackground, setScrolled } from './store/actions';
 
+import './favicons/favicons';
 import HeaderNav from './containers/HeaderNav';
 import Home from './containers/Home';
 import About from './containers/About';
