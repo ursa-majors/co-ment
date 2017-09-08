@@ -17,13 +17,13 @@ class ConnectionResult extends React.Component {
       return (
         <div className="container logout">
           <div className="logout__header">Email Sent</div>
-          <div className="result">Next Steps:
+          <div className="result">
+          <h3 className="result__header">Next Steps:</h3>
             <ol>
-              <li>Your contact email has been sent to the recipient with a link to respond</li>
-              <li>Next, the recipient will log in to co/ment and accept or decline the request</li>
+              <li>Your message has been sent to the recipient with a link to respond</li>
+              <li>The recipient will log in to co/ment and accept or decline the request</li>
               <li>You will receive email notification of their action</li>
-              <li>Once a connection is made, you can decide on the best method of communication
-                for your partnership.  You may use Slack, email, or even meet in person.</li>
+              <li>Once a connection is made, the two of you can decide on the best way to communicate &mdash; email, Slack, video chat, or in-person meeting.</li>
               <li>Good luck!</li>
             </ol>
           </div>
