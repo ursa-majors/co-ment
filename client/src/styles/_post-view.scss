@@ -15,10 +15,9 @@
     width: 100vw;
     transform-style:preserve-3d;
     backface-visibility:hidden;
-    background: $color_sky_lighter;
-    background: $color_purple_sky;
-  background: -webkit-linear-gradient(to bottom, $color_aqua_lighter, $color_sky_lighter);
-  background: linear-gradient(to bottom, $color_aqua_lighter, $color_sky_lighter);
+    background: $color_sky_lightest;
+  background: -webkit-linear-gradient(to bottom, $color_aqua_lightest, $color_sky_lightest);
+  background: linear-gradient(to bottom, $color_aqua_lightest, $color_sky_lightest);
     border-radius: 10px;
     box-shadow: 0 16px 24px rgba(0, 0, 0, 0.4);
     transition: .5s ease-in-out;
@@ -161,7 +160,7 @@
     flex-basis: 45%;
     font-size: 1.3em;
     text-align: center;
-    color: $color_gray_lighter;
+    color: $color_gray_med;
   }
 
   &__name-wrap {

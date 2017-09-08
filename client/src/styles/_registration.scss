@@ -359,7 +359,7 @@ input:not([type=checkbox]):not([type=radio]), textarea {
     border-radius: 50px;
     padding: 10px 20px;
     border: 1px solid white;
-    background: transparent;
+    background-color: $color_sky;
 
     @include for-tablet-portrait-up {
       font-size: 20px;
@@ -368,7 +368,7 @@ input:not([type=checkbox]):not([type=radio]), textarea {
 
     &:hover, &:active, &:focus {
       text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
-      background: rgba(255, 255, 255, 0.2);
+      background-color: $color_aqua_darker;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
       transition: all 300ms ease-in-out;
     }

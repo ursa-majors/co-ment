@@ -606,7 +606,7 @@ class EditProfile extends React.Component {
               className="pageBack pageNav"
               onClick={()=>this.togglePage('back')}
             >
-              <i className="fa fa-chevron-left pageBack__icon" aria-hidden="true" />
+              <i className="fa fa-chevron-left pageBack__icon" aria-hidden="true" /><span className='pageNav__text'>back</span>
             </button>
           }
 
@@ -633,7 +633,7 @@ class EditProfile extends React.Component {
             <button
               className="pageFwd pageNav"
               onClick={() => this.togglePage('fwd')}
-            >
+            ><span className='pageNav__text'>next</span>
               <i className="fa fa-chevron-right pageBack__icon" aria-hidden="true" />
             </button>
           }

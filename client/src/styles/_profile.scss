@@ -240,6 +240,7 @@
       align-self: flex-start;
       max-height: 100%;
       position: relative;
+      padding-bottom: 60px;
 
       @include for-tablet-portrait-up {
           width: 80%;
@@ -288,9 +289,9 @@
     padding: 12px 15px;
     border-radius: 30px;
     margin: 20px;
-    background: $color_aqua;
+    background: $color_sky;
     // border: 1px solid rgba(255,255,255,.4);
-    color: rgba(255,255,255,.4);
+    color: rgba(255,255,255,.8);
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
     appearance: none;
     -webkit-appearance: none;
@@ -298,7 +299,7 @@
     z-index: 3;
 
     &:hover, &:focus, &:active {
-        background: $color_aqua;
+        background: $color_aqua_darker;
         box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.4) !important;
         transition: all 300ms ease-in-out;
         // border: 1px solid rgba(255,255,255,.8);
@@ -308,6 +309,14 @@
         border: none;
         outline: none;
       }
+
+    &__text {
+      font-family: 'Alegreya Sans SC', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: 2px;
+      padding: 0 5px;
+    }
   }
 
   .pageBack {
