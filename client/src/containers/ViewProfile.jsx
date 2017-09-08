@@ -147,6 +147,14 @@ class ViewProfile extends React.Component {
     }
 
     let cardSize = this.state.thumb ? 'thumb' : 'full';
+    let owner;
+    if (!this.props.match)  {
+      owner = true;
+    } else if (this.props.match && this.props.appState.userId === this.props.match.params.id) {
+      owner = true;
+    } else {
+      owner = false;
+    }
 
     return (
       <div className="view-profile" id="view-profile">
@@ -161,12 +169,12 @@ class ViewProfile extends React.Component {
         {this.props.profile.getSuccess &&
           <div className={cardSize}>
             <div className={this.state.flip ? "side front flip" : "side front"} id="front">
-            { !this.state.thumb &&
+            { !this.state.thumb && owner ?
               <Link
                 className="full__edit"
                 to={`/editprofile/${this.props.appState.userId}`} >
                 <i className="fa fa-pencil full__icon--edit" aria-label="edit" />
-              </Link> /* edit link */
+              </Link> : ''/* edit link */
             } {/* post owner, full size */}
             {/* !this.state.thumb &&
               <div className="thumb__compress">
