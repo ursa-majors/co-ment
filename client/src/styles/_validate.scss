@@ -1,6 +1,14 @@
 .validate {
   display: flex;
   flex-direction: column;
+  background: url(./img/splash_pfl.svg) no-repeat top center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  min-height: 100vh;
+  height: 100%;
+  padding: 60px 0;
 
   h2 {
     margin: 25px auto;
@@ -10,14 +18,14 @@
     letter-spacing: 2px;
   }
   &__quote-wrap {
-    color: $color_aqua;
+    color: $color_gray_text;
     align-self: center;
     min-width: 15em;
-    margin: 0 10px;
+    margin: 20px 10px;
     white-space: pre;
     padding: 20px;
     border-radius: 10px;
-    background: rgba(255,255,255,.85);
+    background: rgba(255,255,255,.7);
   }
 
   &__quote {
