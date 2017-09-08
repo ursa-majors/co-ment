@@ -1,5 +1,5 @@
 import { LOGOUT, SET_REDIRECT_URL, SET_WINDOW_SIZE, SET_MENU_STATE, SET_SCROLLED,
-  SET_MENU_BACKGROUND } from '../actions';
+  SET_MENU_BACKGROUND, SET_CONTROLS_BACKGROUND } from '../actions';
 import { VALIDATE_TOKEN_REQUEST, VALIDATE_TOKEN_SUCCESS, VALIDATE_TOKEN_FAILURE, LOGIN_SUCCESS,
   REGISTRATION_SUCCESS, REFRESH_TOKEN_SUCCESS } from '../actions/apiLoginActions';
 
@@ -16,6 +16,7 @@ const INITIAL_STATE = {
   },
   menuState: 'closed',
   menuBackground: '',
+  controlsBackground: '',
   windowScrolled: false,
   scrollPosition: 0,
 };
@@ -172,6 +173,19 @@ function appState(state = INITIAL_STATE, action) {
         return Object.assign({}, state, { menuBackground: 'h-nav__side-bkg-noscroll' });
       } else if (!state.windowScrolled && state.menuBackground) {
         return Object.assign({}, state, { menuBackground: '' });
+      }
+      return state;
+
+    /*
+    * This action is issued from <PostGridControls/> and <App/> components.
+    * Sets the background CSS on the grid controls.  If it is scrolled, the background must be set
+    * If it's not scrolled and the background is set, it must be cleared.
+    */
+    case SET_CONTROLS_BACKGROUND:
+      if (state.windowScrolled && state.controlsBackground === '') {
+        return Object.assign({}, state, { controlsBackground: 'posts-grid__controls--bkg-noscroll' });
+      } else if (!state.windowScrolled && state.controlsBackground) {
+        return Object.assign({}, state, { controlsBackground: '' });
       }
       return state;
 

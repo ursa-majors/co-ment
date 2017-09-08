@@ -65,7 +65,6 @@ class PostsGrid extends React.Component {
       switch (this.props.gridControls.operation) {
         case 'FILTER':
           this.shuffle.group = this.props.gridControls.filterGroup;
-          console.log('PostsGrid.jsx > 68 this.shuffle.group', this.shuffle.group);
           this.shuffle.filter((element, shuffle) => {
             // If there is a current filter applied, ignore elements that don't match it.
             if (shuffle.group !== Shuffle.ALL_ITEMS) {

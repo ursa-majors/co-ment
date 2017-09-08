@@ -225,3 +225,12 @@ export const scrollIt = (destination, duration = 200, easing = 'linear', callbac
   // Invoke scroll and sequential requestAnimationFrame
   scroll();
 }
+
+// delay function to hide search input after user stops typing
+export const delay = (function(){
+  let timer = 0;
+  return function(callback, ms){
+  clearTimeout (timer);
+  timer = setTimeout(callback, ms);
+ };
+})();

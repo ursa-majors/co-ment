@@ -120,16 +120,12 @@ function gridControls(state = INITIAL_STATE, action) {
     case RUN_FILTER:
       // set state.filterGroup to array of object values of state.FilterBtn
       newFilter = Object.assign({}, state.filterBtn);
-      console.log('gridControls > 123 newFilter', newFilter );
       filtKeys = Object.keys(newFilter);
-      console.log('gridControls > 125 filtKeys', filtKeys );
       filtValues = Object.values(newFilter);
-      console.log('gridControls > 127 filtValues', filtValues );
       newFilterGroup = [];
       for (let i = 0; i < filtValues.length; i += 1) {
         // don't push placeholder or empty values
         if (filtValues[i] !== 'Time zone' && filtValues[i] !== 'Gender' && filtValues[i] !== 'Role' && filtValues[i] !== '') {
-          console.log('gridControls > 132 non-placeholder filter value:', filtValues[i] );
           if (filtKeys[i] === 'timezone') {
             // don't convert time zones to lowercase
               newFilterGroup.push(filtValues[i]);
@@ -153,6 +149,7 @@ function gridControls(state = INITIAL_STATE, action) {
       );
 
     case CLEAR_FILTER:
+    console.log('gridControls.js > 152: clear');
       // reset filterBtn values to empty string, filterGroup to empty array
       newFilterGroup = [];
       return update(
