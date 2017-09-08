@@ -49,6 +49,20 @@ input:not([type=checkbox]):not([type=radio]), textarea {
       font-size: 45px;
     }
   }
+
+  &__btn--search {
+      color: white;
+      padding-top: 40px;
+
+    }
+
+
+  &__icon--search {
+      color: white;
+      font-size: 1.5em;
+
+    }
+
   &__input-group {
     width: 100%;
     text-align: left;
@@ -58,6 +72,7 @@ input:not([type=checkbox]):not([type=radio]), textarea {
     column-break-inside:avoid;
     position: relative;
   }
+
   &__input {
     width: 100%;
     border-radius: 3px;
@@ -72,9 +87,14 @@ input:not([type=checkbox]):not([type=radio]), textarea {
       font-size: 1.2em;
     }
 
+    &__search-container {
+      position: relative;
+    }
+
     &--search {
       padding: 8px;
       font-size: .8em;
+
 
       @include for-tablet-landscape-up {
         padding: 12px;
@@ -112,8 +132,18 @@ input:not([type=checkbox]):not([type=radio]), textarea {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      font-size: 1em !important;
+      padding: 8px !important;
+      font-size: .8em !important;
+
+      // @include for-tablet-landscape-up {
+      //   padding: 12px !important;
+      //   font-size: .9em !important;
+      // }
+
+      @include for-big-desktop-up {
       padding: 12px !important;
+      font-size: 1em !important;
+    }
     }
 
     &--option {
@@ -242,12 +272,17 @@ input:not([type=checkbox]):not([type=radio]), textarea {
     border-radius: 3px;
     margin: 5px auto;
     border: 1px solid $color_gray_border;
-    padding: 12px;
-    font-size: .9em;
+    padding: 8px !important;
+    font-size: .8em !important;
     font-weight: 100;
     color: $color_gray_text;
+
+    // @include for-tablet-landscape-up {
+    //   padding: 12px !important;
+    //   font-size: .9em !important;
+    // }
+
     @include for-big-desktop-up {
-      padding: 12px !important;
       font-size: 1em !important;
     }
 
@@ -420,16 +455,3 @@ input:not([type=checkbox]):not([type=radio]), textarea {
   -ms-transition: opacity 0.35s ease-in-out;
   transition: opacity 0.35s ease-in-out;
 }
-
- .react-tags__search-input input {
-  width: 90% !important;
-    border-radius: 3px;
-    width: 90%;
-    margin: 5px 0;
-    border: 1px solid white;
-    padding: 20px;
-    font-size: 1.2em;
-    font-weight: 100;
-    color: $color_gray_text;
-
- }

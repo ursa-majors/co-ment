@@ -13,6 +13,22 @@
   height: 100%;
   padding: 60px 0;
 
+  &__controls {
+
+  }
+
+  &__controls--bkg {
+    position: fixed;
+    width: 100vw;
+    z-index: 1000;
+  }
+
+  &__controls--bkg-noscroll {
+    background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
+    background: linear-gradient(to top, $color_aqua, $color_sky);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  }
+
   @include profile-card-breakpoint {
     padding: 60px 20px;
   }
@@ -27,7 +43,7 @@
   }
 
   &__filters-applied {
-    padding: 20px;
+    padding: 10px 25px;
     font-family: 'Alegreya Sans', sans-serif;
     font-weight: 200;
     letter-spacing: 1px;
@@ -54,6 +70,11 @@
     &__button-wrap {
     width: 100%;
     padding-right: 10px;
+    margin-top: 7px;
+    @include for-tablet-portrait-up {
+      margin-top: 0;
+    }
+
   }
 
   &__button {
@@ -169,12 +190,6 @@
 .filters-group {
 	display: inline-block;
   margin: 0 8px;
-  &:first-child {
-    margin-left: 20px;
-  }
-  &:last-child {
-    margin-right: 20px;
-  }
   @include for-tablet-landscape-up {
 	margin: 0 20px;
 }
@@ -197,6 +212,14 @@
 
 .filters-group--button {
   padding-top: 25px;
+
+  @include for-tablet-landscape-up {
+  padding-top: 19px;
+}
+}
+
+.filters-group--button-grid {
+  padding-top: 18px;
 
   @include for-tablet-landscape-up {
   padding-top: 19px;
@@ -271,7 +294,28 @@
 
 .btn--smaller {
   letter-spacing: 1px;
+}
 
+.btn--single {
+  border-top-right-radius: 3px !important;
+  border-top-left-radius: 3px !important;
+  border-bottom-left-radius: 3px !important;
+  border-bottom-right-radius: 3px !important;
+}
+
+.btn--grid {
+  @include for-tablet-landscape-up {
+  font-size: .8rem;
+  padding: 7px;
+}
+
+}
+
+.btn--sort {
+  padding: 7px 10px;
+  @include for-tablet-landscape-up {
+  padding: .68em .8em;
+}
 }
 
 .btn-group {
@@ -317,6 +361,18 @@
 }
 
 .no-wrap {
+  flex-wrap: wrap;
+  padding: 0 20px;
+  justify-content: space-between;
+  @include for-tablet-portrait-up {
   flex-wrap: nowrap !important;
+}
+@include for-tablet-landscape-up {
+  justify-content: flex-start;
+}
+}
+
+.no-wrap--open {
+  justify-content: flex-start;
 }
 
