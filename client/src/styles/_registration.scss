@@ -283,6 +283,7 @@ input:not([type=checkbox]):not([type=radio]), textarea {
     // }
 
     @include for-big-desktop-up {
+      padding: 12px !important;
       font-size: 1em !important;
     }
 

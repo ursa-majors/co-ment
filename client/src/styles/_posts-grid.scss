@@ -224,6 +224,9 @@
   @include for-tablet-landscape-up {
   padding-top: 19px;
 }
+@include for-big-desktop-up {
+  padding-top: 23px;
+}
 }
 
 .filters-group__btn {
@@ -307,6 +310,11 @@
   @include for-tablet-landscape-up {
   font-size: .8rem;
   padding: 7px;
+}
+
+@include for-big-desktop-up {
+  font-size: 1rem;
+  padding: .68em .8em;
 }
 
 }
