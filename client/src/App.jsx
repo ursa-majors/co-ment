@@ -16,7 +16,7 @@ import PostsGrid from './containers/PostsGrid';
 import EditPost from './containers/EditPost';
 import Logout from './containers/Logout';
 import MentorPath from './containers/MentorPath';
-import ViewPost from './containers/ViewPost';
+import PostFull from './containers/PostFull';
 import ViewProfile from './containers/ViewProfile';
 import Connection from './containers/Connection';
 import Connections from './containers/Connections';
@@ -113,7 +113,7 @@ class App extends React.Component {
               <Route path="/profile" component={UserAdmin} />
               <Route path="/posts" component={PostsGrid} />
               <Route path="/logout" component={Logout} />
-              <Route path="/viewpost/:id" component={ViewPost} />
+              <Route path="/viewpost/:id" component={PostFull} />
               <Route path="/viewprofile/:id" component={ViewProfile} />
               <Route path="/editprofile/:id" component={EditProfile} />
               <Route path="/editpost/:id?" component={EditPost} />

@@ -155,6 +155,11 @@ class ViewProfile extends React.Component {
     } else {
       owner = false;
     }
+    const backgroundStyle = {
+      backgroundImage: `url(${this.props.profile.currentProfile.avatarUrl})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center center",
+    }
 
     return (
       <div className="view-profile" id="view-profile">
@@ -187,16 +192,21 @@ class ViewProfile extends React.Component {
             } {/* compress button, full only */}
             <div className={`${cardSize}__top-wrap`}>
               <div className={`${cardSize}__image-wrap`}>
-                {this.props.profile.currentProfile.avatarUrl ?
-                  <img
-                    className={`${cardSize}__image`}
-                    src={this.props.profile.currentProfile.avatarUrl}
-                    alt={this.props.profile.currentProfile.username} /> :
-                  <i
-                    className={`fa fa-user-circle fa-5x ${cardSize}__icon--avatar`}
-                    aria-hidden="true" />
-                }
-              </div> {/* images-wrap */}
+                <div className={`${cardSize}__image-aspect`}>
+                  <div className={`${cardSize}__image-crop`}>
+                    {this.props.profile.currentProfile.avatarUrl ?
+                      <div
+                        className={`${cardSize}__image`}
+                        style={backgroundStyle}
+                        role="image"
+                        aria-label={this.props.profile.currentProfile.username} /> :
+                      <i
+                        className={`fa fa-user-circle fa-5x ${cardSize}__icon--avatar`}
+                        aria-hidden="true" />
+                    }
+                  </div>
+                </div>
+              </div> {/* image-wrap */}
               <div className={`${cardSize}__card-top ${cardSize}__text-wrap`}>
                 <div className={`${cardSize}__name`}>
                   {this.props.profile.currentProfile.name}</div>

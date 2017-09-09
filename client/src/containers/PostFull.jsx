@@ -200,6 +200,12 @@ class PostFull extends React.Component {
        ));
       }
 
+    const backgroundStyle = {
+      backgroundImage: `url(${this.props.post.author_avatar})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center center",
+    }
+
     return (
         <div className="post-full">
         {!this.state.flip &&
@@ -226,12 +232,20 @@ class PostFull extends React.Component {
             </div>
             <div className={`post-full__card-body`}>
               <div className={`post-full__image-wrap`}>
-                {this.props.post.author_avatar ?
-                  <img
-                    className={`post-full__image`}
-                    src={this.props.post.author_avatar}
-                    alt={this.props.post.author} /> :
-                  <i className={`fa fa-user-circle fa-5x post-full__icon--avatar`} aria-hidden="true" /> }
+                <div className={`post-full__image-aspect`}>
+                    <div className={`post-full__image-crop`}>
+                      {this.props.post.author_avatar ?
+                        <div
+                          className={`post-full__image`}
+                          style={backgroundStyle}
+                          role="image"
+                          aria-label={this.props.post.author} /> :
+                        <i
+                          className={`fa fa-user-circle fa-5x post-full__icon--avatar`}
+                          aria-hidden="true" />
+                        }
+                    </div>
+                  </div>
                 <div className={`post-full__name-wrap`}>
                   <span className={`post-full__name`}>
                     {this.props.post.author_name}</span>
@@ -279,13 +293,6 @@ class PostFull extends React.Component {
             </div>
             {this.props.posts.excerpt &&
               <div className={this.state.flip ? "post-full__side back flip" : "post-full__side back"} id="back">
-                <div className="post-full__date">
-                <span className="tag-value">
-                  <span className="tag-value__label">
-                    {formatDate(new Date(this.props.post.updatedAt))}
-                  </span>
-                </span>
-              </div>
               <div className="post-full__back-wrap">
                 <div className="post-full__title">
                   {this.props.post.title}
