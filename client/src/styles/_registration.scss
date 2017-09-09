@@ -56,6 +56,11 @@ input:not([type=checkbox]):not([type=radio]), textarea {
 
     }
 
+  &__label--checkbox {
+      font-family: 'Alegreya Sans', sans-serif;
+      color: $color_gray_darker;
+  }
+
 
   &__icon--search {
       color: white;
@@ -303,6 +308,7 @@ input:not([type=checkbox]):not([type=radio]), textarea {
     @include for-big-desktop-up {
       font-size: 1.2em;
     }
+
   }
 
     &__label--white {

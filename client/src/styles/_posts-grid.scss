@@ -3,6 +3,14 @@
   overflow: hidden;
 }
 
+.posts {
+  padding-top: 80px;
+  height: 100vh;
+  background: $color_aqua;
+  background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
+  background: linear-gradient(to top, $color_aqua, $color_sky);
+}
+
 .posts-grid {
 	background: url(./img/splash_pfl.svg) no-repeat top center fixed;
   -webkit-background-size: cover;
