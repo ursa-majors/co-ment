@@ -87,22 +87,6 @@ class EditProfile extends React.Component {
     this.props.actions.setFormField('gender', e.target.value);
   }
 
-  // checkGHProfile() {
-  //   // check to see if user has entered valid github username.
-  //   // if field is empty or gh profile not found, OR if field is filled but no profile found, display error message (TODO)
-  //   const ghUserName = document.getElementById('ghUserName').value;
-  //   if (ghUserName) {
-  //     const ghProfile = this.props.api.githubProfile(ghUserName);
-  //     console.log(ghProfile);
-  //     if (ghProfile === undefined || this.props.profiles.getGHError) {
-  //       console.log('user not found');
-  //       // need error handling here
-  //     }
-  //   } else {
-  //       console.log('enter gh username first');
-  //     }
-  // }
-
   addLanguage() {
     // add field value to array of languages, display tags above input field, clear input
     const newLang = this.props.profiles.editForm.language;
@@ -212,6 +196,10 @@ class EditProfile extends React.Component {
     if (this.props.profiles.editForm.codepen && document.getElementById('codepen').checkValidity() === false) {
       msg += 'CodePen URL is invalid.  ';
     }
+    if (this.props.profiles.editForm.avatarUrl === '') {
+      this.props.actions.setFormField('avatarUrl', 'https://cdn.glitch.com/4965fcd8-26e0-4a69-a667-bb075062e086%2Fandroid-chrome-384x384.png?1504907183396')
+      msg += 'Avatar URL is required. Click save again to use our default.';
+    }
     if (msg.length > 0) {
       this.props.actions.setFormField( 'errMsg', msg);
       this.props.actions.setFormField( 'hideErr', '');
@@ -236,7 +224,6 @@ class EditProfile extends React.Component {
     if (this.props.profiles.editForm.language !== '') {
       this.addLanguage();
     }
-
     // check for required fields
     // message will be displayed; exit if validate fails
     if (!this.validateInputs()) { return; }
