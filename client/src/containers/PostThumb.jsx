@@ -78,9 +78,9 @@ class PostThumb extends React.Component {
                     <div className={`post-thumb__title`}>
                       {this.props.post.title}
                     </div>
-                    { this.props.posts.excerpt ?
+                    { this.props.post.excerpt ?
                     <div className={`post-thumb__body post-thumb__excerpt`}>
-                      {`${this.props.posts.excerpt}...`}
+                      {`${this.props.post.excerpt}...`}
                     </div> :
                     <div className={`post-thumb__body`}>
                       {this.props.post.body}
