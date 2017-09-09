@@ -137,6 +137,7 @@ App.propTypes = {
     loggedIn: PropTypes.boolean,
     menuState: PropTypes.String,
     menuBackground: PropTypes.String,
+    windowScrolled: PropTypes.boolean,
     windowSize: PropTypes.shape({
       width: PropTypes.Number,
     }).isRequired,
@@ -145,6 +146,7 @@ App.propTypes = {
     setWindowSize: PropTypes.func,
     setMenuState: PropTypes.func,
     setMenuBackground: PropTypes.func,
+    setScrolled: PropTypes.func,
   }).isRequired,
 };
 

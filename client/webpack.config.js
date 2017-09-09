@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const dev = process.env.NODE_ENV !== 'production' && process.argv.indexOf('-p') === -1;
 
@@ -25,7 +26,7 @@ const UglifyJsPluginConfig = new webpack.optimize.UglifyJsPlugin({
   comments: false,
 });
 
-var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   devServer: {
@@ -48,15 +49,15 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         loaders: ['babel-loader?retainLines=true'],
-        include: path.join(__dirname, 'src')
+        include: path.join(__dirname, 'src'),
       },
       {
         test: /\.scss$/,
         loader: 'style-loader!css-loader!sass-loader',
       },
       {
-        test:/\.(jpg|png|gif|bmp|svg|woff|woff2|ttf|eot)$/,
-        loader: require.resolve("url-loader"),
+        test: /\.(jpg|png|gif|bmp|svg|woff|woff2|ttf|eot)$/,
+        loader: require.resolve('url-loader'),
       },
     ],
   },
@@ -74,6 +75,18 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     new BundleAnalyzerPlugin(),
+    new CopyWebpackPlugin(
+      [
+        { from: './src/img', to: './img/', ignore: ['*.svg'] },
+      ]),
   ] :
-  [HTMLWebpackPluginConfig, DefinePluginConfig, UglifyJsPluginConfig],
+  [
+    HTMLWebpackPluginConfig,
+    DefinePluginConfig,
+    UglifyJsPluginConfig,
+    new CopyWebpackPlugin(
+      [
+        { from: './src/img', to: './img/', ignore: ['*.svg'] },
+      ]),
+  ],
 };
