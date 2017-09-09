@@ -11,12 +11,24 @@ import * as apiActions from '../store/actions/apiPostActions';
 
 class EditPost extends React.Component {
 
+  static adjustTextArea(target) {
+    // expand input height to fit content without scrollbar
+    const el = target;
+    let adjustedHeight = el.clientHeight;
+    adjustedHeight = Math.max(el.scrollHeight, adjustedHeight);
+    if (adjustedHeight > el.clientHeight) { el.style.height = `${adjustedHeight + 20}px`; }
+  }
+
   // For a URL with a specific ID param
   componentDidMount() {
     if (this.props.match.params.id) {
       // copy the current post properties into the editable object
       this.props.actions.setEditPost(this.props.posts.currentPost);
     }
+  }
+
+  componentDidUpdate() {
+    EditPost.adjustTextArea(this.textInput);
   }
 
   // Reset form on unmount
@@ -36,10 +48,15 @@ class EditPost extends React.Component {
   handleChange = (event) => {
     // limit post body to 620 chars
     if (event.target.id === 'content' && event.target.value.length > 620) {
+      event.preventDefault;
       return null;
     }
     // handle input
     this.props.actions.setFormField(event.target.id, event.target.value);
+    // expand textarea height to match content
+    if (event.target.id === 'content') {
+      EditPost.adjustTextArea(this.textInput);
+    }
   }
 
   // handle autosuggest selection
@@ -233,9 +250,12 @@ class EditPost extends React.Component {
               name="content"
               value={this.props.posts.editForm.content}
               onChange={e => this.handleChange(e)}
+              ref={(input) => { this.textInput = input; }}
               placeholder="Add post content (limit 620 characters)"
               maxLength="620"
             />
+            {this.props.posts.editForm.content &&
+              <div className="character-count"> {620 - this.props.posts.editForm.content.length} characters remaining</div> }
           </div>
           <div className="form__input-group" >
             <input
