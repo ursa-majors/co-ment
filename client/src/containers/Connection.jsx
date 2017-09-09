@@ -24,8 +24,16 @@ class Connection extends React.Component {
     };
   }
 
+  componentDidUpdate() {
+    adjustTextArea(this.textInput);
+  }
+
   handleChange = (event) => {
     if (event.target.id === 'body') {
+      if (body.length  > 620) {
+        event.preventDefault;
+        return null;
+      }
       adjustTextArea(event.target);
     }
 
@@ -160,7 +168,9 @@ class Connection extends React.Component {
           <div className="form__input-group">
             <label className="form__label" htmlFor="body">Body:
             </label>
-            <textarea className="form__input form__connection-input" id="body" value={this.state.body} onChange={event => this.handleChange(event)} />
+            <textarea className="form__input form__connection-input" id="body" value={this.state.body} onChange={event => this.handleChange(event)} ref={(input) => { this.textInput = input; }}/>
+            {this.state.body &&
+              <div className="character-count"> {620 - this.state.body.length} characters remaining</div> }
           </div>
           <div className="form__input-group">
             <div className={`${this.state.formErrorClass}`}>{this.state.formError}</div>
