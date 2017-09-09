@@ -156,3 +156,10 @@ body.user-is-tabbing *:focus {
 .hidden {
     display: none;
   }
+
+.character-count {
+  text-align: right;
+  font-family: 'Alegreya Sans', sans-serif;
+  color: $color_gray_text;
+
+}
