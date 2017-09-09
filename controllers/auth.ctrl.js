@@ -90,11 +90,23 @@ function register(req, res) {
             .json({ 'message': 'Please complete all required fields.' });
     }
 
-    User.findOne({ username: req.body.username})
+   const target = {
+        $or: [{ username: req.body.username }, { email: req.body.email }]
+    };
+
+    User.findOne(target)
         .exec()
         .then( user => {
+
             // finding a user is bad - reject --> catch block
-            return user ? Promise.reject('Username already taken.') : undefined;
+            if (user && user.username === req.body.username) {
+                return Promise.reject('Username already taken.');
+            } else if (user && user.email === req.body.email) {
+                return Promise.reject('Email already registered.');
+            } else {
+                return undefined;
+            }
+
         })
         .then( () => {
 
@@ -245,7 +257,7 @@ function login(req, res, next) {
                 .json(info);
 
         } else {
-            
+
             // exclude sensitive info from field selection
             const proj  = { hash : 0, salt : 0, signupKey : 0 };
 
@@ -253,7 +265,7 @@ function login(req, res, next) {
             User.findById(user._id, proj)
                 .exec()
                 .then( (profile) => {
-                
+
                     // generate a token
                     const token = profile.generateJWT();
 
