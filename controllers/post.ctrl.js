@@ -66,6 +66,7 @@ function getPosts(req, res) {
 //          role                : String
 //          title               : String
 //          body                : String
+//          excerpt             : String
 //          keywords            : Array
 //          availability        : String
 //        }
@@ -107,6 +108,7 @@ function createPost(req, res) {
                 myPost.role             = req.body.role;
                 myPost.title            = req.body.title;
                 myPost.body             = req.body.body;
+                myPost.excerpt          = req.body.excerpt;
                 myPost.keywords         = req.body.keywords;
                 myPost.availability     = req.body.availability;
 
@@ -152,6 +154,7 @@ function createPost(req, res) {
 //          role                : String
 //          title               : String
 //          body                : String
+//          excerpt             : String
 //          keywords            : Array
 //          availability        : String
 //        }
@@ -179,6 +182,7 @@ function updatePost(req, res) {
         role                : req.body.role,
         title               : req.body.title,
         body                : req.body.body,
+        excerpt             : req.body.excerpt,
         keywords            : req.body.keywords,
         availability        : req.body.availability
     };

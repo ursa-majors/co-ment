@@ -115,6 +115,13 @@ class EditPost extends React.Component {
     // message will be displayed; exit if validate fails
     if (!this.validateInputs()) { return; }
 
+    let excerpt;
+      if (this.props.posts.editForm.body.length > 140) {
+        excerpt = this.props.posts.editForm.body.substr(0, 140);
+      } else {
+        excerpt = null;
+      }
+
     const body = {
       author: this.props.profiles.userProfile.username,
       author_id: this.props.profiles.userProfile._id,
@@ -126,6 +133,7 @@ class EditPost extends React.Component {
       role: this.props.posts.editForm.role,
       title: this.props.posts.editForm.title,
       body: this.props.posts.editForm.content,
+      excerpt: excerpt,
       keywords: this.props.posts.editForm.keywords,
       active: this.props.posts.editForm.active,
       availability: '',

@@ -260,9 +260,9 @@ class PostFull extends React.Component {
                 <div className={`post-full__title`}>
                   {this.props.post.title}
                 </div>
-                { this.props.posts.excerpt ?
+                { this.props.post.excerpt ?
                   <div className={`post-full__body post-full__excerpt`}>
-                    {`${this.props.posts.excerpt}...`}
+                    {`${this.props.post.excerpt}...`}
                     <span
                       className="flip-it post-full__readmore tag-value"
                       onClick={()=>this.flip()}

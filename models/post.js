@@ -57,6 +57,11 @@ const postSchema = new mongoose.Schema({
         trim     : true
     },
 
+    excerpt : {
+        type     : String,
+        trim     : true
+    },
+
     keywords : {
         type     : [String],  // array of strings
         required : true       // at least 1 element required
