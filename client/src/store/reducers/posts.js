@@ -104,7 +104,6 @@ function posts(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { currentPost: defaultPost, editForm: defaultForm });
 
     case SET_EDIT_POST:
-    console.log(`posts.js > 107 ${action.payload}`);
       return update(
         state,
         {

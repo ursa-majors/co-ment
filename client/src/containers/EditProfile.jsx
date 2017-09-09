@@ -245,8 +245,6 @@ class EditProfile extends React.Component {
       linkedin: this.props.profiles.editForm.linkedin,
       codepen: this.props.profiles.editForm.codepen,
     };
-    console.log('form submit body:')
-    console.log(body);
 
     // write data to db
     this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.userId, body)

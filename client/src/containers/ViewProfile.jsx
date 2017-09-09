@@ -45,7 +45,7 @@ class ViewProfile extends React.Component {
     newState.tab = e.target.className.split(" ")[0];
     this.setState({
       ...newState,
-    }, ()=>{console.log(this.state.tab);})
+    });
   }
 
   flip() {
@@ -69,9 +69,7 @@ class ViewProfile extends React.Component {
   handleKeyDown = (e) => {
     // enter key fires flip / expand / toggle tabs when focused
     const action = e.target.className.split(" ")[0];
-    console.log(action);
     if (e.keyCode === 13 || e.which === 13 ) {
-      console.log('enter');
       switch (action) {
         case 'flip-it':
           this.flip();

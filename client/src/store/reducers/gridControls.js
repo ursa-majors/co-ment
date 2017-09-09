@@ -135,7 +135,6 @@ function gridControls(state = INITIAL_STATE, action) {
             }
           }
         }
-      console.log('gridControls.js > 138', newFilterGroup);
       return update(
         state,
         {
@@ -149,7 +148,6 @@ function gridControls(state = INITIAL_STATE, action) {
       );
 
     case CLEAR_FILTER:
-    console.log('gridControls.js > 152: clear');
       // reset filterBtn values to empty string, filterGroup to empty array
       newFilterGroup = [];
       return update(

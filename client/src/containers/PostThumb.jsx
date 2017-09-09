@@ -13,7 +13,6 @@ class PostThumb extends React.Component {
     // enter key opens modal when focused
     const action = e.target.className.split(" ")[0];
     if (e.keyCode === 13 || e.which === 13 ) {
-      console.log('enter');
       switch (action) {
         case 'expand':
           this.props.openModal();
