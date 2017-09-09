@@ -44,9 +44,7 @@ class PostFull extends React.Component {
   handleKeyDown(e) {
     // enter key fires flip / readmore when focused
     const action = e.target.className.split(" ")[0];
-    console.log(action);
     if (e.keyCode === 13 || e.which === 13 ) {
-      console.log('enter');
       switch (action) {
         case 'flip-it':
           this.flip();
@@ -86,7 +84,6 @@ class PostFull extends React.Component {
   *  Check to see if there is already a similar connection between the user and poster
   **/
   checkConnectionRequest = () => {
-    console.log('check connection');
     const connections = this.props.connection.connections;
     if (connections.length > 0) {
       for (let i = 0; i < connections.length; i += 1) {

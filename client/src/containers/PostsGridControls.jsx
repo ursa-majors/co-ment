@@ -71,7 +71,6 @@ class PostsGridControls extends React.Component {
 
   render() {
     const filterClass = this.state.showFilters ? "flex-row posts-grid__adv-filter-wrap" : "hidden";
-    console.log(this.props.gridControls.filterGroup);
     let filtersAppliedList;
     if (this.props.gridControls.filterGroup === 'all' || this.props.gridControls.filterGroup === []) {
       filtersAppliedList = '';
@@ -152,7 +151,6 @@ class PostsGridControls extends React.Component {
                     <i className="fa fa-filter" aria-label="show filter options" />
                 </button>
                 <button className="btn btn--primary btn--sort" onClick={()=> {this.props.actions.clearFilter();
-                  console.log('156 >', this.props.gridControls.filterGroup);
                 } }>
                   {this.props.appState.windowSize.width>675 &&
                   <span className="label-tiny">clear </span> }

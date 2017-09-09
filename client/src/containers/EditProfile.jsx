@@ -87,22 +87,6 @@ class EditProfile extends React.Component {
     this.props.actions.setFormField('gender', e.target.value);
   }
 
-  // checkGHProfile() {
-  //   // check to see if user has entered valid github username.
-  //   // if field is empty or gh profile not found, OR if field is filled but no profile found, display error message (TODO)
-  //   const ghUserName = document.getElementById('ghUserName').value;
-  //   if (ghUserName) {
-  //     const ghProfile = this.props.api.githubProfile(ghUserName);
-  //     console.log(ghProfile);
-  //     if (ghProfile === undefined || this.props.profiles.getGHError) {
-  //       console.log('user not found');
-  //       // need error handling here
-  //     }
-  //   } else {
-  //       console.log('enter gh username first');
-  //     }
-  // }
-
   addLanguage() {
     // add field value to array of languages, display tags above input field, clear input
     const newLang = this.props.profiles.editForm.language;
@@ -258,8 +242,6 @@ class EditProfile extends React.Component {
       linkedin: this.props.profiles.editForm.linkedin,
       codepen: this.props.profiles.editForm.codepen,
     };
-    console.log('form submit body:')
-    console.log(body);
 
     // write data to db
     this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.userId, body)

@@ -38,7 +38,6 @@ class PostsGrid extends React.Component {
     } else {
       filterGroup = this.props.gridControls.filterGroup;
     }
-    console.log('PostsGrid.jsx > 37',filterGroup);
     const sortByDate = (element) => {
       return element.getAttribute('data-updated');
     };
@@ -137,12 +136,10 @@ class PostsGrid extends React.Component {
 
   addShuffleEventListeners = () => {
     this.shuffle.on(Shuffle.EventType.LAYOUT, (data) => {
-      // console.log('layout. data:', data);
       PostsGrid.adjustBkgSize();
     });
 
     this.shuffle.on(Shuffle.EventType.REMOVED, (data) => {
-      // console.log('removed. data:', data);
       PostsGrid.adjustBkgSize();
     });
   }

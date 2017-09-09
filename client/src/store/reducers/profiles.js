@@ -309,7 +309,6 @@ function profiles(state = INITIAL_STATE, action) {
     * Purpose: Display an error message to the user.
     */
     case MODIFY_PROFILE_FAILURE:
-    console.log(action);
       error = action.payload.response.message || 'An unknown error occurred while modifying profile';
       return Object.assign(
         {},

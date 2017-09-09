@@ -88,14 +88,6 @@ class InputAutosuggest extends React.Component {
     });
   };
 
-  onSuggestionSelected() {
-    // console.log(this.state.value);
-    // this.props.addTag();
-    // this.setState({
-    //     value: ''
-    //   });
-  };
-
   // comma or enter or tab in skill field triggers addSkill
   handleKeyPressAdd(e) {
     if (!this.props.gridControls) {

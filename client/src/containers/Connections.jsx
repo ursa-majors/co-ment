@@ -17,7 +17,6 @@ class Connections extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     return (
       <div className="connections">
         <Spinner cssClass={this.props.connection.getConnectionsSpinnerClass} />
@@ -48,7 +47,6 @@ class Connections extends React.Component {
             <div className="conn-preview__header conn-preview__hide-for-small">Date</div>
           </div>
             {this.props.connection.connections.map(item => {
-              console.log(item);
               return(
               <div className="conn-preview__header-wrap" key={item._id}>
                 <div className="conn-preview__text">{item.mentor.name}</div>
