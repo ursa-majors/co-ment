@@ -19,7 +19,7 @@ const defaultForm = {
   keywords: [],
   keyword: '',
   content: '',
-  hideErr: 'form__hidden',
+  hideErr: 'hidden',
   errMsg: '',
   update: false,
 };
@@ -100,7 +100,7 @@ function posts(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { currentPost: action.payload });
 
     case CLEAR_CURRENT_POST:
-      return Object.assign({}, state, { currentPost: defaultPost, editForm: defaultPost });
+      return Object.assign({}, state, { currentPost: defaultPost, editForm: defaultForm });
 
     case SET_EDIT_POST:
       return update(
@@ -113,7 +113,7 @@ function posts(state = INITIAL_STATE, action) {
             keywords: { $set: action.payload.keywords },
             keyword: { $set: '' },
             content: { $set: action.payload.body },
-            hideErr: { $set: 'form__hidden' },
+            hideErr: { $set: 'hidden' },
             errMsg: { $set: '' },
             update: { $set: true },
           },
