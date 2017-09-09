@@ -448,6 +448,8 @@ class EditProfile extends React.Component {
                     ref={(input) => { this.textInput = input; }}
                     rows="3"
                   />
+                  {this.props.profiles.editForm.about &&
+              <div className="character-count"> {620 - this.props.profiles.editForm.about.length} characters remaining</div> }
                 </div>
               </div>
               <div className="profile__column-R">
