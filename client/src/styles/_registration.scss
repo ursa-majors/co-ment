@@ -391,14 +391,13 @@ input:not([type=checkbox]):not([type=radio]), textarea {
     font-family: 'Alegreya Sans SC', sans-serif;
     text-transform: lowercase;
     letter-spacing: 1px;
-    font-weight: 400;
+    font-weight: 700;
     font-size: 15px;
     margin: 5px 0 0 5px;
     border: 1px transparent !important;
 
     @include for-tablet-portrait-up {
-      font-weight: 100;
-      color: rgba(255,255,255,.7);
+      font-weight: 400;
     }
 
     &:hover, &:active{
