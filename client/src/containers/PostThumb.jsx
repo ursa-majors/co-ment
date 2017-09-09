@@ -44,6 +44,11 @@ class PostThumb extends React.Component {
        ))}{keywordsRest && keywordsRest.map(word => (<span className="tag-value__label sr-only" key={word}>{word}</span>))}</div>
       )
     }
+    const backgroundStyle = {
+      backgroundImage: `url(${this.props.post.author_avatar})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center center",
+    }
 
     return (
       <div>
@@ -87,12 +92,20 @@ class PostThumb extends React.Component {
                 </div>
                 <div className={`post-thumb__image-wrap`}>
                   <Link className="unstyled-link post-thumb__img-link" to={`/viewprofile/${this.props.post.author_id}`}>
-                    {this.props.post.author_avatar ?
-                      <img
-                        className={`post-thumb__image`}
-                        src={this.props.post.author_avatar}
-                        alt={this.props.post.author} /> :
-                      <i className={`fa fa-user-circle fa-5x post-thumb__icon--avatar`} aria-hidden="true" /> }
+                    <div className={`post-thumb__image-aspect`}>
+                      <div className={`post-thumb__image-crop`}>
+                        {this.props.post.author_avatar ?
+                          <div
+                            className={`post-thumb__image`}
+                            style={backgroundStyle}
+                            role="image"
+                            aria-label={this.props.post.author} /> :
+                          <i
+                            className={`fa fa-user-circle fa-5x post-thumb__icon--avatar`}
+                            aria-hidden="true" />
+                        }
+                      </div>
+                    </div>
                       <div className={`post-thumb__name-wrap`}>
                         <span className={`post-thumb__username`}>
                           @{this.props.post.author}

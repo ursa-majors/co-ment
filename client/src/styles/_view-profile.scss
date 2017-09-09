@@ -88,15 +88,39 @@
       }
       }
 
-    &__image {
+    &__image-aspect{
+      width: 100%;
+      padding-bottom: 100%;
+      position: relative;
+      @include profile-card-breakpoint {
+        width: 50%;
+        padding-bottom: 50%;
+        margin: 0 auto;
+        }
+    }
+
+    &__image-crop {
       width: 100%;
       border-radius: 100%;
       height: auto;
-      margin: 0 auto;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
       border: 2px solid rgba(255,255,255,.9);
-      @include profile-card-breakpoint {
-        width: 50%;
-        }
+      overflow: hidden;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+    }
+
+    &__image {
+      min-width: 100%;
+      min-height: 100%;
+      height: auto;
+      margin: 0 auto;
+
     }
 
     &__icon--avatar {

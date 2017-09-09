@@ -133,15 +133,6 @@
     }
   }
 
-  &__image {
-    border-radius: 100%;
-    width: 170px;
-    max-width: 100%;
-    height: auto;
-    border: 2px solid rgba(255,255,255,.8);
-    cursor: pointer;
-  }
-
   &__icon {
     height: 100%;
     width: auto;
@@ -154,14 +145,49 @@
   }
 
   &__image-wrap {
-    width: 170px;
-    height: 170px;
+    width: 120px;
+    height: 120px;
     margin: 20px;
     flex-basis: 45%;
     font-size: 1.3em;
     text-align: center;
     color: $color_gray_med;
+
+    @include profile-card-breakpoint {
+
+        }
   }
+
+  &__image-aspect {
+      width: 100%;
+      padding-bottom: 100%;
+      position: relative;
+  }
+
+
+  &__image-crop {
+      width: 100%;
+      border-radius: 100%;
+      height: auto;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border: 2px solid rgba(255,255,255,.9);
+      overflow: hidden;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    &__image {
+      min-width: 100%;
+      min-height: 100%;
+      height: auto;
+      margin: 0 auto;
+    }
 
   &__name-wrap {
     display: flex;
@@ -188,7 +214,7 @@
   &__username {
     font-weight: 400;
     text-align: center;
-    font-size: 22px;
+    font-size: 16px;
     border-bottom: 1px transparent;
     display: inline-block;
     margin: auto;
@@ -245,7 +271,11 @@
   }
 
   &__back-wrap {
-    padding: 0 0 20px 20px;
+    padding: 20px;
+    @include profile-card-breakpoint {
+      padding: 30px;
+    }
+
   }
 
   &__excerpt {
@@ -454,14 +484,44 @@
     }
   }
 
-  &__image {
-    border-radius: 100%;
-    width: 50px;
-    height: auto;
-    border: 1px solid rgba(255,255,255,.8);
-    cursor: pointer;
-    margin-right: 10px;
+  &__image-wrap {
+    margin: 10px 15px;
+    font-size: 1.3em;
+    color: $color_gray_lighter;
   }
+
+  &__image-aspect {
+      width: 50px;
+      height: 50px;
+      position: relative;
+      margin-right: 10px;
+  }
+
+
+  &__image-crop {
+      width: 100%;
+      border-radius: 100%;
+      height: auto;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border: 2px solid rgba(255,255,255,.9);
+      overflow: hidden;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    &__image {
+      min-width: 100%;
+      min-height: 100%;
+      height: auto;
+      margin: 0 auto;
+
+    }
 
   &__icon {
     height: 100%;
@@ -474,11 +534,7 @@
     font-size: 2.5em;
   }
 
-  &__image-wrap {
-    margin: 10px 15px;
-    font-size: 1.3em;
-    color: $color_gray_lighter;
-  }
+
 
   &__img-link {
     display: flex;
@@ -713,3 +769,7 @@
     }
   }
 }
+
+// #back .post-full__title {
+//   margin-top: 20px;
+// }
