@@ -24,8 +24,20 @@ class PostFull extends React.Component {
     };
   }
 
+  componentWillMount() {
+    console.log(`PostFull.jsx > 29: ${this.props}`);
+    console.log(`PostFull.jsx > 30: ${this.props.posts}`);
+    console.log(`PostFull.jsx > 31: ${this.props.post}`);
+  }
+
   componentDidMount() {
-    const postId = this.props.post._id;
+    let postId;
+    if (this.props.match && this.props.match.params.id) {
+     postId = this.props.match.params.id;
+    } else {
+     postId = this.props.post._id;
+    }
+    console.log(`PostFull.jsx > 34: PostID = ${postId}`);
     const token = this.props.appState.authToken;
         if (this.props.posts.currentPost._id !== postId) {
       this.props.actions.clearCurrentPost();
@@ -101,9 +113,20 @@ class PostFull extends React.Component {
   }
 
   render() {
-    const roleText = (this.props.post.role === 'mentor' ? 'mentor' : 'mentee');
-    const owner = (this.props.appState.userId === this.props.post.author_id);
-    const isLiked = this.props.profiles.userProfile.likedPosts.includes(this.props.post._id) ?
+    let roleText;
+    let post = {}
+    // check to see if this component recieved a full post object from props
+    // (clicked openModal from thumb view)
+    // or if it's rendering as a stand-alone view & is pulling data from store.
+    // there has got to be a better way to do this...
+    if (this.props.post.role) {
+      post = { ...this.props.post }
+    } else {
+      post = { ...this.props.posts.currentPost }
+    }
+    roleText = (post.role === 'mentor' ? 'mentor' : 'mentee');
+    const owner = (this.props.appState.userId === post.author_id);
+    const isLiked = this.props.profiles.userProfile.likedPosts.includes(post._id) ?
       'post-full__liked' :
       '';
     let actions;
@@ -125,7 +148,7 @@ class PostFull extends React.Component {
             aria-label="edit"
             name="edit"
             onKeyDown={e => this.handleKeyDown(e)}
-            onClick={() => this.props.history.push(`/editpost/${this.props.post._id}`)}>
+            onClick={() => this.props.history.push(`/editpost/${post._id}`)}>
             <i className={`fa fa-pencil post-full__icon--edit`}
              aria-label="edit" />
           </button>
@@ -135,7 +158,7 @@ class PostFull extends React.Component {
             name="delete"
             onKeyDown={e => this.handleKeyDown(e)}
             onClick={() => this.deletePost()}>
-            <i className={`fa fa-trash post-full__icon--delete`} aria-label="delet4e" />
+            <i className={`fa fa-trash post-full__icon--delete`} aria-label="delete" />
           </button>
         </div>
       );
@@ -160,16 +183,16 @@ class PostFull extends React.Component {
             onKeyDown={e => this.handleKeyDown(e)}
             onClick={
                () => {
-                 if (!this.props.profiles.userProfile.likedPosts.includes(this.props.post._id)) {
-                   this.props.api.likePost(this.props.appState.authToken, this.props.post._id);
+                 if (!this.props.profiles.userProfile.likedPosts.includes(post._id)) {
+                   this.props.api.likePost(this.props.appState.authToken, post._id);
                  } else {
-                   this.props.api.unlikePost(this.props.appState.authToken, this.props.post._id);
+                   this.props.api.unlikePost(this.props.appState.authToken, post._id);
                  }
                }
              }
           >
             <i
-              className={`fa fa-heart heart__icon--compress ${isLiked}`}
+              className={`fa fa-heart thumb__icon--heart ${isLiked}`}
               aria-label="like"
             />
           </button>
@@ -187,8 +210,8 @@ class PostFull extends React.Component {
     }
 
     let keywordsDisp;
-    if (this.props.post.keywords) {
-      keywordsDisp = this.props.post.keywords.map(word => (
+    if (post.keywords) {
+      keywordsDisp = post.keywords.map(word => (
         <span className="tag-value" key={word}>
           <span className="tag-value__label">
             {word}
@@ -198,7 +221,7 @@ class PostFull extends React.Component {
       }
 
     const backgroundStyle = {
-      backgroundImage: `url(${this.props.post.author_avatar})`,
+      backgroundImage: `url(${post.author_avatar})`,
       backgroundSize: "cover",
       backgroundPosition: "center center",
     }
@@ -206,23 +229,23 @@ class PostFull extends React.Component {
     return (
         <div className="post-full">
         {!this.state.flip &&
-          <div className={this.props.post.role === 'mentor' ? `post-full__ribbon` : `post-full__ribbon--green`}>
-            <span className={this.props.post.role === 'mentor' ? `post-full__ribbon-span` : `post-full__ribbon-span--green`}>{roleText}</span>
+          <div className={post.role === 'mentor' ? `post-full__ribbon` : `post-full__ribbon--green`}>
+            <span className={post.role === 'mentor' ? `post-full__ribbon-span` : `post-full__ribbon-span--green`}>{roleText}</span>
           </div> }
           <div className={this.state.flip ? "post-full__side front flip" : "post-full__side front"} id="front">
             <div className="post-full__metadata">
               <span className="post-full__views">
                 <i className="fa fa-eye" />
                 &nbsp;
-                {this.props.appState.userId === this.props.post.author_id ? this.props.post.meta.views  : this.props.post.meta.views + 1}
+                {this.props.appState.userId === post.author_id ? post.meta.views : post.meta.views + 1}
               </span>
               <span className="post-full__likes">
-                <i className="fa fa-heart" />&nbsp;{this.props.post.meta.likes}
+                <i className="fa fa-heart" />&nbsp;{post.meta.likes}
               </span>
               <div className={`post-full__date`}>
                 <span className="tag-value">
                   <span className="tag-value__label">
-                    {formatDate(new Date(this.props.post.updatedAt))}
+                    {formatDate(new Date(post.updatedAt))}
                   </span>
                 </span>
               </div>
@@ -230,10 +253,10 @@ class PostFull extends React.Component {
             <div className={`post-full__card-body`}>
               <div className={`post-full__text-wrap`}>
                 <div className={`post-full__title`}>
-                  {this.props.post.title}
+                  {post.title}
                 </div>
                   <div className={`post-full__body`}>
-                    {this.props.post.body}
+                    {post.body}
                   </div>
                 {!this.state.thumb &&
                 <div className="tag-value__wrapper">
@@ -243,12 +266,12 @@ class PostFull extends React.Component {
               <div className={`post-full__image-wrap`}>
                 <div className={`post-full__image-aspect`}>
                     <div className={`post-full__image-crop`}>
-                      {this.props.post.author_avatar ?
+                      {post.author_avatar ?
                         <div
                           className={`post-full__image`}
                           style={backgroundStyle}
                           role="image"
-                          aria-label={this.props.post.author} /> :
+                          aria-label={post.author} /> :
                         <i
                           className={`fa fa-user-circle fa-5x post-full__icon--avatar`}
                           aria-hidden="true" />
@@ -257,9 +280,9 @@ class PostFull extends React.Component {
                   </div>
                 <div className={`post-full__name-wrap`}>
                   <span className={`post-full__name`}>
-                    {this.props.post.author_name}</span>
-                  <Link className="unstyled-link post-full__username" to={`/viewprofile/${this.props.post.author_id}`}>
-                      @{this.props.post.author}
+                    {post.author_name}</span>
+                  <Link className="unstyled-link post-full__username" to={`/viewprofile/${post.author_id}`}>
+                      @{post.author}
                 </Link>
                 </div>
               </div>
@@ -268,33 +291,6 @@ class PostFull extends React.Component {
             { actions }
             </div>
             </div>
-            {this.props.posts.excerpt &&
-              <div className={this.state.flip ? "post-full__side back flip" : "post-full__side back"} id="back">
-              <div className="post-full__back-wrap">
-                <div className="post-full__title">
-                  {this.props.post.title}
-                  </div>
-                  <div className="post-full__body">
-                  {this.props.post.body}
-                  </div>
-                  <div className={ !owner ? "post-full__button-wrap" : "post-full__button-wrap post-full__button-wrap--edit"}>
-              { actions }
-              </div>
-                  <div className="post-full__card-footer--back">
-                    <div
-                      className='flip-it post-full__nav-item--flip'
-                      name='flip'
-                      aria-label='flip'
-                      onKeyDown={e => this.handleKeyDown(e)}
-                      onClick={() => this.flip()}
-                      tabIndex={0}
-                    >
-                      <i className="fa fa-refresh post-full__icon--flip" aria-hidden="true" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            }
           </div>
     );
   }
