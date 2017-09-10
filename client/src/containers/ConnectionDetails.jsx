@@ -264,12 +264,7 @@ class ConnectionDetails extends React.Component {
                 <td className="conn-details__td">Original Post</td>
                 <td className="conn-details__td">
                 <button className="aria-button conn-details__link"
-                  onClick={this.openModal(this.props.connection.viewConnection.originalPost.id);}
-                  onKeyDown={
-                    if (e.keyCode === 13 || e.which === 13 ) {
-                      this.openModal(this.props.connection.viewConnection.originalPost.id);
-                    }
-                  }>
+                  onClick={()=>this.openModal(this.props.connection.viewConnection.originalPost.id)}>
               {this.props.connection.viewConnection.originalPost.title}
                 </button>
                 </td>
