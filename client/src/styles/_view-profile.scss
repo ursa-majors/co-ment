@@ -178,7 +178,7 @@
     }
 
     &__location {
-      font-weight: 100;
+      font-weight: 400;
       font-family: 'Alegreya Sans SC', sans-serif;
       text-transform: lowercase;
       font-size: 16px;
@@ -201,7 +201,7 @@
       padding: 10px;
       border-bottom: 2px solid white;
       color: $color_gray_text;
-      font-weight: 100;
+      font-weight: 400;
       font-family: 'Alegreya Sans SC', sans-serif;
       text-transform: lowercase;
       font-size: 18px;
@@ -244,7 +244,7 @@
         padding-left: 6px;
         font-family: inherit;
         font-size: inherit;
-        font-weight: 300;
+        font-weight: 400;
         text-transform: inherit;
         color: $color_gray_lighter;
         /* transition: $transition_card; */
@@ -253,7 +253,7 @@
         &:hover, &--active {
           padding-left: 6px;
           color: $color_gray_darker;
-          font-weight: 300;
+          font-weight: 400;
           transition: all 300ms ease-in-out;
         }
       }
@@ -426,7 +426,7 @@
     }
 
     &__location {
-      font-weight: 100;
+      font-weight: 400;
       font-family: 'Alegreya Sans SC', sans-serif;
       text-transform: lowercase;
       font-size: 12px;

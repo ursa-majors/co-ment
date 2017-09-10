@@ -58,7 +58,7 @@
     font-family: 'Alegreya Sans SC', sans-serif;
     text-transform: lowercase;
     text-shadow: 0 0 20px rgba(0, 0, 0, 0.63);
-    font-weight: 100;
+    font-weight: 300;
     font-size: 5vw;
     letter-spacing: 2px;
     margin: -3vw auto;
@@ -67,7 +67,8 @@
     }
     @include for-desktop-up {
       margin: -55px auto;
-      font-size: 75px;
+      font-size: 62px;
+      font-weight: 100;
     }
   }
   &__button-wrap {
@@ -100,7 +101,7 @@
     font-size: 16px;
     text-decoration: none;
     margin-right: 3vw;
-    font-weight: 100;
+    font-weight: 400;
     border-radius: 50px;
     padding: 10px;
     border: 1px solid white;
@@ -136,7 +137,7 @@
     width: 150%;
     height: auto;
     margin: auto;
-    font-weight: 100;
+    font-weight: 300;
     &--spaced {
       letter-spacing: 2.5px;
     }
@@ -146,6 +147,7 @@
     }
     @include for-tablet-landscape-up {
       font-size: 2em;
+      font-weight: 100;
       width: 80%;
     }
     @include for-desktop-up {

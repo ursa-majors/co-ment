@@ -6,13 +6,14 @@
     color: white;
     font-family: 'Alegreya Sans SC', sans-serif;
     text-transform: lowercase;
-    font-weight: 100;
+    font-weight: 300;
     letter-spacing: 2px;
     font-size: 30px;
     padding: 30px;
     text-align: center;
     @include for-tablet-portrait-up {
       font-size: 45px;
+      font-weight: 100;
     }
   }
 }
