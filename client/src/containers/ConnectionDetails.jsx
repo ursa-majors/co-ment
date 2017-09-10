@@ -165,41 +165,47 @@ class ConnectionDetails extends React.Component {
             }
           }
         />
-        <div className="conn-preview">
+        <div className="conn-details__preview">
           <div className="conn-details__text-wrap">
             <div className="conn-details__title">
               Connection Details
             </div>
           </div>
-          <div className="conn-details__avatars">
-            <div className={`conn-details__image-wrap`}>
-              <div  className="conn-details__header">Mentor</div>
-                <div className={`conn-details__image-aspect`}>
-                  <div className={`conn-details__image-crop`}>
-                    <div
-                      className={`conn-details__image`}
-                      style={backgroundStyleMentor}
-                      role="image"
-                      aria-label={this.props.connection.viewConnection.mentor.name} />
-                  </div>
-                </div>
-                <div className="conn-details__text">{this.props.connection.viewConnection.mentor.name}</div>
-              </div> {/* image-wrap */}
-              <div className={`conn-details__image-wrap`}>
-              <div  className="conn-details__header">Mentee</div>
-                <div className={`conn-details__image-aspect`}>
-                  <div className={`conn-details__image-crop`}>
-                    <div
-                      className={`conn-details__image`}
-                      style={backgroundStyleMentee}
-                      role="image"
-                      aria-label={this.props.connection.viewConnection.mentee.name} />
-                  </div>
-                </div>
-                <div className="conn-details__text">{this.props.connection.viewConnection.mentee.name}</div>
-              </div> {/* image-wrap */}
-          </div>
           <table className="conn-details__table">
+            <thead className="conn-details__thead">
+              <tr className="conn-details__tr">
+                <th className="conn-details__th">
+                  <div className={`conn-details__image-wrap`}>
+                    <div  className="conn-details__header">Mentor</div>
+                      <div className={`conn-details__image-aspect`}>
+                        <div className={`conn-details__image-crop`}>
+                          <div
+                            className={`conn-details__image`}
+                            style={backgroundStyleMentor}
+                            role="image"
+                            aria-label={this.props.connection.viewConnection.mentor.name} />
+                        </div>
+                      </div>
+                      <div className="conn-details__text">{this.props.connection.viewConnection.mentor.name}</div>
+                  </div> {/* image-wrap */}
+                </th>
+                <th className="conn-details__th">
+                  <div className={`conn-details__image-wrap`}>
+                    <div  className="conn-details__header">Mentee</div>
+                      <div className={`conn-details__image-aspect`}>
+                        <div className={`conn-details__image-crop`}>
+                          <div
+                            className={`conn-details__image`}
+                            style={backgroundStyleMentee}
+                            role="image"
+                            aria-label={this.props.connection.viewConnection.mentee.name} />
+                        </div>
+                      </div>
+                    <div className="conn-details__text">{this.props.connection.viewConnection.mentee.name}</div>
+                  </div> {/* image-wrap */}
+                </th>
+              </tr>
+            </thead>
             <tbody className="conn-details__tbody">
               <tr className="conn-details__tr">
                 <td className="conn-details__td">Initiated By</td>
