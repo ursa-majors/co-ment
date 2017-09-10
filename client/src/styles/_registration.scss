@@ -319,7 +319,7 @@ input:not([type=checkbox]):not([type=radio]), textarea {
     position: relative;
     top: 6px;
     color: white;
-    font-weight: 100;
+    font-weight: 300;
     letter-spacing: 2px;
     @include for-big-desktop-up {
       font-size: 1.2em;
@@ -331,7 +331,7 @@ input:not([type=checkbox]):not([type=radio]), textarea {
     color: $color_error_text;
     background-color: $color_error_bkg;
     font-size: 1.2em;
-    font-weight: 100;
+    font-weight: 300;
     margin: 15px auto;
     border: 1px solid $color_error_text;
     padding: 7px;
@@ -369,7 +369,7 @@ input:not([type=checkbox]):not([type=radio]), textarea {
 
     @include for-tablet-portrait-up {
       font-size: 20px;
-      font-weight: 100;
+      font-weight: 400;
     }
 
     &:hover, &:active, &:focus {

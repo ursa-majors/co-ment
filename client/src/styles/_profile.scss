@@ -92,7 +92,7 @@
     text-transform: lowercase;
     letter-spacing: 2px;
     font-size: 1.2em;
-    font-weight: 100;
+    font-weight: 300;
     color: white;
     padding-top: 20px;
     border-top: 1px white dotted;
@@ -146,7 +146,7 @@
 
   &__text {
     font-size: 1.2em;
-    font-weight: 100;
+    font-weight: 300;
     padding-left: 3px;
 
     @include for-tablet-landscape-up {
@@ -203,7 +203,7 @@
       color: white;
       font-family: 'Alegreya Sans SC', sans-serif;
       text-transform: lowercase;
-      font-weight: 100;
+      font-weight: 300;
       font-size: 1.2em;
       letter-spacing: 2px;
       padding: 10px;
