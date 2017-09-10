@@ -5,7 +5,7 @@ import { VALIDATE_TOKEN_REQUEST, VALIDATE_TOKEN_SUCCESS, VALIDATE_TOKEN_FAILURE,
 
 const INITIAL_STATE = {
   loggedIn: false,
-  authToken: {},
+  authToken: '',
   userId: '',
   loginSpinnerClass: 'spinner__hide',
   redirectUrl: '',
