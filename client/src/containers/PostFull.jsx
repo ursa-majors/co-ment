@@ -24,8 +24,18 @@ class PostFull extends React.Component {
     };
   }
 
+  componentWillMount() {
+    console.log(`PostFull.jsx > 28: is this thing on?`);
+  }
+
   componentDidMount() {
-    const postId = this.props.post._id;
+    let postId;
+    if (this.props.match && this.props.match.params.id) {
+     postId = this.props.match.params.id;
+    } else {
+     postId = this.props.post._id;
+    }
+    console.log(`PostFull.jsx > 34: PostID = ${postId}`);
     const token = this.props.appState.authToken;
         if (this.props.posts.currentPost._id !== postId) {
       this.props.actions.clearCurrentPost();
