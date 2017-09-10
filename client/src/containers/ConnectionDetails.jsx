@@ -165,7 +165,7 @@ class ConnectionDetails extends React.Component {
             }
           }
         />
-        <div className="conn-preview">
+        <div className="conn-details__preview">
           <div className="conn-details__text-wrap">
             <div className="conn-details__title">
               Connection Details

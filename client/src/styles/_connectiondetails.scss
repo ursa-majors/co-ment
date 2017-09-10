@@ -10,6 +10,24 @@
   border-radius: 4px;
   margin-bottom: 20px;
 
+  &__preview {
+    width: 100%;
+    margin: 0 auto;
+    font-family: 'Alegreya Sans', sans-serif;
+    color: white;
+    border-radius: 4px;
+    margin-bottom: 20px;
+
+    @include for-tablet-portrait-up {
+        width: 80%;
+        padding: 10px 10px 20px 10px;
+      }
+
+    @include for-tablet-landscape-up {
+      width: 60%;
+    }
+  }
+
   &__avatars {
     display: flex;
     flex-direction: row;
@@ -38,11 +56,7 @@
       width: 100%;
       padding: 10px;
       flex-basis: 40%;
-      @include profile-card-breakpoint {
-        margin-top: 20px;
-        text-align: center;
-        padding: 20px 20px 0 20px;
-      }
+      text-align: center;
       }
 
   &__image-aspect{
@@ -94,9 +108,11 @@
 
   &__table {
     background: rgba(255, 255, 255, 0.75);
-    border-radius: 10px;
     margin: auto;
     border-collapse: collapse;
+    @include for-phone-landscape-up {
+      border-radius: 10px;
+    }
   }
 
   &__thead{
@@ -106,29 +122,31 @@
   &__tr {
     border-bottom: 1px dotted $color_gray_darker;
 
-    &:nth-child(odd) {
-      background-color: rgba(255, 255, 255, 0.75);
+    &:last-child {
+      border-bottom: 0;
     }
-    &:last-child > .user-posts__td {
+
+    &:last-child > .conn-details__td {
       padding-bottom:20px;
     }
   }
 
   &__th {
-    font-family: 'Alegreya Sans SC', sans-serif;
     color: $color_gray_darker;
     font-weight: 400;
-    text-transform: lowercase;
-    letter-spacing: 2px;
     font-size: 1.2em;
-    padding: 15px;
-    padding-top:20px;
+    padding-top:10px;
+    width: 50%;
 
+    @include for-phone-landscape-up {
+      padding: 15px;
+      padding-top:20px;
     &:first-child {
-      padding-left:30px;
-    }
+        padding-left:30px;
+      }
     &:last-child {
-      padding-right:30px;
+        padding-right:30px;
+      }
     }
   }
 
@@ -139,13 +157,17 @@
     padding: 15px;
     border: none;
     &:first-child {
-      padding-left:30px;
+      @include for-phone-landscape-up {
+        padding-left:30px;
+      }
       font-family: 'Alegreya Sans SC', sans-serif;
       text-transform: lowercase;
       letter-spacing: 2px;
     }
     &:last-child {
-      padding-right:30px;
+      @include for-phone-landscape-up {
+        padding-right:30px;
+      }
     }
   }
 
@@ -170,7 +192,6 @@
     font-size: 30px;
     font-weight: 100;
     margin: -10px 0 10px 0;
-    border-bottom: 1px dotted rgba(255,255,255,.6);
     @include for-tablet-portrait-up {
       font-size: 45px;
     }
@@ -180,14 +201,12 @@
     flex: 0 0  auto;
     font-size: 1.6em;
     font-weight: 400;
-    padding-left: 3px;
   }
 
   &__text {
     flex: 0 0 auto;
-    font-size: 1.6em;
+    font-size: 16px;
     font-weight: 300;
-    padding-left: 3px;
 
     @include for-tablet-landscape-up {
       font-size: 1.4em;
