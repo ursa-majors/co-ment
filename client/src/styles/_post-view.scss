@@ -22,10 +22,12 @@
     box-shadow: 0 16px 24px rgba(0, 0, 0, 0.4);
     transition: .5s ease-in-out;
     position: relative;
+    padding: 15px;
 
     @include profile-card-breakpoint {
       border-radius:10px;
       width:100%;
+      padding: 25px;
     }
     }
 
@@ -145,23 +147,17 @@
   }
 
   &__image-wrap {
-    width: 120px;
-    height: 120px;
-    margin: 20px;
-    flex-basis: 45%;
+    margin: 10px 5px 0 5px;
     font-size: 1.3em;
-    text-align: center;
-    color: $color_gray_med;
-
-    @include profile-card-breakpoint {
-
-        }
+    color: $color_gray_lighter;
+    display: flex;
   }
 
   &__image-aspect {
-      width: 100%;
-      padding-bottom: 100%;
+      width: 50px;
+      height: 50px;
       position: relative;
+      margin-right: 10px;
   }
 
 
@@ -187,6 +183,7 @@
       min-height: 100%;
       height: auto;
       margin: 0 auto;
+
     }
 
   &__name-wrap {
@@ -197,7 +194,6 @@
 
   &__name {
       font-weight: 700;
-      text-align: center;
       font-size: 24px;
       line-height: 22px;
       margin-top: 10px;
@@ -213,11 +209,9 @@
 
   &__username {
     font-weight: 400;
-    text-align: center;
-    font-size: 16px;
+    font-size: 18px;
     border-bottom: 1px transparent;
     display: inline-block;
-    margin: auto;
 
     &:hover {
         border-bottom: 1px dotted $color_gray_text;
@@ -227,13 +221,19 @@
 
   &__card-body {
     display: flex;
+    flex-direction: column;
+
+  }
+
+  &__text-wrap {
+    padding: 0 10px;
   }
 
   &__title {
     font-weight: 700;
     font-size: 1.8em;
-    margin: 5px 20px 15px 0;
     line-height: .9em;
+    margin: 5px 20px 15px 0;
   }
   &__metadata {
     display: flex;
@@ -243,7 +243,7 @@
     font-weight: 400;
     text-align: center;
     font-size: 12px;
-    margin: 20px 10px 0 10px;
+    margin: 0;
   }
 
   &__views, &__likes {
@@ -311,11 +311,9 @@
   &__button-wrap {
     display: flex;
     justify-content: flex-end;
-    padding: 0 20px 20px 0;
+    padding: 0;
+    margin-top: 10px;
 
-    // &--edit {
-    //   justify-content: flex-start;
-    // }
   }
 
 
@@ -323,7 +321,7 @@
     padding: 12px 15px;
     border-radius: 30px;
     margin: 0 0 0 10px;
-    background: $color_aqua;
+    background: $color_sky;
     border: none;
     color: rgba(255,255,255, .8);
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);

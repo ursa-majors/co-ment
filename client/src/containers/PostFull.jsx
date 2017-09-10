@@ -228,31 +228,6 @@ class PostFull extends React.Component {
               </div>
             </div>
             <div className={`post-full__card-body`}>
-              <div className={`post-full__image-wrap`}>
-                <div className={`post-full__image-aspect`}>
-                    <div className={`post-full__image-crop`}>
-                      {this.props.post.author_avatar ?
-                        <div
-                          className={`post-full__image`}
-                          style={backgroundStyle}
-                          role="image"
-                          aria-label={this.props.post.author} /> :
-                        <i
-                          className={`fa fa-user-circle fa-5x post-full__icon--avatar`}
-                          aria-hidden="true" />
-                        }
-                    </div>
-                  </div>
-                <div className={`post-full__name-wrap`}>
-                  <span className={`post-full__name`}>
-                    {this.props.post.author_name}</span>
-                  <Link className="unstyled-link" to={`/viewprofile/${this.props.post.author_id}`}>
-                    <span className={`post-full__username`}>
-                      @{this.props.post.author}
-                    </span>
-                </Link>
-                </div>
-              </div>
               <div className={`post-full__text-wrap`}>
                 <div className={`post-full__title`}>
                   {this.props.post.title}
@@ -282,6 +257,29 @@ class PostFull extends React.Component {
                 <div className="tag-value__wrapper">
                     {keywordsDisp ? keywordsDisp : ''}
                 </div> }
+              </div>
+              <div className={`post-full__image-wrap`}>
+                <div className={`post-full__image-aspect`}>
+                    <div className={`post-full__image-crop`}>
+                      {this.props.post.author_avatar ?
+                        <div
+                          className={`post-full__image`}
+                          style={backgroundStyle}
+                          role="image"
+                          aria-label={this.props.post.author} /> :
+                        <i
+                          className={`fa fa-user-circle fa-5x post-full__icon--avatar`}
+                          aria-hidden="true" />
+                        }
+                    </div>
+                  </div>
+                <div className={`post-full__name-wrap`}>
+                  <span className={`post-full__name`}>
+                    {this.props.post.author_name}</span>
+                  <Link className="unstyled-link post-full__username" to={`/viewprofile/${this.props.post.author_id}`}>
+                      @{this.props.post.author}
+                </Link>
+                </div>
               </div>
             </div>
             <div className={ !owner ? `post-full__button-wrap` : `post-full__button-wrap post-full__button-wrap--edit`}>

@@ -164,9 +164,16 @@
     left: 50%;
     transform: translate(-50%, -50%);
     border: none;
-    padding: 25px;
+    padding: 0;
+    margin: -20px 0 0 -20px;
     background-color: transparent;
     z-index: 6;
+    width: 100%;
+
+    @include profile-card-breakpoint {
+
+      margin: 0 0 0 0;
+    }
 
     &__close--x {
   	margin-top: -2px;
