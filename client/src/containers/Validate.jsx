@@ -45,7 +45,7 @@ class Validate extends React.Component {
         <h2 className="title">
           {valStatus}
         </h2>
-        {/* this.props.login.tokenRefreshComplete && */}
+        { this.props.login.tokenRefreshComplete &&
           <div className="validate__text-wrap">
             <div className="validate__text-header">
               {`Congratulations ${this.props.profile.userProfile.username}!`}
@@ -58,7 +58,7 @@ class Validate extends React.Component {
               and then blaze your own trail.</p>
             </div>
           </div>
-     {/*  }*/}
+        }
         <Spinner cssClass={this.props.login.validateSpinnerClass} />
         <ModalSm
           modalClass={this.props.login.validateModal.class}
