@@ -12,7 +12,7 @@ const slides = [
   },
   {
     title: 'Step 1: Profile',
-    image: './build/img/profile.png',
+    image: './img/profile.png',
     imageAlt: 'Profile',
     __html: `<div>
     <p>Begin by filling out your profile</p>
@@ -23,7 +23,7 @@ const slides = [
   },
   {
     title: 'Step 2: Posts',
-    image: './build/img/post.png',
+    image: './img/post.png',
     imageAlt: 'Posts',
     __html: `<div>
     <p>Next, create a post that describes the match you're seeking.</p>
@@ -34,7 +34,7 @@ const slides = [
   },
   {
     title: 'Step 3: Connections',
-    image: './build/img/connection.gif',
+    image: './img/connection.gif',
     imageAlt: 'Connections',
     __html: `<div>
     <p>When you a find match, request a connection!</p>

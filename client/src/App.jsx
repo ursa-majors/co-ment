@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { setWindowSize, setMenuState, setMenuBackground, setScrolled } from './store/actions';
+import { debounce, throttle } from 'underscore';
 
 import './favicons/favicons';
 import HeaderNav from './containers/HeaderNav';
@@ -30,16 +31,17 @@ class App extends React.Component {
 
   componentWillMount() {
     this.updateDimensions();
+    this.setScrolledStatus();
   }
 
   componentDidMount() {
-    window.addEventListener('resize', this.debounce(this.updateDimensions, 100, true));
-    window.addEventListener('scroll', this.throttle(this.setScrolledStatus, 100));
+    window.addEventListener('resize', this.updateDimensions);
+    window.addEventListener('scroll', this.setScrolledStatus);
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateDimensions);
-    window.removeEventListener('scroll', throttled, false);
+    window.removeEventListener('scroll', this.setScrolledStatus);
   }
 
   setScrolledStatus = () => {
@@ -50,38 +52,6 @@ class App extends React.Component {
       this.props.actions.setScrolled(s, sp);
       this.props.actions.setMenuBackground();
     }
-  }
-
-  // Limit the scroll event handler
-  throttle(callback, wait, context = this) {
-    let timeout = null;
-
-    const later = () => {
-      callback.apply(context);
-      timeout = null;
-    };
-
-    return function throttled() {
-      if (!timeout) {
-        timeout = setTimeout(later, wait);
-      }
-    };
-  }
-
-  // Wait till resize finishes before calling again
-  debounce(func, wait, immediate) {
-    let timeout;
-    return () => {
-      const context = this;
-      const later = () => {
-        timeout = null;
-        if (!immediate) func.apply(context);
-      };
-      const callNow = immediate && !timeout;
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-      if (callNow) func.apply(context);
-    };
   }
 
   // Set window dimensions / mobile status in Redux

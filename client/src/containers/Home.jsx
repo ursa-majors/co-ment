@@ -12,11 +12,15 @@ class Home extends React.Component {
 
   componentDidMount() {
     // Check for hash-fragment and stash it in redux
-    // if the redirect is "resetpassword" then go immediately
+    // if the redirect is "resetpassword" or "/validate" then go immediately
     if (this.props.location.hash) {
       const hash = this.props.location.hash.slice(2);
       const url = `/${hash.split('=')[1]}`;
       if (url.startsWith('/resetpassword')) {
+        this.props.history.push(url)
+      } else if (url.startsWith('/validate')) {
+        // do this in case validate forces login
+        this.props.actions.setRedirectUrl(url);
         this.props.history.push(url)
       } else {
         this.props.actions.setRedirectUrl(url);
