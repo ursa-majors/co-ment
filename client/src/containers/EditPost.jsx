@@ -133,7 +133,7 @@ class EditPost extends React.Component {
     if (!this.validateInputs()) { return; }
 
     let excerpt;
-      if (this.props.posts.editForm.body.length > 140) {
+      if (this.props.posts.editForm.content.length > 140) {
         excerpt = this.props.posts.editForm.body.substr(0, 140);
       } else {
         excerpt = null;

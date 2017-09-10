@@ -54,7 +54,6 @@ class InputAutosuggest extends React.Component {
     this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this);
     this.getSuggestions = this.getSuggestions.bind(this);
     this.handleKeyPressAdd = this.handleKeyPressAdd.bind(this);
-    this.onSuggestionSelected = this.onSuggestionSelected.bind(this);
   }
 
   onChange(_, { newValue }) {

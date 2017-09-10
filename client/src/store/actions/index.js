@@ -99,7 +99,7 @@ export function setScrolled(bool, scrollPosition) {
     type: SET_SCROLLED,
     payload: {
       windowScrolled: bool,
-      scrollPosition: scrollPosition,
-    }
+      scrollPosition,
+    },
   });
 }
