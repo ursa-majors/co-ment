@@ -171,7 +171,7 @@
     }
   }
 
-  &__link {
+  &__link  , &__link:visited {
     cursor: pointer;
     text-decoration: none;
     border-bottom: 1px dotted $color_gray_darker;
@@ -227,4 +227,40 @@
     font-size: 1.5em;
   }
 
+  &__btn-wrap {
+  margin: 20px auto 0 auto;
+  z-index: 5;
+  width: 100%;
+  font-weight: 300;
+  letter-spacing: 2px;
+  display: flex;
+  justify-content: center;
+  list-style: none;
+}
+  &__item {
+    margin: 0 10px;
+  }
+
+  &__item-link {
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-transform: lowercase;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    margin-bottom: 5px;
+    padding: 7px 12px;
+    letter-spacing: 2px;
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: $color_sky;
+
+    &:hover, &:focus {
+      background: $color_aqua;
+      color: rgba(255, 2555, 255, 1);
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      transition: box-shadow 300ms ease-in-out;
+    }
+  }
 }

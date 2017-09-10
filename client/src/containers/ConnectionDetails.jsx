@@ -51,10 +51,10 @@ class ConnectionDetails extends React.Component {
     switch (this.props.connection.viewConnection.status) {
       case 'pending':
         actions = (this.props.connection.viewConnection.initiator.id !== this.props.profiles.userProfile._id) ?
-          (<ul className="post-nav">
-            <li className="post-nav__item" >
+          (<ul className="conn-details__btn-wrap">
+            <li className="conn-details__item" >
               <span
-                className="post-nav__item-link pointer"
+                className="conn-details__item-link pointer"
                 onClick={() =>
                   this.props.api.updateConnectionStatus(
                     this.props.appState.authToken,
@@ -68,9 +68,9 @@ class ConnectionDetails extends React.Component {
                 Accept
               </span>
             </li>
-            <li className="post-nav__item" >
+            <li className="conn-details__item" >
               <span
-                className="post-nav__item-link pointer"
+                className="conn-details__item-link pointer"
                 onClick={() =>
                   this.props.api.updateConnectionStatus(
                     this.props.appState.authToken,
@@ -90,10 +90,10 @@ class ConnectionDetails extends React.Component {
         break;
       case 'accepted':
         actions = (
-          <ul className="post-nav">
-            <li className="post-nav__item" >
+          <ul className="conn-details__btn-wrap">
+            <li className="conn-details__item" >
               <span
-                className="post-nav__item-link pointer"
+                className="conn-details__item-link pointer"
                 onClick={() =>
                   this.props.api.updateConnectionStatus(
                     this.props.appState.authToken,
