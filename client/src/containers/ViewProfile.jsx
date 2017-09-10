@@ -153,8 +153,16 @@ class ViewProfile extends React.Component {
     } else {
       owner = false;
     }
+    let avatar;
+    if (this.props.profile.currentProfile) {
+      if (!this.props.profile.currentProfile.avatarUrl) {
+        avatar = 'https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/android-chrome-384x384.png';
+      } else {
+        avatar = this.props.profile.currentProfile.avatarUrl;
+      }
+    }
     const backgroundStyle = {
-      backgroundImage: `url(${this.props.profile.currentProfile.avatarUrl})`,
+      backgroundImage: `url(${avatar})`,
       backgroundSize: "cover",
       backgroundPosition: "center center",
     }
@@ -192,16 +200,11 @@ class ViewProfile extends React.Component {
               <div className={`${cardSize}__image-wrap`}>
                 <div className={`${cardSize}__image-aspect`}>
                   <div className={`${cardSize}__image-crop`}>
-                    {this.props.profile.currentProfile.avatarUrl ?
-                      <div
-                        className={`${cardSize}__image`}
-                        style={backgroundStyle}
-                        role="image"
-                        aria-label={this.props.profile.currentProfile.username} /> :
-                      <i
-                        className={`fa fa-user-circle fa-5x ${cardSize}__icon--avatar`}
-                        aria-hidden="true" />
-                    }
+                    <div
+                      className={`${cardSize}__image`}
+                      style={backgroundStyle}
+                      role="image"
+                      aria-label={this.props.profile.currentProfile.username} />
                   </div>
                 </div>
               </div> {/* image-wrap */}

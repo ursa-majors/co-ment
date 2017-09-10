@@ -88,12 +88,12 @@ class Connection extends React.Component {
       mentor: {
         id: (this.state.role === 'mentor' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author_id ),
         name: (this.state.role === 'mentor' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author ),
-        avatar: (this.state.role === 'mentor' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.avatarUrl ),
+        avatar: (this.state.role === 'mentor' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.author_avatar ),
       },
       mentee: {
         id: (this.state.role === 'mentee' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author_id ),
         name: (this.state.role === 'mentee' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author ),
-        avatar: (this.state.role === 'mentee' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.avatarUrl ),
+        avatar: (this.state.role === 'mentee' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.author_avatar ),
       },
       initiator: {
         id: this.props.appState.userId,

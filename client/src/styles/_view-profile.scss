@@ -40,7 +40,7 @@
       padding: 12px 15px;
       border-radius: 30px;
       margin: 10px;
-      background: $color_aqua;
+      background: $color_sky;
       border: none;
       color: rgba(255,255,255,.8);
       box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
@@ -180,6 +180,7 @@
     &__location {
       font-weight: 400;
       font-family: 'Alegreya Sans SC', sans-serif;
+      color: $color_gray_lighter;
       text-transform: lowercase;
       font-size: 16px;
       @include profile-card-breakpoint {
