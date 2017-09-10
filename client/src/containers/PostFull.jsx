@@ -25,7 +25,9 @@ class PostFull extends React.Component {
   }
 
   componentWillMount() {
-    console.log(`PostFull.jsx > 28: is this thing on?`);
+    console.log(`PostFull.jsx > 29: ${this.props}`);
+    console.log(`PostFull.jsx > 30: ${this.props.posts}`);
+    console.log(`PostFull.jsx > 31: ${this.props.post}`);
   }
 
   componentDidMount() {
