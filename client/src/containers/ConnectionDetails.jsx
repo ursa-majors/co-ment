@@ -2,16 +2,28 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
+import Modal from 'react-modal';
 
 import Spinner from './Spinner';
 import ModalSm from './ModalSm';
+import ModalGuts from './ModalGuts';
 import { formatDate } from '../utils/';
 
 import * as apiActions from '../store/actions/apiConnectionActions';
+import * as apiPostActions from '../store/actions/apiPostActions';
 import * as Actions from '../store/actions/connectionActions';
 
 
 class ConnectionDetails extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      post: {},
+      modalOpen: false,
+    };
+
+  }
 
   // Find the connection matching the URL param and set it in redux state.
   componentDidMount() {
@@ -46,6 +58,25 @@ class ConnectionDetails extends React.Component {
       }
     }
   }
+
+  closeModal = () => {
+    const newState = { ...this.state };
+    newState.modalOpen = false;
+    newState.modalTitle = '';
+    this.setState({
+      ...newState,
+    });
+  }
+
+  openModal = (postId) => {
+    const newState = { ...this.state };
+    newState.modalOpen = true;
+    newState.post._id = postId;
+    this.setState({
+      ...newState,
+    });
+  }
+
   getActions = () => {
     let actions;
     switch (this.props.connection.viewConnection.status) {
@@ -104,7 +135,7 @@ class ConnectionDetails extends React.Component {
                   )
                 }
               >
-                Finish
+                Confirm
               </span>
             </li>
           </ul>
@@ -120,6 +151,8 @@ class ConnectionDetails extends React.Component {
 
   render() {
     const conn = this.props.connection.viewConnection;
+    const modalStyles = { overlay: { zIndex: 1001, backgroundColor: 'rgba(0,0,0,.7)', } };
+    const title = this.state.post && this.state.post.title ? this.state.post.title : '';
 
     let mentorAvatar;
     let menteeAvatar;
@@ -165,6 +198,22 @@ class ConnectionDetails extends React.Component {
             }
           }
         />
+        <Modal
+          style={modalStyles}
+          isOpen={this.state.modalOpen}
+          onRequestClose={this.closeModal}
+          className="post__modal"
+          post={this.state.post}
+          contentLabel={title}
+        >
+          <ModalGuts
+            closeModal={this.closeModal}
+            title={title}
+            post={this.state.post}
+            shuffle={reset}
+            history={this.props.history}
+          />
+        </Modal>
         <div className="conn-details__preview">
           <div className="conn-details__text-wrap">
             <div className="conn-details__title">
@@ -213,9 +262,17 @@ class ConnectionDetails extends React.Component {
               </tr>
               <tr className="conn-details__tr">
                 <td className="conn-details__td">Original Post</td>
-                <td className="conn-details__td"><Link className="conn-details__link" to={`/viewpost/${this.props.connection.viewConnection.originalPost.id}`}>
+                <td className="conn-details__td">
+                <button className="aria-button conn-details__link"
+                  onClick={this.openModal(this.props.connection.viewConnection.originalPost.id);}
+                  onKeyDown={
+                    if (e.keyCode === 13 || e.which === 13 ) {
+                      this.openModal(this.props.connection.viewConnection.originalPost.id);
+                    }
+                  }>
               {this.props.connection.viewConnection.originalPost.title}
-            </Link> </td>
+                </button>
+                </td>
               </tr>
               <tr className="conn-details__tr">
                 <td className="conn-details__td">Status</td>
@@ -241,10 +298,12 @@ const mapStateToProps = state => ({
   appState: state.appState,
   connection: state.connection,
   profiles: state.profiles,
+  posts: state.posts,
 });
 
 const mapDispatchToProps = dispatch => ({
   api: bindActionCreators(apiActions, dispatch),
+  apiPostActions: bindActionCreators(apiPostActions, dispatch),
   actions: bindActionCreators(Actions, dispatch),
 });
 
