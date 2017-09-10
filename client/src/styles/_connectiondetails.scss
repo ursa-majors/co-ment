@@ -34,24 +34,50 @@
     text-align: center;
   }
 
-  &__image {
+   &__image-wrap {
+      width: 100%;
+      padding: 10px;
+      flex-basis: 40%;
+      @include profile-card-breakpoint {
+        margin-top: 20px;
+        text-align: center;
+        padding: 20px 20px 0 20px;
+      }
+      }
+
+  &__image-aspect{
+    width: 100%;
+    padding-bottom: 100%;
+    position: relative;
+    @include profile-card-breakpoint {
+      width: 50%;
+      padding-bottom: 50%;
+      margin: 0 auto;
+      }
+  }
+
+  &__image-crop {
+    width: 100%;
     border-radius: 100%;
-    width: 130px;
-    max-width: 100%;
     height: auto;
-    border: 1px solid rgba(255,255,255,.5);
-  }
-
-  &__icon {
-    height: 100%;
-    width: auto;
-    color: rgba(255,255,255,.4);
-  }
-
-  &__image-wrap {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 2px solid rgba(255,255,255,.9);
+    overflow: hidden;
     text-align: center;
-    width: 50%;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__image {
+    min-width: 100%;
+    min-height: 100%;
     height: auto;
+    margin: 0 auto;
+
   }
 
   &__text-wrap {
@@ -64,6 +90,74 @@
     display: flex;
     flex-direction: row;
     padding: 10px;
+  }
+
+  &__table {
+    background: rgba(255, 255, 255, 0.75);
+    border-radius: 10px;
+    box-shadow: 0 16px 24px rgba(0, 0, 0, 0.4);
+    border-collapse: collapse;
+  }
+
+  &__thead{
+    border-bottom: 1px dotted $color_gray_darker;
+  }
+
+  &__tr {
+    border-bottom: 1px dotted $color_gray_darker;
+
+    &:nth-child(odd) {
+      background-color: rgba(255, 255, 255, 0.75);
+    }
+    &:last-child > .user-posts__td {
+      padding-bottom:20px;
+    }
+  }
+
+  &__th {
+    font-family: 'Alegreya Sans SC', sans-serif;
+    color: $color_gray_darker;
+    font-weight: 400;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    font-size: 1.2em;
+    padding: 15px;
+    padding-top:20px;
+
+    &:first-child {
+      padding-left:30px;
+    }
+    &:last-child {
+      padding-right:30px;
+    }
+  }
+
+  &__td {
+    font-family: 'Alegreya Sans', sans-serif;
+    color: $color_gray_darker;
+    font-weight: 400;
+    padding: 15px;
+    border: none;
+    &:first-child {
+      padding-left:30px;
+      font-family: 'Alegreya Sans SC', sans-serif;
+      text-transform: lowercase;
+      letter-spacing: 2px;
+    }
+    &:last-child {
+      padding-right:30px;
+    }
+  }
+
+  &__link {
+    cursor: pointer;
+    text-decoration: none;
+    border-bottom: 1px dotted $color_gray_darker;
+
+    &:hover, &:active, &:focus {
+      color: $color_aqua;
+      border-bottom: 1px dotted $color_aqua;
+      }
   }
 
   &__title {

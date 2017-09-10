@@ -180,6 +180,7 @@
     &__location {
       font-weight: 400;
       font-family: 'Alegreya Sans SC', sans-serif;
+      color: $color_gray_lighter;
       text-transform: lowercase;
       font-size: 16px;
       @include profile-card-breakpoint {

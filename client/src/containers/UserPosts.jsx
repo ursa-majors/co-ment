@@ -43,7 +43,7 @@ class UserPosts extends React.Component {
             }
           }
         />
-        {this.props.posts.entries.length &&
+        {this.props.posts.entries.length && this.props.posts.loadPostsSpinnerClass === 'spinner__hide' ?
           <div className="user-posts__wrap">
             <div className="user-posts__header">
               posts
@@ -86,7 +86,7 @@ class UserPosts extends React.Component {
                 }
               </tbody>
             </table>
-          </div> }
+          </div> : ''}
       </div>
     );
   }
