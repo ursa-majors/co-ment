@@ -51,17 +51,14 @@ class Validate extends React.Component {
               {`Congratulations ${this.props.profile.userProfile.username}!`}
             </div>
             <div className="validate__text">
-              <p>This is the beginning of your Co/Ment journey.<br/>
-              Next step: Choose your path. <br/>
-              Are you <Link to='/posts'>looking for an adviser</Link>,<br/>
-              or are you ready to <Link to='/mentorpath'>be a guiding star</Link>?</p>
-              <p>Get started by <Link to='/profile'>building your profile</Link>,<br/>
-              then <Link to='/posts'>browse posts made by other users</Link>, <br/>or create one yourself.</p>
+              <p>This is the beginning of your Co/Ment journey. Next step: Choose your path. <br/>
+              Are you <Link to='/posts'>looking for an adviser</Link>, or are you ready to <Link to='/mentorpath'>be a guiding star</Link>?</p>
+              <p>Get started by <Link to='/profile'>building your profile</Link>, then <Link to='/posts'>browse posts made by other users</Link>, <br/>or create one yourself.</p>
               <p>Or <Link to='/about'>take a tour of the site</Link> <br/>
               and then blaze your own trail.</p>
             </div>
           </div>
-       }
+        }
         <Spinner cssClass={this.props.login.validateSpinnerClass} />
         <ModalSm
           modalClass={this.props.login.validateModal.class}
