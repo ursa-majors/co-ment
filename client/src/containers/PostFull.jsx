@@ -232,27 +232,9 @@ class PostFull extends React.Component {
                 <div className={`post-full__title`}>
                   {this.props.post.title}
                 </div>
-                { this.props.post.excerpt ?
-                  <div className={`post-full__body post-full__excerpt`}>
-                    {`${this.props.post.excerpt}...`}
-                    <span
-                      className="flip-it post-full__readmore tag-value"
-                      onClick={()=>this.flip()}
-                      tabIndex={0}
-                      name='flip'
-                      aria-label='flip'
-                      onKeyDown={e => this.handleKeyDown(e)}
-                      >
-                      <span className="tag-value__label">
-                      more &nbsp;
-                      <i className="fa fa-chevron-right post-full__icon--readmore" aria-hidden="true" />
-                      </span>
-                    </span>
-                  </div> :
                   <div className={`post-full__body`}>
                     {this.props.post.body}
                   </div>
-                }
                 {!this.state.thumb &&
                 <div className="tag-value__wrapper">
                     {keywordsDisp ? keywordsDisp : ''}
