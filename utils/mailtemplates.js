@@ -164,7 +164,7 @@ const longEmail = (title, url, toUser, subhead, bodyText, buttonText) => {
                     <tbody>
                       <tr>
                         <td style="color:#545454;" class="">
-                        <p style="color: #545454; font-size: 1.4em; line-height: 1.5em;font-weight:300; font-family: 'Alegreya Sans', sans-serif;text-align:center;">Great news! <strong>${fromUser}</strong> (<a class="link" href="mailto:${fromEmail}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${fromEmail}</a>) has responded to your ad on co/ment!</p>
+                        <p style="color: #545454; font-size: 1.4em; line-height: 1.5em;font-weight:300; font-family: 'Alegreya Sans', sans-serif;text-align:center;">${{subhead}}</p>
 
                         <p style="color: 545454; font-size: 1.2em; line-height: 1.4em;font-weight:300; text-align: left; padding: 0 20px;">${bodyText}</p>
                         <br>
@@ -444,9 +444,16 @@ const validationTemplate = (url) => {
   return shortEmail('co/ment Account Validation Email', url, 'Welcome!', 'Click below to validate your account:', 'Validate Email');
 };
 
+// longEmail( title, url, toUser, subhead, bodyText, buttonText )
 const contactTemplate = (toUser, fromUser, fromEmail, bodyText, connectionId) => {
-  return longEmail('co/ment Connection Request Email', `https://co-ment.glitch.me/connectiondetails/${connectionId}`, `Great news! <strong>${fromUser}</strong> (<a class="link" href="mailto:${fromEmail}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${fromEmail}</a>) has responded to your ad on co/ment!`, bodyText, 'View Connection');
-      };
+  return longEmail(
+    'co/ment Connection Request Email',
+    `https://co-ment.glitch.me/connectiondetails/${connectionId}`,
+    toUser,
+    `Great news! <strong>${fromUser}</strong> (<a class="link" href="mailto:${fromEmail}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${fromEmail}</a>) has responded to your ad on co/ment!`,
+    bodyText,
+    'View Connection');
+};
 
 module.exports = {
     pwResetTemplate    : pwResetTemplate,
