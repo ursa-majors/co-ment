@@ -111,6 +111,8 @@ class Connection extends React.Component {
         if (result1.type === 'CONNECTION_SUCCESS') {
           this.props.api.contact(token, this.state.body, this.props.connection.connectionId, this.props.posts.currentPost.author_id)
           .then((result2) => {
+            console.log('Connection.jsx > 114');
+            console.log(result2);
             if (result2.type === "CONTACT_SUCCESS") {
               this.props.history.push('/connectionresult');
             }

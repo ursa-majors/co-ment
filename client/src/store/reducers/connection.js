@@ -256,6 +256,7 @@ function connection(state = INITIAL_STATE, action) {
     *  Purpose: Set the connection spinner to indicate an API call is in progress.
     */
     case CONTACT_REQUEST:
+    console.log('connection.js > 259: contact request');
       return Object.assign(
         {},
         state,
@@ -270,6 +271,7 @@ function connection(state = INITIAL_STATE, action) {
     *  Purpose: Let the user know the email was sent.
     */
     case CONTACT_SUCCESS:
+      console.log('connection.js > 259: contact success');
       return Object.assign(
         {},
         state,
