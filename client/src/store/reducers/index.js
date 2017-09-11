@@ -7,9 +7,10 @@ import profiles from '../reducers/profiles';
 import connection from '../reducers/connection';
 import gridControls from '../reducers/gridControls';
 import tour from '../reducers/tour';
+import connectionEmail from '../reducers/connectionEmail';
 
 const rootReducer = combineReducers({
-  appState, register, login, posts, profiles, connection, gridControls, tour,
+  appState, register, login, posts, profiles, connection, gridControls, tour, connectionEmail,
 });
 
 export default rootReducer;

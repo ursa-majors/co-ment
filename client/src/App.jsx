@@ -19,7 +19,7 @@ import Logout from './containers/Logout';
 import MentorPath from './containers/MentorPath';
 import PostFull from './containers/PostFull';
 import ViewProfile from './containers/ViewProfile';
-import Connection from './containers/Connection';
+import ConnectionEmail from './containers/ConnectionEmail';
 import Connections from './containers/Connections';
 import ConnectionResult from './containers/ConnectionResult';
 import ConnectionDetails from './containers/ConnectionDetails';
@@ -35,8 +35,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    window.addEventListener('resize', this.updateDimensions);
-    window.addEventListener('scroll', this.setScrolledStatus);
+    window.addEventListener('resize', debounce(this.updateDimensions, 100));
+    window.addEventListener('scroll', throttle(this.setScrolledStatus, 100));
   }
 
   componentWillUnmount() {
@@ -88,7 +88,7 @@ class App extends React.Component {
               <Route path="/editprofile/:id" component={EditProfile} />
               <Route path="/editpost/:id?" component={EditPost} />
               <Route path="/mentorpath" component={MentorPath} />
-              <Route path="/connection" component={Connection} />
+              <Route path="/connectemail" component={ConnectionEmail} />
               <Route path="/connections" component={Connections} />
               <Route path="/connectionresult" component={ConnectionResult} />
               <Route path="/connectiondetails/:id" component={ConnectionDetails} />

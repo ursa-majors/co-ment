@@ -1,23 +1,18 @@
 import { CALL_API } from 'redux-api-middleware';
 
-export const CONTACT_REQUEST = 'CONTACT_REQUEST';
-export const CONTACT_SUCCESS = 'CONTACT_SUCCESS';
-export const CONTACT_FAILURE = 'CONTACT_FAILURE';
+export const SEND_EMAIL_REQUEST = 'SEND_EMAIL_REQUEST';
+export const SEND_EMAIL_SUCCESS = 'SEND_EMAIL_SUCCESS';
+export const SEND_EMAIL_FAILURE = 'SEND_EMAIL_FAILURE';
 
-export function contact(token, msg, connectionId, recipient) {
-  const body = {
-    connectionId,
-    bodyText: msg,
-  };
-
+export function sendEmail(token, mailOptions) {
   return {
     [CALL_API]: {
-      endpoint: `https://co-ment.glitch.me/api/contact/${recipient}`,
+      endpoint: 'https://co-ment.glitch.me/api/sendemail/',
       method: 'POST',
-      types: [CONTACT_REQUEST, CONTACT_SUCCESS, CONTACT_FAILURE],
+      types: [SEND_EMAIL_REQUEST, SEND_EMAIL_SUCCESS, SEND_EMAIL_FAILURE],
       headers: { Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+      body: JSON.stringify(mailOptions),
     },
   };
 }

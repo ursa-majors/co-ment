@@ -99,7 +99,7 @@ class ConnectionDetails extends React.Component {
                     this.props.appState.authToken,
                     {
                       id: this.props.connection.viewConnection._id,
-                      type: 'EXPIRE',
+                      type: 'DEACTIVATE',
                     },
                   )
                 }

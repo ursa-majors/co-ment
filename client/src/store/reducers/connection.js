@@ -2,7 +2,7 @@ import update from 'immutability-helper';
 
 import { SET_VIEW_CONNECTION, CLEAR_VIEW_CONNECTION, SET_CONNECTIONS_MODAL, SET_CONN_DETAILS_MODAL,
   SET_CONN_MODAL } from '../actions/connectionActions';
-import { CONTACT_REQUEST, CONTACT_SUCCESS, CONTACT_FAILURE } from '../actions/apiActions';
+import { SEND_EMAIL_REQUEST, SEND_EMAIL_SUCCESS, SEND_EMAIL_FAILURE } from '../actions/apiActions';
 import { CONNECTION_REQUEST, CONNECTION_SUCCESS, CONNECTION_FAILURE, GET_ALL_CONNECTIONS_REQUEST,
   GET_ALL_CONNECTIONS_SUCCESS, GET_ALL_CONNECTIONS_FAILURE, UPDATE_CONNECTION_STATUS_REQUEST,
   UPDATE_CONNECTION_STATUS_SUCCESS, UPDATE_CONNECTION_STATUS_FAILURE } from '../actions/apiConnectionActions';
@@ -255,7 +255,7 @@ function connection(state = INITIAL_STATE, action) {
     *  Payload: None.
     *  Purpose: Set the connection spinner to indicate an API call is in progress.
     */
-    case CONTACT_REQUEST:
+    case SEND_EMAIL_REQUEST:
       return Object.assign(
         {},
         state,
@@ -269,7 +269,7 @@ function connection(state = INITIAL_STATE, action) {
     *  Payload: None. (The email was sent to user)
     *  Purpose: Let the user know the email was sent.
     */
-    case CONTACT_SUCCESS:
+    case SEND_EMAIL_SUCCESS:
       return Object.assign(
         {},
         state,
@@ -283,7 +283,7 @@ function connection(state = INITIAL_STATE, action) {
     *  Payload: Error message
     *  Purpose: Display modal with email error message
     */
-    case CONTACT_FAILURE:
+    case SEND_EMAIL_FAILURE:
       error = action.payload.response.message || 'An error occurred while attempting to email user';
       return Object.assign(
         {},
