@@ -26,12 +26,12 @@ class Validate extends React.Component {
         token = JSON.parse(token);
         const user = JSON.parse(window.localStorage.getItem('userId'));
         // If we validate successfully, look for redirect_url and follow it
-        this.props.api.validateToken(token, user)
+        this.props.api.refreshToken(token, user)
           .then((result) => {
-            if (result.type === 'VALIDATE_TOKEN_SUCCESS') {
+            if (result.type === 'REFRESH_TOKEN_SUCCESS') {
               this.props.actions.setRedirectUrl('');
             }
-            if (result.type === 'VALIDATE_TOKEN_FAILURE') {
+            if (result.type === 'REFRESH_TOKEN_FAILURE') {
               this.props.actions.setLoginError('You must log in to validate account');
               this.props.history.push('/login');
             }
