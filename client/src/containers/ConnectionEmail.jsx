@@ -95,22 +95,26 @@ class ConnectionEmail extends React.Component {
                   id: this.props.connectionEmail.connectionId,
                   type: 'ACCEPT',
                 },
-              );
-              this.props.emailActions.setEmailModal({
-                class: 'modal__show',
-                text: `The email was sent and your Connection is now Accepted!\n\nYou will receive a copy of the email.\n\nFollow the instructions to begin your mentorship.\n\nGood Luck!`,
-                title: 'SUCCESS',
-                type: 'modal__success',
-                action: () => {
+              )
+              .then((result) => {
+                if (result.type === 'UPDATE_CONNECTION_STATUS_SUCCESS') {
                   this.props.emailActions.setEmailModal({
-                    class: 'modal__hide',
-                    text: '',
-                    title: '',
-                    type: '',
-                    action: null,
+                    class: 'modal__show',
+                    text: `The email was sent and your Connection is now Accepted!\n\nYou will receive a copy of the email.\n\nFollow the instructions to begin your mentorship.\n\nGood Luck!`,
+                    title: 'SUCCESS',
+                    type: 'modal__success',
+                    action: () => {
+                      this.props.emailActions.setEmailModal({
+                        class: 'modal__hide',
+                        text: '',
+                        title: '',
+                        type: '',
+                        action: null,
+                      });
+                      this.props.history.push('/connections');
+                    },
                   });
-                  this.props.history.push('/connections');
-                },
+                }
               });
             }
           });
@@ -119,29 +123,33 @@ class ConnectionEmail extends React.Component {
       case 'decline':
         this.props.emailActions.sendEmail(token, email)
           .then((result) => {
-            if (result.type === "SEND_EMAIL_SUCCESS") {
+            if (result.type === 'SEND_EMAIL_SUCCESS') {
               this.props.connectActions.updateConnectionStatus(
                 token,
                 {
                   id: this.props.connectionEmail.connectionId,
                   type: 'DECLINE',
                 },
-              );
-              this.props.emailActions.setEmailModal({
-                class: 'modal__show',
-                text: `An email was sent to notify ${this.props.connectionEmail.recipient} that the Connection was declined`,
-                title: 'COMPLETE',
-                type: 'modal__success',
-                action: () => {
+              )
+              .then((result) => {
+                if (result.type === 'UPDATE_CONNECTION_STATUS_SUCCESS') {
                   this.props.emailActions.setEmailModal({
-                    class: 'modal__hide',
-                    text: '',
-                    title: '',
-                    type: '',
-                    action: null,
+                    class: 'modal__show',
+                    text: `An email was sent to notify ${this.props.connectionEmail.recipient} that the Connection was declined`,
+                    title: 'COMPLETE',
+                    type: 'modal__success',
+                    action: () => {
+                      this.props.emailActions.setEmailModal({
+                        class: 'modal__hide',
+                        text: '',
+                        title: '',
+                        type: '',
+                        action: null,
+                      });
+                      this.props.history.push('/connections');
+                    },
                   });
-                  this.props.history.push('/connections');
-                },
+                }
               });
             }
           });
@@ -150,29 +158,33 @@ class ConnectionEmail extends React.Component {
         email.copySender = true;
         this.props.emailActions.sendEmail(token, email)
           .then((result) => {
-            if (result.type === "SEND_EMAIL_SUCCESS") {
+            if (result.type === 'SEND_EMAIL_SUCCESS') {
               this.props.connectActions.updateConnectionStatus(
                 token,
                 {
                   id: this.props.connectionEmail.connectionId,
                   type: 'DEACTIVATE',
                 },
-              );
-              this.props.emailActions.setEmailModal({
-                class: 'modal__show',
-                text: `Your connection with ${this.props.connectionEmail.recipient} is now completed.\n\nAn email was sent to both users to confirm this action.`,
-                title: 'COMPLETE',
-                type: 'modal__success',
-                action: () => {
+              )
+              .then((result) => {
+                if (result.type === 'UPDATE_CONNECTION_STATUS_SUCCESS') {
                   this.props.emailActions.setEmailModal({
-                    class: 'modal__hide',
-                    text: '',
-                    title: '',
-                    type: '',
-                    action: null,
+                    class: 'modal__show',
+                    text: `Your connection with ${this.props.connectionEmail.recipient} is now completed.\n\nAn email was sent to both users to confirm this action.`,
+                    title: 'COMPLETE',
+                    type: 'modal__success',
+                    action: () => {
+                      this.props.emailActions.setEmailModal({
+                        class: 'modal__hide',
+                        text: '',
+                        title: '',
+                        type: '',
+                        action: null,
+                      });
+                      this.props.history.push('/connections');
+                    },
                   });
-                  this.props.history.push('/connections');
-                },
+                }
               });
             }
           });
