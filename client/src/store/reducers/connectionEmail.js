@@ -1,5 +1,5 @@
 import update from 'immutability-helper';
-import { SET_EMAIL_OPTIONS, SET_FORM_FIELD, CLEAR_FORM_ERROR, SET_FORM_ERROR,
+import { SET_EMAIL_OPTIONS, SET_EMAIL_FORM_FIELD, CLEAR_FORM_ERROR, SET_FORM_ERROR,
   SET_EMAIL_MODAL } from '../actions/emailActions';
 import { SEND_EMAIL_REQUEST, SEND_EMAIL_SUCCESS, SEND_EMAIL_FAILURE } from '../actions/apiActions';
 import { UPDATE_CONNECTION_STATUS_REQUEST, UPDATE_CONNECTION_STATUS_SUCCESS,
@@ -42,7 +42,7 @@ function connectionEmail(state = INITIAL_STATE, action) {
         },
       );
 
-    case SET_FORM_FIELD:
+    case SET_EMAIL_FORM_FIELD:
       return update(state, { [action.payload.id]: { $set: action.payload.value } });
 
     case CLEAR_FORM_ERROR:
