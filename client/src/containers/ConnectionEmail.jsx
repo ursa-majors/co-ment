@@ -199,7 +199,7 @@ class ConnectionEmail extends React.Component {
     let bodyPlaceholder = 'Include a short message to explain why you want to connect with this user...';
     if (this.props.connectionEmail.type === 'accept') {
       buttonText = 'Accept Request';
-      bodyPlaceholder = `Include a personal message. Let your ${this.props.connectionEmail.role} know the best way to communicate with you to begin your mentorship...`;
+      bodyPlaceholder = `Include a personal message. Let ${this.props.connectionEmail.recipient} know the best way to communicate with you to begin your mentorship...`;
     }
     if (this.props.connectionEmail.type === 'decline') {
       buttonText = 'Decline Request';
