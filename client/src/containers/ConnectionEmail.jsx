@@ -98,7 +98,7 @@ class ConnectionEmail extends React.Component {
               );
               this.props.emailActions.setEmailModal({
                 class: 'modal__show',
-                text: 'Connection Accepted!',
+                text: `The email was sent and your Connection is now Accepted!\n\nYou will receive a copy of the email.\n\nFollow the instructions to begin your mentorship.\n\nGood Luck!`,
                 title: 'SUCCESS',
                 type: 'modal__success',
                 action: () => {
@@ -129,7 +129,7 @@ class ConnectionEmail extends React.Component {
               );
               this.props.emailActions.setEmailModal({
                 class: 'modal__show',
-                text: 'Connection Declined',
+                text: `An email was sent to notify ${this.props.connectionEmail.recipient} that the Connection was declined`,
                 title: 'COMPLETE',
                 type: 'modal__success',
                 action: () => {
@@ -160,7 +160,7 @@ class ConnectionEmail extends React.Component {
               );
               this.props.emailActions.setEmailModal({
                 class: 'modal__show',
-                text: 'Connection Deactivated',
+                text: `Your connection with ${this.props.connectionEmail.recipient} is now completed.\n\nAn email was sent to both users to confirm this action.`,
                 title: 'COMPLETE',
                 type: 'modal__success',
                 action: () => {
@@ -183,6 +183,20 @@ class ConnectionEmail extends React.Component {
   }
 
   render() {
+    let buttonText = 'Send Request';
+    let bodyPlaceholder = 'Include a short message to explain why you want to connect with this user...';
+    if (this.props.connectionEmail.type === 'accept') {
+      buttonText = 'Accept Request';
+      bodyPlaceholder = 'Include a personal message to accept the connection...';
+    }
+    if (this.props.connectionEmail.type === 'decline') {
+      buttonText = 'Decline Request';
+      bodyPlaceholder = 'Include a short message to explain why you are declinig...';
+    }
+    if (this.props.connectionEmail.type === 'deactivate') {
+      buttonText = 'End Connection';
+      bodyPlaceholder = 'Include a personal message to conclude your Connection...';
+    }
     return (
       <div className="container form">
         <div className="form__body">
@@ -213,7 +227,13 @@ class ConnectionEmail extends React.Component {
           <div className="form__input-group">
             <label className="form__label" htmlFor="body">Body:
             </label>
-            <textarea className="form__input form__connection-input" id="body" value={this.props.connectionEmail.body} onChange={event => this.handleChange(event)} ref={(input) => { this.textInput = input; }}/>
+            <textarea
+              className="form__input form__connection-input"
+              id="body" value={this.props.connectionEmail.body}
+              onChange={event => this.handleChange(event)}
+              ref={(input) => { this.textInput = input; }}
+              placeholder={bodyPlaceholder}
+            />
             {this.props.connectionEmail.body &&
               <div className="character-count"> {620 - this.props.connectionEmail.body.length} characters remaining</div> }
           </div>
@@ -222,7 +242,7 @@ class ConnectionEmail extends React.Component {
           </div>
           <div className="form__input-group">
             <div className="form__button-wrap">
-              <button className="form__button pointer" id="btn-add" onClick={() => this.sendMsg()}>Send Request</button>
+              <button className="form__button pointer" id="btn-add" onClick={() => this.sendMsg()}>{buttonText}</button>
             </div>
           </div>
         </div>
