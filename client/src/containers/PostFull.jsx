@@ -8,6 +8,8 @@ import * as apiActions from '../store/actions/apiPostActions';
 import { setEmailOptions } from '../store/actions/emailActions';
 import { formatDate } from '../utils/';
 
+import Spinner from './Spinner';
+
 class PostFull extends React.Component {
 
   static adjustCardHeight() {
@@ -22,13 +24,8 @@ class PostFull extends React.Component {
     super(props);
     this.state = {
       flip: false,
+      post: {},
     };
-  }
-
-  componentWillMount() {
-    console.log(`PostFull.jsx > 29: ${this.props}`);
-    console.log(`PostFull.jsx > 30: ${this.props.posts}`);
-    console.log(`PostFull.jsx > 31: ${this.props.post}`);
   }
 
   componentDidMount() {
@@ -38,7 +35,6 @@ class PostFull extends React.Component {
     } else {
      postId = this.props.post._id;
     }
-    console.log(`PostFull.jsx > 34: PostID = ${postId}`);
     const token = this.props.appState.authToken;
     if (this.props.posts.currentPost._id !== postId) {
       this.props.actions.clearCurrentPost();
@@ -123,18 +119,21 @@ class PostFull extends React.Component {
   }
 
   render() {
-    let roleText;
     let post = {}
+    let postWrapper = '';
+    let compress = true;
     // check to see if this component recieved a full post object from props
     // (clicked openModal from thumb view)
     // or if it's rendering as a stand-alone view & is pulling data from store.
     // there has got to be a better way to do this...
-    if (this.props.post.role) {
+    if (this.props.post && this.props.post.role) {
       post = { ...this.props.post }
     } else {
       post = { ...this.props.posts.currentPost }
+      postWrapper = 'post-full__standalone-wrap';
+      compress = false;
     }
-    roleText = (post.role === 'mentor' ? 'mentor' : 'mentee');
+    const roleText = (post.role === 'mentor' ? 'mentor' : 'mentee');
     const owner = (this.props.appState.userId === post.author_id);
     const isLiked = this.props.profiles.userProfile.likedPosts.includes(post._id) ?
       'post-full__liked' :
@@ -143,16 +142,18 @@ class PostFull extends React.Component {
     if (owner) {
       actions = (
         <div>
-          <button
-            className="close post-full__compress"
-            aria-label="close"
-            name="close"
-            data-dismiss="modal"
-            onKeyDown={e => this.handleKeyDown(e)}
-            onClick={()=>this.props.closeModal()}>
-                <i className="close fa fa-compress thumb__icon--compress"
-                  aria-label="close"/>
-          </button>
+          {compress &&
+            <button
+              className="close post-full__compress"
+              aria-label="close"
+              name="close"
+              data-dismiss="modal"
+              onKeyDown={e => this.handleKeyDown(e)}
+              onClick={()=>this.props.closeModal()}>
+                  <i className="close fa fa-compress thumb__icon--compress"
+                    aria-label="close"/>
+            </button>
+          }
           <button
             className={`edit post-full__edit`}
             aria-label="edit"
@@ -175,7 +176,8 @@ class PostFull extends React.Component {
     } else {
       actions = (
         <div>
-          <button
+          {compress &&
+            <button
               className="close post-full__compress"
               aria-label="close"
               name="close"
@@ -184,7 +186,8 @@ class PostFull extends React.Component {
               onClick={()=>this.props.closeModal()}>
                   <i className="close fa fa-compress thumb__icon--compress"
                     aria-label="close"/>
-          </button>
+            </button>
+          }
           <button
             className="like post-full__like"
             aria-label="like"
@@ -237,11 +240,12 @@ class PostFull extends React.Component {
     }
 
     return (
+      <div className={postWrapper}>
+      { post.meta ?
         <div className="post-full">
-        {!this.state.flip &&
           <div className={post.role === 'mentor' ? `post-full__ribbon` : `post-full__ribbon--green`}>
             <span className={post.role === 'mentor' ? `post-full__ribbon-span` : `post-full__ribbon-span--green`}>{roleText}</span>
-          </div> }
+          </div>
           <div className={this.state.flip ? "post-full__side front flip" : "post-full__side front"} id="front">
             <div className="post-full__metadata">
               <span className="post-full__views">
@@ -300,8 +304,9 @@ class PostFull extends React.Component {
             <div className={ !owner ? `post-full__button-wrap` : `post-full__button-wrap post-full__button-wrap--edit`}>
             { actions }
             </div>
-            </div>
-          </div>
+           </div>
+        </div> : <Spinner cssClass={'spinner__show'} /> }
+        </div>
     );
   }
 }

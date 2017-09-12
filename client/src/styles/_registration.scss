@@ -173,7 +173,7 @@ input:not([type=checkbox]):not([type=radio]), textarea {
       margin-right: 0.5rem;
       outline: none;
       position: relative;
-      z-index: 1000;
+      z-index: 10;
 
       &:hover {
         background: $color_aqua_lighter;
