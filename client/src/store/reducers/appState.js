@@ -1,3 +1,5 @@
+import update from 'immutability-helper';
+
 import { LOGOUT, SET_REDIRECT_URL, SET_WINDOW_SIZE, SET_MENU_STATE, SET_SCROLLED,
   SET_MENU_BACKGROUND, SET_CONTROLS_BACKGROUND } from '../actions';
 import { VALIDATE_TOKEN_REQUEST, VALIDATE_TOKEN_SUCCESS, VALIDATE_TOKEN_FAILURE, LOGIN_SUCCESS,
@@ -42,8 +44,15 @@ function appState(state = INITIAL_STATE, action) {
     case LOGOUT:
       window.localStorage.removeItem('authToken');
       window.localStorage.removeItem('userId');
-      return Object.assign({}, state, { loggedIn: false });
-
+      return update(
+        state,
+        {
+          loggedIn: { $set: false },
+          windowSize: {
+            width: { $set: window.innerWidth },
+            }
+        },
+      );
     /*
     * This action is issued only from the <Home/> component.
     * On VALIDATE_TOKEN_REQUEST action, set the spinner class to show.
