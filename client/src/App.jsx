@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { setWindowSize, setMenuState, setMenuBackground, setScrolled } from './store/actions';
-// import { debounce, throttle } from 'underscore';
+import { debounce, throttle } from 'underscore';
 
 import './favicons/favicons';
 import HeaderNav from './containers/HeaderNav';
