@@ -5,23 +5,25 @@ import PropTypes from 'prop-types';
 import * as Actions from '../store/actions/tourActions';
 
 const adjustBkgSize = (target) => {
-    // expand background size to contain FAQ answers as they are expanded
-    const el = target;
-    let adjustedHeight = el.clientHeight;
-    adjustedHeight = Math.max(el.scrollHeight, adjustedHeight);
-    if (adjustedHeight > el.clientHeight) { el.style.minHeight = `${adjustedHeight + 60}px`; }
+  // expand background size to contain FAQ answers as they are expanded
+  const el = target;
+  let adjustedHeight = el.clientHeight;
+  adjustedHeight = Math.max(el.scrollHeight, adjustedHeight);
+  if (adjustedHeight > el.clientHeight) {
+    el.style.minHeight = `${adjustedHeight + 60}px`;
   }
+};
 
 class About extends React.Component {
 
   componentDidMount() {
     adjustBkgSize(document.querySelector('.faq'));
-    adjustBkgSize(document.querySelector('.tour'))
+    adjustBkgSize(document.querySelector('.tour'));
   }
 
   componentDidUpdate() {
     adjustBkgSize(document.querySelector('.faq'));
-    adjustBkgSize(document.querySelector('.tour'))
+    adjustBkgSize(document.querySelector('.tour'));
   }
 
 
@@ -35,9 +37,19 @@ class About extends React.Component {
             <button
               className="tour__chevron-left aria-button"
               tabIndex={0}
-                aria-label="previous slide"
-                onClick={
-                  () => {
+              aria-label="previous slide"
+              onClick={
+                () => {
+                  let newIndex = this.props.tour.imageIndex - 1;
+                  if (newIndex < 0) {
+                    newIndex = this.props.tour.slides.length - 1;
+                  }
+                  this.props.actions.setIndex(newIndex);
+                }
+              }
+              onKeyDown={
+                (e) => {
+                  if (e.keyCode === 13 || e.which === 13) {
                     let newIndex = this.props.tour.imageIndex - 1;
                     if (newIndex < 0) {
                       newIndex = this.props.tour.slides.length - 1;
@@ -45,18 +57,9 @@ class About extends React.Component {
                     this.props.actions.setIndex(newIndex);
                   }
                 }
-                onKeyDown={
-                  (e) => {
-                    if (e.keyCode === 13 || e.which === 13 ) {
-                      let newIndex = this.props.tour.imageIndex - 1;
-                      if (newIndex < 0) {
-                        newIndex = this.props.tour.slides.length - 1;
-                      }
-                      this.props.actions.setIndex(newIndex);
-                    }
-                  }
-                }>
-              <i className="fa fa-chevron-left"/>
+              }
+            >
+              <i className="fa fa-chevron-left" />
             </button>
             <div className="tour__controls">
               {
@@ -72,11 +75,13 @@ class About extends React.Component {
                       onClick={(e) => { this.props.actions.setIndex(parseInt(e.target.id, 10)); }}
                       onKeyDown={
                         (e) => {
-                          if (e.keyCode === 13 || e.which === 13 ) {
+                          if (e.keyCode === 13 || e.which === 13) {
                             this.props.actions.setIndex(parseInt(e.target.id, 10));
-                            }
-                          }}>
-                      <i className={active? "fa fa-circle" : "fa fa-circle-o"} id={index} />
+                          }
+                        }
+                      }
+                    >
+                      <i className={active ? 'fa fa-circle' : 'fa fa-circle-o'} id={index} />
                     </div>
                   );
                 })
@@ -96,33 +101,37 @@ class About extends React.Component {
                   }
                 }
               onKeyDown={
-                  (e) => {
-                    if (e.keyCode === 13 || e.which === 13 ) {
-                      let newIndex = this.props.tour.imageIndex + 1;
+                (e) => {
+                  if (e.keyCode === 13 || e.which === 13) {
+                    let newIndex = this.props.tour.imageIndex + 1;
                     if (newIndex > this.props.tour.slides.length - 1) {
                       newIndex = 0;
                     }
                     this.props.actions.setIndex(newIndex);
                   }
                 }
-              }>
-              <i className="fa fa-chevron-right"/>
+              }
+            >
+              <i className="fa fa-chevron-right" />
             </button>
           </div>
           <div className="tour__slide-content">
-            <div className="tour__slide-text" dangerouslySetInnerHTML={this.props.tour.slides[this.props.tour.imageIndex]}>
-            </div>
+            <div className="tour__slide-text" dangerouslySetInnerHTML={this.props.tour.slides[this.props.tour.imageIndex]} />
             {this.props.tour.slides[this.props.tour.imageIndex].image &&
               <div className="tour__image">
-              <img src={`${this.props.tour.slides[this.props.tour.imageIndex].image}`} alt={this.props.tour.slides[this.props.tour.imageIndex].imageAlt} />
-              </div> }
+                <img
+                  src={`${this.props.tour.slides[this.props.tour.imageIndex].image}`}
+                  alt={this.props.tour.slides[this.props.tour.imageIndex].imageAlt}
+                />
+              </div>
+            }
           </div>
-          {this.props.appState.windowSize.height <=700 &&
+          {this.props.appState.windowSize.height <= 700 &&
             <div className="tour__slide-footer">
-            {/* Dot-controls for carousel repeated beneath each slide for short viewports */}
-            <button
-              className="tour__chevron-left aria-button"
-              tabIndex={0}
+              {/* Dot-controls for carousel repeated beneath each slide for short viewports */}
+              <button
+                className="tour__chevron-left aria-button"
+                tabIndex={0}
                 aria-label="previous slide"
                 onClick={
                   () => {
@@ -135,7 +144,7 @@ class About extends React.Component {
                 }
                 onKeyDown={
                   (e) => {
-                    if (e.keyCode === 13 || e.which === 13 ) {
+                    if (e.keyCode === 13 || e.which === 13) {
                       let newIndex = this.props.tour.imageIndex - 1;
                       if (newIndex < 0) {
                         newIndex = this.props.tour.slides.length - 1;
@@ -143,11 +152,12 @@ class About extends React.Component {
                       this.props.actions.setIndex(newIndex);
                     }
                   }
-                }>
-              <i className="fa fa-chevron-left"/>
-            </button>
-            <div className="tour__controls">
-              {
+                }
+              >
+                <i className="fa fa-chevron-left" />
+              </button>
+              <div className="tour__controls">
+                {
                 this.props.tour.slides.map((slide, index) => {
                   const active = (this.props.tour.imageIndex === index ? '-active' : '');
                   return (
@@ -160,21 +170,23 @@ class About extends React.Component {
                       onClick={(e) => { this.props.actions.setIndex(parseInt(e.target.id, 10)); }}
                       onKeyDown={
                         (e) => {
-                          if (e.keyCode === 13 || e.which === 13 ) {
+                          if (e.keyCode === 13 || e.which === 13) {
                             this.props.actions.setIndex(parseInt(e.target.id, 10));
-                            }
-                          }}>
-                      <i className={active? "fa fa-circle" : "fa fa-circle-o"} id={index} />
+                          }
+                        }
+                      }
+                    >
+                      <i className={active ? 'fa fa-circle' : 'fa fa-circle-o'} id={index} />
                     </div>
                   );
                 })
               }
-            </div>
-            <button
-              className="tour__chevron-right aria-button"
-              tabIndex={0}
-              aria-label="next slide"
-              onClick={
+              </div>
+              <button
+                className="tour__chevron-right aria-button"
+                tabIndex={0}
+                aria-label="next slide"
+                onClick={
                   () => {
                     let newIndex = this.props.tour.imageIndex + 1;
                     if (newIndex > this.props.tour.slides.length - 1) {
@@ -183,21 +195,22 @@ class About extends React.Component {
                     this.props.actions.setIndex(newIndex);
                   }
                 }
-              onKeyDown={
+                onKeyDown={
                   (e) => {
-                    if (e.keyCode === 13 || e.which === 13 ) {
+                    if (e.keyCode === 13 || e.which === 13) {
                       let newIndex = this.props.tour.imageIndex + 1;
-                    if (newIndex > this.props.tour.slides.length - 1) {
-                      newIndex = 0;
+                      if (newIndex > this.props.tour.slides.length - 1) {
+                        newIndex = 0;
+                      }
+                      this.props.actions.setIndex(newIndex);
                     }
-                    this.props.actions.setIndex(newIndex);
                   }
                 }
-              }>
-              <i className="fa fa-chevron-right"/>
-            </button>
-          </div>
-          }
+              >
+                <i className="fa fa-chevron-right" />
+              </button>
+            </div>
+            }
         </div>
         <div className="faq">
           <div className="faq__header">
@@ -210,8 +223,8 @@ class About extends React.Component {
                   className="faq__question"
                   onClick={
                     () => {
-                      const el = document.getElementById(`${question.id}-answer`)
-                      const classes = el.classList
+                      const el = document.getElementById(`${question.id}-answer`);
+                      const classes = el.classList;
                       if (classes.contains('faq__answer-expanded')) {
                         el.classList.remove('faq__answer-expanded');
                         el.style.height = 0;
@@ -221,7 +234,7 @@ class About extends React.Component {
                         el.classList.add('faq__answer-expanded');
                         el.style.height = `${el.scrollHeight}px`;
                         adjustBkgSize(document.querySelector('.faq'));
-                        adjustBkgSize(document.querySelector('.tour'))
+                        adjustBkgSize(document.querySelector('.tour'));
                       }
                     }
                   }
@@ -231,7 +244,8 @@ class About extends React.Component {
                 <div
                   id={`${question.id}-answer`}
                   className="faq__answer "
-                  dangerouslySetInnerHTML={question} />
+                  dangerouslySetInnerHTML={question}
+                />
               </div>
             ))}
           </div>
@@ -242,9 +256,13 @@ class About extends React.Component {
 }
 
 About.propTypes = {
+  appState: PropTypes.shape({
+    windowSize: PropTypes.object,
+  }).isRequired,
   tour: PropTypes.shape({
     imageIndex: PropTypes.Number,
     slides: PropTypes.Array,
+    faq: PropTypes.Array,
   }).isRequired,
   actions: PropTypes.shape({
     setIndex: PropTypes.func,

@@ -4,8 +4,8 @@ import { SET_VIEW_CONNECTION, CLEAR_VIEW_CONNECTION, SET_CONNECTIONS_MODAL, SET_
   SET_CONN_MODAL } from '../actions/connectionActions';
 import { SEND_EMAIL_REQUEST, SEND_EMAIL_SUCCESS, SEND_EMAIL_FAILURE } from '../actions/apiActions';
 import { CONNECTION_REQUEST, CONNECTION_SUCCESS, CONNECTION_FAILURE, GET_ALL_CONNECTIONS_REQUEST,
-  GET_ALL_CONNECTIONS_SUCCESS, GET_ALL_CONNECTIONS_FAILURE, UPDATE_CONNECTION_STATUS_REQUEST,
-  UPDATE_CONNECTION_STATUS_SUCCESS, UPDATE_CONNECTION_STATUS_FAILURE } from '../actions/apiConnectionActions';
+  GET_ALL_CONNECTIONS_SUCCESS, GET_ALL_CONNECTIONS_FAILURE, UPDATE_CONNECTION_STATUS_SUCCESS,
+  } from '../actions/apiConnectionActions';
 
 const defaultConn = {
   _id: '',
@@ -91,70 +91,6 @@ function connection(state = INITIAL_STATE, action) {
     */
     case CLEAR_VIEW_CONNECTION:
       return Object.assign({}, state, { viewConnection: defaultConn });
-
-    /*
-    *  Called From: <ConnectionDetails />
-    *  Purpose: Called when user initiates a status update. Displays the
-    *  spinner class to indicate API call is in progress.
-    */
-    case UPDATE_CONNECTION_STATUS_REQUEST:
-      return Object.assign(
-        {},
-        state,
-        {
-          connDetailsSpinnerClass: 'spinner__show',
-        },
-      );
-
-    /*
-    *  Called From: <ConnectionDetails />
-    *  Payload: The updated connection object
-    *  Purpose: Called when status update completes.
-    *   Updates the current viewConnections, as well as the original object
-    *   in the connections array.
-    */
-    case UPDATE_CONNECTION_STATUS_SUCCESS:
-      index = -1;
-      for (index = 0; index < state.connections.length; index += 1) {
-        if (state.connections[index]._id === action.payload.conn._id) {
-          break;
-        }
-      }
-      return update(
-        state,
-        {
-          connDetailsSpinnerClass: { $set: 'spinner__hide' },
-          connDetailsModal: {
-            class: { $set: 'modal__show' },
-            type: { $set: 'modal__success' },
-            text: { $set: 'Connection Status Updated!' },
-            title: { $set: 'SUCCESS' },
-          },
-          connections: { $splice: [[index, 1, action.payload.conn]] },
-          viewConnection: { $set: action.payload.conn },
-        },
-      );
-
-    /*
-    *  Called From: <ConnectionDetails />
-    *  Payload: Error message describing the failure
-    *  Purpose: Provide user a description of why the API call fialed.
-    */
-    case UPDATE_CONNECTION_STATUS_FAILURE:
-      error = action.payload.message || 'An error occurred while updating connection status';
-      return Object.assign(
-        {},
-        state,
-        {
-          connDetailsSpinnerClass: 'spinner__hide',
-          connDetailsModal: {
-            class: { $set: 'modal__show' },
-            type: { $set: 'modal__error' },
-            text: { $set: error },
-            title: { $set: 'ERROR' },
-          },
-        },
-      );
 
     /*
     *  Called From: <ConnectionDetails />
@@ -249,52 +185,27 @@ function connection(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { getConnectionsModal: action.payload });
 
 /*---------------------------------------------------------------------------------*/
-
     /*
-    *  Called From: <Connection />
-    *  Payload: None.
-    *  Purpose: Set the connection spinner to indicate an API call is in progress.
+    *  Called From: <ConnectionDetails />
+    *  Payload: The updated connection object
+    *  Purpose: Called when status update completes.
+    *   Updates the current viewConnections, as well as the original object
+    *   in the connections array.
     */
-    case SEND_EMAIL_REQUEST:
-      return Object.assign(
-        {},
+    case UPDATE_CONNECTION_STATUS_SUCCESS:
+      index = -1;
+      for (index = 0; index < state.connections.length; index += 1) {
+        if (state.connections[index]._id === action.payload.conn._id) {
+          break;
+        }
+      }
+      return update(
         state,
         {
-          connectionSpinnerClass: 'spinner__show',
+          connections: { $splice: [[index, 1, action.payload.conn]] },
+          viewConnection: { $set: action.payload.conn },
         },
       );
-
-    /*
-    *  Called From: <Connection />
-    *  Payload: None. (The email was sent to user)
-    *  Purpose: Let the user know the email was sent.
-    */
-    case SEND_EMAIL_SUCCESS:
-      return Object.assign(
-        {},
-        state,
-        {
-          connectionSpinnerClass: 'spinner__hide',
-        },
-      );
-
-    /*
-    *  Called From: <Connection />
-    *  Payload: Error message
-    *  Purpose: Display modal with email error message
-    */
-    case SEND_EMAIL_FAILURE:
-      error = action.payload.response.message || 'An error occurred while attempting to email user';
-      return Object.assign(
-        {},
-        state,
-        {
-          connectionSpinnerClass: 'spinner__hide',
-          connectionModalClass: 'modal__show',
-          connectionModalText: error,
-        },
-      );
-
     /*
     *  Called From: <Connection />
     *  Payload: None.

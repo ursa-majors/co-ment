@@ -2,6 +2,8 @@ import update from 'immutability-helper';
 import { SET_EMAIL_OPTIONS, SET_FORM_FIELD, CLEAR_FORM_ERROR, SET_FORM_ERROR,
   SET_EMAIL_MODAL } from '../actions/emailActions';
 import { SEND_EMAIL_REQUEST, SEND_EMAIL_SUCCESS, SEND_EMAIL_FAILURE } from '../actions/apiActions';
+import { UPDATE_CONNECTION_STATUS_REQUEST, UPDATE_CONNECTION_STATUS_SUCCESS,
+  UPDATE_CONNECTION_STATUS_FAILURE } from '../actions/apiConnectionActions';
 
 const INITIAL_STATE = {
   recipient: '',
@@ -80,6 +82,51 @@ function connectionEmail(state = INITIAL_STATE, action) {
 
     case SET_EMAIL_MODAL:
       return Object.assign({}, state, { emailModal: action.payload });
+
+    /*
+    *  Called From: <ConnectionDetails />
+    *  Purpose: Called when user initiates a status update. Displays the
+    *  spinner class to indicate API call is in progress.
+    */
+    case UPDATE_CONNECTION_STATUS_REQUEST:
+      return Object.assign(
+        {},
+        state,
+        {
+          emailSpinnerClass: 'spinner__show',
+        },
+      );
+
+    /*
+    *  Called From: <ConnectionDetails />
+    *  Payload: The updated connection object
+    *  Purpose: Called when status update completes.
+    *   Updates the current viewConnections, as well as the original object
+    *   in the connections array.
+    */
+    case UPDATE_CONNECTION_STATUS_SUCCESS:
+      return Object.assign({}, state, { emailSpinnerClass: 'spinner__hide' });
+
+    /*
+    *  Called From: <ConnectionDetails />
+    *  Payload: Error message describing the failure
+    *  Purpose: Provide user a description of why the API call fialed.
+    */
+    case UPDATE_CONNECTION_STATUS_FAILURE:
+      error = action.payload.message || 'An error occurred while updating connection status';
+      return Object.assign(
+        {},
+        state,
+        {
+          emailSpinnerClass: 'spinner__hide',
+          emailModal: {
+            class: { $set: 'modal__show' },
+            type: { $set: 'modal__error' },
+            text: { $set: error },
+            title: { $set: 'ERROR' },
+          },
+        },
+      );
 
     default:
       return state;
