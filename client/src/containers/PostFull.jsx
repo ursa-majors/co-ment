@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import * as Actions from '../store/actions/postActions';
 import * as apiActions from '../store/actions/apiPostActions';
+import { setEmailOptions } from '../store/actions/emailActions';
 import { formatDate } from '../utils/';
 
 import Spinner from './Spinner';
@@ -35,11 +36,11 @@ class PostFull extends React.Component {
      postId = this.props.post._id;
     }
     const token = this.props.appState.authToken;
-        if (this.props.posts.currentPost._id !== postId) {
+    if (this.props.posts.currentPost._id !== postId) {
       this.props.actions.clearCurrentPost();
       this.props.api.viewPost(token, postId);
     }
-    }
+  }
 
   deletePost = (event) => {
     const postId = this.props.post._id;
@@ -85,12 +86,12 @@ class PostFull extends React.Component {
     newState.flip = !this.state.flip;
     this.setState({
       ...newState,
-    }, ()=>PostFull.adjustCardHeight() )
+    }, () => PostFull.adjustCardHeight());
   }
 
-  /**
+  /*
   *  Check to see if there is already a similar connection between the user and poster
-  **/
+  */
   checkConnectionRequest = () => {
     const connections = this.props.connection.connections;
     if (connections.length > 0) {
@@ -105,7 +106,16 @@ class PostFull extends React.Component {
     } else {
       // TODO: go get connections, then test them as above
     }
-    this.props.history.push('/connection');
+    this.props.actions.setEmailOptions({
+      recipient: this.props.posts.currentPost.author,
+      sender: this.props.profiles.userProfile.username,
+      subject: `co/ment - Contact Request from ${this.props.profiles.userProfile.username}`,
+      body: '',
+      role: this.props.posts.currentPost.role === 'mentor' ? 'mentee' : 'mentor',
+      type: 'request',
+      connectionId: '',
+    })
+    this.props.history.push('/connectemail');
   }
 
   render() {
@@ -309,7 +319,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(Actions, dispatch),
+  actions: bindActionCreators({ ...Actions, setEmailOptions }, dispatch),
   api: bindActionCreators(apiActions, dispatch),
 });
 

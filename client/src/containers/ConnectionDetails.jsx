@@ -9,14 +9,13 @@ import { formatDate } from '../utils/';
 
 import * as apiActions from '../store/actions/apiConnectionActions';
 import * as Actions from '../store/actions/connectionActions';
+import { setEmailOptions } from '../store/actions/emailActions';
 
 
 class ConnectionDetails extends React.Component {
 
   // Find the connection matching the URL param and set it in redux state.
   componentDidMount() {
-
-
     if (!this.props.connection.connections) {
       this.setCurrentConnection(this.props.match.params.id);
     } else {
@@ -54,15 +53,21 @@ class ConnectionDetails extends React.Component {
           (<ul className="conn-details__btn-wrap">
             <li className="conn-details__item" >
               <span
+
                 className="conn-details__item-link pointer"
-                onClick={() =>
-                  this.props.api.updateConnectionStatus(
-                    this.props.appState.authToken,
-                    {
-                      id: this.props.connection.viewConnection._id,
-                      type: 'ACCEPT',
-                    },
-                  )
+                onClick={
+                  () => {
+                    this.props.actions.setEmailOptions({
+                      recipient: this.props.connection.viewConnection.initiator.name,
+                      sender: this.props.profiles.userProfile.username,
+                      type: 'accept',
+                      subject: 'co/ment - Great News: Connection Accepted!',
+                      body: '',
+                      role: '',
+                      connectionId: this.props.connection.viewConnection._id,
+                    });
+                    this.props.history.push('/connectemail');
+                  }
                 }
               >
                 Accept
@@ -71,14 +76,19 @@ class ConnectionDetails extends React.Component {
             <li className="conn-details__item" >
               <span
                 className="conn-details__item-link pointer"
-                onClick={() =>
-                  this.props.api.updateConnectionStatus(
-                    this.props.appState.authToken,
-                    {
-                      id: this.props.connection.viewConnection._id,
-                      type: 'DECLINE',
-                    },
-                  )
+                onClick={
+                  () => {
+                    this.props.actions.setEmailOptions({
+                      recipient: this.props.connection.viewConnection.initiator.name,
+                      sender: this.props.profiles.userProfile.username,
+                      type: 'decline',
+                      subject: `co/ment - Connection request to ${this.props.profiles.userProfile.username} declined`,
+                      body: '',
+                      role: '',
+                      connectionId: this.props.connection.viewConnection._id,
+                    });
+                    this.props.history.push('/connectemail');
+                  }
                 }
               >
                 Decline
@@ -94,17 +104,22 @@ class ConnectionDetails extends React.Component {
             <li className="conn-details__item" >
               <span
                 className="conn-details__item-link pointer"
-                onClick={() =>
-                  this.props.api.updateConnectionStatus(
-                    this.props.appState.authToken,
-                    {
-                      id: this.props.connection.viewConnection._id,
-                      type: 'EXPIRE',
-                    },
-                  )
+                onClick={
+                  () => {
+                    this.props.actions.setEmailOptions({
+                      recipient: this.props.connection.viewConnection.mentor.id === this.props.profiles.userProfile._id ? this.props.connection.viewConnection.mentee.name : this.props.connection.viewConnection.mentor.name,
+                      sender: this.props.profiles.userProfile.username,
+                      type: 'deactivate',
+                      subject: `co/ment - Your mentoring connection has ended`,
+                      body: '',
+                      role: '',
+                      connectionId: this.props.connection.viewConnection._id,
+                    });
+                    this.props.history.push('/connectemail');
+                  }
                 }
               >
-                Finish
+                End Connection
               </span>
             </li>
           </ul>
@@ -148,23 +163,6 @@ class ConnectionDetails extends React.Component {
 
     return (
       <div className="container conn-details">
-        <Spinner cssClass={this.props.connection.connDetailsSpinnerClass} />
-        <ModalSm
-          modalClass={this.props.connection.connDetailsModal.class}
-          modalText={this.props.connection.connDetailsModal.text}
-          modalTitle={this.props.connection.connDetailsModal.title}
-          modalType={this.props.connection.connDetailsModal.type}
-          dismiss={
-            () => {
-              this.props.actions.setConnDetailsModal({
-                text: '',
-                class: 'modal__hide',
-                type: '',
-                title: '',
-              });
-            }
-          }
-        />
         <div className="conn-details__preview">
           <div className="conn-details__text-wrap">
             <div className="conn-details__title">
@@ -231,6 +229,23 @@ class ConnectionDetails extends React.Component {
             { this.getActions() }
           </div>
         </div>
+        <Spinner cssClass={this.props.connection.connDetailsSpinnerClass} />
+        <ModalSm
+          modalClass={this.props.connection.connDetailsModal.class}
+          modalText={this.props.connection.connDetailsModal.text}
+          modalTitle={this.props.connection.connDetailsModal.title}
+          modalType={this.props.connection.connDetailsModal.type}
+          dismiss={
+            () => {
+              this.props.actions.setConnDetailsModal({
+                text: '',
+                class: 'modal__hide',
+                type: '',
+                title: '',
+              });
+            }
+          }
+        />
       </div>
     );
   }
@@ -245,7 +260,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   api: bindActionCreators(apiActions, dispatch),
-  actions: bindActionCreators(Actions, dispatch),
+  actions: bindActionCreators({ ...Actions, setEmailOptions }, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConnectionDetails);

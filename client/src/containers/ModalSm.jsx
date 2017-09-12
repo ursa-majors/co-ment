@@ -1,5 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { setEmailModal } from '../store/actions/emailActions';
 
 // TODO:
 // tab trapping
@@ -37,4 +40,12 @@ ModalSm.defaultProps = {
   action: null,
 };
 
-export default ModalSm;
+const mapStateToProps = state => ({
+  appState: state.appState,
+});
+
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators({ setEmailModal }, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ModalSm);

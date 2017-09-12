@@ -17,9 +17,8 @@ const Connection = require('../models/connection');
 //   Returns: array of connections on success
 //
 function getConnections(req, res) {
-    
     const target = req.token._id;
-    
+
     Connection.find({
         $or: [
             { "mentor.id": target },
@@ -115,9 +114,9 @@ function updateConnection(req, res) {
             };
             break;
 
-        case 'EXPIRE':
+        case 'DEACTIVATE':
             update = {
-                status: 'expired',
+                status: 'inactive',
                 dateExpired: Date.now()
             };
             break;
