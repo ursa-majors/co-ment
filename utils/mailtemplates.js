@@ -195,7 +195,7 @@ const longEmail = (title, url, toUser, subhead, bodyText, buttonText) => {
                                               </v:roundrect>
                                           <![endif]--></div>
                         <br>
-                        %%unsubscribe%% &nbsp;</td>
+                        &nbsp;</td>
                       </tr>
                     </tbody>
                   </table>

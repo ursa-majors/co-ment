@@ -42,7 +42,7 @@ function appState(state = INITIAL_STATE, action) {
     case LOGOUT:
       window.localStorage.removeItem('authToken');
       window.localStorage.removeItem('userId');
-      return INITIAL_STATE;
+      return Object.assign({}, state, { loggedIn: false });
 
     /*
     * This action is issued only from the <Home/> component.
