@@ -116,8 +116,7 @@ class About extends React.Component {
             </button>
           </div>
           <div className="tour__slide-content">
-            <div className="tour__slide-text" dangerouslySetInnerHTML={this.props.tour.slides[this.props.tour.imageIndex]}>
-            </div>
+            <div className="tour__slide-text" dangerouslySetInnerHTML={this.props.tour.slides[this.props.tour.imageIndex]} />
             {this.props.tour.slides[this.props.tour.imageIndex].image &&
               <div className="tour__image">
                 <img
