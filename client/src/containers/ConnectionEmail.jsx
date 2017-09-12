@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import Spinner from './Spinner';
 import ModalSm from './ModalSm';
 import * as Actions from '../store/actions/emailActions';
+import { sendEmail } from '../store/actions/apiActions';
 import * as connectActions from '../store/actions/apiConnectionActions';
 import { adjustTextArea } from '../utils';
 
@@ -14,7 +15,7 @@ class ConnectionEmail extends React.Component {
     adjustTextArea(this.textInput);
   }
 
-  handleChange = (event) => {
+  handleChange(event) {
     if (event.target.id === 'body') {
       if (this.props.connectionEmail.body.length > 620) {
         event.preventDefault();
@@ -30,19 +31,24 @@ class ConnectionEmail extends React.Component {
   sendMsg = () => {
     // validate inputs (form requires only body)
     if (!this.props.connectionEmail.body) {
-      this.setFormError('Your message must have a body');
+      this.props.emailActions.setFormError('Your message must have a body');
       return;
     }
 
     const token = this.props.appState.authToken;
-    const email = {
-      recipients: this.props.connectionEmail.recipient,
+    let email = {
+      recipient: this.props.connectionEmail.recipient,
       sender: this.props.connectionEmail.sender,
+      copySender: false,
       subject: this.props.connectionEmail.subject,
       body: this.props.connectionEmail.body,
+      type: this.props.connectionEmail.type,
+      connectionId: this.props.connectionEmail.connectionId,
     };
     switch(this.props.connectionEmail.type) {
       case 'request':
+        // This is a new connection.  Build the connection object from
+        // Redux store values
         const connection = {
           mentor: {
             id: this.props.connectionEmail.role === 'mentor' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author_id ,
@@ -64,12 +70,14 @@ class ConnectionEmail extends React.Component {
           },
           status: 'pending',
         };
+        // Save the connection object...send email if successful
         this.props.connectActions.connect(token, connection)
           .then((result1) => {
             if (result1.type === 'CONNECTION_SUCCESS') {
-              this.props.api.sendEmail(token, email)
+              email.connectionId = result1.payload.connectionId;
+              this.props.emailActions.sendEmail(token, email)
               .then((result2) => {
-                if (result2.type === "EMAIL_SUCCESS") {
+                if (result2.type === "SEND_EMAIL_SUCCESS") {
                   this.props.history.push('/connectionresult');
                 }
               });
@@ -77,55 +85,108 @@ class ConnectionEmail extends React.Component {
           });
         break;
       case 'accept':
-        this.props.api.sendEmail(token, email)
+        email.copySender = true;
+        this.props.emailActions.sendEmail(token, email)
           .then((result) => {
-            if (result.type === "EMAIL_SUCCESS") {
-              this.props.api.updateConnectionStatus(
+            if (result.type === "SEND_EMAIL_SUCCESS") {
+              this.props.connectActions.updateConnectionStatus(
                 token,
                 {
-                  id: this.props.connection.viewConnection._id,
+                  id: this.props.connectionEmail.connectionId,
                   type: 'ACCEPT',
                 },
               );
+              this.props.emailActions.setEmailModal({
+                class: 'modal__show',
+                text: 'Connection Accepted!',
+                title: 'SUCCESS',
+                type: 'modal__success',
+                action: () => {
+                  this.props.emailActions.setEmailModal({
+                    class: 'modal__hide',
+                    text: '',
+                    title: '',
+                    type: '',
+                    action: null,
+                  });
+                  this.props.history.push('/connections');
+                },
+              });
             }
           });
+        break;
+
       case 'decline':
-        this.props.api.sendEmail(token, email)
+        this.props.emailActions.sendEmail(token, email)
           .then((result) => {
-            if (result.type === "EMAIL_SUCCESS") {
-              this.props.api.updateConnectionStatus(
+            if (result.type === "SEND_EMAIL_SUCCESS") {
+              this.props.connectActions.updateConnectionStatus(
                 token,
                 {
-                  id: this.props.connection.viewConnection._id,
+                  id: this.props.connectionEmail.connectionId,
                   type: 'DECLINE',
                 },
               );
+              this.props.emailActions.setEmailModal({
+                class: 'modal__show',
+                text: 'Connection Declined',
+                title: 'COMPLETE',
+                type: 'modal__success',
+                action: () => {
+                  this.props.emailActions.setEmailModal({
+                    class: 'modal__hide',
+                    text: '',
+                    title: '',
+                    type: '',
+                    action: null,
+                  });
+                  this.props.history.push('/connections');
+                },
+              });
             }
           });
+        break;
       case 'deactivate':
-      this.props.api.sendEmail(token, email)
-        .then((result) => {
-          if (result.type === "EMAIL_SUCCESS") {
-            this.props.api.updateConnectionStatus(
-              token,
-              {
-                id: this.props.connection.viewConnection._id,
-                type: 'DEACTIVATE',
-              },
-            );
-          }
-        });
+        email.copySender = true;
+        this.props.emailActions.sendEmail(token, email)
+          .then((result) => {
+            if (result.type === "SEND_EMAIL_SUCCESS") {
+              this.props.connectActions.updateConnectionStatus(
+                token,
+                {
+                  id: this.props.connectionEmail.connectionId,
+                  type: 'DEACTIVATE',
+                },
+              );
+              this.props.emailActions.setEmailModal({
+                class: 'modal__show',
+                text: 'Connection Deactivated',
+                title: 'COMPLETE',
+                type: 'modal__success',
+                action: () => {
+                  this.props.emailActions.setEmailModal({
+                    class: 'modal__hide',
+                    text: '',
+                    title: '',
+                    type: '',
+                    action: null,
+                  });
+                  this.props.history.push('/connections');
+                },
+              });
+            }
+          });
+        break;
       default:
-
+        // no-op
     }
   }
 
   render() {
-    console.log(this.props)
     return (
       <div className="container form">
         <div className="form__body">
-          <div className="form__connection-header">Request Connection</div>
+          <div className="form__connection-header">{this.props.connectionEmail.type} Connection</div>
           <div className="form__input-group">
             <label className="form__label" htmlFor="recipient">TO:
             </label>
@@ -165,19 +226,21 @@ class ConnectionEmail extends React.Component {
             </div>
           </div>
         </div>
-        <Spinner cssClass={this.props.connection.connectionSpinnerClass} />
+        <Spinner cssClass={this.props.connectionEmail.emailSpinnerClass} />
         <ModalSm
-          modalClass={this.props.connection.connectionModal.class}
-          modalText={this.props.connection.connectionModal.text}
-          modalTitle={this.props.connection.connectionModal.title}
-          modalType={this.props.connection.connectionModal.type}
+          modalClass={this.props.connectionEmail.emailModal.class}
+          modalText={this.props.connectionEmail.emailModal.text}
+          modalTitle={this.props.connectionEmail.emailModal.title}
+          modalType={this.props.connectionEmail.emailModal.type}
+          action={this.props.connectionEmail.emailModal.action}
           dismiss={
             () => {
-              this.props.connectActions.setConnModal({
+              this.props.connectActions.setEmailModal({
                 text: '',
                 class: 'modal__hide',
                 title: '',
                 type: '',
+                action: null,
               });
             }
           }
@@ -191,12 +254,11 @@ const mapStateToProps = state => ({
   appState: state.appState,
   posts: state.posts,
   profiles: state.profiles,
-  connection: state.connection,
   connectionEmail: state.connectionEmail,
 });
 
 const mapDispatchToProps = dispatch => ({
-  emailActions: bindActionCreators(Actions, dispatch),
+  emailActions: bindActionCreators({ ...Actions, sendEmail }, dispatch),
   connectActions: bindActionCreators(connectActions, dispatch),
 });
 
