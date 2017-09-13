@@ -446,7 +446,6 @@ const validationTemplate = (url) => {
 
 // longEmail( title, url, toUser, subhead, bodyText, buttonText )
 const contactTemplate = (toUser, fromUser, fromEmail, bodyText, connectionId, boilerplate) => {
-  console.log(boilerplate)
   return longEmail(
     'co/ment Connection Request Email',
     `https://co-ment.glitch.me/connectiondetails/${connectionId}`,

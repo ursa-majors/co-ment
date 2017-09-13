@@ -267,12 +267,11 @@ class ConnectionEmail extends React.Component {
           action={this.props.connectionEmail.emailModal.action}
           dismiss={
             () => {
-              this.props.connectActions.setEmailModal({
+              this.props.emailActions.setEmailModal({
                 text: '',
                 class: 'modal__hide',
                 title: '',
                 type: '',
-                action: null,
               });
             }
           }

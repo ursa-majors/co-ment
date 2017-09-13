@@ -36,7 +36,6 @@ function sendEmail(req, res) {
     User.findOne(target)
         .exec()
         .then(recipient => {
-
             if (!recipient) {
                 return res
                     .status(404)
@@ -66,6 +65,7 @@ function sendEmail(req, res) {
                                )
                     }
                 };
+
 
                 // send mail using `mailer` util
                 try {
@@ -114,11 +114,8 @@ function sendEmail2(req, res) {
     User.findOne(target)
         .exec()
         .then(recipient => {
-
-            if (!recipient) {
-                return res
-                    .status(404)
-                    .json({ message : 'User not found!'});
+           if (!recipient) {
+             throw new Error('User not found!');
             } else {
                 return recipient;
             }
@@ -178,6 +175,11 @@ function sendEmail2(req, res) {
 
             });
 
+        })
+        .catch((err) => {
+          return res
+            .status(404)
+            .json({ message : err.toString()});
         });
 }
 
