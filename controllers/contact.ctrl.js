@@ -66,6 +66,7 @@ function sendEmail(req, res) {
                     }
                 };
 
+
                 // send mail using `mailer` util
                 try {
                     mailer(params.to, params.subject, params.body);

@@ -170,7 +170,7 @@ class ConnectionEmail extends React.Component {
                 if (result.type === 'UPDATE_CONNECTION_STATUS_SUCCESS') {
                   this.props.emailActions.setEmailModal({
                     class: 'modal__show',
-                    text: `Your connection with ${this.props.connectionEmail.recipient} is now completed.\n\nAn email was sent to both users to confirm this action.`,
+                    text: `Your connection with ${this.props.connectionEmail.recipient} is now deactivated.\n\nAn email was sent to both users to confirm this action.`,
                     title: 'COMPLETE',
                     type: 'modal__success',
                     action: () => {
@@ -199,11 +199,11 @@ class ConnectionEmail extends React.Component {
     let bodyPlaceholder = 'Include a short message to explain why you want to connect with this user...';
     if (this.props.connectionEmail.type === 'accept') {
       buttonText = 'Accept Request';
-      bodyPlaceholder = 'Include a personal message to accept the connection...';
+      bodyPlaceholder = `Include a personal message. Let ${this.props.connectionEmail.recipient} know the best way to communicate with you to begin your mentorship...`;
     }
     if (this.props.connectionEmail.type === 'decline') {
       buttonText = 'Decline Request';
-      bodyPlaceholder = 'Include a short message to explain why you are declinig...';
+      bodyPlaceholder = 'Include a short message to explain why you are declining...';
     }
     if (this.props.connectionEmail.type === 'deactivate') {
       buttonText = 'End Connection';
