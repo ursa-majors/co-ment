@@ -1,5 +1,5 @@
 export const SET_EDIT_PROFILE = 'SET_EDIT_PROFILE';
-export const SET_FORM_FIELD = 'SET_FORM_FIELD';
+export const SET_PROFILE_FORM_FIELD = 'SET_PROFILE_FORM_FIELD';
 export const ADD_SKILL = 'ADD_SKILL';
 export const ADD_LANGUAGE = 'ADD_LANGUAGE';
 export const REMOVE_SKILL = 'REMOVE_SKILL';
@@ -18,7 +18,7 @@ export function setEditProfile(profile) {
 
 export function setFormField(field, value) {
   return ({
-    type: SET_FORM_FIELD,
+    type: SET_PROFILE_FORM_FIELD,
     field,
     value,
   });

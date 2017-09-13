@@ -1,5 +1,5 @@
 import update from 'immutability-helper';
-import { SET_EDIT_PROFILE, SET_FORM_FIELD, ADD_LANGUAGE, ADD_SKILL, REMOVE_LANGUAGE,
+import { SET_EDIT_PROFILE, SET_PROFILE_FORM_FIELD, ADD_LANGUAGE, ADD_SKILL, REMOVE_LANGUAGE,
   REMOVE_SKILL, DISMISS_VIEWPROFILE_MODAL, SET_PROFILE_MODAL_CLASS, SET_PROFILE_MODAL_TEXT,
   SET_UPD_PROFILE_MODAL } from '../actions/profileActions';
 import { GET_PROFILE_REQUEST, GET_PROFILE_SUCCESS, GET_PROFILE_FAILURE,
@@ -169,7 +169,7 @@ function profiles(state = INITIAL_STATE, action) {
     * Payload: Form Field and Value
     * Purpose: Update the connected form field.
     */
-    case SET_FORM_FIELD:
+    case SET_PROFILE_FORM_FIELD:
       return update(state, { editForm: { [action.field]: { $set: action.value } } });
 
     /*
