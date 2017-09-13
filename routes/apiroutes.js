@@ -105,7 +105,7 @@ router.delete('/api/posts/:id', postCtrl.deletePost);
 
 // Send contact email to another user
 // Returns success message
-router.post('/api/contact/:id', contactCtrl.sendEmail);
+router.post('/api/sendemail', contactCtrl.sendEmail);
 
 
 // Get all connections where the user is either a mentor or mentee
