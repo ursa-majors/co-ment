@@ -10,6 +10,7 @@ const app           = express();
 const morgan        = require('morgan');
 const bodyParser    = require('body-parser');
 const path          = require('path');
+
 // passport auth
 const passport      = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -43,6 +44,9 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended : true }));
 
+// set static path
+app.use(express.static(path.join(__dirname, '/client/build/')));
+
 
 /* ================================= CORS ================================= */
 
@@ -60,7 +64,6 @@ app.use(function(req, res, next) {
     }
 });
 
-app.use(express.static(path.join(__dirname, '/client/build/')));
 
 /* =============================== PASSPORT ================================ */
 
@@ -123,6 +126,11 @@ mongoose.connect(db.getDbConnectionString(), {
 
 // old Mongo connection logic (may be needed for Heroku):
 //mongoose.connect(db.getDbConnectionString());
+
+// log mongoose connection errors to console
+mongoose.connection.on('error', function(err) {
+    console.error('Mongoose connection error: ', err);
+});
 
 // tell Mongoose to use Node global es6 Promises
 mongoose.Promise = global.Promise;
