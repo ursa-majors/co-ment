@@ -26,6 +26,7 @@ import ConnectionDetails from './containers/ConnectionDetails';
 import Validate from './containers/Validate';
 import ResetPassword from './containers/ResetPassword';
 import UserAdmin from './containers/UserAdmin';
+import NotFound from './containers/NotFound';
 
 class App extends React.Component {
 
@@ -94,6 +95,7 @@ class App extends React.Component {
               <Route path="/connectiondetails/:id" component={ConnectionDetails} />
               <Route path="/validate" component={Validate} />
               <Route path="/resetpassword/:key" component={ResetPassword} />
+              <Route path="*" component={NotFound} />
             </Switch>
           </main>
         </div>
