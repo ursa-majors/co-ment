@@ -27,6 +27,7 @@ import Validate from './containers/Validate';
 import ResetPassword from './containers/ResetPassword';
 import UserAdmin from './containers/UserAdmin';
 import NotFound from './containers/NotFound';
+import Footer from './containers/Footer';
 
 class App extends React.Component {
 
@@ -98,6 +99,7 @@ class App extends React.Component {
               <Route path="*" component={NotFound} />
             </Switch>
           </main>
+          <Footer />
         </div>
       </BrowserRouter>
     );

@@ -1,0 +1,28 @@
+.footer {
+	width:100vw;
+	padding: 20px 30px;
+	display: flex;
+	justify-content: space-between;
+	color: rgba(255,255,255,.8);
+	background: $color_sky;
+  background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
+  background: linear-gradient(to top, $color_aqua, $color_sky);
+  font-family: 'Alegreya Sans SC', sans-serif;
+  text-transform: lowercase;
+  letter-spacing: 2px;
+
+  &__link {
+  	color: white;
+  }
+
+  &__icon {
+  	color: rgba(255,255,255,.8);
+  	font-size: 1.2em;
+
+  	&:hover, &:focus, &:active {
+  		color: rgba(255,255,255,1);
+  		box-shadow: 0 0 10px rgba(0,0,0,.4);
+  		transition: all 300ms ease-in-out;
+  	}
+  }
+}

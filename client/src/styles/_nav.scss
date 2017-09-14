@@ -26,6 +26,7 @@
     min-height: 60px;
   }
   &__side-bkg-noscroll {
+    background: $color_sky;
     background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
     background: linear-gradient(to top, $color_aqua, $color_sky);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
