@@ -1,0 +1,36 @@
+.notfound {
+	  width: 80vw;
+    max-width: 400px;
+    border-radius: 7px;
+    font-family: 'Alegreya Sans', sans-serif;
+    background: rgba(255, 255, 255, 0.7);
+    color: $color_gray_text;
+    text-align: center;
+    margin: auto;
+    padding: 30px;
+
+    &__header {
+	    font-family: 'Alegreya Sans SC', sans-serif;
+	    text-align: center;
+	    text-transform: lowercase;
+	    letter-spacing: 2px;
+	    font-size: 1.8em;
+	    font-weight: 300;
+	    padding: 0 10px 20px 10px;
+    }
+
+    &__text {
+    	text-align: center;
+    }
+
+    &__link {
+    	text-decoration: none;
+    	color: $color_sky;
+    	border-bottom: 1px dotted $color_sky;
+
+    	&:hover, &:active {
+    		color: $color_aqua;
+    		border-bottom: 1px dotted $color_aqua;
+    	}
+    }
+}
