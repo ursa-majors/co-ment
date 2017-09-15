@@ -32,7 +32,7 @@
     text-align: center;
     color: white;
 
-    @include profile-card-breakpoint {
+    @include for-phone-landscape-up {
       width: 80vw;
       max-width: 675px;
       border-radius: 7px;
@@ -53,7 +53,12 @@
   &__slide-header, &__slide-footer {
     position: relative;
     flex: 0 0 auto;
-    color: white;
+  }
+  &__slide-header {
+    padding-top: 20px;
+  }
+
+  &__slide-title {
     font-family: 'Alegreya Sans SC', sans-serif;
     text-align: center;
     text-transform: lowercase;
@@ -162,13 +167,13 @@
     cursor: pointer;
     font-size: 30px;
     position: absolute;
-    top: 50%;
+    top: 35%;
     left: 10px;
     border-radius: 100%;
     width: 40px;
     height: 40px;
-    @include profile-card-breakpoint {
-      top: 50%;
+    @include for-phone-landscape-up {
+      top: 35%;
       left: -45px;
     }
   }
@@ -177,13 +182,13 @@
     cursor: pointer;
     font-size: 30px;
     position: absolute;
-    top: 50%;
+    top: 35%;
     right: 10px;
     border-radius: 100%;
     width: 40px;
     height: 40px;
-    @include profile-card-breakpoint {
-      top: 50%;
+    @include for-phone-landscape-up {
+      top: 35%;
       right: -45px;
     }
   }
@@ -192,10 +197,16 @@
 .tour__slide-footer .tour__chevron-left {
   top: 3px;
   left: 10px;
+  @include for-phone-landscape-up {
+      left: -45px;
+    }
 }
 .tour__slide-footer .tour__chevron-right {
   top: 3px;
   right: 10px;
+  @include for-phone-landscape-up {
+      right: -45px;
+    }
 }
 
 

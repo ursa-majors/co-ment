@@ -10,7 +10,6 @@ const INITIAL_STATE = {
 
 function tour(state = INITIAL_STATE, action) {
   switch (action.type) {
-
     case SET_INDEX:
     	// scroll to top when slide changes
     	// (for shorter viewports with slide footer nav)
