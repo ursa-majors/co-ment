@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { Swipe, SwipeItem } from 'swipejs/react';
 import * as Actions from '../store/actions/tourActions';
 
 const adjustBkgSize = (target) => {
@@ -19,6 +20,7 @@ class About extends React.Component {
   componentDidMount() {
     adjustBkgSize(document.querySelector('.faq'));
     adjustBkgSize(document.querySelector('.tour'));
+    let mySwipe = this.refs.swipe.instance;
   }
 
   componentDidUpdate() {
@@ -115,17 +117,33 @@ class About extends React.Component {
               <i className="fa fa-chevron-right" />
             </button>
           </div>
-          <div className="tour__slide-content">
-            <div className="tour__slide-text" dangerouslySetInnerHTML={this.props.tour.slides[this.props.tour.imageIndex]} />
-            {this.props.tour.slides[this.props.tour.imageIndex].image &&
-              <div className="tour__image">
-                <img
-                  src={`${this.props.tour.slides[this.props.tour.imageIndex].image}`}
-                  alt={this.props.tour.slides[this.props.tour.imageIndex].imageAlt}
-                />
-              </div>
-            }
-          </div>
+          <Swipe className='custom-swipe-container-class'
+             ref='swipe'
+             startSlide={0}
+             speed={500}
+             auto={3000}
+             draggable={false}
+             continuous={true}
+             autoRestart={false}
+             disableScroll={false}
+             stopPropagation={false}
+             // callback={this.handleCallback.bind(this)}
+             // transitionEnd={this.onTransactionEnd.bind(this)}
+             >
+             {this.props.tour.slides.map(slide => {
+              return (
+              <SwipeItem className='swipe-slide' key={slide.title}>
+                <div className="tour__slide-text" dangerouslySetInnerHTML={{__html: slide.__html}} />
+                  <div className="tour__image">
+                    <img
+                      src={slide.image}
+                      alt={slide.imageAlt}
+                    />
+                  </div>
+              </SwipeItem>
+              );
+             })}
+          </Swipe>
           {this.props.appState.windowSize.height <= 700 &&
             <div className="tour__slide-footer">
               {/* Dot-controls for carousel repeated beneath each slide for short viewports */}

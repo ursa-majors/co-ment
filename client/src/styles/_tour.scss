@@ -285,3 +285,29 @@
     }
   }
 }
+
+.swipe {
+  overflow: hidden;
+  visibility: hidden;
+  position: relative;
+}
+.swipe-wrap {
+  overflow: hidden;
+  position: relative;
+}
+.swipe-wrap > div {
+  float:left;
+  width:100%;
+  position: relative;
+}
+
+.custom-swipe-container-class {
+
+}
+
+.swipe-item {
+  // position: relative;
+  // margin-top: 140px;
+  // color: white;
+  // font-weight: bold;
+}
