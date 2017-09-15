@@ -38,11 +38,13 @@ class Home extends React.Component {
           .then((result) => {
             if (result.type === 'VALIDATE_TOKEN_SUCCESS') {
               if (this.props.appState.redirectUrl) {
-                this.props.history.push(this.props.appState.redirectUrl)
+                this.props.history.push(this.props.appState.redirectUrl);
                 this.props.actions.setRedirectUrl('');
               }
             }
           })
+      } else if (this.props.location.hash) {
+        this.props.history.push('/login');
       }
     }
   }
