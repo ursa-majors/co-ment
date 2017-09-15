@@ -57,6 +57,7 @@
     "redux": "^3.7.2",
     "redux-api-middleware": "^1.0.3",
     "shufflejs": "^5.0.1",
+    "swipejs": "^2.2.10",
     "underscore": "^1.8.3"
   }
 }
