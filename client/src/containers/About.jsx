@@ -156,13 +156,17 @@ class About extends React.Component {
                 <div className="tour__slide-title">
                   {this.props.tour.slides[this.props.tour.imageIndex].title}
                 </div>
-                <div className="tour__slide-text" dangerouslySetInnerHTML={{__html: slide.__html}} />
-                  <div className="tour__image">
-                    <img
-                      src={slide.image}
-                      alt={slide.imageAlt}
-                    />
-                  </div>
+                <div className="tour__slide-flexwrap">
+                  <div className="tour__slide-text" dangerouslySetInnerHTML={{__html: slide.__html}} />
+                  { slide.image &&
+                    <div className="tour__image">
+                        <img
+                          src={slide.image}
+                          alt={slide.imageAlt}
+                        />
+                    </div>
+                  }
+                </div>
               </SwipeItem>
               );
              })}

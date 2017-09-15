@@ -42,6 +42,9 @@
   &__slide-content {
     flex: 1 0 auto;
     height: 100%;
+  }
+
+  &__slide-flexwrap {
     display: flex;
     flex-direction: column;
 
@@ -319,8 +322,4 @@
 .swipe-item {
   display: flex;
   flex-direction: column;
-
-    @include for-tablet-portrait-up {
-      flex-direction: row;
-    }
 }
