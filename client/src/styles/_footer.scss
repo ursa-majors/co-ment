@@ -13,11 +13,13 @@
 
   &__link {
   	color: white;
+    border-radius: 100%;
   }
 
   &__icon {
   	color: rgba(255,255,255,.8);
   	font-size: 1.2em;
+    border-radius: 100%;
 
   	&:hover, &:focus, &:active {
   		color: rgba(255,255,255,1);

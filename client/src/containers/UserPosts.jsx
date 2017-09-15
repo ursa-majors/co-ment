@@ -67,8 +67,8 @@ class UserPosts extends React.Component {
                       <tr key={post._id} className="user-posts__tr">
                         <td className="user-posts__td"> {post.role} </td>
                         <td className="user-posts__td">
-                          <span
-                            className="user-posts__link"
+                          <button
+                            className="aria-button user-posts__link"
                             onClick={
                               () => {
                                 this.props.actions.setCurrentPost(post);
@@ -77,7 +77,7 @@ class UserPosts extends React.Component {
                             }
                           >
                             {post.title}
-                          </span>
+                          </button>
                         </td>
                         <td className="user-posts__td"> {formatDate(new Date(post.updatedAt))} </td>
                       </tr>
