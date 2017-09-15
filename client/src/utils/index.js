@@ -144,7 +144,7 @@ export const adjustTextArea = (target) => {
     if (adjustedHeight > el.clientHeight) { el.style.height = `${adjustedHeight + 20}px`; }
   }
 
-////// page scrolling for slide footer nav in about/tour section //////
+////// animated page scrolling //////
 ////// source: https://codepen.io/pawelgrzybek/pen/ZeomJB
 
 export const scrollIt = (destination, duration = 200, easing = 'linear', callback) => {
@@ -234,3 +234,20 @@ export const delay = (function(){
   timer = setTimeout(callback, ms);
  };
 })();
+
+// force focus on #main when using skip navigation link
+// (some browsers will only focus form inputs, links, and buttons)
+export const skip = (targetId) => {
+  const removeTabIndex = (e) => {
+    e.target.removeAttribute('tabindex');
+  }
+  let skipTo = document.getElementById(targetId);
+  // Setting 'tabindex' to -1 takes an element out of normal
+  // tab flow but allows it to be focused via javascript
+  skipTo.tabIndex = -1;
+  skipTo.focus(); // focus on the content container
+  console.log(document.activeElement);
+  // when focus leaves this element,
+  // remove the tabindex attribute
+  skipTo.addEventListener("blur", removeTabIndex);
+}

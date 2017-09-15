@@ -4,6 +4,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import { skip } from '../utils';
 import { setMenuState, setMenuBackground } from '../store/actions';
 
 class Nav extends React.Component {
@@ -78,6 +79,9 @@ class Nav extends React.Component {
     };
     return (
       <div className={`h-nav__side-bkg ${this.props.appState.menuBackground}`}>
+      <button
+        className="skip"
+        onClick={ () => skip('main')}><span className="skip__text">Skip to content</span> <i className="fa fa-angle-right" /></button>
       <div className={classObj[this.props.appState.menuState].menu} aria-expanded={classObj[this.props.appState.menuState].ariaE} aria-controls="nav" onClick={this.navToggle}>
         <span className={classObj[this.props.appState.menuState].span}>
           <button className="h-nav__icon" >

@@ -166,3 +166,38 @@ body.user-is-tabbing *:focus {
   color: $color_gray_text;
 
 }
+
+.skip {
+    position: absolute;
+    top: -1000px;
+    left: -1000px;
+    height: 1px;
+    width: 1px;
+    text-align: left;
+    overflow: hidden;
+
+    &:active, &:focus, &:hover {
+      left: 10px;
+      top: 10px;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      padding: 7px 10px;
+      border-radius: 20px;
+      appearance: none;
+      -webkit-appearance: none;
+      background: $color_sky;
+      z-index: 100;
+      border: 1px solid white;
+      color: white;
+      font-family: 'Alegreya Sans SC', sans-serif;
+      text-transform: lowercase;
+      letter-spacing: 2px;
+      font-size: 1.2em;
+
+      & i {
+        font-size: .8em;
+      }
+
+    }
+}
