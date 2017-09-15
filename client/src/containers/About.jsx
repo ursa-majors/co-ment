@@ -20,12 +20,15 @@ class About extends React.Component {
   componentDidMount() {
     adjustBkgSize(document.querySelector('.faq'));
     adjustBkgSize(document.querySelector('.tour'));
-    let mySwipe = this.refs.swipe.instance;
   }
 
   componentDidUpdate() {
     adjustBkgSize(document.querySelector('.faq'));
     adjustBkgSize(document.querySelector('.tour'));
+  }
+
+  handleClick(e) {
+    this.swipe.instance.next();
   }
 
 
@@ -47,6 +50,7 @@ class About extends React.Component {
                     newIndex = this.props.tour.slides.length - 1;
                   }
                   this.props.actions.setIndex(newIndex);
+                  this.swipe.instance.prev();
                 }
               }
               onKeyDown={
@@ -57,6 +61,7 @@ class About extends React.Component {
                       newIndex = this.props.tour.slides.length - 1;
                     }
                     this.props.actions.setIndex(newIndex);
+                    this.swipe.instance.prev();
                   }
                 }
               }
@@ -74,11 +79,15 @@ class About extends React.Component {
                       id={index}
                       aria-label={this.props.tour.slides[index].title}
                       tabIndex={0}
-                      onClick={(e) => { this.props.actions.setIndex(parseInt(e.target.id, 10)); }}
+                      onClick={(e) => {
+                        this.props.actions.setIndex(parseInt(e.target.id, 10));
+                        this.swipe.instance.slide(parseInt(e.target.id, 10), 500);
+                         }}
                       onKeyDown={
                         (e) => {
                           if (e.keyCode === 13 || e.which === 13) {
                             this.props.actions.setIndex(parseInt(e.target.id, 10));
+                            this.swipe.instance.slide(parseInt(e.target.id, 10), 500);
                           }
                         }
                       }
@@ -100,6 +109,7 @@ class About extends React.Component {
                       newIndex = 0;
                     }
                     this.props.actions.setIndex(newIndex);
+                    this.swipe.instance.next();
                   }
                 }
               onKeyDown={
@@ -110,6 +120,7 @@ class About extends React.Component {
                       newIndex = 0;
                     }
                     this.props.actions.setIndex(newIndex);
+                    this.swipe.instance.next();
                   }
                 }
               }
@@ -118,7 +129,7 @@ class About extends React.Component {
             </button>
           </div>
           <Swipe className='custom-swipe-container-class'
-             ref='swipe'
+             ref={(instance) => { this.swipe = instance; }}
              startSlide={0}
              speed={500}
              auto={3000}
@@ -132,7 +143,7 @@ class About extends React.Component {
              >
              {this.props.tour.slides.map(slide => {
               return (
-              <SwipeItem className='swipe-slide' key={slide.title}>
+              <SwipeItem className='swipe-slide' key={slide.title} onClick={this.handleClick.bind(this)}>
                 <div className="tour__slide-text" dangerouslySetInnerHTML={{__html: slide.__html}} />
                   <div className="tour__image">
                     <img

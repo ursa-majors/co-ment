@@ -302,12 +302,14 @@
 }
 
 .custom-swipe-container-class {
-
+  cursor: pointer;
 }
 
 .swipe-item {
-  // position: relative;
-  // margin-top: 140px;
-  // color: white;
-  // font-weight: bold;
+  display: flex;
+  flex-direction: column;
+
+    @include for-tablet-portrait-up {
+      flex-direction: row;
+    }
 }
