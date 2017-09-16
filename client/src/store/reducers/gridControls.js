@@ -14,7 +14,7 @@ const INITIAL_STATE = {
   },
   filterGroup: 'all',
   sortBtn: {
-    title: '',
+    'popular': '',
     'date-updated': '',
   },
   sortOptions: {

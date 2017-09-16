@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { languages, skills, timezones } from '../utils';
@@ -43,16 +44,22 @@ class PostsGridControls extends React.Component {
   }
 
   toggleControls = (type) => {
+    // show/hide expanded controls on smaller screens
     const large = document.getElementsByClassName(`${type}__large`);
     const small = document.getElementsByClassName(`${type}__small`);
-    large[0].classList.toggle('visible');
-    small[0].classList.toggle('hidden');
+    for (let i = 0; i < large.length; i++) {
+      large[i].classList.toggle('visible');
+    }
+    for (let i = 0; i < small.length; i++) {
+      small[i].classList.toggle('hidden');
+    }
     const newState = { ...this.state }
     newState[type] = !this.state[type];
     this.setState({ ...newState });
   }
 
   toggleFilters = () => {
+    // show/hide advanced filter controls box
     const newState = { ...this.state }
     newState.showFilters = !this.state.showFilters;
     this.setState({ ...newState });
@@ -71,18 +78,6 @@ class PostsGridControls extends React.Component {
          this.props.actions.setSearchText('');
         }
       }, 1);
-  }
-
-  addFocusClass = (e) => {
-    // to improve keyboard accessibility: add visible focus indicator to the parent label element on customized checkbox/radio buttons that are hidiing the real focused html element
-    console.log('add focus');
-    console.log(e.target.parentElement);
-    e.target.parentElement.classList.add('fake-focus');
-  }
-
-  removeFocusClass = (e) => {
-    // remove it on blur
-    e.target.parentElement.classList.remove('fake-focus');
   }
 
   render() {
@@ -110,67 +105,59 @@ class PostsGridControls extends React.Component {
                   onKeyUp={e => this.props.actions.setSearchText(e.target.value)}
                   onMouseUp={(e)=>this.onMouseUp(e)}
                   />
-                  <button className="aria-button modal-close modal-close--pg" aria-label="close search" onClick={()=>this.toggleControls('search')}>&times;</button>
+                  {this.props.appState.windowSize.width<675 && this.state.search ?
+                    <button className="aria-button modal-close modal-close--pg search__large visible" aria-label="close search" onClick={()=>this.toggleControls('search')}>&times;</button> : ''
+                  }
               </div>
               <div className="btn-group sort-options">
                 <button className="btn btn--primary btn--single search__small" onClick={()=>this.toggleControls('search')}>
                     <i className="fa fa-search" aria-label="search" />
                 </button>
               </div>
-          </div>
+          </div> {/* SEARCH */}
           <div className="filters-group">
             <label className="form__label--white">Sort</label>
               <div className="btn-group sort-options sort__large">
-                <label
+                <button
                   className={`btn btn--primary ${this.props.gridControls.sortBtn['date-updated']}`}
-                  >
-                  <input
-                    type="radio"
-                    name="sort-value"
-                    value="date-updated"
-                    onClick={e => {
+                  value="date-updated"
+                  onClick={e => {
+                    this.props.actions.setSort(e.target);
+                    this.toggleControls('sort');
+                    }
+                  }
+                  onKeyDown={e => {
+                    if (e.charCode === 13 || e.which === 13) {
                       this.props.actions.setSort(e.target);
                       this.toggleControls('sort');
                       }
                     }
-                    onFocus={e => this.addFocusClass}
-                    onBlur={e => this.removeFocusClass}
-                    onKeyDown={e => {
-                      if (e.charCode === 13 || e.which === 13) {
-                        this.props.actions.setSort(e.target);
-                        this.toggleControls('sort');
-                        }
-                      }
-                    }/> New
-                </label>
-                <label className={`btn btn--primary ${this.props.gridControls.sortBtn.title}`}>
-                  <input
-                    type="radio"
-                    name="sort-value"
-                    value="popular"
-                    onClick={e => {
+                  }> New
+                </button>
+                <button
+                  className={`btn btn--primary ${this.props.gridControls.sortBtn['popular']}`}
+                  value="popular"
+                  onClick={e => {
+                    this.props.actions.setSort(e.target);
+                    this.toggleControls('sort');
+                    }
+                  }
+                  onKeyDown={e => {
+                    if (e.charCode === 13 || e.which === 13) {
                       this.props.actions.setSort(e.target);
                       this.toggleControls('sort');
                       }
                     }
-                    onFocus={e => this.addFocusClass}
-                    onBlur={e => this.removeFocusClass}
-                    onKeyDown={e => {
-                      if (e.charCode === 13 || e.which === 13) {
-                        this.props.actions.setSort(e.target);
-                        this.toggleControls('sort');
-                        }
-                      }
-                    }
-                  /> Popular
-                </label>
+                  }
+                  > Popular
+                </button>
               </div>
               <div className="btn-group sort-options sort__small">
                 <button className="btn btn--primary btn--single btn--sort" onClick={()=>this.toggleControls('sort')}>
                     <i className="fa fa-sort" aria-label="sort" />
                 </button>
               </div>
-          </div>
+          </div> {/* SORT */}
           <div className="filters-group">
             <label className="form__label--white">Filter</label>
               <div className="btn-group sort-options">
@@ -184,18 +171,16 @@ class PostsGridControls extends React.Component {
                     <i className="fa fa-ban" aria-label="clear filters" />
                 </button>
               </div>
-          </div>
+          </div> {/* FILTER */}
           <div className="filters-group">
             <label className="form__label--white">New</label>
             <div className="btn-group sort-options">
-              <Link to="/editpost">
-                <div className="btn btn--primary btn--single" aria-label="New Post">
-                <i className="fa fa-edit edit__icon" aria-label="new post" />
-                    <span className="label-tiny newpost__large">&nbsp;new post</span>
-                </div>
-              </Link>
+              <button className="btn btn--primary btn--single" aria-label="New Post" onClick={()=>this.props.history.push('/editpost')}>
+              <i className="fa fa-edit edit__icon" aria-label="new post" />
+                  <span className="label-tiny newpost__large">&nbsp;new post</span>
+              </button>
             </div>
-          </div>
+          </div> {/* NEW POST */}
         </div>
         <div className={filterClass}>
           <button className="aria-button modal-close filters-group--close" onClick={()=>this.toggleFilters()} aria-label="Close Advanced Filters Box">&times;</button>
@@ -304,4 +289,4 @@ const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(Actions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostsGridControls);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostsGridControls));
