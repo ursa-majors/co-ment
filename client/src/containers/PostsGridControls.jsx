@@ -7,6 +7,7 @@ import { languages, skills, timezones } from '../utils';
 import InputAutosuggest from './InputAutosuggest';
 
 import * as Actions from '../store/actions/gridControlActions';
+import ResponsiveTabOrder from '../utils/responsive-tab-order.js';
 
 const genders = ['Male', 'Female', 'Other'];
 const roles = ['Mentor', 'Mentee'];
@@ -62,7 +63,16 @@ class PostsGridControls extends React.Component {
     // show/hide advanced filter controls box
     const newState = { ...this.state }
     newState.showFilters = !this.state.showFilters;
-    this.setState({ ...newState });
+    this.setState({ ...newState }, () => {
+      // set data attribute taborder = 'visual' on autosuggest hidden inputs
+    const focusable = document.getElementsByClassName('react-autosuggest__input');
+    for (let i=0; i<focusable.length; i++) {
+      focusable[i].setAttribute('data-taborder', 'visual');
+    }
+      // add or remove advanced controls from tab order
+      ResponsiveTabOrder.updateTabOrder();
+    });
+
   }
 
   onMouseUp = (e) => {
@@ -99,6 +109,7 @@ class PostsGridControls extends React.Component {
               <div className="form__input__search-container search__large">
                 <input
                   className="form__input form__input--search filter__search js-shuffle-search"
+                  data-taborder="visual"
                   type="search"
                   id="filters-search-input"
                   placeholder="Search..."
@@ -106,12 +117,22 @@ class PostsGridControls extends React.Component {
                   onMouseUp={(e)=>this.onMouseUp(e)}
                   />
                   {this.props.appState.windowSize.width<675 && this.state.search ?
-                    <button className="aria-button modal-close modal-close--pg search__large visible" aria-label="close search" onClick={()=>this.toggleControls('search')}>&times;</button> : ''
+                    <button
+                      className="aria-button modal-close modal-close--pg search__large visible"
+                      data-taborder="visual"
+                      aria-label="close search"
+                      onClick={()=>this.toggleControls('search')}>
+                        &times;
+                      </button> : ''
                   }
               </div>
               <div className="btn-group sort-options">
-                <button className="btn btn--primary btn--single search__small" onClick={()=>this.toggleControls('search')}>
-                    <i className="fa fa-search" aria-label="search" />
+                <button
+                  className="btn btn--primary btn--single search__small"
+                  data-taborder="visual"
+                  aria-label="search"
+                  onClick={()=>this.toggleControls('search')}>
+                    <i className="fa fa-search" aria-hidden={true}/>
                 </button>
               </div>
           </div> {/* SEARCH */}
@@ -120,7 +141,9 @@ class PostsGridControls extends React.Component {
               <div className="btn-group sort-options sort__large">
                 <button
                   className={`btn btn--primary ${this.props.gridControls.sortBtn['date-updated']}`}
+                  data-taborder="visual"
                   value="date-updated"
+                  aria-label="sort by date"
                   onClick={e => {
                     this.props.actions.setSort(e.target);
                     this.toggleControls('sort');
@@ -136,6 +159,8 @@ class PostsGridControls extends React.Component {
                 </button>
                 <button
                   className={`btn btn--primary ${this.props.gridControls.sortBtn['popular']}`}
+                  data-taborder="visual"
+                  aria-label="sort by popular"
                   value="popular"
                   onClick={e => {
                     this.props.actions.setSort(e.target);
@@ -153,41 +178,62 @@ class PostsGridControls extends React.Component {
                 </button>
               </div>
               <div className="btn-group sort-options sort__small">
-                <button className="btn btn--primary btn--single btn--sort" onClick={()=>this.toggleControls('sort')}>
-                    <i className="fa fa-sort" aria-label="sort" />
+                <button
+                  className="btn btn--primary btn--single btn--sort"
+                  data-taborder="visual"
+                  aria-label="sort"
+                  onClick={()=>this.toggleControls('sort')}>
+                    <i className="fa fa-sort" aria-hidden={true} />
                 </button>
               </div>
           </div> {/* SORT */}
           <div className="filters-group">
             <label className="form__label--white">Filter</label>
               <div className="btn-group sort-options">
-                <button className="btn btn--primary btn--sort" onClick={()=>this.toggleFilters()}>
+                <button
+                  className="btn btn--primary btn--sort"
+                  data-taborder="visual"
+                  aria-label="show filter options"
+                  onClick={()=>this.toggleFilters()}>
                     <span className="label-tiny filter__large">show&nbsp;</span>
-                    <i className="fa fa-filter filter__icon" aria-label="show filter options" />
+                    <i className="fa fa-filter filter__icon" aria-hidden={true}/>
                 </button>
-                <button className="btn btn--primary btn--sort" onClick={()=> {this.props.actions.clearFilter();
+                <button
+                  className="btn btn--primary btn--sort"
+                  data-taborder="visual"
+                  aria-label="clear filters"
+                  onClick={()=> {this.props.actions.clearFilter();
                 } }>
                   <span className="label-tiny filter__large">clear&nbsp;</span>
-                    <i className="fa fa-ban" aria-label="clear filters" />
+                    <i className="fa fa-ban" aria-hidden={true}/>
                 </button>
               </div>
           </div> {/* FILTER */}
           <div className="filters-group">
             <label className="form__label--white">New</label>
             <div className="btn-group sort-options">
-              <button className="btn btn--primary btn--single" aria-label="New Post" onClick={()=>this.props.history.push('/editpost')}>
-              <i className="fa fa-edit edit__icon" aria-label="new post" />
+              <button
+                className="btn btn--primary btn--single"
+                data-taborder="visual"
+                aria-label="New Post"
+                onClick={()=>this.props.history.push('/editpost')}>
+              <i className="fa fa-edit edit__icon" aria-hidden={true} />
                   <span className="label-tiny newpost__large">&nbsp;new post</span>
               </button>
             </div>
           </div> {/* NEW POST */}
         </div>
         <div className={filterClass}>
-          <button className="aria-button modal-close filters-group--close" onClick={()=>this.toggleFilters()} aria-label="Close Advanced Filters Box">&times;</button>
+          <button
+            className="aria-button modal-close filters-group--close"
+            data-taborder="visual"
+            onClick={()=>this.toggleFilters()}
+            aria-label="Close Advanced Filters Box">&times;</button>
           <div className="filters-group--flush flex-col-12-xs flex-col-6-sm flex-col-4-md flex-col-2-xl">
             <label htmlFor="role" className="form__label--white">Role</label>
             <select
               className="form__input form__input--select-grid"
+              data-taborder="visual"
               id="role"
               name="role"
               value={this.props.gridControls.filterBtn.role}
@@ -200,6 +246,7 @@ class PostsGridControls extends React.Component {
           <div className="filters-group--flush flex-col-12-xs flex-col-6-sm flex-col-4-md flex-col-2-xl">
             <label htmlFor="language" className="form__label--white">Spoken Language</label>
             <InputAutosuggest
+              data-taborder="visual"
               id="language"
               className="form__input-grid"
               name="language"
@@ -214,6 +261,7 @@ class PostsGridControls extends React.Component {
           <div className="filters-group--flush flex-col-12-xs flex-col-6-sm flex-col-4-md flex-col-2-xl">
             <label htmlFor="keyword" className="form__label--white">Keyword</label>
             <InputAutosuggest
+              data-taborder="visual"
               id="keyword"
               className="form__input-grid"
               name="keyword"
@@ -229,6 +277,7 @@ class PostsGridControls extends React.Component {
             <label htmlFor="timezone" className="form__label--white">Time Zone</label>
             <select
               className="form__input form__input--select-grid"
+              data-taborder="visual"
               id="timezone"
               name="timezone"
               value={this.props.gridControls.filterBtn.timezone}
@@ -242,6 +291,7 @@ class PostsGridControls extends React.Component {
             <label htmlFor="gender" className="form__label--white">Gender</label>
             <select
               className="form__input form__input--select-grid"
+              data-taborder="visual"
               id="gender"
               name="gender"
               value={this.props.gridControls.filterBtn.gender}
@@ -255,11 +305,13 @@ class PostsGridControls extends React.Component {
           <div className="btn-group sort-options filters-group--button-grid">
             <button
               className="btn btn--primary btn--smaller btn--grid"
+              data-taborder="visual"
               onClick={() => this.props.actions.runFilter()}>
               Apply <i className="fa fa-filter" aria-label="filter" />
             </button>
             <button
               className="btn btn--primary btn--smaller btn--grid"
+              data-taborder="visual"
               onClick={() => this.props.actions.clearFilter().then(console.log('PostGridControls.jsx > 105', this.props.gridControls.filterBtn))}>
               Clear <i className="fa fa-filter" aria-label="filter" />
             </button>

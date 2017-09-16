@@ -11,6 +11,7 @@ import Spinner from './Spinner';
 import ModalSm from './ModalSm';
 import ModalGuts from './ModalGuts';
 import PostsGridControls from './PostsGridControls';
+import ResponsiveTabOrder from '../utils/responsive-tab-order.js';
 
 class PostsGrid extends React.Component {
 
@@ -57,6 +58,13 @@ class PostsGrid extends React.Component {
         this.shuffle.resetItems();
         this.addShuffleEventListeners();
       });
+    // temporarily set data attribute taborder = 'visual' to focusable eleements outside this commponent
+    const focusable = document.querySelectorAll('[data-taborder]');
+    for (let i=0; i<focusable.length; i++) {
+      focusable[i].setAttribute('data-taborder', 'visual');
+    }
+    // set initial tab order of sorted / shuffled posts
+    ResponsiveTabOrder.startAutoUpdate();
   }
 
   componentDidUpdate() {
@@ -107,6 +115,8 @@ class PostsGrid extends React.Component {
           this.shuffle.resetItems();
 
       }
+      // update tab order of sorted / shuffled posts
+      ResponsiveTabOrder.updateTabOrder();
     }
   }
 
@@ -114,6 +124,12 @@ class PostsGrid extends React.Component {
     // Dispose of shuffle when it will be removed from the DOM.
     this.shuffle.destroy();
     this.shuffle = null;
+
+    // remove temp tab-order data attributes
+    const focusable = document.querySelectorAll('[data-taborder]');
+    for (let i=0; i<focusable.length; i++) {
+      focusable[i].setAttribute('data-taborder', '');
+    }
   }
 
   closeModal = () => {

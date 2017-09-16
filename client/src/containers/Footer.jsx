@@ -5,6 +5,7 @@ const Footer = () => (
         &copy; 2017 The Ursa Majors
         <a
         	href="https://github.com/ursa-majors/co-ment"
+          data-taborder=""
         	rel="noopener noreferrer"
           target="_blank"
           className="footer__link">

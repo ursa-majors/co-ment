@@ -90,7 +90,7 @@ class PostThumb extends React.Component {
                 </div>
                 </div>
                 <div className={`post-thumb__image-wrap`}>
-                  <Link className="unstyled-link post-thumb__img-link" to={`/viewprofile/${this.props.post.author_id}`}>
+                  <div className='post-thumb__link-wrap'>
                     <div className={`post-thumb__image-aspect`}>
                       <div className={`post-thumb__image-crop`}>
                         {this.props.post.author_avatar ?
@@ -105,12 +105,17 @@ class PostThumb extends React.Component {
                         }
                       </div>
                     </div>
-                      <div className={`post-thumb__name-wrap`}>
+                    <div className={`post-thumb__name-wrap`}>
+                      <Link
+                        className="unstyled-link post-thumb__img-link"
+                        to={`/viewprofile/${this.props.post.author_id}`}
+                        data-taborder="visual">
                         <span className={`post-thumb__username`}>
                           @{this.props.post.author}
                         </span>
-                      </div>
-                  </Link>
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="post-thumb__button-wrap">
@@ -118,6 +123,7 @@ class PostThumb extends React.Component {
                   className={`expand post-thumb__expand`}
                   aria-label="expand"
                   name="expand"
+                  data-taborder="visual"
                   onKeyDown={e => this.handleKeyDown(e)}
                   onClick={
                     () => {
