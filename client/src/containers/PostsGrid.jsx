@@ -129,6 +129,7 @@ class PostsGrid extends React.Component {
     const focusable = document.querySelectorAll('[data-taborder]');
     for (let i=0; i<focusable.length; i++) {
       focusable[i].setAttribute('data-taborder', '');
+      focusable[i].tabIndex = '0';
     }
   }
 
