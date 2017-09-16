@@ -43,6 +43,10 @@ class PostsGridControls extends React.Component {
   }
 
   toggleControls = (type) => {
+    const large = document.getElementsByClassName(`${type}__large`);
+    const small = document.getElementsByClassName(`${type}__small`);
+    large[0].classList.toggle('visible');
+    small[0].classList.toggle('hidden');
     const newState = { ...this.state }
     newState[type] = !this.state[type];
     this.setState({ ...newState });
@@ -69,6 +73,18 @@ class PostsGridControls extends React.Component {
       }, 1);
   }
 
+  addFocusClass = (e) => {
+    // to improve keyboard accessibility: add visible focus indicator to the parent label element on customized checkbox/radio buttons that are hidiing the real focused html element
+    console.log('add focus');
+    console.log(e.target.parentElement);
+    e.target.parentElement.classList.add('fake-focus');
+  }
+
+  removeFocusClass = (e) => {
+    // remove it on blur
+    e.target.parentElement.classList.remove('fake-focus');
+  }
+
   render() {
     const filterClass = this.state.showFilters ? "flex-row posts-grid__adv-filter-wrap" : "hidden";
     let filtersAppliedList;
@@ -85,8 +101,7 @@ class PostsGridControls extends React.Component {
         <div className={this.state.search || this.state.sort || this.state.filter ? "flex-row no-wrap no-wrap--open" : "flex-row no-wrap"}>
           <div className="filters-group">
             <label htmlFor="filters-search-input" className="form__label--white">Search</label>
-            {this.props.appState.windowSize.width>675 || this.state.search ?
-              <div className="form__input__search-container">
+              <div className="form__input__search-container search__large">
                 <input
                   className="form__input form__input--search filter__search js-shuffle-search"
                   type="search"
@@ -95,22 +110,20 @@ class PostsGridControls extends React.Component {
                   onKeyUp={e => this.props.actions.setSearchText(e.target.value)}
                   onMouseUp={(e)=>this.onMouseUp(e)}
                   />
-                {this.props.appState.windowSize.width<675 && this.state.search ?
-                  <button className="aria-button modal-close modal-close--pg" aria-label="close search" onClick={()=>this.toggleControls('search')}>&times;</button> : '' }
+                  <button className="aria-button modal-close modal-close--pg" aria-label="close search" onClick={()=>this.toggleControls('search')}>&times;</button>
               </div>
-                :
               <div className="btn-group sort-options">
-                <button className="btn btn--primary btn--single" onClick={()=>this.toggleControls('search')}>
+                <button className="btn btn--primary btn--single search__small" onClick={()=>this.toggleControls('search')}>
                     <i className="fa fa-search" aria-label="search" />
                 </button>
               </div>
-            }
           </div>
           <div className="filters-group">
             <label className="form__label--white">Sort</label>
-            {this.props.appState.windowSize.width>675 || this.state.sort ?
-              <div className="btn-group sort-options">
-                <label className={`btn btn--primary ${this.props.gridControls.sortBtn['date-updated']}`}>
+              <div className="btn-group sort-options sort__large">
+                <label
+                  className={`btn btn--primary ${this.props.gridControls.sortBtn['date-updated']}`}
+                  >
                   <input
                     type="radio"
                     name="sort-value"
@@ -120,7 +133,15 @@ class PostsGridControls extends React.Component {
                       this.toggleControls('sort');
                       }
                     }
-                  /> New
+                    onFocus={e => this.addFocusClass}
+                    onBlur={e => this.removeFocusClass}
+                    onKeyDown={e => {
+                      if (e.charCode === 13 || e.which === 13) {
+                        this.props.actions.setSort(e.target);
+                        this.toggleControls('sort');
+                        }
+                      }
+                    }/> New
                 </label>
                 <label className={`btn btn--primary ${this.props.gridControls.sortBtn.title}`}>
                   <input
@@ -132,28 +153,34 @@ class PostsGridControls extends React.Component {
                       this.toggleControls('sort');
                       }
                     }
+                    onFocus={e => this.addFocusClass}
+                    onBlur={e => this.removeFocusClass}
+                    onKeyDown={e => {
+                      if (e.charCode === 13 || e.which === 13) {
+                        this.props.actions.setSort(e.target);
+                        this.toggleControls('sort');
+                        }
+                      }
+                    }
                   /> Popular
                 </label>
-              </div> :
-              <div className="btn-group sort-options">
+              </div>
+              <div className="btn-group sort-options sort__small">
                 <button className="btn btn--primary btn--single btn--sort" onClick={()=>this.toggleControls('sort')}>
                     <i className="fa fa-sort" aria-label="sort" />
                 </button>
               </div>
-            }
           </div>
           <div className="filters-group">
             <label className="form__label--white">Filter</label>
               <div className="btn-group sort-options">
                 <button className="btn btn--primary btn--sort" onClick={()=>this.toggleFilters()}>
-                  {this.props.appState.windowSize.width>675 &&
-                    <span className="label-tiny">show </span> }
-                    <i className="fa fa-filter" aria-label="show filter options" />
+                    <span className="label-tiny filter__large">show&nbsp;</span>
+                    <i className="fa fa-filter filter__icon" aria-label="show filter options" />
                 </button>
                 <button className="btn btn--primary btn--sort" onClick={()=> {this.props.actions.clearFilter();
                 } }>
-                  {this.props.appState.windowSize.width>675 &&
-                  <span className="label-tiny">clear </span> }
+                  <span className="label-tiny filter__large">clear&nbsp;</span>
                     <i className="fa fa-ban" aria-label="clear filters" />
                 </button>
               </div>
@@ -162,11 +189,10 @@ class PostsGridControls extends React.Component {
             <label className="form__label--white">New</label>
             <div className="btn-group sort-options">
               <Link to="/editpost">
-                <button className="btn btn--primary btn--single" aria-label="New Post">
-                <i className="fa fa-edit" aria-label="new post" />
-                {this.props.appState.windowSize.width>675 &&
-                    <span className="label-tiny"> new post</span> }
-                </button>
+                <div className="btn btn--primary btn--single" aria-label="New Post">
+                <i className="fa fa-edit edit__icon" aria-label="new post" />
+                    <span className="label-tiny newpost__large">&nbsp;new post</span>
+                </div>
               </Link>
             </div>
           </div>

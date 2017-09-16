@@ -2,8 +2,9 @@ import React from 'react';
 
 const handleFirstTab = (e) => {
   if (e.keyCode === 9) {
+    console.log(document.activeElement);
     document.body.classList.add('user-is-tabbing');
-    window.removeEventListener('keydown', handleFirstTab);
+    // window.removeEventListener('keydown', handleFirstTab);
     window.addEventListener('mousedown', handleMouseDownOnce);
   }
 }
@@ -246,7 +247,7 @@ export const skip = (targetId) => {
   // tab flow but allows it to be focused via javascript
   skipTo.tabIndex = -1;
   skipTo.focus(); // focus on the content container
-  console.log(document.activeElement);
+  // console.log(document.activeElement);
   // when focus leaves this element,
   // remove the tabindex attribute
   skipTo.addEventListener("blur", removeTabIndex);
