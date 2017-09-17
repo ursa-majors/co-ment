@@ -9,13 +9,13 @@ import { formatDate } from '../utils/';
 
 class PostThumb extends React.Component {
 
-  handleKeyDown(e) {
+  handleKeyDown(e, post) {
     // enter key opens modal when focused
     const action = e.target.className.split(" ")[0];
     if (e.keyCode === 13 || e.which === 13 ) {
       switch (action) {
         case 'expand':
-          this.props.openModal();
+          this.props.openModal(post);
           break;
         default:
           return null;
@@ -124,7 +124,7 @@ class PostThumb extends React.Component {
                   aria-label="expand"
                   name="expand"
                   data-taborder="visual"
-                  onKeyDown={e => this.handleKeyDown(e)}
+                  onKeyDown={e => this.handleKeyDown(e, this.props.post)}
                   onClick={
                     () => {
                       if( this.props.appState.userId !== this.props.post.author_id) {
