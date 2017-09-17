@@ -40,6 +40,8 @@ class PostFull extends React.Component {
       this.props.actions.clearCurrentPost();
       this.props.api.viewPost(token, postId);
     }
+    // force focus on first focusable element trap focus inside modal when opening on postsgrid page
+    document.getElementById('username').focus();
   }
 
   deletePost = (event) => {
@@ -66,9 +68,6 @@ class PostFull extends React.Component {
           break;
         case 'delete':
           this.deletePost();
-          break;
-        case 'close':
-          this.props.closeModal();
           break;
         case 'like':
           this.props.api.likePost(this.props.appState.authToken, this.props.post._id);
@@ -148,7 +147,6 @@ class PostFull extends React.Component {
               aria-label="close"
               name="close"
               data-dismiss="modal"
-              onKeyDown={e => this.handleKeyDown(e)}
               onClick={()=>this.props.closeModal()}>
                   <i className="close fa fa-compress thumb__icon--compress"
                     aria-label="close"/>
@@ -295,7 +293,7 @@ class PostFull extends React.Component {
                 <div className={`post-full__name-wrap`}>
                   <span className={`post-full__name`}>
                     {post.author_name}</span>
-                  <Link className="unstyled-link post-full__username" to={`/viewprofile/${post.author_id}`}>
+                  <Link id="username" className="unstyled-link post-full__username" to={`/viewprofile/${post.author_id}`}>
                       @{post.author}
                 </Link>
                 </div>

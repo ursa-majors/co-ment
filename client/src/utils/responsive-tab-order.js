@@ -30,7 +30,7 @@ var ResponsiveTabOrder = (function (module) {
     for (i = 0; i < tabbables.length; ++i) {
       tabbables[i].element.tabIndex = i + 1;
     }
-    console.log(tabbables);
+    // console.log(tabbables);
   };
 
 
