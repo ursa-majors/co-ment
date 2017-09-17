@@ -49,6 +49,11 @@ body.user-is-tabbing *:focus {
   box-shadow: inset 0 0 .2em $color_aqua, 0 0 1em $color_focus_ring !important;
 }
 
+/* fake focus class for elements like labels of custome-styled buttons that hide html inputs */
+.fake-focus {
+  box-shadow: inset 0 0 .2em $color_aqua, 0 0 1em $color_focus_ring !important;
+}
+
 .app-root {
   background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
   background: linear-gradient(to top, $color_aqua, $color_sky);
@@ -157,8 +162,12 @@ body.user-is-tabbing *:focus {
   }
 
 .hidden {
-    display: none;
+    display: none !important;
   }
+
+.visible {
+  display: block !important;
+}
 
 .character-count {
   text-align: right;

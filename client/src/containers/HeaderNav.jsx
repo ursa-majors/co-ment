@@ -81,10 +81,11 @@ class Nav extends React.Component {
       <div className={`h-nav__side-bkg ${this.props.appState.menuBackground}`}>
       <button
         className="skip"
+        data-taborder=""
         onClick={ () => skip('main')}><span className="skip__text">Skip to content</span> <i className="fa fa-angle-right" /></button>
       <div className={classObj[this.props.appState.menuState].menu} aria-expanded={classObj[this.props.appState.menuState].ariaE} aria-controls="nav" onClick={this.navToggle}>
         <span className={classObj[this.props.appState.menuState].span}>
-          <button className="h-nav__icon" >
+          <button className="h-nav__icon" data-taborder="" >
             <span className="sr-only">Toggle navigation</span>
             <div className={classObj[this.props.appState.menuState].bar1} />
             <div className={classObj[this.props.appState.menuState].bar2} />
@@ -99,6 +100,7 @@ class Nav extends React.Component {
           <li className="h-nav__item">
             <NavLink
               to="/"
+              data-taborder=""
               className="h-nav__item-link"
               activeClassName="h-nav__item-link--active"
             >
@@ -108,6 +110,7 @@ class Nav extends React.Component {
           <li className="h-nav__item">
             <NavLink
               to="/about"
+              data-taborder=""
               className="h-nav__item-link h-nav__item-link"
               activeClassName="h-nav__item-link--active"
             >
@@ -125,6 +128,7 @@ class Nav extends React.Component {
               <li className="h-nav__item" key={item}>
                 <NavLink
                   to={`/${item}`}
+                  data-taborder=""
                   className={classes}
                   activeClassName="h-nav__item-link--active"
                 >
