@@ -28,6 +28,7 @@ import ResetPassword from './containers/ResetPassword';
 import UserAdmin from './containers/UserAdmin';
 import NotFound from './containers/NotFound';
 import Footer from './containers/Footer';
+import ScrollToTop from './containers/ScrollToTop';
 
 class App extends React.Component {
 
@@ -74,33 +75,35 @@ class App extends React.Component {
     const links = (this.props.appState.loggedIn ? ['posts', 'profile', 'connections', 'logout'] : ['login']);
     return (
       <BrowserRouter>
-        <div className="app-root">
-          <HeaderNav links={links} />
-          <main className="main" id="main">
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route path="/register" component={Registration} />
-              <Route path="/login" component={Login} />
-              <Route path="/about" component={About} />
-              <Route path="/profile" component={UserAdmin} />
-              <Route path="/posts" component={PostsGrid} />
-              <Route path="/logout" component={Logout} />
-              <Route path="/viewpost/:id" component={PostFull} />
-              <Route path="/viewprofile/:id" component={ViewProfile} />
-              <Route path="/editprofile/:id" component={EditProfile} />
-              <Route path="/editpost/:id?" component={EditPost} />
-              <Route path="/mentorpath" component={MentorPath} />
-              <Route path="/connectemail" component={ConnectionEmail} />
-              <Route path="/connections" component={Connections} />
-              <Route path="/connectionresult" component={ConnectionResult} />
-              <Route path="/connectiondetails/:id" component={ConnectionDetails} />
-              <Route path="/validate" component={Validate} />
-              <Route path="/resetpassword/:key" component={ResetPassword} />
-              <Route path="*" component={NotFound} />
-            </Switch>
-          </main>
-          <Footer />
-        </div>
+        <ScrollToTop>
+          <div className="app-root">
+            <HeaderNav links={links} />
+            <main className="main" id="main">
+              <Switch>
+                <Route exact path="/" component={Home} />
+                <Route path="/register" component={Registration} />
+                <Route path="/login" component={Login} />
+                <Route path="/about" component={About} />
+                <Route path="/profile" component={UserAdmin} />
+                <Route path="/posts" component={PostsGrid} />
+                <Route path="/logout" component={Logout} />
+                <Route path="/viewpost/:id" component={PostFull} />
+                <Route path="/viewprofile/:id" component={ViewProfile} />
+                <Route path="/editprofile/:id" component={EditProfile} />
+                <Route path="/editpost/:id?" component={EditPost} />
+                <Route path="/mentorpath" component={MentorPath} />
+                <Route path="/connectemail" component={ConnectionEmail} />
+                <Route path="/connections" component={Connections} />
+                <Route path="/connectionresult" component={ConnectionResult} />
+                <Route path="/connectiondetails/:id" component={ConnectionDetails} />
+                <Route path="/validate" component={Validate} />
+                <Route path="/resetpassword/:key" component={ResetPassword} />
+                <Route path="*" component={NotFound} />
+              </Switch>
+            </main>
+            <Footer />
+          </div>
+        </ScrollToTop>
       </BrowserRouter>
     );
   }
