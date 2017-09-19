@@ -3,21 +3,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import InputAutosuggest from './InputAutosuggest';
-import { languages, skills, timezones } from '../utils';
+import { languages, skills, adjustTextArea } from '../utils';
 import parseSKill from '../utils/skillsparser';
 
 import * as Actions from '../store/actions/postActions';
 import * as apiActions from '../store/actions/apiPostActions';
 
 class EditPost extends React.Component {
-
-  static adjustTextArea(target) {
-    // expand input height to fit content without scrollbar
-    const el = target;
-    let adjustedHeight = el.clientHeight;
-    adjustedHeight = Math.max(el.scrollHeight, adjustedHeight);
-    if (adjustedHeight > el.clientHeight) { el.style.height = `${adjustedHeight + 20}px`; }
-  }
 
   // For a URL with a specific ID param
   componentDidMount() {
@@ -28,7 +20,7 @@ class EditPost extends React.Component {
   }
 
   componentDidUpdate() {
-    EditPost.adjustTextArea(this.textInput);
+    adjustTextArea(this.textInput);
   }
 
   // Reset form on unmount
@@ -55,7 +47,7 @@ class EditPost extends React.Component {
     this.props.actions.setFormField(event.target.id, event.target.value);
     // expand textarea height to match content
     if (event.target.id === 'content') {
-      EditPost.adjustTextArea(this.textInput);
+      adjustTextArea(this.textInput);
     }
   }
 

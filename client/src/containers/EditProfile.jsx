@@ -8,18 +8,10 @@ import InputAutosuggest from './InputAutosuggest';
 import RadioGroup from './RadioGroup';
 import Spinner from '../containers/Spinner';
 import ModalSm from '../containers/ModalSm';
-import { languages, skills, timezones } from '../utils';
+import { languages, skills, timezones, adjustTextArea } from '../utils';
 import parseSKill from '../utils/skillsparser';
 
 class EditProfile extends React.Component {
-
-  static adjustTextArea(target) {
-    // expand input height to fit content without scrollbar
-    const el = target;
-    let adjustedHeight = el.clientHeight;
-    adjustedHeight = Math.max(el.scrollHeight, adjustedHeight);
-    if (adjustedHeight > el.clientHeight) { el.style.height = `${adjustedHeight + 20}px`; }
-  }
 
   constructor(props) {
     super(props);
@@ -60,7 +52,7 @@ class EditProfile extends React.Component {
     }
     this.setState({ ...newState }, () => {
       if (this.state.page === 2) {
-        EditProfile.adjustTextArea(this.textInput);
+        adjustTextArea(this.textInput);
       }
     });
   }
@@ -72,14 +64,13 @@ class EditProfile extends React.Component {
 
   handleTextAreaInput(e) {
     // limit length to 620 characters
-     if (e.target.value.length > 620) {
+    if (e.target.value.length > 620) {
       return null;
-    } else {
-      // handle input
-      this.props.actions.setFormField(e.target.name, e.target.value);
-      // expand textarea height to match content
-      EditProfile.adjustTextArea(e.target);
     }
+    // handle input
+    this.props.actions.setFormField(e.target.name, e.target.value);
+    // expand textarea height to match content
+    adjustTextArea(e.target);
   }
 
   handleRadioChange(e) {
