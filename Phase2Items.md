@@ -8,6 +8,7 @@ Technical debt
 * Review react-router setup for best practice
 * Improve security (username/password requirements)
 * Analytics - should we be tracking visitors/clicks/other?
+* confirmation/cancel on forms
 
 New Features
 ------------
