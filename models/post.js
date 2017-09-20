@@ -88,11 +88,16 @@ const postSchema = new mongoose.Schema({
     meta : {
         views    : { type : Number, default  : 0, min : 0 },
         likes    : { type : Number, default  : 0, min : 0 }
+    },
+    
+    updatedAt : {
+        type     : Date
+    },
+    
+    createdAt : {
+        type     : Date
     }
 
-},
-{
-    timestamps : true
 });
 
 

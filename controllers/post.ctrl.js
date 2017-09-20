@@ -111,6 +111,8 @@ function createPost(req, res) {
                 myPost.excerpt          = req.body.excerpt;
                 myPost.keywords         = req.body.keywords;
                 myPost.availability     = req.body.availability;
+                myPost.createdAt        = new Date().toISOString();
+                myPost.updatedAt        = new Date().toISOString();
 
                 // save new post to database
                 myPost.save( (err, newPost) => {
@@ -171,20 +173,21 @@ function updatePost(req, res) {
 
     // build new post object from request body and parsed token
     const updates = {
-        active              : req.body.active,
-        author              : req.body.author,
-        author_id           : req.token._id,
-        author_name         : req.body.author_name,
-        author_avatar       : req.body.author_avatar,
-        author_timezone     : req.body.author_timezone,
-        author_languages    : req.body.author_languages,
-        author_gender       : req.body.author_gender,
-        role                : req.body.role,
-        title               : req.body.title,
-        body                : req.body.body,
-        excerpt             : req.body.excerpt,
-        keywords            : req.body.keywords,
-        availability        : req.body.availability
+        active           : req.body.active,
+        author           : req.body.author,
+        author_id        : req.token._id,
+        author_name      : req.body.author_name,
+        author_avatar    : req.body.author_avatar,
+        author_timezone  : req.body.author_timezone,
+        author_languages : req.body.author_languages,
+        author_gender    : req.body.author_gender,
+        role             : req.body.role,
+        title            : req.body.title,
+        body             : req.body.body,
+        excerpt          : req.body.excerpt,
+        keywords         : req.body.keywords,
+        availability     : req.body.availability,
+        updatedAt        : new Date().toISOString()
     };
 
     const options = {
@@ -240,8 +243,9 @@ function deletePost(req, res) {
     };
 
     const updates = {
-        deleted : true,
-        active  : false
+        deleted   : true,
+        active    : false,
+        updatedAt : new Date().toISOString()
     };
 
     Post.findOneAndUpdate(target, updates, (err, post) => {
@@ -305,11 +309,12 @@ function incPostViews(req, res) {
 
 
 // INCREMENT A POST'S LIKE COUNT
-//   Example: PUT >> /api/posts/597dd8665229970e99c6ab55/likessplusplus
+//   Example: PUT >> /api/posts/597dd8665229970e99c6ab55/likes?action=plusplus
 //   Secured: yes, valid JWT required
 //   Expects:
 //     1) post 'id' from request params
 //     2) user '_id' from JWT
+//     3) action from request query param (either 'plusplus' or 'minusminus')
 //   Returns: success status only
 //
 function updatePostLikes(req, res) {
