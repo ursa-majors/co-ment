@@ -478,7 +478,7 @@ const contactTemplate = (toUser, fromUser, fromEmail, bodyText, connectionId, bo
     'co/ment Connection Request Email',
     `https://co-ment.glitch.me/connectiondetails/${connectionId}`,
     toUser,
-    boilerplate || `Great news! <strong>${fromUser}</strong> (<a class="link" href="mailto:${fromEmail}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${fromEmail}</a>) has responded to your ad on co/ment!`,
+    boilerplate || `Great news! <strong>${fromUser}</strong> (<a class="link" href="mailto:${fromEmail}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${fromEmail}</a>) <br/>has responded to your ad on co/ment!`,
     bodyText,
     'View Connection');
 };
