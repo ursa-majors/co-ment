@@ -52,7 +52,7 @@ function makeValidationUrl(user_id, key) {
 function makeBoilerplate(type, sender, recipient) {
     switch(type) {
         case 'request':
-            return `Great news! <strong>${sender.username}</strong> (<a class="link" href="mailto:${sender.email}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${sender.email}</a>) has responded to your ad on co/ment!`;
+            return `Great news! <strong>${sender.username}</strong> (<a class="link" href="mailto:${sender.email}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${sender.email}</a>)<br />has responded to your ad on co/ment!`;
         case 'accept':
             return `Great news! <strong>${sender.username}</strong> (<a class="link" href="mailto:${sender.email}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${sender.email}</a>) has accepted your connection request on co/ment! <br />You have each other's email addresses now, so you're on your own from here. Good luck!`;
         case 'decline':
@@ -60,7 +60,7 @@ function makeBoilerplate(type, sender, recipient) {
         case 'deactivate':
             return `Connection Update: The mentorship between <strong>${sender.username}</strong> and <strong>${recipient.username}</strong> has ended`;
         default:
-            return `Great news! <strong>${sender.username}</strong> (<a class="link" href="mailto:${sender.email}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${sender.username}</a>) has responded to your ad on co/ment!`;
+            return `Great news! <strong>${sender.username}</strong> (<a class="link" href="mailto:${sender.email}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${sender.username}</a>)<br />has responded to your ad on co/ment!`;
         }
 }
 
