@@ -34,6 +34,8 @@ const errorHandler  = require('./utils/errorhandler');
 // port
 const port          = process.env.PORT || 3001;
 
+// bulk email notifier
+const spammy        = require('./utils/spammer');
 
 /* ============================= CONFIGURATION ============================= */
 
@@ -134,6 +136,10 @@ mongoose.connection.on('error', function(err) {
 
 // tell Mongoose to use Node global es6 Promises
 mongoose.Promise = global.Promise;
+
+
+/* EXPERIMENTAL */
+spammy();
 
 
 /* ================================ STARTUP ================================ */
