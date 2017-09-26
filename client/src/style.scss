@@ -122,6 +122,22 @@ body.user-is-tabbing *:focus {
     background: transparent;
     outline: none;
   }
+  &__link {
+    text-align: left;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    width: 100%;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+
+    &:hover, &:active {
+      border-bottom: 1px dotted $color_gray_text;
+      cursor: pointer;
+
+    }
+
+  }
 }
 
 .error {
@@ -159,6 +175,7 @@ body.user-is-tabbing *:focus {
 .unstyled-link {
     color: inherit;
     text-decoration: none;
+    cursor: pointer;
   }
 
 .hidden {

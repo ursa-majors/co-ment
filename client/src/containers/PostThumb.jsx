@@ -74,36 +74,57 @@ class PostThumb extends React.Component {
             </div>
               <div className={`post-thumb__card-body`}>
                 <div className={`post-thumb__text-wrap`}>
+                  <button
+                  className={`aria-button aria-button__link`}
+                  aria-label="expand"
+                  name="expand"
+                  data-taborder="visual"
+                  onKeyDown={e => this.handleKeyDown(e, this.props.post)}
+                  onClick={
+                    () => {
+                      if( this.props.appState.userId !== this.props.post.author_id) {
+                        this.props.api.incrementPostView(this.props.appState.authToken, this.props.post._id);
+                        }
+                        this.props.openModal(this.props.post);
+                      }
+                    }
+                  >
                     <div className={`post-thumb__title`}>
                       {this.props.post.title}
                     </div>
-                    { this.props.post.excerpt ?
-                    <div className={`post-thumb__body post-thumb__excerpt`}>
-                      {`${this.props.post.excerpt}...`}
-                    </div> :
-                    <div className={`post-thumb__body`}>
-                      {this.props.post.body}
-                    </div>
-                    }
-                    <div className="tag-value__wrapper">
-                    {keywordsDisp ? keywordsDisp : ''}
-                </div>
+                  </button>
+                  { this.props.post.excerpt ?
+                  <div className={`post-thumb__body post-thumb__excerpt`}>
+                    {`${this.props.post.excerpt}...`}
+                  </div> :
+                  <div className={`post-thumb__body`}>
+                    {this.props.post.body}
+                  </div>
+                  }
+                  <div className="tag-value__wrapper">
+                  {keywordsDisp ? keywordsDisp : ''}
+                  </div>
                 </div>
                 <div className={`post-thumb__image-wrap`}>
                   <div className='post-thumb__link-wrap'>
                     <div className={`post-thumb__image-aspect`}>
-                      <div className={`post-thumb__image-crop`}>
-                        {this.props.post.author_avatar ?
-                          <div
-                            className={`post-thumb__image`}
-                            style={backgroundStyle}
-                            role="image"
-                            aria-label={this.props.post.author} /> :
-                          <i
-                            className={`fa fa-user-circle fa-5x post-thumb__icon--avatar`}
-                            aria-hidden="true" />
-                        }
-                      </div>
+                      <Link
+                        className="unstyled-link post-thumb__img-link"
+                        to={`/viewprofile/${this.props.post.author_id}`}
+                        data-taborder="visual">
+                        <div className={`post-thumb__image-crop`}>
+                          {this.props.post.author_avatar ?
+                            <div
+                              className={`post-thumb__image`}
+                              style={backgroundStyle}
+                              role="image"
+                              aria-label={this.props.post.author} /> :
+                            <i
+                              className={`fa fa-user-circle fa-5x post-thumb__icon--avatar`}
+                              aria-hidden="true" />
+                          }
+                        </div>
+                      </Link>
                     </div>
                     <div className={`post-thumb__name-wrap`}>
                       <Link

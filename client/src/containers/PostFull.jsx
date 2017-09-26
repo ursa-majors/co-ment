@@ -277,6 +277,7 @@ class PostFull extends React.Component {
               </div>
               <div className={`post-full__image-wrap`}>
                 <div className={`post-full__image-aspect`}>
+                  <Link id="username" className="unstyled-link post-full__username" to={`/viewprofile/${post.author_id}`}>
                     <div className={`post-full__image-crop`}>
                       {post.author_avatar ?
                         <div
@@ -289,10 +290,13 @@ class PostFull extends React.Component {
                           aria-hidden="true" />
                         }
                     </div>
-                  </div>
+                  </Link>
+                </div>
                 <div className={`post-full__name-wrap`}>
-                  <span className={`post-full__name`}>
+                  <Link id="username" className="unstyled-link post-full__username" to={`/viewprofile/${post.author_id}`}>
+                    <span className={`post-full__name`}>
                     {post.author_name}</span>
+                  </Link>
                   <Link id="username" className="unstyled-link post-full__username" to={`/viewprofile/${post.author_id}`}>
                       @{post.author}
                 </Link>
