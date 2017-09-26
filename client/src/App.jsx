@@ -103,7 +103,7 @@ class App extends React.Component {
                 <Route path="*" component={NotFound} />
               </Switch>
             </main>
-            <Footer />
+            <Footer mobile={this.props.appState.windowSize.mobile}/>
           </div>
         </ScrollToTop>
       </BrowserRouter>
