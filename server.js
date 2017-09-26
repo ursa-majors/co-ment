@@ -138,12 +138,11 @@ mongoose.connection.on('error', function(err) {
 mongoose.Promise = global.Promise;
 
 
-/* EXPERIMENTAL */
-spammy();
-
-
 /* ================================ STARTUP ================================ */
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}.`);
 });
+
+/* EXPERIMENTAL */
+//spammy();
