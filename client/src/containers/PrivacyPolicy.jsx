@@ -1,3 +1,10 @@
+/*
+*  This text was generated from privacypolicies.com.
+*  The following changes were made to the boilerplate:
+*  1. Changed 'order' to 'account'
+*  2. Removed language saying we would send an email if privacy policy Changed
+*  3. Made 'contact us' into a mailto: link
+*/
 import React from 'react';
 
 const PrivacyPolicy = () => (
@@ -50,7 +57,7 @@ const PrivacyPolicy = () => (
         <li>
           <i>To send periodic emails</i>
           <br />
-          {'We may use the email address to send User information and updates pertaining to their order. It may also be used to respond to their inquiries, questions, and/or other requests.'}
+          {'We may use the email address to send User information and updates pertaining to their account. It may also be used to respond to their inquiries, questions, and/or other requests.'}
         </li>
       </ul>
 
