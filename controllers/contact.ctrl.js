@@ -57,13 +57,15 @@ function sendEmail(req, res) {
 
                 const recipientList = req.body.copySender ? `${recipient.email};${sender.email}` : recipient.email;
 
+                const greeting = req.body.copySender ? `${recipient.username} and ${sender.username}` : recipient.username;
+
                 const params = {
                     to      : recipientList,
                     subject : req.body.subject,
                     body    : {
                         type : 'html',
                         text : emailTpl.contactTemplate(
-                                recipient.username,          // toUser
+                                greeting,                    // toUser
                                 sender.username,             // fromUser
                                 sender.email,                // fromEmail
                                 sanitize(req.body.body),     // bodyText

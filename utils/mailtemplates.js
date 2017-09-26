@@ -136,7 +136,6 @@ const longEmail = (title, url, toUser, subhead, bodyText, buttonText) => {
                               <v:fill type="frame" src="https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/co-ment_email-header_600x400.jpg"></v:fill>
                               </v:background>
                             <![endif]-->
-
         <table
         cellpadding="0" cellspacing="0" style=
         "margin:0 auto; width:600px; background: #ffffff;" bgcolor="#ffffff">
@@ -174,8 +173,6 @@ const longEmail = (title, url, toUser, subhead, bodyText, buttonText) => {
                             <tbody>
                               <tr>
                                 <td style="color:#545454;" class="">
-
-
                                   <p style=
                                   "color: 545454; font-family: &#39;Alegreya Sans&#39;, sans-serif; font-size: 1.2em; line-height: 1.6em;font-weight:400; text-align: left; padding: 0 20px;">
                                   Personal message:
@@ -478,7 +475,7 @@ const contactTemplate = (toUser, fromUser, fromEmail, bodyText, connectionId, bo
     'co/ment Connection Request Email',
     `https://co-ment.glitch.me/connectiondetails/${connectionId}`,
     toUser,
-    boilerplate || `Great news! <strong>${fromUser}</strong> (<a class="link" href="mailto:${fromEmail}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${fromEmail}</a>) <br/>has responded to your ad on co/ment!`,
+    boilerplate || `<div style="padding: 30px 13%;">Great news! <strong>${fromUser}</strong> (<a class="link" href="mailto:${fromEmail}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${fromEmail}</a>) <br/>has responded to your ad on co/ment!</div>`,
     bodyText,
     'View Connection');
 };
