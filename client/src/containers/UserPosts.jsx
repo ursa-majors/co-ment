@@ -54,6 +54,8 @@ class UserPosts extends React.Component {
                   <th className="user-posts__th">Role</th>
                   <th className="user-posts__th">Title</th>
                   <th className="user-posts__th">Date</th>
+                  <th className="user-posts__th"><i className={`fa fa-eye`} /></th>
+                  <th className="user-posts__th"><i className={`fa fa-heart`} /></th>
                 </tr>
               </thead>
               <tbody className="user-posts__tbody">
@@ -80,6 +82,8 @@ class UserPosts extends React.Component {
                           </button>
                         </td>
                         <td className="user-posts__td"> {formatDate(new Date(post.updatedAt))} </td>
+                        <td className="user-posts__td"> {post.meta.views} </td>
+                        <td className="user-posts__td"> {post.meta.likes} </td>
                       </tr>
                     );
                   })
