@@ -248,7 +248,7 @@ const longEmail = (title, url, toUser, subhead, bodyText, buttonText) => {
 </table>
 </body>
       </html>
-`
+`;
 };
 
 const shortEmail = (title, url, headline, body, buttonText) => {
@@ -461,7 +461,7 @@ const shortEmail = (title, url, headline, body, buttonText) => {
           </tbody>
         </table>
         </body>
-        </html>`
+        </html>`;
 };
 
 const pwResetTemplate = (url) => {
@@ -483,8 +483,10 @@ const contactTemplate = (toUser, fromUser, fromEmail, bodyText, connectionId, bo
     'View Connection');
 };
 
+const reminderTemplate = () => {
+    // @Sarah -- edit me!
+};
+
 module.exports = {
-    pwResetTemplate    : pwResetTemplate,
-    validationTemplate : validationTemplate,
-    contactTemplate    : contactTemplate
+    pwResetTemplate, validationTemplate, contactTemplate, reminderTemplate
 };
