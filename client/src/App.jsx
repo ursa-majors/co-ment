@@ -3,9 +3,9 @@ import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { setWindowSize, setMenuState, setMenuBackground, setScrolled } from './store/actions';
 import { debounce, throttle } from 'underscore';
 
+import { setWindowSize, setMenuState, setMenuBackground, setScrolled } from './store/actions';
 import './favicons/favicons';
 import HeaderNav from './containers/HeaderNav';
 import Home from './containers/Home';
@@ -26,6 +26,7 @@ import ConnectionDetails from './containers/ConnectionDetails';
 import Validate from './containers/Validate';
 import ResetPassword from './containers/ResetPassword';
 import UserAdmin from './containers/UserAdmin';
+import PrivacyPolicy from './containers/PrivacyPolicy';
 import NotFound from './containers/NotFound';
 import Footer from './containers/Footer';
 import ScrollToTop from './containers/ScrollToTop';
@@ -97,11 +98,12 @@ class App extends React.Component {
                 <Route path="/connectionresult" component={ConnectionResult} />
                 <Route path="/connectiondetails/:id" component={ConnectionDetails} />
                 <Route path="/validate" component={Validate} />
+                <Route path="/privacy" component={PrivacyPolicy} />
                 <Route path="/resetpassword/:key" component={ResetPassword} />
                 <Route path="*" component={NotFound} />
               </Switch>
             </main>
-            <Footer />
+            <Footer mobile={this.props.appState.windowSize.mobile}/>
           </div>
         </ScrollToTop>
       </BrowserRouter>
