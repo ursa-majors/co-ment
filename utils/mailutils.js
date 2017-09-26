@@ -52,15 +52,15 @@ function makeValidationUrl(user_id, key) {
 function makeBoilerplate(type, sender, recipient) {
     switch(type) {
         case 'request':
-            return `Great news! <strong>${sender.username}</strong> (<a class="link" href="mailto:${sender.email}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${sender.email}</a>)<br />has responded to your ad on co/ment!`;
+            return `<div style="padding: 30px 13%;">Great news! <strong>${sender.username}</strong> (<a class="link" href="mailto:${sender.email}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${sender.email}</a>)<br />has responded to your ad on co/ment!</div>`;
         case 'accept':
-            return `Great news! <strong>${sender.username}</strong> (<a class="link" href="mailto:${sender.email}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${sender.email}</a>) has accepted your connection request on co/ment! <br />You have each other's email addresses now, so you're on your own from here. Good luck!`;
+            return `<div style="padding: 30px 13%;">Great news! <strong>${sender.username}</strong> has accepted <strong>${recipient.username}</strong>'s connection request on co/ment! <br />You have each other's email addresses now:<br/><a class="link" href="mailto:${sender.email}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${sender.email}</a><br/><a class="link" href="mailto:${recipient.email}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${recipient.email}</a><br/>so you're on your own from here. Good luck!</div>`;
         case 'decline':
-            return `Connection Update: <strong>${sender.username}</strong> has declined your Connection request on co/ment`;
+            return `<div style="padding: 30px 13%;">Connection Update: <strong>${sender.username}</strong> has declined your Connection request on co/ment</div>`;
         case 'deactivate':
-            return `Connection Update: The mentorship between <strong>${sender.username}</strong> and <strong>${recipient.username}</strong> has ended`;
+            return `<div style="padding: 30px 13%;">Connection Update: The mentorship between <strong>${sender.username}</strong> and <strong>${recipient.username}</strong> has ended</div>`;
         default:
-            return `Great news! <strong>${sender.username}</strong> (<a class="link" href="mailto:${sender.email}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${sender.username}</a>)<br />has responded to your ad on co/ment!`;
+            return `<div style="padding: 30px 13%;">Great news! <strong>${sender.username}</strong> (<a class="link" href="mailto:${sender.email}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${sender.username}</a>)<br />has responded to your ad on co/ment!</div>`;
         }
 }
 
