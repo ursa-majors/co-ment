@@ -14,9 +14,9 @@ const User = require('../models/user');
 //   Example: GET >> /api/posts?role=mentor&id=12345689
 //   Secured: yes, valid JWT required
 //   Query params for filtering requests:
-//     role        Return only 'mentor' or 'mentee' wanted posts
-//     id          Return single specific post object '_id'
-//     author_id   Return only posts by a specific author
+//     role         Return only 'mentor' or 'mentee' wanted posts
+//     id           Return single specific post object '_id'
+//     author       Return only posts by a specific author
 //     active=all   Return all posts, active and inactive
 //   Returns: JSON array of 'post' objects on success.
 //
@@ -40,6 +40,7 @@ function getPosts(req, res) {
     });
 
     Post.find(query)
+        .populate('author', 'username name avatarUrl time_zone languages gender')
         .exec()
         .then( posts => res.status(200).json(posts) )
         .catch( err => {
@@ -54,15 +55,8 @@ function getPosts(req, res) {
 //   Example: POST >> /api/posts
 //   Secured: yes, valid JWT required
 //   Expects:
-//     1) 'author_id' from JWT token
+//     1) author '_id' from JWT token
 //     2) request body properties : {
-//          author              : String
-//          author_id           : String
-//          author_name         : String
-//          author_avatar       : String
-//          author_timezone     : String
-//          author_languages    : Array
-//          author_gemder       : String
 //          role                : String
 //          title               : String
 //          body                : String
@@ -77,10 +71,10 @@ function createPost(req, res) {
     // Check if exists non-deleted post with same author_id, role & title
     Post
         .findOne({
-            author_id : req.token._id,
-            role      : req.body.role,
-            title     : req.body.title,
-            deleted   : false
+            author  : req.token._id,
+            role    : req.body.role,
+            title   : req.body.title,
+            deleted : false
         })
         .exec()
         .then( post => {
@@ -93,30 +87,27 @@ function createPost(req, res) {
                     .json({ message: 'Error - same/similar post already exists!'});
 
             } else {
+                
+                // get a datestamp
+                const now = new Date().toISOString();
 
                 // create new post
                 const myPost = new Post();
 
                 // build new post from request body and token
-                myPost.author           = req.body.author;
-                myPost.author_id        = req.token._id;
-                myPost.author_name      = req.body.author_name;
-                myPost.author_avatar    = req.body.author_avatar;
-                myPost.author_timezone  = req.body.author_timezone;
-                myPost.author_languages = req.body.author_languages;
-                myPost.author_gender    = req.body.author_gender;
+                myPost.author           = req.token._id;
                 myPost.role             = req.body.role;
                 myPost.title            = req.body.title;
                 myPost.body             = req.body.body;
                 myPost.excerpt          = req.body.excerpt;
                 myPost.keywords         = req.body.keywords;
                 myPost.availability     = req.body.availability;
-                myPost.createdAt        = new Date().toISOString();
-                myPost.updatedAt        = new Date().toISOString();
+                myPost.createdAt        = now;
+                myPost.updatedAt        = now;
 
                 // save new post to database
                 myPost.save( (err, newPost) => {
-                    if (err) { throw err; }
+                    if (err) { throw new Error(err); }
 
                     return res
                         .status(200)
@@ -143,16 +134,10 @@ function createPost(req, res) {
 //   Example: PUT >> /api/posts/597dd8665229970e99c6ab55
 //   Secured: yes, valid JWT required
 //   Expects:
-//     1) '_id' from JWT token
+//     1) author '_id' from JWT token
 //     2) request body properties : {
 //          action              : Boolean
 //          author              : String
-//          author_id           : String
-//          author_name         : String
-//          author_avatar       : String
-//          author_timezone     : String
-//          author_languages    : Array
-//          author_gender       : String
 //          role                : String
 //          title               : String
 //          body                : String
@@ -167,32 +152,24 @@ function updatePost(req, res) {
     // Target post by post '_id' and 'author_id'.
     // This way, users can only update posts they authored.
     const target = {
-        _id       : req.params.id,
-        author_id : req.token._id
+        _id    : req.params.id,
+        author : req.token._id
     };
 
     // build new post object from request body and parsed token
     const updates = {
-        active           : req.body.active,
-        author           : req.body.author,
-        author_id        : req.token._id,
-        author_name      : req.body.author_name,
-        author_avatar    : req.body.author_avatar,
-        author_timezone  : req.body.author_timezone,
-        author_languages : req.body.author_languages,
-        author_gender    : req.body.author_gender,
-        role             : req.body.role,
-        title            : req.body.title,
-        body             : req.body.body,
-        excerpt          : req.body.excerpt,
-        keywords         : req.body.keywords,
-        availability     : req.body.availability,
-        updatedAt        : new Date().toISOString()
+        active       : req.body.active,
+        author       : req.token._id,
+        role         : req.body.role,
+        title        : req.body.title,
+        body         : req.body.body,
+        excerpt      : req.body.excerpt,
+        keywords     : req.body.keywords,
+        availability : req.body.availability,
+        updatedAt    : new Date().toISOString()
     };
 
-    const options = {
-        new: true  // return the updated document rather than the original
-    };
+    const options = { new: true };
 
     Post.findOneAndUpdate(target, updates, options)
         .exec()
@@ -202,7 +179,7 @@ function updatePost(req, res) {
 
                 return res
                     .status(404)
-                    .json({message: 'Post not found!'});
+                    .json({ message : 'Post not found!' });
 
             } else {
 
@@ -229,8 +206,8 @@ function updatePost(req, res) {
 //   Example: DELETE >> /api/posts/597dd8665229970e99c6ab55
 //   Secured: yes, valid JWT required
 //   Expects:
-//     1) '_id' from JWT token
-//     2) 'id' from request params
+//     1) user '_id' from JWT token
+//     2) post 'id' from request params
 //   Returns: success message & deleted post on success
 //
 function deletePost(req, res) {
@@ -238,8 +215,8 @@ function deletePost(req, res) {
     // Target post by post '_id' and post 'author_id'.
     // This way, users can only delete their own posts.
     const target = {
-        _id       : req.params.id,
-        author_id : req.token._id
+        _id    : req.params.id,
+        author : req.token._id
     };
 
     const updates = {
@@ -247,8 +224,10 @@ function deletePost(req, res) {
         active    : false,
         updatedAt : new Date().toISOString()
     };
+    
+    const options = { new : true };
 
-    Post.findOneAndUpdate(target, updates, (err, post) => {
+    Post.findOneAndUpdate(target, updates, options, (err, post) => {
 
         if (err) { throw err; }
 
@@ -287,10 +266,10 @@ function incPostViews(req, res) {
     const conditions = {
 
         // the post _id
-        _id       : req.params.id,
+        _id    : req.params.id,
 
         // match only if post author NOT EQUAL to requesting user
-        author_id : { $ne: req.token._id }
+        author : { $ne: req.token._id }
     };
 
     const updates = { $inc: { 'meta.views': 1 } };
@@ -352,7 +331,7 @@ function updatePostLikes(req, res) {
                 .then( post => {
 
                     // fail if author tries to like their own post
-                    if (post.author_id === userId) {
+                    if (post.author === userId) {
                         return res.end();
                     } else if (action === 'plusplus') {
                         post.meta.likes += 1;
