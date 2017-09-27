@@ -109,11 +109,20 @@ function createPost(req, res) {
                 myPost.save( (err, newPost) => {
                     if (err) { throw new Error(err); }
 
-                    return res
-                        .status(200)
-                        .json({
-                            message : 'New post saved!',
-                            post    : newPost
+                    newPost
+                        .populate({
+                            path   : 'author',
+                            select : 'username name avatarUrl time_zone languages gender'
+                        }, (err, populatedPost) => {
+
+                            if (err) { throw new Error(err); }
+
+                            return res
+                                .status(200)
+                                .json({
+                                    message : 'New post saved!',
+                                    post    : populatedPost
+                                });
                         });
                 });
 
@@ -183,11 +192,19 @@ function updatePost(req, res) {
 
             } else {
 
-                return res
-                    .status(200)
-                    .json({
-                        message : 'Post updated!',
-                        post    : post
+                post.populate({
+                        path   : 'author',
+                        select : 'username name avatarUrl time_zone languages gender'
+                    }, (err, populatedPost) => {
+
+                        if (err) { throw new Error(err); }
+
+                        return res
+                            .status(200)
+                            .json({
+                                message : 'Post updated!',
+                                post    : populatedPost
+                            });
                     });
 
             }
@@ -239,11 +256,19 @@ function deletePost(req, res) {
 
         } else {
 
-            return res
-                .status(200)
-                .json({
-                    message : 'Post deleted!',
-                    post    : post
+            post.populate({
+                    path   : 'author',
+                    select : 'username name avatarUrl time_zone languages gender'
+                }, (err, populatedPost) => {
+
+                    if (err) { throw new Error(err); }
+
+                    return res
+                        .status(200)
+                        .json({
+                            message : 'Post deleted!',
+                            post    : populatedPost
+                        });
                 });
 
         }
