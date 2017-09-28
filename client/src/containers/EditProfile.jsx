@@ -339,6 +339,29 @@ class EditProfile extends React.Component {
                     selectedOptions={this.props.profiles.editForm.gender}
                   />
                 </div>
+                <div className="form__input-group">
+                  <label htmlFor="unsubscribe" className="form__label">
+                    Contact Preferences
+                  </label>
+                  <div className="toggle">
+                    <input
+                      id="unSubbed"
+                      className="cmn-toggle cmn-toggle-round"
+                      type="checkbox"
+                      value={this.props.profiles.editForm.contactMeta.unSubbed}
+                      name="contactMeta"
+                      onChange={e => this.props.actions.setFormField(e.target.name, { unSubbed: e.target.checked })}
+                    />
+                    <label htmlFor="unSubbed"></label>
+                    <span title="You won't receive emails from co/ment, but individual users may contact you for mentoring connections.">
+                      Unsubscribe from system-generated emails
+                      <i
+                        className="fa fa-question-circle spaced"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </div>
+                </div>
               </div>
               <div className="profile__column-R">
                 <div className="form__input-group">
