@@ -28,6 +28,10 @@ const defaultForm = {
   link: '',
   linkedin: '',
   codepen: '',
+  contactMeta: {
+    unSubbed: false,
+    addPostReminderSent: null,
+  },
   hideErr: 'form__hidden',
   errMsg: '',
   update: false,
@@ -52,6 +56,10 @@ const INITIAL_STATE = {
     link: '',
     linkedin: '',
     codepen: '',
+    contactMeta: {
+      unSubbed: false,
+      addPostReminderSent: null,
+    },
   },
   userProfile: {},
   profileSpinnerClass: 'spinner__hide',
@@ -157,6 +165,7 @@ function profiles(state = INITIAL_STATE, action) {
             link: { $set: action.payload.link || '' },
             linkedin: { $set: action.payload.linkedin || '' },
             codepen: { $set: action.payload.codepen || '' },
+            contactMeta: { $set: action.payload.contactMeta },
             hideErr: { $set: 'form__hidden' },
             errMsg: { $set: '' },
             update: { $set: true },
@@ -168,9 +177,15 @@ function profiles(state = INITIAL_STATE, action) {
     * Called from: <Profile />
     * Payload: Form Field and Value
     * Purpose: Update the connected form field.
+    * Note modification to use $merge to handle nested contactMeta field
     */
     case SET_PROFILE_FORM_FIELD:
+      if (typeof action.value === 'object') {
+        return update(state, { editForm: { [action.field]: { $merge: action.value } } });
+      }
+
       return update(state, { editForm: { [action.field]: { $set: action.value } } });
+
 
     /*
     * Called from: <Profile />
