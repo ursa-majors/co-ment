@@ -17,7 +17,7 @@ New Features
 * Rating system for users
 * Reputation/Badge system to reward participation
 * Follow up messaging to users (reminders + feedback)
-* Privacy policy/ability to opt out of messaging
+* ~~Privacy policy~~/ability to opt out of messaging
 * Ability to browse or search for other users?
 * Delete profile and associated records (logical delete)
 
