@@ -1,4 +1,5 @@
 import { CALL_API } from 'redux-api-middleware';
+
 // ENVIRONMENT is a global variable defined by weback.config.js
 // defaults to DEVELOPMENT
 const BASE_URL = (ENVIRONMENT === 'PRODUCTION' ? 'https://co-ment.glitch.me' : 'https://co-ment-dev.glitch.me');
