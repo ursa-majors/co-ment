@@ -235,6 +235,7 @@ class EditProfile extends React.Component {
       link: this.props.profiles.editForm.link,
       linkedin: this.props.profiles.editForm.linkedin,
       codepen: this.props.profiles.editForm.codepen,
+      contactMeta: this.props.profiles.editForm.contactMeta,
     };
 
     // write data to db
@@ -348,7 +349,7 @@ class EditProfile extends React.Component {
                       id="unSubbed"
                       className="cmn-toggle cmn-toggle-round"
                       type="checkbox"
-                      value={this.props.profiles.editForm.contactMeta.unSubbed}
+                      defaultChecked={this.props.profiles.editForm.contactMeta.unSubbed}
                       name="contactMeta"
                       onChange={e => this.props.actions.setFormField(e.target.name, { unSubbed: e.target.checked })}
                     />
