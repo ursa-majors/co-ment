@@ -12,7 +12,7 @@ const HTMLWebpackPluginConfig = new HTMLWebpackPlugin({
 });
 
 const DefinePluginConfig = new webpack.DefinePlugin({
-  'process.env.NODE_ENV': JSON.stringify('production'),
+  ENVIRONMENT: (dev ? JSON.stringify('DEVELOPMENT') : JSON.stringify('PRODUCTION')),
 });
 
 const UglifyJsPluginConfig = new webpack.optimize.UglifyJsPlugin({
@@ -72,6 +72,7 @@ module.exports = {
   plugins: dev ?
   [
     HTMLWebpackPluginConfig,
+    DefinePluginConfig,
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     new BundleAnalyzerPlugin(),
