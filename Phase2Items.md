@@ -1,6 +1,6 @@
 Technical debt
 --------------
-* Set up for development/integration branch and test environment
+* ~~Set up for development/integration branch and test environment~~
 * Refactor components into smaller parts => what can we make reusable...forms, buttons?
 * Hardening for error conditions
 * Write unit tests for helper functions? (including this as a skill for us to pick up)
