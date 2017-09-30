@@ -9,6 +9,7 @@ import { setEmailOptions } from '../store/actions/emailActions';
 import { formatDate } from '../utils/';
 
 import Spinner from './Spinner';
+import ModalSm from './ModalSm';
 
 class PostFull extends React.Component {
 
@@ -25,6 +26,7 @@ class PostFull extends React.Component {
     this.state = {
       flip: false,
       post: {},
+      modal: false,
     };
   }
 
@@ -44,10 +46,17 @@ class PostFull extends React.Component {
     document.getElementById('username').focus();
   }
 
-  deletePost = (event) => {
-    const postId = this.props.post._id;
+  openDeleteModal = () => {
+    this.setState({
+      modal: true,
+    });
+    document.getElementsByClassName('.ReactModal__Content')[0].style.background = "transparent !important";
+  }
+
+  deletePost = () => {
+    const id = this.props.posts.currentPost._id;
     const token = this.props.appState.authToken;
-    this.props.api.deletePost(token, postId);
+    this.props.api.deletePost(token, id);
     this.props.closeModal();
     this.props.shuffle();
   }
@@ -67,8 +76,10 @@ class PostFull extends React.Component {
           this.checkConnectionRequest();
           break;
         case 'delete':
-          this.deletePost();
+          this.openDeleteModal();
           break;
+        case 'dismiss':
+          this.setState({modal:false,});
         case 'like':
           this.props.api.likePost(this.props.appState.authToken, this.props.post._id);
           break;
@@ -166,7 +177,7 @@ class PostFull extends React.Component {
             aria-label="delete"
             name="delete"
             onKeyDown={e => this.handleKeyDown(e)}
-            onClick={() => this.deletePost()}>
+            onClick={() => this.openDeleteModal()}>
             <i className={`fa fa-trash post-full__icon--delete`} aria-label="delete" />
           </button>
         </div>
@@ -308,6 +319,21 @@ class PostFull extends React.Component {
             </div>
            </div>
         </div> : <Spinner cssClass={'spinner__show'} /> }
+        <ModalSm
+          modalClass={this.state.modal ? 'modal modal__show' : 'modal__hide'}
+          modalText="Are you sure? This action cannot be undone."
+          modalTitle="Confirm Delete"
+          modalType="modal__error"
+          modalDanger={true}
+          action={() => this.deletePost()}
+          dismiss={
+            () => {
+              this.setState({
+                modal: false,
+              });
+            }
+          }
+        />
         </div>
     );
   }

@@ -7,7 +7,7 @@
 
 const prodUrl = 'https://co-ment.glitch.me';
 const devUrl  = 'https://co-ment-dev.glitch.me';
-//const devUrl  = 'http://127.0.0.1:3001';
+// const devUrl  = 'http://127.0.0.1:3001';
 
 
 /* ================================ EXPORTS ================================ */
