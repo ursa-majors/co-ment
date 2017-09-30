@@ -13,37 +13,8 @@ const postSchema = new mongoose.Schema({
     },
 
     author : {
-        type     : String,
-        required : true
-    },
-
-    author_id : {
-        type     : String,
-        required : true
-    },
-
-    author_name : {
-        type     : String,
-        required : true
-    },
-
-    author_avatar : {
-        type     : String,
-        required : true
-    },
-
-    author_timezone : {
-        type     : String,
-        required : true
-    },
-
-    author_languages : {
-        type     : [String],  // array of strings
-        required : true       // at least 1 element required
-    },
-
-    author_gender : {
-        type     : String
+        type     : mongoose.Schema.Types.ObjectId,
+		ref      : 'User'
     },
 
     availability : {
@@ -69,6 +40,7 @@ const postSchema = new mongoose.Schema({
 
     role : {
         type     : String,
+        lowercase: true,
         enum     : ['mentor', 'mentee'],
         default  : 'mentee',
         trim     : true

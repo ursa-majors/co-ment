@@ -44,7 +44,7 @@ class PostThumb extends React.Component {
       )
     }
     const backgroundStyle = {
-      backgroundImage: `url(${this.props.post.author_avatar})`,
+      backgroundImage: `url(${this.props.post.author.avatarUrl})`,
       backgroundSize: "cover",
       backgroundPosition: "center center",
     }
@@ -82,7 +82,7 @@ class PostThumb extends React.Component {
                   onKeyDown={e => this.handleKeyDown(e, this.props.post)}
                   onClick={
                     () => {
-                      if( this.props.appState.userId !== this.props.post.author_id) {
+                      if( this.props.appState.userId !== this.props.post.author._id) {
                         this.props.api.incrementPostView(this.props.appState.authToken, this.props.post._id);
                         }
                         this.props.openModal(this.props.post);
@@ -110,15 +110,15 @@ class PostThumb extends React.Component {
                     <div className={`post-thumb__image-aspect`}>
                       <Link
                         className="unstyled-link post-thumb__img-link"
-                        to={`/viewprofile/${this.props.post.author_id}`}
+                        to={`/viewprofile/${this.props.post.author._id}`}
                         data-taborder="visual">
                         <div className={`post-thumb__image-crop`}>
-                          {this.props.post.author_avatar ?
+                          {this.props.post.author.avatarUrl ?
                             <div
                               className={`post-thumb__image`}
                               style={backgroundStyle}
                               role="image"
-                              aria-label={this.props.post.author} /> :
+                              aria-label={this.props.post.author.username} /> :
                             <i
                               className={`fa fa-user-circle fa-5x post-thumb__icon--avatar`}
                               aria-hidden="true" />
@@ -129,10 +129,10 @@ class PostThumb extends React.Component {
                     <div className={`post-thumb__name-wrap`}>
                       <Link
                         className="unstyled-link post-thumb__img-link"
-                        to={`/viewprofile/${this.props.post.author_id}`}
+                        to={`/viewprofile/${this.props.post.author._id}`}
                         data-taborder="visual">
                         <span className={`post-thumb__username`}>
-                          @{this.props.post.author}
+                          @{this.props.post.author.username}
                         </span>
                       </Link>
                     </div>
@@ -148,7 +148,7 @@ class PostThumb extends React.Component {
                   onKeyDown={e => this.handleKeyDown(e, this.props.post)}
                   onClick={
                     () => {
-                      if( this.props.appState.userId !== this.props.post.author_id) {
+                      if( this.props.appState.userId !== this.props.post.author._id) {
                         this.props.api.incrementPostView(this.props.appState.authToken, this.props.post._id);
                       }
                       this.props.openModal(this.props.post);
