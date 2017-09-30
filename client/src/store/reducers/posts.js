@@ -25,13 +25,15 @@ const defaultForm = {
 };
 const defaultPost = {
   active: '',
-  author: '',
-  author_id: '',
-  author_name: '',
-  author_avatar: '',
-  author_timezone: '',
-  author_languages: [],
-  author_gender: '',
+  author: {
+      _id: '',
+      username: '',
+      name: '',
+      avatarUrl: '',
+      time_zone: '',
+      languages: [],
+      gender: '',
+  },
   availability: '',
   keywords: [],
   body: '',
