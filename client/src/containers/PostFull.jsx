@@ -96,7 +96,7 @@ class PostFull extends React.Component {
     if (connections.length > 0) {
       for (let i = 0; i < connections.length; i += 1) {
         if (connections[i].initiator === this.props.appState.userId &&
-          connections[i][this.props.post.role] === this.props.post.author_id) {
+          connections[i][this.props.post.role] === this.props.post.author._id) {
           this.props.actions.setViewPostModalText('You already have a connection to this poster');
           this.props.actions.setViewPostModalClass('modal__show');
           return;
@@ -106,7 +106,7 @@ class PostFull extends React.Component {
       // TODO: go get connections, then test them as above
     }
     this.props.actions.setEmailOptions({
-      recipient: this.props.posts.currentPost.author,
+      recipient: this.props.posts.currentPost.author.username,
       sender: this.props.profiles.userProfile.username,
       subject: `co/ment - Contact Request from ${this.props.profiles.userProfile.username}`,
       body: '',
@@ -133,7 +133,7 @@ class PostFull extends React.Component {
       compress = false;
     }
     const roleText = (post.role === 'mentor' ? 'mentor' : 'mentee');
-    const owner = (this.props.appState.userId === post.author_id);
+    const owner = (this.props.appState.userId === post.author._id);
     const isLiked = this.props.profiles.userProfile.likedPosts.includes(post._id) ?
       'post-full__liked' :
       '';
@@ -232,7 +232,7 @@ class PostFull extends React.Component {
       }
 
     const backgroundStyle = {
-      backgroundImage: `url(${post.author_avatar})`,
+      backgroundImage: `url(${post.author.avatarUrl})`,
       backgroundSize: "cover",
       backgroundPosition: "center center",
     }
@@ -249,7 +249,7 @@ class PostFull extends React.Component {
               <span className="post-full__views">
                 <i className="fa fa-eye" />
                 &nbsp;
-                {this.props.appState.userId === post.author_id ? post.meta.views : post.meta.views + 1}
+                {this.props.appState.userId === post.author._id ? post.meta.views : post.meta.views + 1}
               </span>
               <span className="post-full__likes">
                 <i className="fa fa-heart" />&nbsp;{post.meta.likes}
@@ -277,14 +277,14 @@ class PostFull extends React.Component {
               </div>
               <div className={`post-full__image-wrap`}>
                 <div className={`post-full__image-aspect`}>
-                  <Link id="username" className="unstyled-link post-full__username" to={`/viewprofile/${post.author_id}`}>
+                  <Link id="username" className="unstyled-link post-full__username" to={`/viewprofile/${post.author._id}`}>
                     <div className={`post-full__image-crop`}>
-                      {post.author_avatar ?
+                      {post.author.avatarUrl ?
                         <div
                           className={`post-full__image`}
                           style={backgroundStyle}
                           role="image"
-                          aria-label={post.author} /> :
+                          aria-label={post.author.username} /> :
                         <i
                           className={`fa fa-user-circle fa-5x post-full__icon--avatar`}
                           aria-hidden="true" />
@@ -293,12 +293,12 @@ class PostFull extends React.Component {
                   </Link>
                 </div>
                 <div className={`post-full__name-wrap`}>
-                  <Link id="username" className="unstyled-link post-full__username" to={`/viewprofile/${post.author_id}`}>
+                  <Link id="username" className="unstyled-link post-full__username" to={`/viewprofile/${post.author._id}`}>
                     <span className={`post-full__name`}>
-                    {post.author_name}</span>
+                    {post.author.name}</span>
                   </Link>
-                  <Link id="username" className="unstyled-link post-full__username" to={`/viewprofile/${post.author_id}`}>
-                      @{post.author}
+                  <Link id="username" className="unstyled-link post-full__username" to={`/viewprofile/${post.author._id}`}>
+                      @{post.author.username}
                 </Link>
                 </div>
               </div>

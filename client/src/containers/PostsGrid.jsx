@@ -206,14 +206,14 @@ class PostsGrid extends React.Component {
           <div ref={element => this.element = element} className="flex-row my-shuffle shuffle posts-grid__cont">
             <div className="flex-col-1-sp sizer" />
             {this.props.posts.entries.map((post) => {
-              const languages = post.author_languages ? post.author_languages.map(lang => lang.toLowerCase()) : [];
+              const languages = post.author.languages ? post.author.languages.map(lang => lang.toLowerCase()) : [];
               const keywords = post.keywords ? post.keywords.map(keyword => keyword.toLowerCase()) : [];
-              const gender = post.author_gender ? post.author_gender.toLowerCase() : '';
+              const gender = post.author.gender ? post.author.gender.toLowerCase() : '';
               return (
                 <div
                   key={post._id}
                   className="flex-col-12-xs flex-col-6-md flex-col-4-lg flex-col-3-xl flex-col-2-xxl shuffle-item shuffle-item--visible post"
-                  data-groups={[post.role, gender, post.author_timezone, languages, keywords]}
+                  data-groups={[post.role, gender, post.author.time_zone, languages, keywords]}
                   data-updated={post.updatedAt}
                   data-popular={Number(post.meta.likes) + Number(post.meta.views)}
                 >
