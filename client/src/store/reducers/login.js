@@ -36,6 +36,7 @@ function login(state = INITIAL_STATE, action) {
     *  Purpose: Connected component handler
     */
     case SET_LOGIN_USER:
+      console.log('39: login');
       return Object.assign({}, state, { loginUsername: action.payload });
 
     /*

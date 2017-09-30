@@ -15,14 +15,21 @@ const ModalSm = props => (
   <div className={`modal ${props.modalClass}`} >
     <div className={`modal__header ${props.modalType}`}>
       {props.modalTitle}
-      <span className="modal-close modal-close-sm" onClick={props.dismiss} role="button" tabIndex="0">&times;</span>
+      <button className="dismiss aria-button modal-close modal-close-sm" onClick={props.dismiss} role="button" tabIndex="0">&times;</button>
     </div>
     <div className="modal__body">
       {props.modalText}
     </div>
+    {props.modalDanger ?
+      <div className="modal__action">
+        <div className="modal__button" onClick={props.dismiss}>Cancel</div>
+        <div className="modal__button modal__danger" onClick={props.action}>Delete</div>
+      </div>
+    :
     <div className="modal__action">
       <div className="modal__button" onClick={props.action || props.dismiss}>Continue</div>
     </div>
+  }
   </div>
 );
 
@@ -33,6 +40,7 @@ ModalSm.propTypes = {
   modalTitle: PropTypes.string,
   action: PropTypes.func,
   dismiss: PropTypes.func.isRequired,
+  danger: PropTypes.bool,
 };
 ModalSm.defaultProps = {
   modalType: 'modal__info',

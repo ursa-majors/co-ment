@@ -38,6 +38,11 @@
   &__error {
     background-color: darken($color_error_bkg,35%);
   }
+  &__danger {
+    &:hover, &:active, &:focus {
+      background-color: darken($color_error_bkg,35%);
+    }
+  }
   &__success {
     background-color: darken($color_success_bkg,35%);
   }
