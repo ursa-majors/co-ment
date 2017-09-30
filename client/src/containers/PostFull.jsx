@@ -50,6 +50,7 @@ class PostFull extends React.Component {
     this.setState({
       modal: true,
     });
+    document.getElementsByClassName('.ReactModal__Content')[0].style.background = "transparent !important";
   }
 
   deletePost = () => {
@@ -324,7 +325,7 @@ class PostFull extends React.Component {
           modalTitle="Confirm Delete"
           modalType="modal__error"
           modalDanger={true}
-          modalAction={() => this.deletePost()}
+          action={() => this.deletePost()}
           dismiss={
             () => {
               this.setState({
