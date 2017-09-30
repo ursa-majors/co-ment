@@ -51,14 +51,14 @@ class ConnectionEmail extends React.Component {
         // Redux store values
         const connection = {
           mentor: {
-            id: this.props.connectionEmail.role === 'mentor' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author_id ,
-            name: this.props.connectionEmail.role === 'mentor' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author,
-            avatar: this.props.connectionEmail.role === 'mentor' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.author_avatar,
+            id: this.props.connectionEmail.role === 'mentor' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author._id ,
+            name: this.props.connectionEmail.role === 'mentor' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author.username,
+            avatar: this.props.connectionEmail.role === 'mentor' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.author.avatarUrl,
           },
           mentee: {
-            id: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author_id,
-            name: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author,
-            avatar: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.author_avatar,
+            id: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author._id,
+            name: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author.username,
+            avatar: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.author.avatarUrl,
           },
           initiator: {
             id: this.props.appState.userId,

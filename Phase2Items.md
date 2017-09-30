@@ -1,6 +1,6 @@
 Technical debt
 --------------
-* Set up for development/integration branch and test environment
+* ~~Set up for development/integration branch and test environment~~
 * Refactor components into smaller parts => what can we make reusable...forms, buttons?
 * Hardening for error conditions
 * Write unit tests for helper functions? (including this as a skill for us to pick up)
@@ -17,7 +17,7 @@ New Features
 * Rating system for users
 * Reputation/Badge system to reward participation
 * Follow up messaging to users (reminders + feedback)
-* ~~Privacy policy~~/ability to opt out of messaging
+* ~~Privacy policy/ability to opt out of messaging~~
 * Ability to browse or search for other users?
 * Delete profile and associated records (logical delete)
 
