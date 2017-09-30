@@ -1,7 +1,5 @@
 import { CALL_API } from 'redux-api-middleware';
-// ENVIRONMENT is a global variable defined by weback.config.js
-// defaults to DEVELOPMENT
-const BASE_URL = (ENVIRONMENT === 'PRODUCTION' ? 'https://co-ment.glitch.me' : 'https://co-ment-dev.glitch.me');
+import { BASE_URL } from './apiConfig.js';
 
 export const GET_POST_REQUEST = 'GET_POST_REQUEST';
 export const GET_POST_SUCCESS = 'GET_POST_SUCCESS';
@@ -131,7 +129,7 @@ export const INCREMENT_POSTVIEW_FAILURE = 'INCREMENT_POSTVIEW_FAILURE';
 export function incrementPostView(token, postId) {
   return {
     [CALL_API]: {
-      endpoint: `${BASE_URL}/api/postviews/${postId}`,
+      endpoint: `${BASE_URL}/api/posts/${postId}/viewsplusplus`,
       method: 'PUT',
       types: [
         INCREMENT_POSTVIEW_REQUEST,
