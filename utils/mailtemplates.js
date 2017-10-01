@@ -4,7 +4,9 @@
 
 */
 
-const longEmail = (title, url, toUser, subhead, bodyText, buttonText) => {
+const baseUrl = "http://co-ment.glitch.me/";
+
+const longEmail = (title, url, toUser, subhead, bodyText, buttonText, recUserId) => {
   return `
       <!DOCTYPE html>
         <html xmlns:v="urn:schemas-microsoft-com:vml">
@@ -221,6 +223,11 @@ const longEmail = (title, url, toUser, subhead, bodyText, buttonText) => {
                                    
                                 </td>
                               </tr>
+                              <tr>
+                                <td style="text-align: center">
+                                  <a style="color:#fff; text-decoration: none; border-bottom: 1px dotted #fff;" href="${baseUrl}editprofile/${recUserId}">Edit Contact Preferences</a>
+                                </td>
+                              </tr>
                             </tbody>
                           </table><!--[if gte mso 9]>
           </v:textbox>
@@ -248,7 +255,7 @@ const longEmail = (title, url, toUser, subhead, bodyText, buttonText) => {
 `
 };
 
-const shortEmail = (title, url, headline, body, buttonText) => {
+const shortEmail = (title, url, headline, body, buttonText, recUserId) => {
   return `
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
         <html xmlns:v="urn:schemas-microsoft-com:vml">
@@ -435,6 +442,11 @@ const shortEmail = (title, url, headline, body, buttonText) => {
                                           <br>&nbsp;
                                         </td>
                                       </tr>
+                                      <tr>
+                                        <td style="text-align: center">
+                                          <a class="link" style="color:#fff; text-decoration: none; border-bottom: 1px dotted #fff;" href="${baseUrl}editprofile/${recUserId}">Edit Contact Preferences</a>
+                                        </td>
+                                      </tr>
                                     </tbody>
                                   </table>
                                 </center>
@@ -461,23 +473,25 @@ const shortEmail = (title, url, headline, body, buttonText) => {
         </html>`
 };
 
-const pwResetTemplate = (url) => {
-     return shortEmail('co/ment Password Reset Email', url,'Forgot your password?', 'No problem! Click below to reset it!', 'Reset Password');
+const pwResetTemplate = (url, recUserId) => {
+     return shortEmail('co/ment Password Reset Email', url,'Forgot your password?', 'No problem! Click below to reset it!', 'Reset Password', recUserId);
  };
 
-const validationTemplate = (url) => {
-  return shortEmail('co/ment Account Validation Email', url, 'Welcome!', 'Click below to validate your account:', 'Validate Email');
+const validationTemplate = (url, recUserId) => {
+  return shortEmail('co/ment Account Validation Email', url, 'Welcome!', 'Click below to validate your account:', 'Validate Email', recUserId);
 };
 
-// longEmail( title, url, toUser, subhead, bodyText, buttonText )
-const contactTemplate = (toUser, fromUser, fromEmail, bodyText, connectionId, boilerplate) => {
+// longEmail( title, url, toUser, subhead, bodyText, buttonText, recUserId )
+const contactTemplate = (toUser, fromUser, fromEmail, bodyText, connectionId, boilerplate, recUserId) => {
   return longEmail(
     'co/ment Connection Request Email',
     `https://co-ment.glitch.me/connectiondetails/${connectionId}`,
     toUser,
     boilerplate || `<div style="padding: 30px 13%;">Great news! <strong>${fromUser}</strong> (<a class="link" href="mailto:${fromEmail}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${fromEmail}</a>) <br/>has responded to your ad on co/ment!</div>`,
     bodyText,
-    'View Connection');
+    'View Connection',
+    recUserId,
+    );
 };
 
 module.exports = {

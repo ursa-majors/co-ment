@@ -27,7 +27,7 @@ function sendValidationEmail(params) {
     const subject = 'co/ment - Email verification required';
     const body    = {
         type: 'html',
-        text: emailTpl.validationTemplate(url)
+        text: emailTpl.validationTemplate(url, recUserId)
     };
 
     // send mail using `mailer` util
@@ -53,7 +53,7 @@ function sendPWResetEmail(params) {
     const subject = 'co/ment - Password Reset Request';
     const body    = {
         type: 'html',
-        text: emailTpl.pwResetTemplate(url)
+        text: emailTpl.pwResetTemplate(url, recUserId)
     };
 
     // send mail using `mailer` util
@@ -327,8 +327,9 @@ function sendReset(req, res) {
 
                 // build email parameter map
                 const emailParams = {
-                    key      : user.passwordResetKey.key,
-                    to_email : user.email
+                    key         : user.passwordResetKey.key,
+                    to_email    : user.email,
+                    recUserId   : user._id
                 };
 
                 // send validation email, passing email param map
