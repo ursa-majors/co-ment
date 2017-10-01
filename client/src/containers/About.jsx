@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { Swipe, SwipeItem } from 'swipejs/react';
 import * as Actions from '../store/actions/tourActions';
+import { scrollIt } from '../utils';
 
 const adjustBkgSize = (target) => {
   // expand background size to contain FAQ answers as they are expanded
@@ -25,20 +26,46 @@ class About extends React.Component {
   componentDidUpdate() {
     adjustBkgSize(document.querySelector('.faq'));
     adjustBkgSize(document.querySelector('.tour'));
-    console.log()
   }
 
   handleCallback(index, elem, dir) {
-    // let newIndex = this.props.tour.imageIndex - dir;
-    // if (newIndex > this.props.tour.slides.length - 1) {
-    //   newIndex = 0;
-    // }
-    // if (newIndex < 0) {
-    //   newIndex = this.props.tour.slides.length - 1;
-    // }
     this.props.actions.setIndex(index);
+    // scroll to top when slide changes
+    // (for shorter viewports with slide footer nav)
+    scrollIt(document.querySelector('.tour'), 300, 'easeOutQuad');
   }
 
+  slideNext = () => {
+    let newIndex = this.props.tour.imageIndex + 1;
+    if (newIndex > this.props.tour.slides.length - 1) {
+      newIndex = 0;
+    }
+    this.props.actions.setIndex(newIndex);
+    // scroll to top when slide changes
+    // (for shorter viewports with slide footer nav)
+    scrollIt(document.querySelector('.tour'), 300, 'easeOutQuad');
+    this.swipe.instance.next();
+  }
+
+  slidePrev = () => {
+    let newIndex = this.props.tour.imageIndex - 1;
+    if (newIndex < 0) {
+      newIndex = this.props.tour.slides.length - 1;
+    }
+    this.props.actions.setIndex(newIndex);
+    // scroll to top when slide changes
+    // (for shorter viewports with slide footer nav)
+    scrollIt(document.querySelector('.tour'), 300, 'easeOutQuad');
+    this.swipe.instance.prev();
+  }
+
+  handleControlAction = (e) => {
+    this.props.actions.setIndex(parseInt(e.target.id, 10));
+    this.swipe.instance.slide(parseInt(e.target.id, 10), 500);
+    // scroll to top when slide changes
+    // (for shorter viewports with slide footer nav)
+    scrollIt(document.querySelector('.tour'), 300, 'easeOutQuad');
+  }
 
   render() {
     return (
@@ -50,25 +77,11 @@ class About extends React.Component {
               className="tour__chevron-left aria-button"
               tabIndex={0}
               aria-label="previous slide"
-              onClick={
-                () => {
-                  let newIndex = this.props.tour.imageIndex - 1;
-                  if (newIndex < 0) {
-                    newIndex = this.props.tour.slides.length - 1;
-                  }
-                  this.props.actions.setIndex(newIndex);
-                  this.swipe.instance.prev();
-                }
-              }
+              onClick={this.slidePrev}
               onKeyDown={
                 (e) => {
                   if (e.keyCode === 13 || e.which === 13) {
-                    let newIndex = this.props.tour.imageIndex - 1;
-                    if (newIndex < 0) {
-                      newIndex = this.props.tour.slides.length - 1;
-                    }
-                    this.props.actions.setIndex(newIndex);
-                    this.swipe.instance.prev();
+                    this.slidePrev()
                   }
                 }
               }
@@ -88,15 +101,11 @@ class About extends React.Component {
                       id={index}
                       aria-label={this.props.tour.slides[index].title}
                       tabIndex={0}
-                      onClick={(e) => {
-                        this.props.actions.setIndex(parseInt(e.target.id, 10));
-                        this.swipe.instance.slide(parseInt(e.target.id, 10), 500);
-                         }}
+                      onClick={e => this.handleControlAction(e)}
                       onKeyDown={
                         (e) => {
                           if (e.keyCode === 13 || e.which === 13) {
-                            this.props.actions.setIndex(parseInt(e.target.id, 10));
-                            this.swipe.instance.slide(parseInt(e.target.id, 10), 500);
+                            this.handleControlAction(e);
                           }
                         }
                       }
@@ -111,25 +120,11 @@ class About extends React.Component {
               className="tour__chevron-right aria-button"
               tabIndex={0}
               aria-label="next slide"
-              onClick={
-                  () => {
-                    let newIndex = this.props.tour.imageIndex + 1;
-                    if (newIndex > this.props.tour.slides.length - 1) {
-                      newIndex = 0;
-                    }
-                    this.props.actions.setIndex(newIndex);
-                    this.swipe.instance.next();
-                  }
-                }
+              onClick={this.slideNext}
               onKeyDown={
                 (e) => {
                   if (e.keyCode === 13 || e.which === 13) {
-                    let newIndex = this.props.tour.imageIndex + 1;
-                    if (newIndex > this.props.tour.slides.length - 1) {
-                      newIndex = 0;
-                    }
-                    this.props.actions.setIndex(newIndex);
-                    this.swipe.instance.next();
+                    this.slideNext();
                   }
                 }
               }
@@ -178,25 +173,11 @@ class About extends React.Component {
               className="tour__chevron-left aria-button"
               tabIndex={0}
               aria-label="previous slide"
-              onClick={
-                () => {
-                  let newIndex = this.props.tour.imageIndex - 1;
-                  if (newIndex < 0) {
-                    newIndex = this.props.tour.slides.length - 1;
-                  }
-                  this.props.actions.setIndex(newIndex);
-                  this.swipe.instance.prev();
-                }
-              }
+              onClick={this.slidePrev}
               onKeyDown={
                 (e) => {
                   if (e.keyCode === 13 || e.which === 13) {
-                    let newIndex = this.props.tour.imageIndex - 1;
-                    if (newIndex < 0) {
-                      newIndex = this.props.tour.slides.length - 1;
-                    }
-                    this.props.actions.setIndex(newIndex);
-                    this.swipe.instance.prev();
+                    this.slidePrev()
                   }
                 }
               }
@@ -216,15 +197,11 @@ class About extends React.Component {
                       id={index}
                       aria-label={this.props.tour.slides[index].title}
                       tabIndex={0}
-                      onClick={(e) => {
-                        this.props.actions.setIndex(parseInt(e.target.id, 10));
-                        this.swipe.instance.slide(parseInt(e.target.id, 10), 500);
-                         }}
+                      onClick={(e) => this.handleControlAction(e)}
                       onKeyDown={
                         (e) => {
                           if (e.keyCode === 13 || e.which === 13) {
-                            this.props.actions.setIndex(parseInt(e.target.id, 10));
-                            this.swipe.instance.slide(parseInt(e.target.id, 10), 500);
+                            this.handleControlAction(e)
                           }
                         }
                       }
@@ -239,25 +216,11 @@ class About extends React.Component {
               className="tour__chevron-right aria-button"
               tabIndex={0}
               aria-label="next slide"
-              onClick={
-                  () => {
-                    let newIndex = this.props.tour.imageIndex + 1;
-                    if (newIndex > this.props.tour.slides.length - 1) {
-                      newIndex = 0;
-                    }
-                    this.props.actions.setIndex(newIndex);
-                    this.swipe.instance.next();
-                  }
-                }
+              onClick={this.slideNext}
               onKeyDown={
                 (e) => {
                   if (e.keyCode === 13 || e.which === 13) {
-                    let newIndex = this.props.tour.imageIndex + 1;
-                    if (newIndex > this.props.tour.slides.length - 1) {
-                      newIndex = 0;
-                    }
-                    this.props.actions.setIndex(newIndex);
-                    this.swipe.instance.next();
+                    this.slideNext()
                   }
                 }
               }
