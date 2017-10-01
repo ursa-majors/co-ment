@@ -219,13 +219,11 @@ const longEmail = (title, url, toUser, subhead, bodyText, buttonText, recUserId)
                                               </v:roundrect>
                                           <![endif]-->
                                   </div>
+                                  <div style="text-align: center; margin-top: 30px;">
+                                    <a style="color:#fff; text-decoration: none; border-bottom: 1px dotted #fff;" href="${baseUrl}editprofile/${recUserId}">Edit Contact Preferences</a>
+                                  </div>
                                   <br>
                                    
-                                </td>
-                              </tr>
-                              <tr>
-                                <td style="text-align: center">
-                                  <a style="color:#fff; text-decoration: none; border-bottom: 1px dotted #fff;" href="${baseUrl}editprofile/${recUserId}">Edit Contact Preferences</a>
                                 </td>
                               </tr>
                             </tbody>
