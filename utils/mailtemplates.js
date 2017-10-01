@@ -490,7 +490,7 @@ const contactTemplate = (toUser, fromUser, fromEmail, bodyText, connectionId, bo
     boilerplate || `<div style="padding: 30px 13%;">Great news! <strong>${fromUser}</strong> (<a class="link" href="mailto:${fromEmail}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${fromEmail}</a>) <br/>has responded to your ad on co/ment!</div>`,
     bodyText,
     'View Connection',
-    recUserId,
+    recUserId
     );
 };
 

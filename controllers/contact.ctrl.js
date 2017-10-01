@@ -72,7 +72,7 @@ function sendEmail(req, res) {
                                 sender.email,                // fromEmail
                                 sanitize(req.body.body),     // bodyText
                                 req.body.connectionId,       // connectionId
-                                boilerplate.boilerplate      // boilerplate
+                                boilerplate.boilerplate,     // boilerplate
                                 boilerplate.recUserId        // recUserId
                                )
                     }
