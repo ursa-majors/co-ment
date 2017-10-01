@@ -59,6 +59,8 @@ function sendEmail(req, res) {
 
                 const greeting = req.body.copySender ? `${recipient.username} and ${sender.username}` : recipient.username;
 
+                const boilerplate = makeBoilerplate(req.body.type, sender, recipient);
+
                 const params = {
                     to      : recipientList,
                     subject : req.body.subject,
@@ -70,7 +72,8 @@ function sendEmail(req, res) {
                                 sender.email,                // fromEmail
                                 sanitize(req.body.body),     // bodyText
                                 req.body.connectionId,       // connectionId
-                                makeBoilerplate(req.body.type, sender, recipient)
+                                boilerplate.boilerplate,     // boilerplate
+                                boilerplate.recUserId        // recUserId
                                )
                     }
                 };
@@ -120,7 +123,7 @@ function resendValidation(req, res) {
             const subject = 'co/ment - Email verification required';
             const body    = {
                 type: 'html',
-                text: emailTpl.validationTemplate(url)
+                text: emailTpl.validationTemplate(url, user._id)
             };
 
             // send mail using `mailer` util

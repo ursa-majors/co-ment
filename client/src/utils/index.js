@@ -2,7 +2,6 @@ import React from 'react';
 
 const handleFirstTab = (e) => {
   if (e.keyCode === 9) {
-    // console.log(document.activeElement);
     document.body.classList.add('user-is-tabbing');
     window.removeEventListener('keydown', handleFirstTab);
     window.addEventListener('mousedown', handleMouseDownOnce);

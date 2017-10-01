@@ -81,8 +81,6 @@ module.exports = {
       [
         { from: './src/img', to: './img/', ignore: ['*.svg'] },
       ]),
-    new webpack.optimize.UglifyJsPlugin(),
-    new webpack.optimize.AggressiveMergingPlugin(),
     new CompressionPlugin({
       asset: "[path].gz[query]",
       algorithm: "gzip",
@@ -99,8 +97,6 @@ module.exports = {
       [
         { from: './src/img', to: './img/', ignore: ['*.svg'] },
       ]),
-    new webpack.optimize.UglifyJsPlugin(),
-    new webpack.optimize.AggressiveMergingPlugin(),
     new CompressionPlugin({
       asset: "[path].gz[query]",
       algorithm: "gzip",

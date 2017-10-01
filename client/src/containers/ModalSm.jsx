@@ -11,7 +11,7 @@ const modalStyles = { overlay: { zIndex: 1001, background: 'rgba(0,0,0,.7)', }, 
 const ModalSm = props => (
   <Modal
     style={modalStyles}
-    isOpen={props.modalClass === "modal modal__show"}
+    isOpen={props.modalClass === "modal modal__show" || props.modalClass === "modal__show"}
     onRequestClose={props.dismiss}
     contentLabel={props.modalTitle}
         >

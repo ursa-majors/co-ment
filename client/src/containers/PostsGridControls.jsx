@@ -312,7 +312,7 @@ class PostsGridControls extends React.Component {
             <button
               className="btn btn--primary btn--smaller btn--grid"
               data-taborder="visual"
-              onClick={() => this.props.actions.clearFilter().then(console.log('PostGridControls.jsx > 105', this.props.gridControls.filterBtn))}>
+              onClick={() => this.props.actions.clearFilter()}>
               Clear <i className="fa fa-filter" aria-label="filter" />
             </button>
             </div>
