@@ -12,9 +12,33 @@
   letter-spacing: 2px;
 
   &__link {
-  	color: white;
-    border-radius: 100%;
-		padding-right: 8px;
+  	color: rgba(255,255,255,.8);
+		margin-right: 10px;
+    position: relative;
+    text-decoration: none;
+    @include for-phone-landscape-up {
+      top: -3px;
+      border-bottom: 1px dotted rgba(255,255,255,.8);
+    }
+
+
+    &:hover, &:focus, &:active {
+      color: rgba(255,255,255,1);
+      border-bottom: 1px dotted white;
+      transition: all 300ms ease-in-out;
+    }
+
+    &:last-child {
+      border-bottom: none;
+      margin-right: 0;
+      top: 0;
+    }
+
+
+  }
+
+  &__right {
+    display: flex;
   }
 
   &__icon {
