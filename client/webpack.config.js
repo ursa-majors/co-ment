@@ -23,6 +23,8 @@ const UglifyJsPluginConfig = new webpack.optimize.UglifyJsPlugin({
   },
   compress: {
     screw_ie8: true,
+    dead_code: true,
+    drop_console: true,
   },
   comments: false,
 });
@@ -77,6 +79,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     new BundleAnalyzerPlugin(),
+    new webpack.optimize.AggressiveMergingPlugin(),
     new CopyWebpackPlugin(
       [
         { from: './src/img', to: './img/', ignore: ['*.svg'] },
@@ -93,6 +96,7 @@ module.exports = {
     HTMLWebpackPluginConfig,
     DefinePluginConfig,
     UglifyJsPluginConfig,
+    new webpack.optimize.AggressiveMergingPlugin(),
     new CopyWebpackPlugin(
       [
         { from: './src/img', to: './img/', ignore: ['*.svg'] },
