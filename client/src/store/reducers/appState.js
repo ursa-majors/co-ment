@@ -8,7 +8,13 @@ import { VALIDATE_TOKEN_REQUEST, VALIDATE_TOKEN_SUCCESS, VALIDATE_TOKEN_FAILURE,
 const INITIAL_STATE = {
   loggedIn: false,
   authToken: '',
-  userId: '',
+  // userId: '',
+  user: {
+    _id: '',
+    username: '',
+    name: '',
+    avatarUrl: '',
+  },
   loginSpinnerClass: 'spinner__hide',
   redirectUrl: '',
   windowSize: {
@@ -108,13 +114,15 @@ function appState(state = INITIAL_STATE, action) {
     case LOGIN_SUCCESS:
       window.localStorage.setItem('authToken', JSON.stringify(action.payload.token));
       window.localStorage.setItem('userId', JSON.stringify(action.payload.profile._id));
+      const profile = { ...action.payload.profile };
       return Object.assign(
         {},
         state,
         {
           loginSpinnerClass: 'spinner__hide',
           loggedIn: true,
-          userId: action.payload.profile._id,
+          // userId: action.payload.profile._id,
+          user: profile,
           authToken: action.payload.token,
         },
        );

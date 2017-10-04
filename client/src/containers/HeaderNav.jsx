@@ -24,14 +24,11 @@ class Nav extends React.Component {
   navToggle = () => {
     if (this.props.appState.windowSize.width < 650) {
       if (this.props.appState.menuState === 'closed') {
-        //this.setState({ menu: 'open' }, ()=>{this.setBackground();});
         this.props.actions.setMenuState('open');
         this.props.actions.setMenuBackground();
       } else {
-        //this.setState({ menu: 'closing' }, ()=>{this.setBackground();});
         this.props.actions.setMenuState('closing');
         setTimeout(() => {
-          //this.setState({ menu: 'closed' }, ()=>{this.setBackground();});
           this.props.actions.setMenuState('closed');
           this.props.actions.setMenuBackground();
         }, 300);
@@ -77,6 +74,13 @@ class Nav extends React.Component {
         ariaE: false,
       },
     };
+
+    const backgroundStyle = {
+      backgroundImage: `url(${this.props.appState.user.avatarUrl})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center center",
+    }
+
     return (
       <div className={`h-nav__side-bkg ${this.props.appState.menuBackground}`}>
       <button
@@ -119,8 +123,10 @@ class Nav extends React.Component {
           </li>
           {this.props.links.map((item) => {
             let classes;
-            if (item === 'login' || item === 'logout') {
+            if (item === 'login') {
               classes = 'h-nav__item-link h-nav__item-link--login';
+            } else if (item === 'logout') {
+              classes = 'h-nav__item-link h-nav__item-link--logout';
             } else {
               classes = 'h-nav__item-link h-nav__item-link';
             }
@@ -139,6 +145,24 @@ class Nav extends React.Component {
           })
         }
         </ul>
+        {this.props.appState.loggedIn &&
+          <div className="h-nav__avatar">
+            <div className="h-nav__image-aspect">
+              <div className="h-nav__image-crop">
+                {this.props.appState.user.avatarUrl ?
+                  <div
+                    className="h-nav__image"
+                    style={backgroundStyle}
+                    role="image"
+                    aria-label={this.props.appState.user.username} /> :
+                  <i
+                    className={`fa fa-user-circle fa-5x post-thumb__icon--avatar`}
+                    aria-hidden="true" />
+                }
+              </div>
+            </div>
+          </div>
+        }
       </nav>
       </div>
     );
