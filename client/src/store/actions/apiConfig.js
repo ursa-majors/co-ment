@@ -14,8 +14,8 @@ const devUrl  = 'https://co-ment-dev.glitch.me';
 
 // ENVIRONMENT is a global variable defined by weback.config.js
 // defaults to DEVELOPMENT
-// export const BASE_URL = (ENVIRONMENT === 'PRODUCTION' ? prodUrl : devUrl);
+export const BASE_URL = (ENVIRONMENT === 'PRODUCTION' ? prodUrl : devUrl);
 
 // for testing locally with production DB
 // uncomment line 21 and comment out line 17
-export const BASE_URL = 'https://co-ment.glitch.me';
+// export const BASE_URL = 'https://co-ment.glitch.me';
