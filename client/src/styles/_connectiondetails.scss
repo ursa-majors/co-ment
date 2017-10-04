@@ -8,7 +8,6 @@
   color: white;
   background: rgba(255,255,255,.3);
   border-radius: 4px;
-  margin-bottom: 20px;
 
   &__preview {
     width: 100%;
@@ -16,7 +15,6 @@
     font-family: 'Alegreya Sans', sans-serif;
     color: white;
     border-radius: 4px;
-    margin-bottom: 20px;
 
     @include for-tablet-portrait-up {
         width: 80%;

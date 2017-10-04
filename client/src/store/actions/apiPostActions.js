@@ -1,7 +1,5 @@
 import { CALL_API } from 'redux-api-middleware';
-// ENVIRONMENT is a global variable defined by weback.config.js
-// defaults to DEVELOPMENT
-const BASE_URL = (ENVIRONMENT === 'PRODUCTION' ? 'https://co-ment.glitch.me' : 'https://co-ment-dev.glitch.me');
+import { BASE_URL } from './apiConfig.js';
 
 export const GET_POST_REQUEST = 'GET_POST_REQUEST';
 export const GET_POST_SUCCESS = 'GET_POST_SUCCESS';
@@ -10,7 +8,7 @@ export const GET_POST_FAILURE = 'GET_POST_FAILURE';
 export function getPost(token, userId, role) {
   return {
     [CALL_API]: {
-      endpoint: `${BASE_URL}/api/posts?author_id=${userId}&role=${role}`,
+      endpoint: `${BASE_URL}/api/posts?author=${userId}&role=${role}`,
       method: 'GET',
       types: [GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE],
       headers: { Authorization: `Bearer ${token}` },
@@ -25,7 +23,7 @@ export const GET_USERPOSTS_FAILURE = 'GET_USERPOSTS_FAILURE';
 export function getUserPosts(token, userId) {
   return {
     [CALL_API]: {
-      endpoint: `${BASE_URL}/api/posts?author_id=${userId}&active=all`,
+      endpoint: `${BASE_URL}/api/posts?author.id=${userId}&active=all`,
       method: 'GET',
       types: [GET_USERPOSTS_REQUEST, GET_USERPOSTS_SUCCESS, GET_USERPOSTS_FAILURE],
       headers: { Authorization: `Bearer ${token}` },
@@ -131,7 +129,7 @@ export const INCREMENT_POSTVIEW_FAILURE = 'INCREMENT_POSTVIEW_FAILURE';
 export function incrementPostView(token, postId) {
   return {
     [CALL_API]: {
-      endpoint: `${BASE_URL}/api/postviews/${postId}`,
+      endpoint: `${BASE_URL}/api/posts/${postId}/viewsplusplus`,
       method: 'PUT',
       types: [
         INCREMENT_POSTVIEW_REQUEST,

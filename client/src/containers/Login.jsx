@@ -15,7 +15,7 @@ class Login extends React.Component {
   /* Function handleLogin - Perform basic validation:
   * - username is at least 1 char
   * - password is at least 1 char
-  * If valid, call the loign route; store token in redux, clear password from state
+  * If valid, call the login route; store token in redux, clear password from state
   * , return to Home
   */
   handleLogin() {

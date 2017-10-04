@@ -2,28 +2,39 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+// wrap component in react-modal for tab trapping and other accessibility features
+import Modal from 'react-modal';
 import { setEmailModal } from '../store/actions/emailActions';
 
-// TODO:
-// tab trapping
-// keypress event handlers (enter or esc should dismiss modal)
-// click anywhere outside of modal should dismiss
-// look up other WCAG modal accessibility issues & implement,
-// or wrap in react-modal if it's too complicated
+const modalStyles = { overlay: { zIndex: 1001, background: 'rgba(0,0,0,.7)', }, content: { background: 'transparent', border: 0} };
 
 const ModalSm = props => (
-  <div className={`modal ${props.modalClass}`} >
-    <div className={`modal__header ${props.modalType}`}>
-      {props.modalTitle}
-      <span className="modal-close modal-close-sm" onClick={props.dismiss} role="button" tabIndex="0">&times;</span>
+  <Modal
+    style={modalStyles}
+    isOpen={props.modalClass === "modal modal__show" || props.modalClass === "modal__show"}
+    onRequestClose={props.dismiss}
+    contentLabel={props.modalTitle}
+        >
+    <div className={`modal ${props.modalClass}`} >
+      <div className={`modal__header ${props.modalType}`}>
+        {props.modalTitle}
+        <button className="dismiss aria-button modal-close modal-close-sm" onClick={props.dismiss} role="button" tabIndex="0">&times;</button>
+      </div>
+      <div className="modal__body">
+        {props.modalText}
+      </div>
+      {props.modalDanger ?
+        <div className="modal__action">
+          <button className="modal__button" onClick={props.dismiss}>Cancel</button>
+          <button className="modal__button modal__danger" onClick={props.action}>Delete</button>
+        </div>
+      :
+      <div className="modal__action">
+        <button className="modal__button" onClick={props.action || props.dismiss}>Continue</button>
+      </div>
+    }
     </div>
-    <div className="modal__body">
-      {props.modalText}
-    </div>
-    <div className="modal__action">
-      <div className="modal__button" onClick={props.action || props.dismiss}>Continue</div>
-    </div>
-  </div>
+  </Modal>
 );
 
 ModalSm.propTypes = {
@@ -33,6 +44,7 @@ ModalSm.propTypes = {
   modalTitle: PropTypes.string,
   action: PropTypes.func,
   dismiss: PropTypes.func.isRequired,
+  danger: PropTypes.bool,
 };
 ModalSm.defaultProps = {
   modalType: 'modal__info',

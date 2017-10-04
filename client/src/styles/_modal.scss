@@ -57,6 +57,9 @@
   }
 
   &__button {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
     color: white;
     font-family: 'Alegreya Sans SC', sans-serif;
     text-transform: lowercase;
@@ -70,10 +73,19 @@
     display: inline-block;
 
       &:hover, &:focus {
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
         text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
         border: 1px solid white;
       }
     }
+
+    &__danger {
+    &:hover, &:active, &:focus {
+      background-color: darken($color_error_bkg,35%);
+    }
+  }
 }
 .modal-close {
   position: absolute;
@@ -97,4 +109,8 @@
   &:hover, &:focus {
     opacity: 1;
   }
+}
+
+.ReactModal__Content .ReactModal__Content--after-open {
+  background: rgba(0,0,0,.7) !important;
 }

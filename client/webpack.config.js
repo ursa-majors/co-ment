@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 const dev = process.env.NODE_ENV !== 'production' && process.argv.indexOf('-p') === -1;
 
@@ -22,6 +23,8 @@ const UglifyJsPluginConfig = new webpack.optimize.UglifyJsPlugin({
   },
   compress: {
     screw_ie8: true,
+    dead_code: true,
+    drop_console: true,
   },
   comments: false,
 });
@@ -76,18 +79,34 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     new BundleAnalyzerPlugin(),
+    new webpack.optimize.AggressiveMergingPlugin(),
     new CopyWebpackPlugin(
       [
         { from: './src/img', to: './img/', ignore: ['*.svg'] },
       ]),
+    new CompressionPlugin({
+      asset: "[path].gz[query]",
+      algorithm: "gzip",
+      test: /\.js$|\.css$|\.html$/,
+      threshold: 10240,
+      minRatio: 0.8
+    }),
   ] :
   [
     HTMLWebpackPluginConfig,
     DefinePluginConfig,
     UglifyJsPluginConfig,
+    new webpack.optimize.AggressiveMergingPlugin(),
     new CopyWebpackPlugin(
       [
         { from: './src/img', to: './img/', ignore: ['*.svg'] },
       ]),
+    new CompressionPlugin({
+      asset: "[path].gz[query]",
+      algorithm: "gzip",
+      test: /\.js$|\.css$|\.html$/,
+      threshold: 10240,
+      minRatio: 0.8
+    }),
   ],
 };

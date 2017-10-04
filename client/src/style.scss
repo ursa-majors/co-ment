@@ -115,6 +115,7 @@ body.user-is-tabbing *:focus {
   appearance: none;
   border: none;
   background: transparent;
+  color: inherit;
 
   &:hover, &:active, &:focus {
     -webkit-appearance: none;
@@ -122,6 +123,7 @@ body.user-is-tabbing *:focus {
     border: none;
     background: transparent;
     outline: none;
+    color: inherit;
   }
   &__link {
     text-align: left;
