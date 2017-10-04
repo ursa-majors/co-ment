@@ -23,7 +23,7 @@ export const GET_USERPOSTS_FAILURE = 'GET_USERPOSTS_FAILURE';
 export function getUserPosts(token, userId) {
   return {
     [CALL_API]: {
-      endpoint: `${BASE_URL}/api/posts?author.id=${userId}&active=all`,
+      endpoint: `${BASE_URL}/api/posts?author=${userId}&active=all`,
       method: 'GET',
       types: [GET_USERPOSTS_REQUEST, GET_USERPOSTS_SUCCESS, GET_USERPOSTS_FAILURE],
       headers: { Authorization: `Bearer ${token}` },
