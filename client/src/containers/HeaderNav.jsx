@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { skip } from '../utils';
-import { setMenuState, setMenuBackground } from '../store/actions';
+import { setMenuState, setAdminMenuState, setMenuBackground } from '../store/actions';
 
 class Nav extends React.Component {
 
@@ -35,6 +35,18 @@ class Nav extends React.Component {
       }
     }
   }
+
+
+  adminNavToggle = () => {
+      if (this.props.appState.adminMenuState === 'closed') {
+        this.props.actions.setAdminMenuState('open');
+      } else {
+        this.props.actions.setAdminMenuState('closing');
+        setTimeout(() => {
+          this.props.actions.setAdminMenuState('closed');
+        }, 300);
+      }
+    }
 
   render() {
     const classObj = {
@@ -75,11 +87,22 @@ class Nav extends React.Component {
       },
     };
 
+    let avatarUrl;
+    if (this.props.appState.user.avatarUrl === 'https://cdn.glitch.com/4965fcd8-26e0-4a69-a667-bb075062e086%2Fandroid-chrome-384x384.png?1504907183396' || !this.props.appState.user.avatarUrl ) {
+      avatarUrl = 'https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/usericon2.png'
+    } else {
+      avatarUrl = this.props.appState.user.avatarUrl;
+    }
     const backgroundStyle = {
-      backgroundImage: `url(${this.props.appState.user.avatarUrl})`,
+      backgroundImage: `url(${avatarUrl})`,
       backgroundSize: "cover",
       backgroundPosition: "center center",
     }
+
+    const adminLinks = ['inbox', 'profile', 'connections', 'logout'];
+
+    const adminMenuClass = this.props.appState.adminMenuState === 'open' ? 'visible' : 'hidden';
+    console.log('adminMenuClass =' + adminMenuClass);
 
     return (
       <div className={`h-nav__side-bkg ${this.props.appState.menuBackground}`}>
@@ -146,19 +169,43 @@ class Nav extends React.Component {
         }
         </ul>
         {this.props.appState.loggedIn &&
-          <div className="h-nav__avatar">
-            <div className="h-nav__image-aspect">
-              <div className="h-nav__image-crop">
-                {this.props.appState.user.avatarUrl ?
+          <div>
+            <button
+              className="h-nav__avatar aria-button"
+              data-taborder=""
+              onClick={() => this.adminNavToggle()}
+              aria-expanded={this.props.appState.adminMenuState === 'open' ? true : false}
+              >
+              <div className="h-nav__image-aspect">
+                <div className="h-nav__image-crop">
                   <div
                     className="h-nav__image"
                     style={backgroundStyle}
                     role="image"
-                    aria-label={this.props.appState.user.username} /> :
-                  <i
-                    className={`fa fa-user-circle fa-5x post-thumb__icon--avatar`}
-                    aria-hidden="true" />
-                }
+                    aria-label={this.props.appState.user.username} />
+                </div>
+              </div>
+            </button>
+            <div className={adminMenuClass}>
+              <div className="a-nav__caret"></div>
+              <div>
+                <ul className="a-nav">
+                  {adminLinks.map((item) => {
+                    return (
+                      <li className="a-nav__item" key={item}>
+                        <NavLink
+                          to={`/${item}`}
+                          data-taborder=""
+                          className="a-nav__item-link"
+                          activeClassName="a-nav__item-link--active"
+                        >
+                          {item}
+                        </NavLink>
+                      </li>
+                      );
+                    })
+                  }
+                </ul>
               </div>
             </div>
           </div>
@@ -174,7 +221,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({ setMenuState, setMenuBackground }, dispatch),
+  actions: bindActionCreators({ setMenuState, setMenuBackground, setAdminMenuState }, dispatch),
 });
 
 const connectedNav = connect(mapStateToProps, mapDispatchToProps)(Nav)
