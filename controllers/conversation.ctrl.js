@@ -24,37 +24,56 @@ function getConversations(req, res) {
     };
 
     Conversation.find(query)
-        .select('_id')
         .exec()
         .then( cons => {
-
-            const promiseList = [];
-
-            cons.forEach( con => {
-
-                // target messages by conversation '_id'
-                const messageQuery = {
-                    conversation : con._id
-                };
-
-                promiseList.push( new Promise( resolve => {
-                    return Message.find(messageQuery)
-                        .sort('-createdAt')
-                        .limit(1)
-                        .populate({
-                            path   : 'author',
-                            select : 'username name avatarUrl'
-                        })
-                        .exec()
-                        .then( msgs => resolve(msgs[0]) );
-                }));
-
+        
+            // simple array of conversation IDs
+            const conIdsArr = cons.map( c => c._id );
+            
+            Message.aggregate([
+                {
+                    $match: { 'conversation' : { $in : conIdsArr} }
+                },
+                {
+                    $lookup: {
+                        from         : 'conversations',
+                        localField   : 'conversation',
+                        foreignField : '_id',
+                        as           : 'conv_docs'
+                    }
+                },
+                {
+                    $project: {
+                        'createdAt'    : 1,
+                        'conversation' : 1,
+                        'body'         : 1,
+                        'author'       : 1,
+                        'partcipants'  : '$conv_docs.participants'
+                    }
+                },
+                {
+                    $sort: {
+                        'conversation' : 1,
+                        'createdAt'    : -1
+                    }
+                },
+                {
+                    $group: {
+                        _id          : '$conversation',
+                        totalMsgs    : { $sum : 1 },
+                        participants : { $first: '$$CURRENT.partcipants' },
+                        latestMsg    : { $first: '$$CURRENT' },
+                    }
+                }
+            ])
+            .exec()
+            .then( messages => {
+                return res
+                    .status(200)
+                    .json({'conversations' : messages});
             });
-
-            return Promise.all(promiseList);
-
+    
         })
-        .then( populatedCons => res.status(200).json( populatedCons ))
         .catch( err => {
             return res
                 .status(400)
