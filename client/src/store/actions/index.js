@@ -96,7 +96,6 @@ export function setMenuState(menu) {
 }
 
 export function setAdminMenuState(menu) {
-  console.log(menu);
   return ({
     type: SET_ADMIN_MENU_STATE,
     payload: menu,

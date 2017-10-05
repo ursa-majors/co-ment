@@ -12,9 +12,11 @@ class Nav extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
       this.props.actions.setMenuState('closing');
+      this.props.actions.setAdminMenuState('closing');
       this.props.actions.setMenuBackground();
       setTimeout(() => {
         this.props.actions.setMenuState('closed');
+        this.props.actions.setAdminMenuState('closed');
         this.props.actions.setMenuBackground();
       }, 300);
     }
@@ -101,8 +103,9 @@ class Nav extends React.Component {
 
     const adminLinks = ['inbox', 'profile', 'connections', 'logout'];
 
-    const adminMenuClass = this.props.appState.adminMenuState === 'open' ? 'visible' : 'hidden';
-    console.log('adminMenuClass =' + adminMenuClass);
+    const navItemClass = this.props.appState.adminMenuState === 'open' ? 'a-nav__item--expanded' : 'a-nav__item';
+    const navLinkClass = this.props.appState.adminMenuState === 'open' ? 'a-nav__item-link a-nav__item-link--expanded' : 'a-nav__item-link';
+    const adminNavClass = this.props.appState.adminMenuState === 'open' ? 'a-nav__expanded' : 'a-nav';
 
     return (
       <div className={`h-nav__side-bkg ${this.props.appState.menuBackground}`}>
@@ -186,17 +189,17 @@ class Nav extends React.Component {
                 </div>
               </div>
             </button>
-            <div className={adminMenuClass}>
-              <div className="a-nav__caret"></div>
+            <div className="a-nav__wrap">
               <div>
-                <ul className="a-nav">
+             {/*} <button className="dismiss aria-button modal-close modal-close-sm a-nav__close" onClick={() => this.adminNavToggle()} data-taborder="">&times;</button> */}
+                <ul className={adminNavClass}>
                   {adminLinks.map((item) => {
                     return (
-                      <li className="a-nav__item" key={item}>
+                      <li className={navItemClass} key={item}>
                         <NavLink
                           to={`/${item}`}
                           data-taborder=""
-                          className="a-nav__item-link"
+                          className={navLinkClass}
                           activeClassName="a-nav__item-link--active"
                         >
                           {item}
