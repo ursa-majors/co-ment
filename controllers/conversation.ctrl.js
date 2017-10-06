@@ -8,6 +8,72 @@ const Conversation = require('../models/conversation');
 const Message      = require('../models/message');
 
 
+/* =============================== UTILITIES =============================== */
+
+/* Build 'getConversations' response object from conversations array
+ * @params    [array]   convs   [array of conversation objects]
+ * @returns   [object]          [formatted response]
+ *
+ *   {
+ *      totalMessages : Number,
+ *      totalUnreads  : Number,
+ *      conversations : [
+ *          {
+ *              _id         : String,
+ *              subject     : String,
+ *              startDate   : String,
+ *              qtyMessages : Number,
+ *              qtyUnreads  : Number,
+ *              latestMessage : {
+ *                  _id       : String,
+ *                  updatedAt : String,
+ *                  createdAt : String,
+ *                  body      : String,
+ *                  author    : String,
+ *                  recipient : String,
+ *                  unread    : Boolean
+ *              },
+ *              participants : [
+ *                  {
+ *                      _id       : String,
+ *                      username  : String,
+ *                      name      : String,
+ *                      avatarUrl : String
+ *                  }...
+ *              ]
+ *          }
+ *      ]
+ *   }
+*/
+function formatConvData(convs) {
+    
+    // count all messages
+    const totalMessages = convs.reduce( (sum, conv) => {
+        return sum + conv.messages.length;
+    }, 0);
+    
+    // count unread messages
+    const totalUnreads = convs.reduce( (sum, conv) => {
+        return sum + conv.messages.filter( m => m.unread ).length;
+    }, 0);
+    
+    // remap conversations to include metadata
+    const conversations = convs.map( c => {
+    	return {
+        	_id           : c._id,
+            subject       : c.subject,
+            qtyMessages   : c.messages.length,
+            qtyUnreads    : c.messages.filter( m => m.unread ).length,
+            startDate     : c.startDate,
+            participants  : c.participants,
+            latestMessage : c.messages[0]
+        };
+    });
+    
+    return { totalMessages, totalUnreads, conversations };
+}
+
+
 /* ============================ ROUTE HANDLERS ============================= */
 
 // GET CONVERSATIONS - with projection!
@@ -20,19 +86,21 @@ const Message      = require('../models/message');
 function getConversations(req, res) {
 
     Conversation.find({ participants: req.token._id })
+        .select('subject startDate messages participants')
         .populate({
             path : 'participants',
             select: 'username name avatarUrl'
         })
         .populate({
             path    : 'messages',
+            select  : 'updatedAt createdAt body author recipient unread',
             options : {
                 sort  : { createdAt: -1 },
-//                limit : 1
             }
         })
         .exec()
-        .then( cons => res.status(200).json({ 'conversations' : cons }))
+        .then( formatConvData )
+        .then( data => res.status(200).json(data) )
         .catch( err => {
             return res
                 .status(400)
@@ -192,10 +260,10 @@ function createConversation(req, res, next) {
             return next(err);
         }
 
-        message.save( (err, newMessage) => {
-            if (err) {
-                console.log('Error!', err);
-                return next(err);
+        message.save( (error, newMessage) => {
+            if (error) {
+                console.log('Error!', error);
+                return next(error);
             }
 
             return res
@@ -215,6 +283,7 @@ function createConversation(req, res, next) {
 //   Expects:
 //     1) user '_id' from JWT token
 //     2) request body properties
+//          recipientId  : String
 //          conversation : String
 //          messageBody  : String
 //        }
@@ -224,7 +293,8 @@ function postMessage (req, res) {
     const message = new Message({
         conversation : req.body.conversation,
         body         : req.body.messageBody,
-        author       : req.token._id
+        author       : req.token._id,
+        recipient    : req.body.recipientId
     });
 
     message.save( (err, sentMessage) => {
