@@ -73,7 +73,7 @@ class App extends React.Component {
   }
 
   render() {
-    const links = (this.props.appState.loggedIn ? ['posts', 'profile', 'connections', 'logout'] : ['login']);
+    const links = (this.props.appState.loggedIn ? ['posts'] : ['login']);
     return (
       <BrowserRouter>
         <ScrollToTop>

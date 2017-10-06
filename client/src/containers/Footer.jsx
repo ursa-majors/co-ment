@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const Footer = props => (
   <div className="footer">
     &copy; 2017 The Ursa Majors
-    <div class="footer__right">
+    <div className="footer__right">
       <Link className="footer__link" to="/privacy">
         {props.mobile ? <i className="fa fa-user-secret footer__icon" /> : 'Privacy'}
       </Link>

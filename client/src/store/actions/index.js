@@ -10,6 +10,7 @@ export const DISMISS_PWRESET_MODAL = 'DISMISS_PWRESET_MODAL';
 export const DISMISS_LOGIN_MODAL = 'DISMISS_LOGIN_MODAL';
 export const SET_WINDOW_SIZE = 'SET_WINDOW_SIZE';
 export const SET_MENU_STATE = 'SET_MENU_STATE';
+export const SET_ADMIN_MENU_STATE = 'SET_ADMIN_MENU_STATE';
 export const SET_MENU_BACKGROUND = 'SET_MENU_BACKGROUND';
 export const SET_CONTROLS_BACKGROUND = 'SET_CONTROLS_BACKGROUND';
 export const SET_SCROLLED = 'SET_SCROLLED';
@@ -90,6 +91,13 @@ export function setControlsBackground(bg) {
 export function setMenuState(menu) {
   return ({
     type: SET_MENU_STATE,
+    payload: menu,
+  });
+}
+
+export function setAdminMenuState(menu) {
+  return ({
+    type: SET_ADMIN_MENU_STATE,
     payload: menu,
   });
 }
