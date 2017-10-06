@@ -8,19 +8,28 @@ const mongoose = require('mongoose');
 const messageSchema = new mongoose.Schema({
 
     conversation: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Conversation',
-        required: true
+        type     : mongoose.Schema.Types.ObjectId,
+        required : true
     },
     
     body: {
-        type: String,
-        required: true
+        type     : String,
+        required : true
     },
     
     author: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        type     : mongoose.Schema.Types.ObjectId,
+        ref      : 'User'
+    },
+    
+    recipient: {
+        type     : mongoose.Schema.Types.ObjectId,
+        ref      : 'User'
+    },
+    
+    unread: {
+        type     : Boolean,
+        default  : true
     }
     
 },
