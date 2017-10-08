@@ -5,16 +5,18 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { skip } from '../utils';
-import { setMenuState, setMenuBackground } from '../store/actions';
+import { setMenuState, setAdminMenuState, setMenuBackground } from '../store/actions';
 
 class Nav extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
       this.props.actions.setMenuState('closing');
+      this.props.actions.setAdminMenuState('closing');
       this.props.actions.setMenuBackground();
       setTimeout(() => {
         this.props.actions.setMenuState('closed');
+        this.props.actions.setAdminMenuState('closed');
         this.props.actions.setMenuBackground();
       }, 300);
     }
@@ -24,20 +26,29 @@ class Nav extends React.Component {
   navToggle = () => {
     if (this.props.appState.windowSize.width < 650) {
       if (this.props.appState.menuState === 'closed') {
-        //this.setState({ menu: 'open' }, ()=>{this.setBackground();});
         this.props.actions.setMenuState('open');
         this.props.actions.setMenuBackground();
       } else {
-        //this.setState({ menu: 'closing' }, ()=>{this.setBackground();});
         this.props.actions.setMenuState('closing');
         setTimeout(() => {
-          //this.setState({ menu: 'closed' }, ()=>{this.setBackground();});
           this.props.actions.setMenuState('closed');
           this.props.actions.setMenuBackground();
         }, 300);
       }
     }
   }
+
+
+  adminNavToggle = () => {
+      if (this.props.appState.adminMenuState === 'closed') {
+        this.props.actions.setAdminMenuState('open');
+      } else {
+        this.props.actions.setAdminMenuState('closing');
+        setTimeout(() => {
+          this.props.actions.setAdminMenuState('closed');
+        }, 300);
+      }
+    }
 
   render() {
     const classObj = {
@@ -77,6 +88,25 @@ class Nav extends React.Component {
         ariaE: false,
       },
     };
+
+    let avatarUrl;
+    if (this.props.appState.user.avatarUrl === 'https://cdn.glitch.com/4965fcd8-26e0-4a69-a667-bb075062e086%2Fandroid-chrome-384x384.png?1504907183396' || !this.props.appState.user.avatarUrl ) {
+      avatarUrl = 'https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/usericon2.png'
+    } else {
+      avatarUrl = this.props.appState.user.avatarUrl;
+    }
+    const backgroundStyle = {
+      backgroundImage: `url(${avatarUrl})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center center",
+    }
+
+    const adminLinks = ['inbox', 'profile', 'connections', 'logout'];
+
+    const navItemClass = this.props.appState.adminMenuState === 'open' ? 'a-nav__item--expanded' : 'a-nav__item';
+    const navLinkClass = this.props.appState.adminMenuState === 'open' ? 'a-nav__item-link a-nav__item-link--expanded' : 'a-nav__item-link';
+    const adminNavClass = this.props.appState.adminMenuState === 'open' ? 'a-nav__expanded' : 'a-nav';
+
     return (
       <div className={`h-nav__side-bkg ${this.props.appState.menuBackground}`}>
       <button
@@ -119,8 +149,10 @@ class Nav extends React.Component {
           </li>
           {this.props.links.map((item) => {
             let classes;
-            if (item === 'login' || item === 'logout') {
+            if (item === 'login') {
               classes = 'h-nav__item-link h-nav__item-link--login';
+            } else if (item === 'logout') {
+              classes = 'h-nav__item-link h-nav__item-link--logout';
             } else {
               classes = 'h-nav__item-link h-nav__item-link';
             }
@@ -139,6 +171,48 @@ class Nav extends React.Component {
           })
         }
         </ul>
+        {this.props.appState.loggedIn &&
+          <div>
+            <button
+              className="h-nav__avatar aria-button"
+              data-taborder=""
+              onClick={() => this.adminNavToggle()}
+              aria-expanded={this.props.appState.adminMenuState === 'open' ? true : false}
+              >
+              <div className="h-nav__image-aspect">
+                <div className="h-nav__image-crop">
+                  <div
+                    className="h-nav__image"
+                    style={backgroundStyle}
+                    role="image"
+                    aria-label={this.props.appState.user.username} />
+                </div>
+              </div>
+            </button>
+            <div className="a-nav__wrap">
+              <div>
+             {/*} <button className="dismiss aria-button modal-close modal-close-sm a-nav__close" onClick={() => this.adminNavToggle()} data-taborder="">&times;</button> */}
+                <ul className={adminNavClass}>
+                  {adminLinks.map((item) => {
+                    return (
+                      <li className={navItemClass} key={item}>
+                        <NavLink
+                          to={`/${item}`}
+                          data-taborder=""
+                          className={navLinkClass}
+                          activeClassName="a-nav__item-link--active"
+                        >
+                          {item}
+                        </NavLink>
+                      </li>
+                      );
+                    })
+                  }
+                </ul>
+              </div>
+            </div>
+          </div>
+        }
       </nav>
       </div>
     );
@@ -150,7 +224,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({ setMenuState, setMenuBackground }, dispatch),
+  actions: bindActionCreators({ setMenuState, setMenuBackground, setAdminMenuState }, dispatch),
 });
 
 const connectedNav = connect(mapStateToProps, mapDispatchToProps)(Nav)
