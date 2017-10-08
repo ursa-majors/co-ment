@@ -1,0 +1,13 @@
+.inbox {
+	&__avatar {
+
+	}
+
+	&__messagelist {
+		background: rgba(255, 255, 255, 0.75);
+    margin: auto;
+    @include for-phone-landscape-up {
+      border-radius: 10px;
+    }
+	}
+}
