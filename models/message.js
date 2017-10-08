@@ -9,20 +9,24 @@ const messageSchema = new mongoose.Schema({
 
     conversation: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'COnversation',
+        ref: 'Conversation',
         required: true
     },
-    
+
     body: {
         type: String,
         required: true
     },
-    
+
+    subject: {
+        type: String,
+    }
+
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }
-    
+
 },
 {
     timestamps: true
