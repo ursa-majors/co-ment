@@ -117,6 +117,11 @@ body.user-is-tabbing *:focus {
   border: none;
   background: transparent;
   color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  font-weight: inherit;
 
   &:hover, &:active, &:focus {
     -webkit-appearance: none;
@@ -125,6 +130,11 @@ body.user-is-tabbing *:focus {
     background: transparent;
     outline: none;
     color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    font-weight: inherit;
   }
   &__link {
     text-align: left;

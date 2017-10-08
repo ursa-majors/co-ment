@@ -11,9 +11,28 @@ import { formatDate } from '../utils';
 
 class Conversations extends React.Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      view: 'inbox',
+      message: '',
+    };
+
+  }
+
   componentDidMount() {
     const token = this.props.appState.authToken;
     this.props.api.getConversations(token);
+  }
+
+  setView = (view, message) => {
+    const newState = { ...this.state };
+    newState.view = view;
+    newState.message = message;
+    this.setState({
+      ...newState
+    });
   }
 
   render() {
@@ -38,9 +57,44 @@ class Conversations extends React.Component {
         />
         <div className="conn-details__preview">
           <div className="conn-details__text-wrap">
-            <div className="conn-details__title">Inbox</div>
+            <div className="conn-details__title">Messages</div>
           </div>
-          <div className="inbox__messagewrap">
+          <div className="inbox__wrap">
+            <div className="inbox__sidebar">
+              <ul className="inbox__admin">
+                <li className="inbox__admin-item inbox__admin-title">
+                  Mailbox
+                </li>
+                <button
+                  className="aria-button inbox__button"
+                  onClick={() => this.setView('inbox')}>
+                  <li className="inbox__admin-item">
+                    <i className='fa fa-inbox'/>Inbox
+                  </li>
+                </button>
+                <button
+                  className="aria-button inbox__button"
+                  onClick={() => this.setView('sent')}>
+                  <li className="inbox__admin-item">
+                    <i className='fa fa-send-o'/>Sent
+                  </li>
+                </button>
+                <button
+                  className="aria-button inbox__button"
+                  onClick={() => this.setView('drafts')}>
+                <li className="inbox__admin-item">
+                  <i className='fa fa-file-o'/>Drafts
+                </li>
+                </button>
+                <button
+                  className="aria-button inbox__button"
+                  onClick={() => this.setView('trash')}>
+                  <li className="inbox__admin-item">
+                    <i className='fa fa-trash-o'/>Trash
+                  </li>
+                </button>
+              </ul>
+            </div>
             <ul className="inbox__messagelist">
             {this.props.conversation.conversations.map(item => {
                   const sender = item.participants.filter(participant => participant._id !== this.props.appState.user._id);
@@ -52,7 +106,7 @@ class Conversations extends React.Component {
                 return(
                   <li className="inbox__message" key={item._id}>
                     <div className="inbox__avatar">
-                      <div className="h-nav__image-aspect">
+                      <div className="inbox__image-aspect">
                         <div className="h-nav__image-crop">
                           <div
                             className="h-nav__image"
@@ -62,14 +116,17 @@ class Conversations extends React.Component {
                         </div>
                       </div>
                     </div>
-                    <span className="inbox__name">{sender[0].name}</span>
-
-                    <div className="inbox__subject">
-                      <Link className="inbox__link" to={`/conversationdetails/${item._id}`}>
-                        {item.latestMessage.subject || 'message subject'}
-                      </Link>
+                    <div className="inbox__message-wrap">
+                      <div className="inbox__name">{sender[0].name}</div>
+                      <div className="inbox__subject">
+                        <button
+                          className="aria-button aria-button--link inbox__link"
+                          onClick={()=> this.setView('single', item._id)}>
+                          {item.latestMessage.subject || 'The subject line of the thread'}
+                        </button>
+                      </div>
+                      <div className="inbox__body">{item.latestMessage.body}</div>
                     </div>
-                    <div className="inbox__bocy">{item.latestMessage.body}</div>
                   </li>
                 )
               })}
