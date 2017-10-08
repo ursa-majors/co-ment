@@ -61,7 +61,7 @@
 	&__admin-title {
 		color: rgba(255,255,255,.4);
 		font-size: 1.5em;
-		font-weight: 400;
+		font-weight: 700;
 
 	}
 
@@ -121,7 +121,6 @@
       margin-right: 10px;
   }
 
-
   &__image-crop {
       width: 100%;
       border-radius: 100%;
@@ -143,6 +142,41 @@
       min-height: 100%;
       height: auto;
       margin: 0 auto;
-
     }
+
+    &__single-image-aspect {
+      width: 30px;
+      height: 30px;
+      position: relative;
+      margin-right: 10px;
+  }
+
+	  &__single-message {
+	  	border-bottom: 1px dotted $color_gray_text;
+	  	padding: 20px;
+
+	  	&:last-child {
+	  		border-bottom: 0;
+	  	}
+	  }
+
+	  &__single-subject {
+			font-weight: 700;
+			font-size: 1.5em;
+			margin-bottom: 10px;
+	  }
+
+	  &__single-meta {
+	  	display: flex;
+	  	justify-content: space-between;
+	  	margin-bottom: 20px;
+	  }
+
+	  &__single-from {
+	  	display: flex;
+	  }
+
+	  &__single-sender, &__single-date {
+	  	padding-top: 5px;;
+	  }
 }

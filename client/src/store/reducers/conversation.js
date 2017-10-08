@@ -1,10 +1,11 @@
 import update from 'immutability-helper';
 
-import { SET_VIEW_CONVERSATION, CLEAR_VIEW_CONVERSATION, SET_CONVERSATIONS_MODAL, SET_CONV_DETAILS_MODAL,
-  SET_CONV_MODAL } from '../actions/conversationActions';
+import { SET_VIEW_CONVERSATION, CLEAR_VIEW_CONVERSATION, SET_CONVERSATIONS_MODAL, SET_CONV_DETAILS_MODAL, SET_CONVERSATION_MODAL,
+  SET_CONV_MODAL, SET_MSG_VIEW } from '../actions/conversationActions';
 
 import { GET_ALL_CONVERSATIONS_REQUEST,
-  GET_ALL_CONVERSATIONS_SUCCESS, GET_ALL_CONVERSATIONS_FAILURE,
+  GET_ALL_CONVERSATIONS_SUCCESS, GET_ALL_CONVERSATIONS_FAILURE, GET_CONVERSATION_REQUEST,
+  GET_CONVERSATION_SUCCESS, GET_CONVERSATION_FAILURE,
   } from '../actions/apiConversationActions';
 
 const defaultConv = {
@@ -28,6 +29,7 @@ const defaultConv = {
 const INITIAL_STATE = {
 	totalMessages: 0,
   totalUnreads: 0,
+  messageView: 'inbox',
   conversations_loading: false,
   conversations_error: null,
   // ConversationDetails state
@@ -48,6 +50,15 @@ const INITIAL_STATE = {
     title: '',
   },
   conversations: [],
+  // Conversation state
+  getConversationSpinnerClass: 'spinner__hide',
+  getConversationModal: {
+    class: 'modal__hide',
+    text: '',
+    type: '',
+    title: '',
+  },
+  conversation: defaultConv,
 };
 
 function conversation(state = INITIAL_STATE, action) {
@@ -83,10 +94,10 @@ function conversation(state = INITIAL_STATE, action) {
     case SET_CONV_DETAILS_MODAL:
       return Object.assign({}, state, { convDetailsModal: action.payload });
 
-		/*---------------------------------------------------------------------------------*/
+		/*-----------------------------------------------------------------------*/
 
     /*
-    *  Called From: <Conversations /> and <ConversationDetails />
+    *  Called From: <Conversations />
     *  Payload: None
     *  Purpose: When a getConversations() function is called, this sets the
     *  spinner CSS to indicate that an API call is in progress.
@@ -97,7 +108,7 @@ function conversation(state = INITIAL_STATE, action) {
         });
 
     /*
-    *  Called From: <Conversations /> and <ConversationDetails />
+    *  Called From: <Conversations />
     *  Payload: An array of conversation objects
     *  Purpose: Called when the API call succeeds. Populate the conversation
     *  list for a user.
@@ -131,7 +142,7 @@ function conversation(state = INITIAL_STATE, action) {
       );
 
     /*
-    *  Called From: <Conversations /> and <ConversationDetails />
+    *  Called From: <Conversations />
     *  Payload: An error message
     *  Purpose: Called when the API call fails. Set the state to display
     *  a message to user.
@@ -152,13 +163,67 @@ function conversation(state = INITIAL_STATE, action) {
         },
       );
 
+  /*-----------------------------------------------------------------------*/
+
+    /*
+    *  Called From: <Conversations />
+    *  Payload: None
+    *  Purpose: When a getConversation() function is called, this sets the
+    *  spinner CSS to indicate that an API call is in progress.
+    */
+    case GET_CONVERSATION_REQUEST:
+      return Object.assign({}, state, {
+      	getConversationSpinnerClass: 'spinner__show'
+        });
+
+    /*
+    *  Called From: <Conversations />
+    *  Payload: A conversation object
+    *  Purpose: Called when the API call succeeds. Populate the conversation
+    *  object.
+    */
+    case GET_CONVERSATION_SUCCESS:
+      return Object.assign(
+        {},
+        state,
+        {
+          conversation: action.payload,
+          getConversationSpinnerClass: 'spinner__hide',
+        },
+      );
+
+    /*
+    *  Called From: <Conversations />
+    *  Payload: An error message
+    *  Purpose: Called when the API call fails. Set the state to display
+    *  a message to user.
+    */
+    case GET_CONVERSATION_FAILURE:
+      error = action.payload.response.message || 'An error occurred while fetching messages';
+      return Object.assign(
+        {},
+        state,
+        {
+          getConversationSpinnerClass: 'spinner__hide',
+          getConversationModal: {
+            class: 'modal__show',
+            text: error,
+            type: 'modal__error',
+            title: 'ERROR',
+          },
+        },
+      );
+
     /*
     *  Called From: <Conversations />
     *  Payload: CSS class to show/hide the modal
     *  Purpose: Called from the modal to dismiss the modal
     */
-    case SET_CONVERSATIONS_MODAL:
-      return Object.assign({}, state, { getConversationsModal: action.payload });
+    case SET_CONVERSATION_MODAL:
+      return Object.assign({}, state, { getConversationModal: action.payload });
+
+    case SET_MSG_VIEW:
+    	return Object.assign({}, state, { messageView: action.payload });
 
     default:
       return state;
