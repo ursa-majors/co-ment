@@ -80,9 +80,9 @@ class Conversations extends React.Component {
               {this.props.conversation.messageView !=='single' &&
                 <ul className="inbox__messagelist">
                   {this.props.conversation.conversations.sort((a,b) => new Date(b.latestMessage.createdAt) - new Date(a.latestMessage.createdAt)).map(item => {
-                      const sender = item.participants.filter(participant => participant._id !== this.props.appState.user._id);
+                      const sender = item.participants.find(participant => participant._id !== this.props.appState.user._id);
                       const backgroundStyle = {
-                        backgroundImage: `url(${sender[0].avatarUrl})`,
+                        backgroundImage: `url(${sender.avatarUrl})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center center",
                       }
@@ -95,13 +95,13 @@ class Conversations extends React.Component {
                                 className="h-nav__image"
                                 style={backgroundStyle}
                                 role="image"
-                                aria-label={sender[0].name} />
+                                aria-label={sender.name} />
                             </div>
                           </div>
                         </div>
                         <div className="inbox__message-wrap">
                           <div className="inbox__name-date">
-                            <div className="inbox__name">{sender[0].name}</div>
+                            <div className="inbox__name">{sender.name}</div>
                             <div className="inbox__date">{formatDate(new Date(item.latestMessage.createdAt))}</div>
                           </div>
                           <div className="inbox__subject">
@@ -133,17 +133,19 @@ class Conversations extends React.Component {
             <div>
               { this.props.conversation.messageView === 'single' &&
                 <div className="inbox__single">
-                  {this.props.conversation.conversation.conversation.subject}
-                  {this.props.conversation.conversation.conversation.map(message => {
+                  {this.props.conversation.conversation &&
+                    <div className="inbox__single-subject">
+                    {this.props.conversation.conversation.subject}
+                    </div>}
+                  {this.props.conversation.conversation.messages.map(message => {
+                    const sender = this.props.conversation.conversation.participants.find(participant => participant._id === message.author);
                     const backgroundStyle = {
-                      backgroundImage: `url(${message.author.avatarUrl})`,
+                      backgroundImage: `url(${sender.avatarUrl})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center center",
                     }
                     return (
                       <div className="inbox__single-message">
-                        <div className="inbox__single-subject">
-                        </div>
                         <div className="inbox__single-meta">
                           <div className="inbox__single-from">
                             <div className="inbox__single-avatar">
@@ -153,12 +155,12 @@ class Conversations extends React.Component {
                                       className="h-nav__image"
                                       style={backgroundStyle}
                                       role="image"
-                                      aria-label={message.author.name} />
+                                      aria-label={sender.name} />
                                  </div>
                               </div>
                             </div>
                             <div className="inbox__single-sender">
-                              {message.author.name}
+                              {sender.name}
                             </div>
                           </div>
                           <div className="inbox__single-date">
