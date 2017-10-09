@@ -79,7 +79,7 @@ class Conversations extends React.Component {
             <div>
               {this.props.conversation.messageView !=='single' &&
                 <ul className="inbox__messagelist">
-                  {this.props.conversation.conversations.map(item => {
+                  {this.props.conversation.conversations.sort((a,b) => new Date(b.latestMessage.createdAt) - new Date(a.latestMessage.createdAt)).map(item => {
                       const sender = item.participants.filter(participant => participant._id !== this.props.appState.user._id);
                       const backgroundStyle = {
                         backgroundImage: `url(${sender[0].avatarUrl})`,
@@ -100,7 +100,10 @@ class Conversations extends React.Component {
                           </div>
                         </div>
                         <div className="inbox__message-wrap">
-                          <div className="inbox__name">{sender[0].name}</div>
+                          <div className="inbox__name-date">
+                            <div className="inbox__name">{sender[0].name}</div>
+                            <div className="inbox__date">{formatDate(new Date(item.latestMessage.createdAt))}</div>
+                          </div>
                           <div className="inbox__subject">
                             <button
                               className="aria-button aria-button--link inbox__link"
@@ -116,7 +119,7 @@ class Conversations extends React.Component {
                                     console.log('an error has occurred');
                                   })
                               }}>
-                              {item.latestMessage.subject || 'The subject line of the thread'}
+                              {item.subject || 'The subject line of the thread'}
                             </button>
                           </div>
                           <div className="inbox__body">{item.latestMessage.body}</div>
@@ -130,6 +133,7 @@ class Conversations extends React.Component {
             <div>
               { this.props.conversation.messageView === 'single' &&
                 <div className="inbox__single">
+                  {this.props.conversation.conversation.conversation.subject}
                   {this.props.conversation.conversation.conversation.map(message => {
                     const backgroundStyle = {
                       backgroundImage: `url(${message.author.avatarUrl})`,
@@ -139,7 +143,6 @@ class Conversations extends React.Component {
                     return (
                       <div className="inbox__single-message">
                         <div className="inbox__single-subject">
-                          {message.subject || 'Message Subject'}
                         </div>
                         <div className="inbox__single-meta">
                           <div className="inbox__single-from">

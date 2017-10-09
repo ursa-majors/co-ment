@@ -85,9 +85,18 @@
 		}
 	}
 
+	&__message-wrap {
+		width: 100%;
+	}
+
 	&__name {
 		font-weight: 700;
 		font-size: 1.2em;
+	}
+
+	&__name-date {
+		display: flex;
+		justify-content: space-between;
 	}
 
 	&__subject {
