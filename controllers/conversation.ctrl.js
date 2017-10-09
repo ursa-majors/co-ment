@@ -194,19 +194,22 @@ function getConversationsAggregate(req, res) {
 //   Returns: array of messages from single conversation.
 //
 function getConversation(req, res) {
-    Message.find({ conversation: req.params.id })
-        .select('createdAt body author unread')
-        .sort('-createdAt')
+    
+    Conversation.findById(req.params.id)
+        .select('subject startDate messages participants')
         .populate({
-            path   : 'author',
-            select : 'username name avatarUrl'
+            path : 'participants',
+            select: 'username name avatarUrl'
+        })
+        .populate({
+            path    : 'messages',
+            select  : 'updatedAt createdAt body author recipient unread',
+            options : {
+                sort  : { createdAt: -1 },
+            }
         })
         .exec()
-        .then( messages => {
-            return res
-                .status(200)
-                .json({ conversation: messages });
-        })
+        .then( data => res.status(200).json(data) )
         .catch( err => {
             return res
                 .status(400)
