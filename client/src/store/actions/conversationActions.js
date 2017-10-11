@@ -5,6 +5,8 @@ export const SET_CONVERSATION_MODAL = 'SET_CONVERSATION_MODAL';
 export const SET_CONV_DETAILS_MODAL = 'SET_CONV_DETAILS_MODAL';
 export const SET_CONV_MODAL = 'SET_CONV_MODAL';
 export const SET_MSG_VIEW = 'SET_MSG_VIEW';
+export const CLEAR_CURRENT_CONV = 'CLEAR_CURRENT_CONV';
+export const SET_CURRENT_CONV = 'SET_CURRENT_CONV'
 
 export function setViewConversation(conv) {
   return ({
@@ -51,5 +53,18 @@ export function setMessageView(view) {
   return ({
     type: SET_MSG_VIEW,
     payload: view,
+  });
+}
+
+export function clearCurrentConv() {
+  return ({
+    type: CLEAR_CURRENT_CONV,
+  });
+}
+
+export function setCurrentConv(conv) {
+  return ({
+    type: SET_CURRENT_CONV,
+    payload: conv,
   });
 }

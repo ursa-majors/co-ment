@@ -7,6 +7,7 @@ import * as apiActions from '../store/actions/apiConversationActions';
 import * as Actions from '../store/actions/conversationActions';
 import Spinner from './Spinner';
 import ModalSm from './ModalSm';
+import Conversation from './Conversation';
 import { formatDate } from '../utils';
 
 class Conversations extends React.Component {
@@ -77,104 +78,60 @@ class Conversations extends React.Component {
               </ul>
             </div>
             <div>
-              {this.props.conversation.messageView !=='single' &&
-                <ul className="inbox__messagelist">
+              <div className="inbox__messagelist">
+                <div>
                   {this.props.conversation.conversations.sort((a,b) => new Date(b.latestMessage.createdAt) - new Date(a.latestMessage.createdAt)).map(item => {
                       const sender = item.participants.find(participant => participant._id !== this.props.appState.user._id);
                       const backgroundStyle = {
                         backgroundImage: `url(${sender.avatarUrl})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center center",
-                      }
+                      };
+                      const conv2view = { ...item };
                     return(
-                      <li className="inbox__message" key={item._id}>
-                        <div className="inbox__avatar">
-                          <div className="inbox__image-aspect">
-                            <div className="h-nav__image-crop">
-                              <div
-                                className="h-nav__image"
-                                style={backgroundStyle}
-                                role="image"
-                                aria-label={sender.name} />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="inbox__message-wrap">
-                          <div className="inbox__name-date">
-                            <div className="inbox__name">{sender.name}</div>
-                            <div className="inbox__date">{formatDate(new Date(item.latestMessage.createdAt))}</div>
-                          </div>
-                          <div className="inbox__subject">
-                            <button
-                              className="aria-button aria-button--link inbox__link"
-                              onClick={()=> {
-                                this.props.api.getConversation(this.props.appState.authToken, item._id)
-                                  .then((result) => {
-                                    if (result.type === 'GET_CONVERSATION_SUCCESS') {
-                                      this.props.actions.setMessageView('single')
-                                      .then(() => console.log(this.props.conversation.messageView));
-                                    }
-                                  })
-                                  .catch((error) => {
-                                    console.log('an error has occurred');
-                                  })
-                              }}>
-                              {item.subject || 'The subject line of the thread'}
-                            </button>
-                          </div>
-                          <div className="inbox__body">{item.latestMessage.body}</div>
-                        </div>
-                      </li>
-                    )
-                  })}
-                </ul>
-              }
-            </div>
-            <div>
-              { this.props.conversation.messageView === 'single' &&
-                <div className="inbox__single">
-                  {this.props.conversation.conversation &&
-                    <div className="inbox__single-subject">
-                    {this.props.conversation.conversation.subject}
-                    </div>}
-                  {this.props.conversation.conversation.messages.map(message => {
-                    const sender = this.props.conversation.conversation.participants.find(participant => participant._id === message.author);
-                    const backgroundStyle = {
-                      backgroundImage: `url(${sender.avatarUrl})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center center",
-                    }
-                    return (
-                      <div className="inbox__single-message">
-                        <div className="inbox__single-meta">
-                          <div className="inbox__single-from">
-                            <div className="inbox__single-avatar">
-                              <div className="inbox__single-image-aspect">
-                                  <div className="h-nav__image-crop">
-                                    <div
-                                      className="h-nav__image"
-                                      style={backgroundStyle}
-                                      role="image"
-                                      aria-label={sender.name} />
-                                 </div>
+                      <div key={item._id}>
+                        {this.props.conversation.messageView !=='single' &&
+                          <div className="inbox__message">
+                            <div className="inbox__avatar">
+                              <div className="inbox__image-aspect">
+                                <div className="h-nav__image-crop">
+                                  <div
+                                    className="h-nav__image"
+                                    style={backgroundStyle}
+                                    role="image"
+                                    aria-label={sender.name} />
+                                </div>
                               </div>
                             </div>
-                            <div className="inbox__single-sender">
-                              {sender.name}
+                            <div className="inbox__message-wrap">
+                              <div className="inbox__name-date">
+                                <div className="inbox__name">{sender.name}</div>
+                                <div className="inbox__date">{formatDate(new Date(item.latestMessage.createdAt))}</div>
+                              </div>
+                              <div className="inbox__subject">
+                                <button
+                                  className="aria-button aria-button--link inbox__link"
+                                  onClick={()=> {
+                                    this.props.actions.setMessageView('single');
+                                    this.props.actions.setCurrentConv(conv2view);
+                                  }}>
+                                  {item.subject || 'The subject line of the thread'}
+                                </button>
+                              </div>
+                              <div className="inbox__body">{item.latestMessage.body}</div>
                             </div>
                           </div>
-                          <div className="inbox__single-date">
-                            {formatDate(new Date(message.createdAt))}
-                          </div>
-                        </div>
-                        <div className="inbox__single-body">
-                          {message.body}
-                        </div>
+                        }
                       </div>
-                      );
+                    );
                   })}
                 </div>
-              }
+                <div>
+                { this.props.conversation.messageView === 'single' && this.props.conversation.currentConv &&
+                  <Conversation convId={this.props.conversation.currentConv._id}/>
+                }
+                </div>
+              </div>
             </div>
           </div>
         </div>
