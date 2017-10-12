@@ -1,16 +1,14 @@
 import update from 'immutability-helper';
 
-import { SET_VIEW_CONVERSATION, CLEAR_VIEW_CONVERSATION, SET_CONVERSATIONS_MODAL, SET_CONV_DETAILS_MODAL, SET_CONVERSATION_MODAL,
-  SET_CONV_MODAL, SET_MSG_VIEW, SET_CURRENT_CONV, CLEAR_CURRENT_CONV } from '../actions/conversationActions';
+import { SET_VIEW_CONVERSATION, CLEAR_VIEW_CONVERSATION, SET_CONVERSATIONS_MODAL, SET_CONV_MODAL, SET_CURRENT_CONV, CLEAR_CURRENT_CONV } from '../actions/conversationActions';
 
 import { GET_ALL_CONVERSATIONS_REQUEST,
   GET_ALL_CONVERSATIONS_SUCCESS, GET_ALL_CONVERSATIONS_FAILURE,
-  // GET_CONVERSATION_REQUEST, GET_CONVERSATION_SUCCESS, GET_CONVERSATION_FAILURE,
   VIEW_CONV_REQUEST, VIEW_CONV_SUCCESS, VIEW_CONV_FAILURE,
   } from '../actions/apiConversationActions';
 
 const defaultConv = {
-	_id: '',
+	_id: undefined,
   subject: '',
   qtyMessages: 0,
   qtyUnreads: 0,
@@ -30,18 +28,6 @@ const defaultConv = {
 const INITIAL_STATE = {
 	totalMessages: 0,
   totalUnreads: 0,
-  messageView: 'inbox',
-  conversations_loading: false,
-  conversations_error: null,
-  // ConversationDetails state
-  viewConversation: defaultConv,
-  convDetailsSpinnerClass: 'spinner__hide',
-  convDetailsModal: {
-    title: '',
-    text: '',
-    type: '',
-    class: 'modal__hide',
-  },
   // Conversations state
   getConversationsSpinnerClass: 'spinner__hide',
   getConversationsModal: {
@@ -50,9 +36,10 @@ const INITIAL_STATE = {
     type: '',
     title: '',
   },
+  conversations_loading: false,
+  conversations_error: null,
   conversations: [],
-  // Conversation state
-  currentConv: defaultConv,
+  // Current Conversation state
   viewConvSpinnerClass: 'spinner__hide',
   viewConvModal: {
     class: 'modal__hide',
@@ -60,6 +47,9 @@ const INITIAL_STATE = {
     type: '',
     title: '',
   },
+  currentConv_loading: false,
+  currentConv_error: null,
+  currentConv: defaultConv,
 };
 
 function conversation(state = INITIAL_STATE, action) {
@@ -68,7 +58,7 @@ function conversation(state = INITIAL_STATE, action) {
   switch (action.type) {
 
     /*
-    *  Called From: <ConversationDetails />
+    *  Called From: <Conversation />
     *  Payload: A conversation object
     *  Purpose: Conversation Details are cleared when the component unmounts
     *  to prevent showing the previous details when a new conversation is
@@ -81,19 +71,12 @@ function conversation(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { viewConversation: action.payload });
 
     /*
-    *  Called From: <ConversationDetails />
+    *  Called From: <Conversation />
     *  Purpose: Prevent flash of old content when user loads component
     */
     case CLEAR_VIEW_CONVERSATION:
       return Object.assign({}, state, { viewConversation: defaultConv });
 
-    /*
-    *  Called From: <ConversationDetails />
-    *  Payload: Text to show in the modal
-    *  Purpose: Set/Unset the text for the modal.
-    */
-    case SET_CONV_DETAILS_MODAL:
-      return Object.assign({}, state, { convDetailsModal: action.payload });
 
 		/*-----------------------------------------------------------------------*/
 
@@ -149,6 +132,7 @@ function conversation(state = INITIAL_STATE, action) {
     *  a message to user.
     */
     case GET_ALL_CONVERSATIONS_FAILURE:
+      console.log('conversation.js > 136', action.payload);
       error = action.payload.response.message || 'An error occurred while fetching messages';
       return Object.assign(
         {},
@@ -171,26 +155,16 @@ function conversation(state = INITIAL_STATE, action) {
     *  Payload: CSS class to show/hide the modal
     *  Purpose: Called from the modal to dismiss the modal
     */
-    case SET_CONVERSATION_MODAL:
+    case SET_CONV_MODAL:
       return Object.assign({}, state, { viewConvModal: action.payload });
 
-    case SET_MSG_VIEW:
-    	return Object.assign({}, state, { messageView: action.payload });
-
     case SET_CURRENT_CONV:
-    const conv = { ...action.payload };
+    console.log('conversation.js > 162');
+    console.log(action.payload);
       return update(
         state,
         {
-          currentConv: {
-            _id: { $set: action.payload._id },
-            subject: { $set: action.payload.subject },
-            qtyMessages: { $set: action.payload.qtyMessages },
-            qtyUnreads: { $set: action.payload.qtyUnreads },
-            startDate: { $set: action.payload.startDate },
-            participants: { $set: action.payload.participants },
-            latestMessage: { $set: action.payload.latestMessage  },
-          },
+          currentConv: { $set: action.payload },
         },
       );
 
@@ -205,6 +179,7 @@ function conversation(state = INITIAL_STATE, action) {
     *  spinner CSS to indicate that an API call is in progress.
     */
     case VIEW_CONV_REQUEST:
+    console.log('conversation.js > 183:', 'view request');
       return Object.assign({}, state, { viewConvSpinnerClass: 'spinner__show' });
 
     /*
@@ -214,6 +189,7 @@ function conversation(state = INITIAL_STATE, action) {
     *  object.
     */
     case VIEW_CONV_SUCCESS:
+      console.log('conversation.js > 192:', action.payload);
       return Object.assign(
         {},
         state,
@@ -231,6 +207,7 @@ function conversation(state = INITIAL_STATE, action) {
     */
     case VIEW_CONV_FAILURE:
       error = action.payload.message || 'An error occurred';
+      console.log('conversation.js > 210:', error);
       return Object.assign(
         {},
         state,

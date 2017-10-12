@@ -11,33 +11,29 @@ import { formatDate } from '../utils';
 
 class Conversation extends React.Component {
 
-  componentWillMount() {
-    const token = this.props.appState.authToken;
-    // fetch the requested conversation
-    this.props.actions.clearCurrentConv();
-    this.props.api.viewConv(token, this.props.convId);
-    }
+  // componentDidMount() {
+  //   const token = this.props.appState.authToken;
+  //   // fetch the requested conversation
+  //   console.log('Conversation.jsx > 17', this.props.conversation.currentConv);
+  //   if (this.props.conversation.currentConv._id) {
+  //   	this.props.conversation.viewConv(token, this.props.conversation.currentConv._id);
+  //   }
+  //   }
+
+
+  // componentWillReceiveProps(nextProps) {
+  //   const token = this.props.appState.authToken;
+  //   // fetch the requested conversation
+
+  //   if (nextProps.conversation.currentConv._id !== this.props.conversation.currentConv._id ) {
+  //   	console.log('Conversation.jsx > 27', nextProps.conversation.currentConv);
+  //   	// this.props.api.viewConv(token, nextProps.conversation.currentConv._id);
+  //   }
+  //   }
 
   render() {
     return (
       <div className="message">
-        <Spinner cssClass={this.props.conversation.viewConvSpinnerClass} />
-        <ModalSm
-          modalClass={this.props.conversation.viewConvModal.class}
-          modalText={this.props.conversation.viewConvModal.text}
-          modalTitle={this.props.conversation.viewConvModal.title}
-          modalType={this.props.conversation.viewConvModal.type}
-          dismiss={
-            () => {
-              this.props.actions.setConversationsModal({
-                class: 'modal__hide',
-                text: '',
-                type: '',
-                title: '',
-              });
-            }
-          }
-        />
         {this.props.conversation.currentConv && this.props.conversation.currentConv.messages &&
         	<div className="inbox__single">
             <div className="inbox__single-subject">

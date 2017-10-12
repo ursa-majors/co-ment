@@ -14,10 +14,20 @@ class Conversations extends React.Component {
 
   componentDidMount() {
     const token = this.props.appState.authToken;
-    this.props.api.getConversations(token);
-  }
+    this.props.api.getConversations(token)
+    .then((result) => {
+      if (result.type === 'GET_ALL_CONVERSATIONS_SUCCESS') {
+        const sortedConvs = this.props.conversation.conversations.sort((a,b) =>  new Date(b.latestMessage.createdAt) - new Date(a.latestMessage.createdAt));
+        const newestConv = sortedConvs[0];
+        console.log('Conversations.jsx > 20', 'newestConv');
+        console.log(newestConv);
+        this.props.api.viewConv(token, newestConv._id);
+        }
+      });
+    }
 
   render() {
+    const token = this.props.appState.authToken;
     return (
       <div className="connections">
         <Spinner cssClass={this.props.conversation.getConversationsSpinnerClass} />
@@ -43,95 +53,70 @@ class Conversations extends React.Component {
           </div>
           <div className="inbox__wrap">
             <div className="inbox__sidebar">
-              <ul className="inbox__admin">
-                <li className="inbox__admin-item inbox__admin-title">
-                  Mailbox
-                </li>
-                <button
-                  className={this.props.conversation.messageView === 'inbox' ? "aria-button inbox__button inbox__button--active" : "aria-button inbox__button"}
-                  onClick={() => this.props.actions.setMessageView('inbox')}>
-                  <li className="inbox__admin-item">
-                    <i className='fa fa-inbox'/>Inbox
-                  </li>
-                </button>
-                <button
-                  className={this.props.conversation.messageView === 'sent' ? "aria-button inbox__button inbox__button--active" : "aria-button inbox__button"}
-                  onClick={() => this.props.actions.setMessageView('sent')}>
-                  <li className="inbox__admin-item">
-                    <i className='fa fa-send-o'/>Sent
-                  </li>
-                </button>
-                <button
-                  className={this.props.conversation.messageView === 'drafts' ? "aria-button inbox__button inbox__button--active" : "aria-button inbox__button"}
-                  onClick={() => this.props.actions.setMessageView('drafts')}>
-                <li className="inbox__admin-item">
-                  <i className='fa fa-file-o'/>Drafts
-                </li>
-                </button>
-                <button
-                  className={this.props.conversation.messageView  === 'trash' ? "aria-button inbox__button inbox__button--active" : "aria-button inbox__button"}
-                  onClick={() => this.props.actions.setMessageView('trash')}>
-                  <li className="inbox__admin-item">
-                    <i className='fa fa-trash-o'/>Trash
-                  </li>
-                </button>
-              </ul>
-            </div>
-            <div>
               <div className="inbox__messagelist">
-                <div>
-                  {this.props.conversation.conversations.sort((a,b) => new Date(b.latestMessage.createdAt) - new Date(a.latestMessage.createdAt)).map(item => {
-                      const sender = item.participants.find(participant => participant._id !== this.props.appState.user._id);
-                      const backgroundStyle = {
-                        backgroundImage: `url(${sender.avatarUrl})`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center center",
-                      };
-                      const conv2view = { ...item };
-                    return(
-                      <div key={item._id}>
-                        {this.props.conversation.messageView !=='single' &&
-                          <div className="inbox__message">
-                            <div className="inbox__avatar">
-                              <div className="inbox__image-aspect">
-                                <div className="h-nav__image-crop">
-                                  <div
-                                    className="h-nav__image"
-                                    style={backgroundStyle}
-                                    role="image"
-                                    aria-label={sender.name} />
-                                </div>
-                              </div>
-                            </div>
-                            <div className="inbox__message-wrap">
-                              <div className="inbox__name-date">
-                                <div className="inbox__name">{sender.name}</div>
-                                <div className="inbox__date">{formatDate(new Date(item.latestMessage.createdAt))}</div>
-                              </div>
-                              <div className="inbox__subject">
-                                <button
-                                  className="aria-button aria-button--link inbox__link"
-                                  onClick={()=> {
-                                    this.props.actions.setMessageView('single');
-                                    this.props.actions.setCurrentConv(conv2view);
-                                  }}>
-                                  {item.subject || 'The subject line of the thread'}
-                                </button>
-                              </div>
-                              <div className="inbox__body">{item.latestMessage.body}</div>
-                            </div>
+                {this.props.conversation.conversations.sort((a,b) => new Date(b.latestMessage.createdAt) - new Date(a.latestMessage.createdAt)).map(item => {
+                    const sender = item.participants.find(participant => participant._id !== this.props.appState.user._id);
+                    const backgroundStyle = {
+                      backgroundImage: `url(${sender.avatarUrl})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center center",
+                    };
+                    const excerpt = `${item.latestMessage.body.substr(0,50)}...`;
+                    const conv2view = { ...item };
+                  return(
+                    <button
+                      key={item._id}
+                      className="aria-button inbox__message"
+                      onClick={()=> {this.props.api.viewConv(token, conv2view._id)}}>
+                      <div className="inbox__avatar">
+                        <div className="inbox__image-aspect">
+                          <div className="h-nav__image-crop">
+                            <div
+                              className="h-nav__image"
+                              style={backgroundStyle}
+                              role="image"
+                              aria-label={sender.name} />
                           </div>
-                        }
+                        </div>
                       </div>
-                    );
-                  })}
-                </div>
-                <div>
-                { this.props.conversation.messageView === 'single' && this.props.conversation.currentConv &&
-                  <Conversation convId={this.props.conversation.currentConv._id}/>
-                }
-                </div>
+                      <div className="inbox__message-wrap">
+                        <div className="inbox__name-date">
+                          <div className="inbox__name">{sender.name}</div>
+                          <div className="inbox__date">{formatDate(new Date(item.latestMessage.createdAt))}</div>
+                        </div>
+                        <div className="inbox__subject">
+                          {item.subject || 'The subject line of the thread'}
+                        </div>
+                        <div className="inbox__body">{excerpt}</div>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
+            </div>
+            <div className="inbox__messagepane">
+              <Spinner cssClass={this.props.conversation.viewConvSpinnerClass} />
+              <ModalSm
+                modalClass={this.props.conversation.viewConvModal.class}
+                modalText={this.props.conversation.viewConvModal.text}
+                modalTitle={this.props.conversation.viewConvModal.title}
+                modalType={this.props.conversation.viewConvModal.type}
+                dismiss={
+                  () => {
+                    this.props.actions.setConversationsModal({
+                      class: 'modal__hide',
+                      text: '',
+                      type: '',
+                      title: '',
+                    });
+                  }
+                }
+              />
+              { this.props.conversation.currentConv ?
+                <Conversation
+                  convId = {this.props.conversation.currentConv._id} /> :
+                  "No messages"
+              }
             </div>
           </div>
         </div>

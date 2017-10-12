@@ -11,35 +11,11 @@
 	}
 
 	&__sidebar {
-		width: 33%;
-		min-width: 150px;
-		background: $color_sky_darker;
-		font-family: 'Alegreya Sans SC', sans-serif;
-		text-transform: lowercase;
-		letter-spacing: 2px;
-		color: white;
+		width: 100%;
 		@include for-phone-landscape-up {
 			border-top-left-radius: 10px;
 			border-bottom-left-radius: 10px;
 		}
-	}
-
-	&__admin {
-		list-style-type: none;
-		padding: 10px;
-	}
-
-	&__admin-item {
-		padding: 10px;
-
-		& i {
-			margin-right: 10px;
-		}
-
-		&:hover, &:active, &--active {
-			font-weight: 700;
-		}
-
 	}
 
 	&__button {
@@ -69,9 +45,9 @@
 
 	}
 
-	&__messagelist {
-    list-style-type: none;
+	&__messagelist, &__messagepane{
     padding: 10px;
+    width: 100%;
 
 	}
 
@@ -79,6 +55,7 @@
 		padding: 10px;
 		display: flex;
 		border-bottom: 1px dotted $color_gray_text;
+		text-align: left !important;
 
 		&:last-child {
 			border-bottom: 0;
@@ -103,12 +80,6 @@
 		margin-bottom: 10px;
 		font-size: 1.2em;
 		display: inline-block;
-		border-bottom: 1px transparent;
-
-		&:hover, &:active, &:focus {
-			color: $color_sky;
-			border-bottom: 1px dotted $color_sky;
-			}
 	}
 
 	&__link, &__link:visited {
@@ -151,6 +122,10 @@
       min-height: 100%;
       height: auto;
       margin: 0 auto;
+    }
+
+    &__single {
+    	width: 100%;
     }
 
     &__single-image-aspect {
