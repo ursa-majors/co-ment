@@ -1,10 +1,10 @@
 import update from 'immutability-helper';
 
-import { SET_VIEW_CONVERSATION, CLEAR_VIEW_CONVERSATION, SET_CONVERSATIONS_MODAL, SET_CONV_MODAL, SET_CURRENT_CONV, CLEAR_CURRENT_CONV } from '../actions/conversationActions';
+import { SET_VIEW_CONVERSATION, CLEAR_VIEW_CONVERSATION, SET_CONVERSATIONS_MODAL, SET_CONV_MODAL, SET_CURRENT_CONV, CLEAR_CURRENT_CONV, SET_MSG_BODY, CLEAR_MSG_BODY } from '../actions/conversationActions';
 
 import { GET_ALL_CONVERSATIONS_REQUEST,
   GET_ALL_CONVERSATIONS_SUCCESS, GET_ALL_CONVERSATIONS_FAILURE,
-  VIEW_CONV_REQUEST, VIEW_CONV_SUCCESS, VIEW_CONV_FAILURE,
+  VIEW_CONV_REQUEST, VIEW_CONV_SUCCESS, VIEW_CONV_FAILURE, POST_MSG_REQUEST, POST_MSG_SUCCESS, POST_MSG_FAILURE
   } from '../actions/apiConversationActions';
 
 const defaultConv = {
@@ -50,6 +50,17 @@ const INITIAL_STATE = {
   currentConv_loading: false,
   currentConv_error: null,
   currentConv: defaultConv,
+  // New Message state
+  newMsgBody: '',
+  newMsgSpinnerClass: 'spinner__hide',
+  newMsgModal: {
+    class: 'modal__hide',
+    text: '',
+    type: '',
+    title: '',
+  },
+  newMsg_loading: false,
+  newMsg_error: null,
 };
 
 function conversation(state = INITIAL_STATE, action) {
@@ -133,7 +144,7 @@ function conversation(state = INITIAL_STATE, action) {
     */
     case GET_ALL_CONVERSATIONS_FAILURE:
       console.log('conversation.js > 136', action.payload);
-      error = action.payload.response.message || 'An error occurred while fetching messages';
+      error = action.payload.message || 'An error occurred while fetching messages';
       return Object.assign(
         {},
         state,
@@ -159,8 +170,6 @@ function conversation(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { viewConvModal: action.payload });
 
     case SET_CURRENT_CONV:
-    console.log('conversation.js > 162');
-    console.log(action.payload);
       return update(
         state,
         {
@@ -179,7 +188,6 @@ function conversation(state = INITIAL_STATE, action) {
     *  spinner CSS to indicate that an API call is in progress.
     */
     case VIEW_CONV_REQUEST:
-    console.log('conversation.js > 183:', 'view request');
       return Object.assign({}, state, { viewConvSpinnerClass: 'spinner__show' });
 
     /*
@@ -189,7 +197,6 @@ function conversation(state = INITIAL_STATE, action) {
     *  object.
     */
     case VIEW_CONV_SUCCESS:
-      console.log('conversation.js > 192:', action.payload);
       return Object.assign(
         {},
         state,
@@ -207,7 +214,6 @@ function conversation(state = INITIAL_STATE, action) {
     */
     case VIEW_CONV_FAILURE:
       error = action.payload.message || 'An error occurred';
-      console.log('conversation.js > 210:', error);
       return Object.assign(
         {},
         state,
@@ -217,6 +223,83 @@ function conversation(state = INITIAL_STATE, action) {
           viewConvModalType: 'modal__error',
           viewConvModalText: error,
           viewConvModalTitle: 'Error',
+        },
+      );
+
+    /*
+    *  Called From: <NewMessage />
+    *  Payload: None
+    *  Purpose: When a postMessage() function is called, this sets the
+    *  spinner CSS to indicate that an API call is in progress.
+    */
+    case POST_MSG_REQUEST:
+      return Object.assign({}, state, { newMsgSpinnerClass: 'spinner__show' });
+
+    /*
+    *  Called From: <NewMessage />
+    *  Payload: A message object
+    *  Purpose: Called when the API call succeeds. Push new message to end
+    *  of current conversation
+    */
+    case POST_MSG_SUCCESS:
+    console.log('post msg success');
+    console.log(action.payload);
+      return update(
+        state,
+        {
+          newMsgSpinnerClass: { $set: 'spinner__hide' },
+          currentConv: {
+            messages: {
+              $push: [ action.payload.message ] },
+          },
+        }
+      );
+
+    /*
+    *  Called From: <NewMessage />
+    *  Payload: An error message
+    *  Purpose: Called when the API call fails. Set the state to display
+    *  a message to user.
+    */
+    case POST_MSG_FAILURE:
+      error = action.payload.message || 'An error occurred';
+      return Object.assign(
+        {},
+        state,
+        {
+          newMsgSpinnerClass: 'spinner__hide',
+          newMsgModalClass: 'modal__show',
+          newMsgModalType: 'modal__error',
+          newMsgModalText: error,
+          newMsgModalTitle: 'Error',
+        },
+      );
+
+    /*
+    *  Called From: <NewMessage />
+    *  Payload: Message body
+    *  Purpose: Update form field with user input
+    */
+    case SET_MSG_BODY:
+      return Object.assign(
+        {},
+        state,
+        {
+          newMsgBody: action.payload,
+        },
+      );
+
+    /*
+    *  Called From: <NewMessage />
+    *  Payload: none
+    *  Purpose: Clear form field when component unmounts
+    */
+    case CLEAR_MSG_BODY:
+      return Object.assign(
+        {},
+        state,
+        {
+          newMsgBody: '',
         },
       );
 

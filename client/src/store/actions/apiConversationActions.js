@@ -29,8 +29,6 @@ export const VIEW_CONV_SUCCESS = 'VIEW_CONV_SUCCESS';
 export const VIEW_CONV_FAILURE = 'VIEW_CONV_FAILURE';
 
 export function viewConv(token, convId) {
-  console.log('apiConversationActions > 32');
-  console.log(convId);
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/conversations/${convId}`,
@@ -39,4 +37,26 @@ export function viewConv(token, convId) {
       headers: { Authorization: `Bearer ${token}` },
     },
   };
+}
+
+
+export const POST_MSG_REQUEST = 'POST_MSG_REQUEST';
+export const POST_MSG_SUCCESS = 'POST_MSG_SUCCESS';
+export const POST_MSG_FAILURE = 'POST_MSG_FAILURE';
+
+export function postMessage(token, body) {
+  console.log(token);
+  console.log(body);
+  console.log(JSON.stringify(body));
+  return {
+  [CALL_API]: {
+    endpoint: `${BASE_URL}/api/messages`,
+    method: 'POST',
+    types: [POST_MSG_REQUEST, POST_MSG_SUCCESS, POST_MSG_FAILURE],
+    headers: { Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  },
+};
+
 }

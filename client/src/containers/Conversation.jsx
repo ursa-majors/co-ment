@@ -1,35 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Link } from 'react-router-dom';
 
 import * as apiActions from '../store/actions/apiConversationActions';
 import * as Actions from '../store/actions/conversationActions';
-import Spinner from './Spinner';
-import ModalSm from './ModalSm';
-import { formatDate } from '../utils';
+import { formatDateInbox } from '../utils';
 
 class Conversation extends React.Component {
-
-  // componentDidMount() {
-  //   const token = this.props.appState.authToken;
-  //   // fetch the requested conversation
-  //   console.log('Conversation.jsx > 17', this.props.conversation.currentConv);
-  //   if (this.props.conversation.currentConv._id) {
-  //   	this.props.conversation.viewConv(token, this.props.conversation.currentConv._id);
-  //   }
-  //   }
-
-
-  // componentWillReceiveProps(nextProps) {
-  //   const token = this.props.appState.authToken;
-  //   // fetch the requested conversation
-
-  //   if (nextProps.conversation.currentConv._id !== this.props.conversation.currentConv._id ) {
-  //   	console.log('Conversation.jsx > 27', nextProps.conversation.currentConv);
-  //   	// this.props.api.viewConv(token, nextProps.conversation.currentConv._id);
-  //   }
-  //   }
 
   render() {
     return (
@@ -46,6 +23,16 @@ class Conversation extends React.Component {
 	              backgroundSize: "cover",
 	              backgroundPosition: "center center",
 	            }
+	            let formattedDate = formatDateInbox(new Date(message.createdAt));
+					  	let dateOnly;
+					  	let am_pm;
+					  	let smallCaps = false;
+					  	// format am/pm in small caps because OCD
+					  	if (formattedDate.substr(formattedDate.length-1, formattedDate.length) === 'm') {
+					  		dateOnly = formattedDate.substr(0, formattedDate.length-2);
+					  		am_pm = formattedDate.slice(-2);
+					  		smallCaps = true;
+					  	}
 	            return (
 	              <div className="inbox__single-message" key={message._id}>
 	                <div className="inbox__single-meta">
@@ -64,10 +51,17 @@ class Conversation extends React.Component {
 	                    <div className="inbox__single-sender">
 	                      {sender.name}
 	                    </div>
+	                    <div className="inbox__single-date">
+	                    {!smallCaps ?
+	                    	<div>{formattedDate}</div> :
+	                    	<div>
+		                    	<span className="inbox__dateOnly">{dateOnly}</span>
+		                    	<span className="inbox__am_pm">{am_pm}</span>
+	                    	</div>
+	                    }
+	                  	</div>
 	                  </div>
-	                  <div className="inbox__single-date">
-	                    {formatDate(new Date(message.createdAt))}
-	                  </div>
+
 	                </div>
 	                <div className="inbox__single-body">
 	                  {message.body}
