@@ -66,6 +66,7 @@
 		display: flex;
 		border-bottom: 1px solid $color_gray_lightest !important;
 		text-align: left !important;
+		width: 100%;
 
 		&:first-child {
 			padding-top: 20px;
@@ -84,6 +85,7 @@
 
 		&--active {
 			background: rgba(255,255,255,.7) !important;
+			width: 100%;
 		}
 	}
 
