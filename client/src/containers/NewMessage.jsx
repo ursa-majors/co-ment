@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 
 import * as apiActions from '../store/actions/apiConversationActions';
 import * as Actions from '../store/actions/conversationActions';
-import { scrollToBottom } from '../utils';
+import { scrollToBottom, adjustTextArea } from '../utils';
 
 class NewMessage extends React.Component {
 
@@ -18,6 +18,11 @@ class NewMessage extends React.Component {
 
 	handleChange = (e) => {
 		this.props.actions.setMsgBody(e.target.value);
+		adjustTextArea(e.target);
+	}
+
+	resetTextAreaHeight = () => {
+		document.getElementById('msgInput').style.height = 'auto';
 	}
 
   render() {
@@ -36,10 +41,11 @@ class NewMessage extends React.Component {
     return (
       <div className="message__new" id="newMsg">
       	<div className="message__input-wrap">
-          <input
-          	className="message__input form__input"
+          <textarea
+          	className="message__input form__input form__input--textarea"
+          	id="msgInput"
           	placeholder="Message"
-          	type="text"
+          	rows="1"
           	value={this.props.conversation.newMsgBody}
           	onChange={(e) => this.handleChange(e)} />
           <button
@@ -48,8 +54,11 @@ class NewMessage extends React.Component {
               name="send"
               onClick={
               	() => { this.props.api.postMessage(token,body);
-                this.props.actions.clearMsgBody();
-                scrollToBottom();
+                this.props.actions.clearMsgBody()
+                	.then(()=>{
+                		adjustTextArea(document.getElementById('msgInput'));
+                	});
+                this.resetTextAreaHeight();
               }
               }>
                   <i className="send fa fa-send message__icon--send" />
