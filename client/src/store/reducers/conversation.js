@@ -1,6 +1,6 @@
 import update from 'immutability-helper';
 
-import { SET_VIEW_CONVERSATION, CLEAR_VIEW_CONVERSATION, SET_CONVERSATIONS_MODAL, SET_CONV_MODAL, SET_CURRENT_CONV, CLEAR_CURRENT_CONV, SET_MSG_BODY, CLEAR_MSG_BODY } from '../actions/conversationActions';
+import { SET_VIEW_CONVERSATION, CLEAR_VIEW_CONVERSATION, SET_CONVERSATIONS_MODAL, SET_CONVERSATION_MODAL, SET_CURRENT_CONV, CLEAR_CURRENT_CONV, SET_MSG_BODY, CLEAR_MSG_BODY, SET_MSG_MODAL } from '../actions/conversationActions';
 
 import { GET_ALL_CONVERSATIONS_REQUEST,
   GET_ALL_CONVERSATIONS_SUCCESS, GET_ALL_CONVERSATIONS_FAILURE,
@@ -144,7 +144,7 @@ function conversation(state = INITIAL_STATE, action) {
     */
     case GET_ALL_CONVERSATIONS_FAILURE:
       console.log('conversation.js > 136', action.payload);
-      error = action.payload.message || 'An error occurred while fetching messages';
+      error = `An error occurred while fetching messages: ${action.payload.message || 'Unknown error'}`;
       return Object.assign(
         {},
         state,
@@ -166,8 +166,8 @@ function conversation(state = INITIAL_STATE, action) {
     *  Payload: CSS class to show/hide the modal
     *  Purpose: Called from the modal to dismiss the modal
     */
-    case SET_CONV_MODAL:
-      return Object.assign({}, state, { viewConvModal: action.payload });
+    case SET_CONVERSATIONS_MODAL:
+      return Object.assign({}, state, { getConversationsModal: action.payload });
 
     case SET_CURRENT_CONV:
       return update(
@@ -213,7 +213,7 @@ function conversation(state = INITIAL_STATE, action) {
     *  a message to user.
     */
     case VIEW_CONV_FAILURE:
-      error = action.payload.message || 'An error occurred';
+      error = `An error occurred while fetching messages: ${action.payload.message || 'Unknown error'}`;
       return Object.assign(
         {},
         state,
@@ -225,6 +225,9 @@ function conversation(state = INITIAL_STATE, action) {
           viewConvModalTitle: 'Error',
         },
       );
+
+    case SET_CONVERSATION_MODAL:
+      return Object.assign({}, state, { viewConvModal: action.payload });
 
     /*
     *  Called From: <NewMessage />
@@ -262,7 +265,7 @@ function conversation(state = INITIAL_STATE, action) {
     *  a message to user.
     */
     case POST_MSG_FAILURE:
-      error = action.payload.message || 'An error occurred';
+      error = `An error occurred while posting your message: ${action.payload.message || 'Unknown error'}`;
       return Object.assign(
         {},
         state,
@@ -302,6 +305,9 @@ function conversation(state = INITIAL_STATE, action) {
           newMsgBody: '',
         },
       );
+
+    case SET_MSG_MODAL:
+      return Object.assign({}, state, { newMsgModal: action.payload });
 
     default:
       return state;

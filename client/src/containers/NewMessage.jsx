@@ -9,10 +9,19 @@ class NewMessage extends React.Component {
 
 	componentWillUnmount() {
 		this.props.actions.clearMsgBody();
+		this.scrollToBottom();
 	}
 
 	handleChange = (e) => {
 		this.props.actions.setMsgBody(e.target.value);
+	}
+
+	scrollToBottom = () => {
+		const el = document.getElementById('msg');
+		let isScrolledToBottom = el.scrollHeight - el.clientHeight <= el.scrollTop + 1;
+		if (isScrolledToBottom) {
+    	el.scrollTop = el.scrollHeight - el.clientHeight;
+    }
 	}
 
   render() {
@@ -34,6 +43,7 @@ class NewMessage extends React.Component {
           <input
           	className="message__input form__input"
           	placeholder="Message"
+          	id="msg"
           	type="text"
           	value={this.props.conversation.newMsgBody}
           	onChange={(e) => this.handleChange(e)} />
@@ -41,7 +51,12 @@ class NewMessage extends React.Component {
               className="aria-button message__send"
               aria-label="send"
               name="send"
-              onClick={() => this.props.api.postMessage(token,body)}>
+              onClick={
+              	() => { this.props.api.postMessage(token,body);
+                this.props.actions.clearMsgBody();
+                this.scrollToBottom();
+              }
+              }>
                   <i className="send fa fa-send message__icon--send" />
           </button>
         </div>

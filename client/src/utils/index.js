@@ -156,9 +156,15 @@ export const formatDateInbox = (date) => {
   // 24 hrs/day * 60 minutes/hour * 60 seconds/minute * 1000 msecs/second
   const daysDiff = Math.floor(microSecondsDiff/(1000 * 60 * 60 * 24));
 
-  if (daysDiff < 7) {
+  // if message is less than a day old, only show the time sent
+  if (daysDiff < 1) {
+    return `${hours}:${minutes} ${am_pm}`;
+  } else if (daysDiff < 6) {
+  // if message is less than a week old,
+  // show the day of week and time
     return `${daysOfWeek[date.getDay()]}, ${hours}:${minutes} ${am_pm}`;
   } else {
+  // otherwise show month, day, and year as MM/DD/YY
     return `${month}/${day}/${year-100}`;
   }
 

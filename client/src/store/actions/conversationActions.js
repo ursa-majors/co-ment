@@ -2,13 +2,12 @@ export const SET_VIEW_CONVERSATION = 'SET_VIEW_CONVERSATION';
 export const CLEAR_VIEW_CONVERSATION = 'CLEAR_VIEW_CONVERSATION';
 export const SET_CONVERSATIONS_MODAL = 'SET_CONVERSATIONS_MODAL';
 export const SET_CONVERSATION_MODAL = 'SET_CONVERSATION_MODAL';
-export const SET_CONV_DETAILS_MODAL = 'SET_CONV_DETAILS_MODAL';
-export const SET_CONV_MODAL = 'SET_CONV_MODAL';
 export const SET_MSG_VIEW = 'SET_MSG_VIEW';
 export const CLEAR_CURRENT_CONV = 'CLEAR_CURRENT_CONV';
 export const SET_CURRENT_CONV = 'SET_CURRENT_CONV';
 export const SET_MSG_BODY = 'SET_MSG_BODY';
 export const CLEAR_MSG_BODY = 'CLEAR_MSG_BODY';
+export const SET_MSG_MODAL = 'SET_MSG_MODAL';
 
 export function setViewConversation(conv) {
   return ({
@@ -37,16 +36,9 @@ export function setConversationModal(options) {
   });
 }
 
-export function setConvDetailsModal(options) {
+export function setMsgModal(options) {
   return ({
-    type: SET_CONV_DETAILS_MODAL,
-    payload: options,
-  });
-}
-
-export function setConvModal(options) {
-  return ({
-    type: SET_CONV_MODAL,
+    type: SET_MSG_MODAL,
     payload: options,
   });
 }

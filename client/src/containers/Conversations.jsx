@@ -36,6 +36,7 @@ class Conversations extends React.Component {
           modalType={this.props.conversation.getConversationsModal.type}
           dismiss={
             () => {
+              console.log('dismiss conversastions modal');
               this.props.actions.setConversationsModal({
                 class: 'modal__hide',
                 text: '',
