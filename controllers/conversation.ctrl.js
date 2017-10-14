@@ -46,7 +46,7 @@ const Message      = require('../models/message');
  *   }
 */
 function formatConvData(convs) {
-    
+
     // count all messages
     const totalMessages = convs.reduce( (sum, conv) => {
         return sum + conv.messages.length;
@@ -56,11 +56,11 @@ function formatConvData(convs) {
     const totalUnreads = convs.reduce( (sum, conv) => {
         return sum + conv.messages.filter( m => m.unread ).length;
     }, 0);
-    
+
     // remap conversations to include metadata
     const conversations = convs.map( c => {
-    	return {
-        	_id           : c._id,
+        return {
+              _id           : c._id,
             subject       : c.subject,
             qtyMessages   : c.messages.length,
             qtyUnreads    : c.messages.filter( m => m.unread ).length,
@@ -173,10 +173,10 @@ function getConversationsAggregate(req, res) {
     Conversation.find(query)
         .exec()
         .then( cons => {
-        
+
             // simple array of conversation IDs
             const conIdsArr = cons.map( c => c._id );
-            
+
             Message.aggregate([
                 {
                     $match: { 'conversation' : { $in : conIdsArr} }
@@ -224,7 +224,6 @@ function getConversationsAggregate(req, res) {
                     .status(200)
                     .json({'conversations' : messages});
             });
-    
         })
         .catch( err => {
             return res
@@ -242,7 +241,7 @@ function getConversationsAggregate(req, res) {
 //   Returns: array of messages from single conversation.
 //
 function getConversation(req, res) {
-    
+
     Conversation.findById(req.params.id)
         .select('subject startDate messages participants')
         .populate({
@@ -299,9 +298,9 @@ function createConversation(req, res, next) {
         author       : req.token._id,
         recipient    : req.body.recipientId
     });
-    
+
     conversation.messages.push(message._id);
-    
+
     conversation.save( (err, newConversation) => {
         if (err) {
             console.log('Error!', err);
@@ -335,7 +334,7 @@ function createConversation(req, res, next) {
 //          conversation : String
 //          messageBody  : String
 //        }
-//   Returns: success message on success
+//   Returns: new message object
 //
 function postMessage (req, res) {
     const message = new Message({
@@ -353,7 +352,7 @@ function postMessage (req, res) {
 
         return res
             .status(200)
-            .json({ message: message });
+            .json({ message: message, });
     });
 }
 

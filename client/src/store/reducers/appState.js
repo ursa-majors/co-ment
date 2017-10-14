@@ -1,6 +1,6 @@
 import update from 'immutability-helper';
 
-import { LOGOUT, SET_REDIRECT_URL, SET_WINDOW_SIZE, SET_MENU_STATE, SET_SCROLLED,
+import { LOGOUT, SET_REDIRECT_URL, SET_WINDOW_SIZE, SET_MENU_STATE, SET_SCROLLED, SET_ADMIN_MENU_STATE,
   SET_MENU_BACKGROUND, SET_CONTROLS_BACKGROUND } from '../actions';
 import { VALIDATE_TOKEN_REQUEST, VALIDATE_TOKEN_SUCCESS, VALIDATE_TOKEN_FAILURE, LOGIN_SUCCESS,
   REGISTRATION_SUCCESS, REFRESH_TOKEN_SUCCESS } from '../actions/apiLoginActions';
@@ -8,7 +8,12 @@ import { VALIDATE_TOKEN_REQUEST, VALIDATE_TOKEN_SUCCESS, VALIDATE_TOKEN_FAILURE,
 const INITIAL_STATE = {
   loggedIn: false,
   authToken: '',
-  userId: '',
+  // userId: '',
+  user: {
+    _id: '',
+    avatarUrl: '',
+    username: '',
+  },
   loginSpinnerClass: 'spinner__hide',
   redirectUrl: '',
   windowSize: {
@@ -16,6 +21,7 @@ const INITIAL_STATE = {
     height: undefined,
     mobile: false,
   },
+  adminMenuState: 'closed',
   menuState: 'closed',
   menuBackground: '',
   controlsBackground: '',
@@ -75,7 +81,11 @@ function appState(state = INITIAL_STATE, action) {
         {
           loginSpinnerClass: 'spinner__hide',
           loggedIn: true,
-          userId: action.payload._id,
+          user: {
+            _id: action.payload._id,
+            avatarUrl: action.payload.avatarUrl,
+            username: action.payload.username,
+            },
           authToken: action.meta.token,
         },
        );
@@ -114,7 +124,12 @@ function appState(state = INITIAL_STATE, action) {
         {
           loginSpinnerClass: 'spinner__hide',
           loggedIn: true,
-          userId: action.payload.profile._id,
+          // userId: action.payload.profile._id,
+          user: {
+            _id: action.payload.profile._id,
+            avatarUrl: action.payload.profile.avatarUrl,
+            username: action.payload.profile.username,
+            },
           authToken: action.payload.token,
         },
        );
@@ -125,6 +140,8 @@ function appState(state = INITIAL_STATE, action) {
     * Populate the store with userId and token, set logged in to true.
     */
     case REGISTRATION_SUCCESS:
+    console.log('registration success');
+    console.log(action.payload);
       window.localStorage.setItem('authToken', JSON.stringify(action.payload.token));
       window.localStorage.setItem('userId', JSON.stringify(action.payload.profile._id));
       return Object.assign(
@@ -132,7 +149,11 @@ function appState(state = INITIAL_STATE, action) {
         state,
         {
           loggedIn: true,
-          userId: action.payload.profile._id,
+          user: {
+            _id: action.payload.profile._id,
+            avatarUrl: action.payload.profile.avatarUrl || '',
+            username: action.payload.profile.username,
+            },
           authToken: action.payload.token,
         },
        );
@@ -168,6 +189,13 @@ function appState(state = INITIAL_STATE, action) {
     */
     case SET_MENU_STATE:
       return Object.assign({}, state, { menuState: action.payload });
+
+    /*
+    * This action is issued from <HeaderNav/> component.
+    * Toggles the admin menu between open/closed states
+    */
+    case SET_ADMIN_MENU_STATE:
+      return Object.assign({}, state, { adminMenuState: action.payload });
 
     /*
     * This action is issued from <HeaderNav/> and <App/> components.

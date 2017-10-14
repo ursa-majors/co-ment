@@ -11,12 +11,16 @@ const messageSchema = new mongoose.Schema({
         type     : mongoose.Schema.Types.ObjectId,
         required : true
     },
-    
+
     body: {
         type     : String,
         required : true
     },
-    
+
+    subject: {
+        type: String,
+    },
+
     author: {
         type     : mongoose.Schema.Types.ObjectId,
         ref      : 'User'
@@ -31,7 +35,7 @@ const messageSchema = new mongoose.Schema({
         type     : Boolean,
         default  : true
     }
-    
+
 },
 {
     timestamps: true
