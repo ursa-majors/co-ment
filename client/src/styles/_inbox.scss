@@ -87,6 +87,11 @@
 			background: rgba(255,255,255,.7) !important;
 			width: 100%;
 		}
+
+		&:hover {
+			background: rgba(255,255,255,.7) !important;
+			border: 1px dotted $color_gray_text;
+		}
 	}
 
 	&__message-wrap {
@@ -104,13 +109,12 @@
 	}
 
 	&__date {
-		padding-top: 3px;
 		color: $color_gray_lighter;
 		font-weight: 300;
 	}
 
 	&__subject {
-		margin-bottom: 10px;
+		padding-top: 3px;
 		font-size: 1.2em;
 		display: inline-block;
 	}

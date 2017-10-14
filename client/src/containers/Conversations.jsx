@@ -90,9 +90,10 @@ class Conversations extends React.Component {
                         </div>
                       </div>
                       <div className="inbox__message-wrap">
-                        <div className="inbox__name-date">
-                          <div className="inbox__name">{sender.name}</div>
-                          <div className="inbox__date">
+                        <div className="inbox__name">{sender.name}</div>
+                        <div className="inbox__subject">{item.subject}</div>
+                         {/* <div className="inbox__body">{item.latestMessage.body}</div> */}
+                        <div className="inbox__date">
                             {!smallCaps ?
                               <div>{formattedDate}</div> :
                               <div>
@@ -102,8 +103,6 @@ class Conversations extends React.Component {
                             }
                           </div>
                         </div>
-                        <div className="inbox__body">{item.latestMessage.body}</div>
-                      </div>
                     </button>
                   );
                 })}
