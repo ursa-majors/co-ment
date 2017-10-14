@@ -45,9 +45,6 @@ export const POST_MSG_SUCCESS = 'POST_MSG_SUCCESS';
 export const POST_MSG_FAILURE = 'POST_MSG_FAILURE';
 
 export function postMessage(token, body) {
-  console.log(token);
-  console.log(body);
-  console.log(JSON.stringify(body));
   return {
   [CALL_API]: {
     endpoint: `${BASE_URL}/api/messages`,

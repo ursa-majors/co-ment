@@ -72,6 +72,6 @@ export function setMsgBody(body) {
 
 export function clearMsgBody() {
   return ({
-    type: SET_MSG_BODY,
+    type: CLEAR_MSG_BODY,
   });
 }

@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 
 import * as apiActions from '../store/actions/apiConversationActions';
 import * as Actions from '../store/actions/conversationActions';
+import { scrollToBottom } from '../utils';
 
 class NewMessage extends React.Component {
 
@@ -48,7 +49,7 @@ class NewMessage extends React.Component {
               onClick={
               	() => { this.props.api.postMessage(token,body);
                 this.props.actions.clearMsgBody();
-                this.scrollToBottom();
+                scrollToBottom();
               }
               }>
                   <i className="send fa fa-send message__icon--send" />

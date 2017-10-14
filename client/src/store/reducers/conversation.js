@@ -244,8 +244,6 @@ function conversation(state = INITIAL_STATE, action) {
     *  of current conversation
     */
     case POST_MSG_SUCCESS:
-    console.log('post msg success');
-    console.log(action.payload);
       return update(
         state,
         {
