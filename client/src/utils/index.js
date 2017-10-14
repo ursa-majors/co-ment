@@ -122,7 +122,7 @@ const tzVal = numericOffset < 0 ? `(UTC ${numericOffset})` : `(UTC + ${numericOf
 const filterList = q => tzList.filter(i => i.indexOf(q) > -1);
 export const tzGuess = filterList(tzVal)[0];
 
-////// date formatter for post cards //////
+////// date formatter for post display //////
 
 export const formatDate = (date) => {
   const monthNames = [
@@ -133,6 +133,36 @@ export const formatDate = (date) => {
   const year = date.getFullYear();
 
   return `${day} ${monthNames[monthIndex]} ${year}`;
+};
+
+////// date formatter for message list //////
+
+export const formatDateInbox = (date) => {
+
+  const day = date.getDate();
+  const month = date.getMonth();
+  const year = date.getYear();
+  const hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+  const minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+  const am_pm = date.getHours() >= 12 ? "pm" : "am";
+  const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+  const now = new Date();
+  const dateTimeStamp = (new Date(date)).getTime();
+  var nowTimeStamp = now.getTime();
+
+  const microSecondsDiff = Math.abs(dateTimeStamp - nowTimeStamp );
+  // Number of milliseconds per day =
+  // 24 hrs/day * 60 minutes/hour * 60 seconds/minute * 1000 msecs/second
+  const daysDiff = Math.floor(microSecondsDiff/(1000 * 60 * 60 * 24));
+
+  if (daysDiff < 7) {
+    return `${daysOfWeek[date.getDay()]}, ${hours}:${minutes} ${am_pm}`;
+  } else {
+    return `${month}/${day}/${year-100}`;
+  }
+
+
 };
 
 ////// adjust textarea size to fit content ///////

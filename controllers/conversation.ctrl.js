@@ -8,9 +8,75 @@ const Conversation = require('../models/conversation');
 const Message      = require('../models/message');
 
 
+/* =============================== UTILITIES =============================== */
+
+/* Build 'getConversations' response object from conversations array
+ * @params    [array]   convs   [array of conversation objects]
+ * @returns   [object]          [formatted response]
+ *
+ *   {
+ *      totalMessages : Number,
+ *      totalUnreads  : Number,
+ *      conversations : [
+ *          {
+ *              _id         : String,
+ *              subject     : String,
+ *              startDate   : String,
+ *              qtyMessages : Number,
+ *              qtyUnreads  : Number,
+ *              latestMessage : {
+ *                  _id       : String,
+ *                  updatedAt : String,
+ *                  createdAt : String,
+ *                  body      : String,
+ *                  author    : String,
+ *                  recipient : String,
+ *                  unread    : Boolean
+ *              },
+ *              participants : [
+ *                  {
+ *                      _id       : String,
+ *                      username  : String,
+ *                      name      : String,
+ *                      avatarUrl : String
+ *                  }...
+ *              ]
+ *          }
+ *      ]
+ *   }
+*/
+function formatConvData(convs) {
+
+    // count all messages
+    const totalMessages = convs.reduce( (sum, conv) => {
+        return sum + conv.messages.length;
+    }, 0);
+
+    // count unread messages
+    const totalUnreads = convs.reduce( (sum, conv) => {
+        return sum + conv.messages.filter( m => m.unread ).length;
+    }, 0);
+
+    // remap conversations to include metadata
+    const conversations = convs.map( c => {
+        return {
+              _id           : c._id,
+            subject       : c.subject,
+            qtyMessages   : c.messages.length,
+            qtyUnreads    : c.messages.filter( m => m.unread ).length,
+            startDate     : c.startDate,
+            participants  : c.participants,
+            latestMessage : c.messages[0]
+        };
+    });
+
+    return { totalMessages, totalUnreads, conversations };
+}
+
+
 /* ============================ ROUTE HANDLERS ============================= */
 
-// GET CONVERSATIONS
+// GET CONVERSATIONS - with projection!
 //   Example: GET >> /api/conversations
 //   Secured: yes, valid JWT required
 //   Expects:
@@ -19,42 +85,99 @@ const Message      = require('../models/message');
 //
 function getConversations(req, res) {
 
+    Conversation.find({ participants: req.token._id })
+        .select('subject startDate messages participants')
+        .populate({
+            path : 'participants',
+            select: 'username name avatarUrl'
+        })
+        .populate({
+            path    : 'messages',
+            select  : 'updatedAt createdAt body author recipient unread',
+            options : {
+                sort  : { createdAt: -1 },
+            }
+        })
+        .exec()
+        .then( formatConvData )
+        .then( data => res.status(200).json(data) )
+        .catch( err => {
+            return res
+                .status(400)
+                .json({ message: err });
+        });
+}
+
+
+// GET CONVERSATIONS -- WITH AGGREGATE
+//   Example: GET >> /api/conversations
+//   Secured: yes, valid JWT required
+//   Expects:
+//     1) user '_id' from JWT token
+//   Returns: array of user's conversations with most recent messages.
+//
+function getConversationsAggregate(req, res) {
+
     const query = {
         participants: req.token._id
     };
 
     Conversation.find(query)
-        .select('_id')
         .exec()
         .then( cons => {
 
-            const promiseList = [];
+            // simple array of conversation IDs
+            const conIdsArr = cons.map( c => c._id );
 
-            cons.forEach( con => {
-
-                // target messages by conversation '_id'
-                const messageQuery = {
-                    conversation : con._id
-                };
-
-                promiseList.push( new Promise( resolve => {
-                    return Message.find(messageQuery)
-                        .sort('-createdAt')
-                        .limit(1)
-                        .populate({
-                            path   : 'author',
-                            select : 'username name avatarUrl'
-                        })
-                        .exec()
-                        .then( msgs => resolve(msgs[0]) );
-                }));
-
+            Message.aggregate([
+                {
+                    $match: { 'conversation' : { $in : conIdsArr} }
+                },
+                {
+                    $lookup: {
+                        from         : 'conversations',
+                        localField   : 'conversation',
+                        foreignField : '_id',
+                        as           : 'conv_docs'
+                    }
+                },
+                {
+                    $project: {
+                        'createdAt'    : 1,
+                        'conversation' : 1,
+                        'body'         : 1,
+                        'author'       : 1,
+                        'recipient'    : 1,
+                        'unread'       : 1,
+                        'subject'      : '$conv_docs.subject',
+                        'partcipants'  : '$conv_docs.participants'
+                    }
+                },
+                {
+                    $sort: {
+                        'conversation' : 1,
+                        'createdAt'    : -1
+                    }
+                },
+                {
+                    $group: {
+                        _id          : '$conversation',
+                        subject      : { $first: '$subject' },
+                        totalMsgs    : { $sum : 1 },
+                        unreads      : { $sum : { $cond : [ '$unread', 1, 0 ]} },
+                        participants : { $first: '$partcipants' },
+                        messages     : { $push: '$$CURRENT' },
+                    }
+                }
+            ])
+            .exec()
+            .then( messages => {
+                return res
+                    .status(200)
+                    .json({'conversations' : messages});
             });
 
-            return Promise.all(promiseList);
-
         })
-        .then( populatedCons => res.status(200).json( populatedCons ))
         .catch( err => {
             return res
                 .status(400)
@@ -71,19 +194,22 @@ function getConversations(req, res) {
 //   Returns: array of messages from single conversation.
 //
 function getConversation(req, res) {
-    Message.find({ conversation: req.params.id })
-        .select('createdAt body author')
-        .sort('-createdAt')
+
+    Conversation.findById(req.params.id)
+        .select('subject startDate messages participants')
         .populate({
-            path   : 'author',
-            select : 'username name avatarUrl'
+            path : 'participants',
+            select: 'username name avatarUrl'
+        })
+        .populate({
+            path    : 'messages',
+            select  : 'updatedAt createdAt body author recipient unread',
+            options : {
+                sort  : { createdAt: -1 },
+            }
         })
         .exec()
-        .then( messages => {
-            return res
-                .status(200)
-                .json({ conversation: messages });
-        })
+        .then( data => res.status(200).json(data) )
         .catch( err => {
             return res
                 .status(400)
@@ -118,8 +244,18 @@ function createConversation(req, res, next) {
     }
 
     const conversation = new Conversation({
+        subject     : req.body.subject,
         participants: [req.token._id, req.body.recipientId]
     });
+
+    const message = new Message({
+        conversation : conversation._id,
+        body         : req.body.message,
+        author       : req.token._id,
+        recipient    : req.body.recipientId
+    });
+
+    conversation.messages.push(message._id);
 
     conversation.save( (err, newConversation) => {
         if (err) {
@@ -127,16 +263,10 @@ function createConversation(req, res, next) {
             return next(err);
         }
 
-        const message = new Message({
-            conversation : newConversation._id,
-            body         : req.body.message,
-            author       : req.token._id
-        });
-
-        message.save( (err, newMessage) => {
-            if (err) {
-                console.log('Error!', err);
-                return next(err);
+        message.save( (error, newMessage) => {
+            if (error) {
+                console.log('Error!', error);
+                return next(error);
             }
 
             return res
@@ -156,16 +286,18 @@ function createConversation(req, res, next) {
 //   Expects:
 //     1) user '_id' from JWT token
 //     2) request body properties
+//          recipientId  : String
 //          conversation : String
 //          messageBody  : String
 //        }
-//   Returns: success message on success
+//   Returns: new message object
 //
 function postMessage (req, res) {
     const message = new Message({
         conversation : req.body.conversation,
         body         : req.body.messageBody,
-        author       : req.token._id
+        author       : req.token._id,
+        recipient    : req.body.recipientId
     });
 
     message.save( (err, sentMessage) => {
@@ -176,7 +308,7 @@ function postMessage (req, res) {
 
         return res
             .status(200)
-            .json({ message: 'Message sent!' });
+            .json({ message: message, });
     });
 }
 
@@ -184,5 +316,9 @@ function postMessage (req, res) {
 /* ============================== EXPORT API =============================== */
 
 module.exports = {
-    getConversations, getConversation, createConversation, postMessage
+    getConversations : getConversations,
+//    getConversations : getConversationsAggregate,
+    getConversation : getConversation,
+    createConversation : createConversation,
+    postMessage : postMessage
 };

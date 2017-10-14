@@ -24,17 +24,39 @@ export function getConversations(token) {
   };
 }
 
-export const GET_CONVERSATION_REQUEST = 'GET_CONVERSATION_REQUEST';
-export const GET_CONVERSATION_SUCCESS = 'GET_CONVERSATION_SUCCESS';
-export const GET_CONVERSATION_FAILURE = 'GET_CONVERSATION_FAILURE';
+export const VIEW_CONV_REQUEST = 'VIEW_CONV_REQUEST';
+export const VIEW_CONV_SUCCESS = 'VIEW_CONV_SUCCESS';
+export const VIEW_CONV_FAILURE = 'VIEW_CONV_FAILURE';
 
-export function getConversation(token, conversationId) {
+export function viewConv(token, convId) {
   return {
     [CALL_API]: {
-      endpoint: `${BASE_URL}/api/conversations/${conversationId}`,
+      endpoint: `${BASE_URL}/api/conversations/${convId}`,
       method: 'GET',
-      types: [GET_CONVERSATION_REQUEST, GET_CONVERSATION_SUCCESS, GET_CONVERSATION_FAILURE],
+      types: [VIEW_CONV_REQUEST, VIEW_CONV_SUCCESS, VIEW_CONV_FAILURE],
       headers: { Authorization: `Bearer ${token}` },
     },
   };
+}
+
+
+export const POST_MSG_REQUEST = 'POST_MSG_REQUEST';
+export const POST_MSG_SUCCESS = 'POST_MSG_SUCCESS';
+export const POST_MSG_FAILURE = 'POST_MSG_FAILURE';
+
+export function postMessage(token, body) {
+  console.log(token);
+  console.log(body);
+  console.log(JSON.stringify(body));
+  return {
+  [CALL_API]: {
+    endpoint: `${BASE_URL}/api/messages`,
+    method: 'POST',
+    types: [POST_MSG_REQUEST, POST_MSG_SUCCESS, POST_MSG_FAILURE],
+    headers: { Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  },
+};
+
 }

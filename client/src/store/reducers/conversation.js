@@ -1,15 +1,14 @@
 import update from 'immutability-helper';
 
-import { SET_VIEW_CONVERSATION, CLEAR_VIEW_CONVERSATION, SET_CONVERSATIONS_MODAL, SET_CONV_DETAILS_MODAL, SET_CONVERSATION_MODAL,
-  SET_CONV_MODAL, SET_MSG_VIEW } from '../actions/conversationActions';
+import { SET_VIEW_CONVERSATION, CLEAR_VIEW_CONVERSATION, SET_CONVERSATIONS_MODAL, SET_CONV_MODAL, SET_CURRENT_CONV, CLEAR_CURRENT_CONV, SET_MSG_BODY, CLEAR_MSG_BODY } from '../actions/conversationActions';
 
 import { GET_ALL_CONVERSATIONS_REQUEST,
-  GET_ALL_CONVERSATIONS_SUCCESS, GET_ALL_CONVERSATIONS_FAILURE, GET_CONVERSATION_REQUEST,
-  GET_CONVERSATION_SUCCESS, GET_CONVERSATION_FAILURE,
+  GET_ALL_CONVERSATIONS_SUCCESS, GET_ALL_CONVERSATIONS_FAILURE,
+  VIEW_CONV_REQUEST, VIEW_CONV_SUCCESS, VIEW_CONV_FAILURE, POST_MSG_REQUEST, POST_MSG_SUCCESS, POST_MSG_FAILURE
   } from '../actions/apiConversationActions';
 
 const defaultConv = {
-	_id: '',
+	_id: undefined,
   subject: '',
   qtyMessages: 0,
   qtyUnreads: 0,
@@ -29,18 +28,6 @@ const defaultConv = {
 const INITIAL_STATE = {
 	totalMessages: 0,
   totalUnreads: 0,
-  messageView: 'inbox',
-  conversations_loading: false,
-  conversations_error: null,
-  // ConversationDetails state
-  viewConversation: defaultConv,
-  convDetailsSpinnerClass: 'spinner__hide',
-  convDetailsModal: {
-    title: '',
-    text: '',
-    type: '',
-    class: 'modal__hide',
-  },
   // Conversations state
   getConversationsSpinnerClass: 'spinner__hide',
   getConversationsModal: {
@@ -49,16 +36,31 @@ const INITIAL_STATE = {
     type: '',
     title: '',
   },
+  conversations_loading: false,
+  conversations_error: null,
   conversations: [],
-  // Conversation state
-  getConversationSpinnerClass: 'spinner__hide',
-  getConversationModal: {
+  // Current Conversation state
+  viewConvSpinnerClass: 'spinner__hide',
+  viewConvModal: {
     class: 'modal__hide',
     text: '',
     type: '',
     title: '',
   },
-  conversation: defaultConv,
+  currentConv_loading: false,
+  currentConv_error: null,
+  currentConv: defaultConv,
+  // New Message state
+  newMsgBody: '',
+  newMsgSpinnerClass: 'spinner__hide',
+  newMsgModal: {
+    class: 'modal__hide',
+    text: '',
+    type: '',
+    title: '',
+  },
+  newMsg_loading: false,
+  newMsg_error: null,
 };
 
 function conversation(state = INITIAL_STATE, action) {
@@ -67,7 +69,7 @@ function conversation(state = INITIAL_STATE, action) {
   switch (action.type) {
 
     /*
-    *  Called From: <ConversationDetails />
+    *  Called From: <Conversation />
     *  Payload: A conversation object
     *  Purpose: Conversation Details are cleared when the component unmounts
     *  to prevent showing the previous details when a new conversation is
@@ -80,19 +82,12 @@ function conversation(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { viewConversation: action.payload });
 
     /*
-    *  Called From: <ConversationDetails />
+    *  Called From: <Conversation />
     *  Purpose: Prevent flash of old content when user loads component
     */
     case CLEAR_VIEW_CONVERSATION:
       return Object.assign({}, state, { viewConversation: defaultConv });
 
-    /*
-    *  Called From: <ConversationDetails />
-    *  Payload: Text to show in the modal
-    *  Purpose: Set/Unset the text for the modal.
-    */
-    case SET_CONV_DETAILS_MODAL:
-      return Object.assign({}, state, { convDetailsModal: action.payload });
 
 		/*-----------------------------------------------------------------------*/
 
@@ -148,7 +143,8 @@ function conversation(state = INITIAL_STATE, action) {
     *  a message to user.
     */
     case GET_ALL_CONVERSATIONS_FAILURE:
-      error = action.payload.response.message || 'An error occurred while fetching messages';
+      console.log('conversation.js > 136', action.payload);
+      error = action.payload.message || 'An error occurred while fetching messages';
       return Object.assign(
         {},
         state,
@@ -167,63 +163,145 @@ function conversation(state = INITIAL_STATE, action) {
 
     /*
     *  Called From: <Conversations />
-    *  Payload: None
-    *  Purpose: When a getConversation() function is called, this sets the
-    *  spinner CSS to indicate that an API call is in progress.
+    *  Payload: CSS class to show/hide the modal
+    *  Purpose: Called from the modal to dismiss the modal
     */
-    case GET_CONVERSATION_REQUEST:
-      return Object.assign({}, state, {
-      	getConversationSpinnerClass: 'spinner__show'
-        });
+    case SET_CONV_MODAL:
+      return Object.assign({}, state, { viewConvModal: action.payload });
+
+    case SET_CURRENT_CONV:
+      return update(
+        state,
+        {
+          currentConv: { $set: action.payload },
+        },
+      );
+
+    case CLEAR_CURRENT_CONV:
+      return Object.assign({}, state, { currentConv: defaultConv });
+
 
     /*
-    *  Called From: <Conversations />
+    *  Called From: <Conversation />
+    *  Payload: None
+    *  Purpose: When a viewConversation() function is called, this sets the
+    *  spinner CSS to indicate that an API call is in progress.
+    */
+    case VIEW_CONV_REQUEST:
+      return Object.assign({}, state, { viewConvSpinnerClass: 'spinner__show' });
+
+    /*
+    *  Called From: <Conversation />
     *  Payload: A conversation object
-    *  Purpose: Called when the API call succeeds. Populate the conversation
+    *  Purpose: Called when the API call succeeds. Populate the currentConv
     *  object.
     */
-    case GET_CONVERSATION_SUCCESS:
+    case VIEW_CONV_SUCCESS:
       return Object.assign(
         {},
         state,
         {
-          conversation: action.payload,
-          getConversationSpinnerClass: 'spinner__hide',
+          viewConvSpinnerClass: 'spinner__hide',
+          currentConv: action.payload,
         },
       );
 
     /*
-    *  Called From: <Conversations />
+    *  Called From: <Conversation />
     *  Payload: An error message
     *  Purpose: Called when the API call fails. Set the state to display
     *  a message to user.
     */
-    case GET_CONVERSATION_FAILURE:
-      error = action.payload.response.message || 'An error occurred while fetching messages';
+    case VIEW_CONV_FAILURE:
+      error = action.payload.message || 'An error occurred';
       return Object.assign(
         {},
         state,
         {
-          getConversationSpinnerClass: 'spinner__hide',
-          getConversationModal: {
-            class: 'modal__show',
-            text: error,
-            type: 'modal__error',
-            title: 'ERROR',
-          },
+          viewConvSpinnerClass: 'spinner__hide',
+          viewConvModalClass: 'modal__show',
+          viewConvModalType: 'modal__error',
+          viewConvModalText: error,
+          viewConvModalTitle: 'Error',
         },
       );
 
     /*
-    *  Called From: <Conversations />
-    *  Payload: CSS class to show/hide the modal
-    *  Purpose: Called from the modal to dismiss the modal
+    *  Called From: <NewMessage />
+    *  Payload: None
+    *  Purpose: When a postMessage() function is called, this sets the
+    *  spinner CSS to indicate that an API call is in progress.
     */
-    case SET_CONVERSATION_MODAL:
-      return Object.assign({}, state, { getConversationModal: action.payload });
+    case POST_MSG_REQUEST:
+      return Object.assign({}, state, { newMsgSpinnerClass: 'spinner__show' });
 
-    case SET_MSG_VIEW:
-    	return Object.assign({}, state, { messageView: action.payload });
+    /*
+    *  Called From: <NewMessage />
+    *  Payload: A message object
+    *  Purpose: Called when the API call succeeds. Push new message to end
+    *  of current conversation
+    */
+    case POST_MSG_SUCCESS:
+    console.log('post msg success');
+    console.log(action.payload);
+      return update(
+        state,
+        {
+          newMsgSpinnerClass: { $set: 'spinner__hide' },
+          currentConv: {
+            messages: {
+              $push: [ action.payload.message ] },
+          },
+        }
+      );
+
+    /*
+    *  Called From: <NewMessage />
+    *  Payload: An error message
+    *  Purpose: Called when the API call fails. Set the state to display
+    *  a message to user.
+    */
+    case POST_MSG_FAILURE:
+      error = action.payload.message || 'An error occurred';
+      return Object.assign(
+        {},
+        state,
+        {
+          newMsgSpinnerClass: 'spinner__hide',
+          newMsgModalClass: 'modal__show',
+          newMsgModalType: 'modal__error',
+          newMsgModalText: error,
+          newMsgModalTitle: 'Error',
+        },
+      );
+
+    /*
+    *  Called From: <NewMessage />
+    *  Payload: Message body
+    *  Purpose: Update form field with user input
+    */
+    case SET_MSG_BODY:
+      return Object.assign(
+        {},
+        state,
+        {
+          newMsgBody: action.payload,
+        },
+      );
+
+    /*
+    *  Called From: <NewMessage />
+    *  Payload: none
+    *  Purpose: Clear form field when component unmounts
+    */
+    case CLEAR_MSG_BODY:
+      return Object.assign(
+        {},
+        state,
+        {
+          newMsgBody: '',
+        },
+      );
 
     default:
       return state;
