@@ -51,8 +51,8 @@ function formatConvData(convs) {
     const totalMessages = convs.reduce( (sum, conv) => {
         return sum + conv.messages.length;
     }, 0);
-
-    // count unread messages
+    
+    // count unread messages where user is the recipient
     const totalUnreads = convs.reduce( (sum, conv) => {
         return sum + conv.messages.filter( m => m.unread ).length;
     }, 0);
@@ -69,8 +69,55 @@ function formatConvData(convs) {
             latestMessage : c.messages[0]
         };
     });
-
+    
     return { totalMessages, totalUnreads, conversations };
+}
+
+
+/* Add array of messages to conversations
+ * @params    [object]   convos   [array of conv objects or single conv object]
+ * @params    [string]   user     [user's '_id']
+ * @returns   [object]            [populated conversation(s)]
+*/
+function populateMessages(convos, user) {
+    
+    let convIsArray = Array.isArray(convos);
+    
+    if (convIsArray) {
+        return Message.find({ $or: [ { author : user }, { recipient : user } ]})
+            .exec()
+            .then( msgs => {
+
+                return convos.map( c => {
+                    let messages = msgs.filter( m => {
+                        return m.conversation.toString() === c._id.toString();
+                    });
+                    return {
+                        _id          : c._id,
+                        subject      : c.subject,
+                        participants : c.participants,
+                        startDate    : c.startDate,
+                        messages     : messages
+                    };
+                });
+        
+        });
+    } else {
+        return Message.find({ conversation : convos._id })
+            .exec()
+            .then( msgs => {
+
+                return {
+                    _id          : convos._id,
+                    subject      : convos.subject,
+                    participants : convos.participants,
+                    startDate    : convos.startDate,
+                    messages     : msgs
+                };
+        
+        });
+    }
+        
 }
 
 
@@ -87,19 +134,20 @@ function getConversations(req, res) {
 
     Conversation.find({ participants: req.token._id })
         .select('subject startDate messages participants')
+        
+        // add conversation participant details
         .populate({
-            path : 'participants',
-            select: 'username name avatarUrl'
-        })
-        .populate({
-            path    : 'messages',
-            select  : 'updatedAt createdAt body author recipient unread',
-            options : {
-                sort  : { createdAt: -1 },
-            }
+            path   : 'participants',
+            select : 'username name avatarUrl'
         })
         .exec()
+    
+        // add messages to each conversation in the results array
+        .then( convos => populateMessages(convos, req.token._id) )
+    
+        // get unreads and filter messages
         .then( formatConvData )
+    
         .then( data => res.status(200).json(data) )
         .catch( err => {
             return res
@@ -176,7 +224,6 @@ function getConversationsAggregate(req, res) {
                     .status(200)
                     .json({'conversations' : messages});
             });
-
         })
         .catch( err => {
             return res
@@ -201,14 +248,11 @@ function getConversation(req, res) {
             path : 'participants',
             select: 'username name avatarUrl'
         })
-        .populate({
-            path    : 'messages',
-            select  : 'updatedAt createdAt body author recipient unread',
-            options : {
-                sort  : { createdAt: -1 },
-            }
-        })
         .exec()
+        
+        // add messages array to the conversation
+        .then( convo => populateMessages(convo, req.token._id) )
+
         .then( data => res.status(200).json(data) )
         .catch( err => {
             return res
