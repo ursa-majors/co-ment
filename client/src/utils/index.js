@@ -171,6 +171,21 @@ export const formatDateInbox = (date) => {
 
 };
 
+////// load message list scrolled to bottom to show newest messages ///////
+export const scrollToBottom = () => {
+    const el = document.getElementById('msgPane');
+    const subject = document.getElementById('subject');
+    let isScrolledToBottom = el.scrollHeight - el.clientHeight <= el.scrollTop + 1;
+    if (!isScrolledToBottom) {
+      el.scrollTop = el.scrollHeight - el.clientHeight;
+    }
+    if (el.scrollTop > 0) {
+      subject.classList.add('inbox__single-subject--scrolled');
+    } else if (el.scrollTop === 0 && subject.classList.contains('inbox__single-subject--scrolled')) {
+      subject.classList.remove('inbox__single-subject--scrolled');
+    }
+  }
+
 ////// adjust textarea size to fit content ///////
 export const adjustTextArea = (target) => {
     // expand input height to fit content without scrollbar

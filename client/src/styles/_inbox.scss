@@ -52,11 +52,8 @@
 	}
 
 	&__messagepane {
-		padding: 10px;
 		width: 100%;
 		background: rgba(255,255,255,.7);
-		overflow-y: scroll;
-	  max-height: 70vh;
 	  padding-bottom: 20px;
 		@include for-phone-landscape-up {
 			border-top-right-radius: 10px;
@@ -185,7 +182,7 @@
 
 	  &__single-message {
 	  	border-bottom: 1px dotted $color_gray_text;
-	  	padding: 20px 10px;
+	  	padding: 20px;
 
 	  	&:last-child {
 	  		border-bottom: 0;
@@ -195,8 +192,11 @@
 	  &__single-subject {
 			font-weight: 700;
 			font-size: 1.2em;
-			padding: 10px;
-			border-bottom: 1px solid $color_gray_lightest;
+			padding: 20px;
+
+			&--scrolled {
+				box-shadow: 0 5px 5px rgba(0,0,0,.4);
+			}
 	  }
 
 	  &__single-meta {

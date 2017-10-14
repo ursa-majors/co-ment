@@ -8,7 +8,7 @@ import Spinner from './Spinner';
 import ModalSm from './ModalSm';
 import Conversation from './Conversation';
 import NewMessage from './NewMessage';
-import { formatDateInbox } from '../utils';
+import { formatDateInbox, scrollToBottom } from '../utils';
 
 class Conversations extends React.Component {
 
@@ -36,7 +36,6 @@ class Conversations extends React.Component {
           modalType={this.props.conversation.getConversationsModal.type}
           dismiss={
             () => {
-              console.log('dismiss conversastions modal');
               this.props.actions.setConversationsModal({
                 class: 'modal__hide',
                 text: '',
@@ -75,7 +74,10 @@ class Conversations extends React.Component {
                     <button
                       key={item._id}
                       className={this.props.conversation.currentConv._id === item._id ? "aria-button inbox__message inbox__message--active" : "aria-button inbox__message"}
-                      onClick={()=> {this.props.api.viewConv(token, conv2view._id)}}>
+                      onClick={()=> {
+                        this.props.api.viewConv(token, conv2view._id);
+                        scrollToBottom();
+                      }}>
                       <div className="inbox__avatar">
                         <div className="inbox__image-aspect">
                           <div className="h-nav__image-crop">

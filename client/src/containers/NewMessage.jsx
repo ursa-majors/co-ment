@@ -7,21 +7,16 @@ import * as Actions from '../store/actions/conversationActions';
 
 class NewMessage extends React.Component {
 
+	componentDidMount() {
+
+	}
+
 	componentWillUnmount() {
 		this.props.actions.clearMsgBody();
-		this.scrollToBottom();
 	}
 
 	handleChange = (e) => {
 		this.props.actions.setMsgBody(e.target.value);
-	}
-
-	scrollToBottom = () => {
-		const el = document.getElementById('msg');
-		let isScrolledToBottom = el.scrollHeight - el.clientHeight <= el.scrollTop + 1;
-		if (isScrolledToBottom) {
-    	el.scrollTop = el.scrollHeight - el.clientHeight;
-    }
 	}
 
   render() {
@@ -38,12 +33,11 @@ class NewMessage extends React.Component {
     }
 
     return (
-      <div className="message__new">
+      <div className="message__new" id="newMsg">
       	<div className="message__input-wrap">
           <input
           	className="message__input form__input"
           	placeholder="Message"
-          	id="msg"
           	type="text"
           	value={this.props.conversation.newMsgBody}
           	onChange={(e) => this.handleChange(e)} />
