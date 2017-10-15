@@ -236,7 +236,7 @@ function connection(state = INITIAL_STATE, action) {
     *  Purpose: Display modal with email error message
     */
     case CONNECTION_FAILURE:
-      error = action.payload.response.message || 'An error occurred while attempting to save connection';
+      error = `An error occurred while attempting to save connection: ${action.payload.response.message}`;
       return Object.assign(
         {},
         state,

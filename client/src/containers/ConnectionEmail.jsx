@@ -61,7 +61,7 @@ class ConnectionEmail extends React.Component {
             avatar: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.author.avatarUrl,
           },
           initiator: {
-            id: this.props.appState.userId,
+            id: this.props.appState.user._id,
             name: this.props.profiles.userProfile.username,
           },
           originalPost: {
@@ -73,10 +73,12 @@ class ConnectionEmail extends React.Component {
         // Save the connection object...send email if successful
         this.props.connectActions.connect(token, connection)
           .then((result1) => {
+            console.log(result1);
             if (result1.type === 'CONNECTION_SUCCESS') {
               email.connectionId = result1.payload.connectionId;
               this.props.emailActions.sendEmail(token, email)
               .then((result2) => {
+                console.log(result2);
                 if (result2.type === "SEND_EMAIL_SUCCESS") {
                   this.props.history.push('/connectionresult');
                 }
