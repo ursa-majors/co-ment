@@ -39,7 +39,7 @@ class ConnectionEmail extends React.Component {
 
     const token = this.props.appState.authToken;
     let email = {
-      recipient: this.props.connectionEmail.recipient.username,
+      recipient: this.props.connectionEmail.recipient.username || this.props.connectionEmail.recipient.name,
       sender: this.props.connectionEmail.sender.username,
       copySender: false,
       subject: this.props.connectionEmail.subject,
@@ -49,51 +49,51 @@ class ConnectionEmail extends React.Component {
     };
     switch(this.props.connectionEmail.type) {
       case 'request':
-        // This is a new connection.  Build the connection object from
-        // Redux store values
-        const connection = {
-          mentor: {
-            id: this.props.connectionEmail.role === 'mentor' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author._id ,
-            name: this.props.connectionEmail.role === 'mentor' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author.username,
-            avatar: this.props.connectionEmail.role === 'mentor' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.author.avatarUrl,
-          },
-          mentee: {
-            id: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author._id,
-            name: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author.username,
-            avatar: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.author.avatarUrl,
-          },
-          initiator: {
-            id: this.props.appState.user._id,
-            name: this.props.profiles.userProfile.username,
-          },
-          originalPost: {
-            id: this.props.posts.currentPost._id,
-            title: this.props.posts.currentPost.title,
-          },
-          status: 'pending',
-        };
-        // build a new conversation object
-        // save this email as the first message in that conversation
+        // build new conversation and connection objects
         const conversation = {
           recipientId: this.props.connectionEmail.recipient._id,
           message: this.props.connectionEmail.body,
           subject: `Re: ${this.props.posts.currentPost.title}`,
         }
-        console.log('ConnectionEmail.jsx > 82');
-        console.log(conversation);
-        // Save the connection object
-        // ...send email if successful
-        // Save the new conversation
-        this.props.connectActions.connect(token, connection)
-          .then((result1) => {
-            if (result1.type === 'CONNECTION_SUCCESS') {
-              email.connectionId = result1.payload.connectionId;
-              this.props.emailActions.sendEmail(token, email)
-              .then((result2) => {
-                if (result2.type === "SEND_EMAIL_SUCCESS") {
-                  this.props.conversationActions.postConversation(token, conversation)
-                  .then((result3) => {
-                    if (result3.type === "POST_CONV_SUCCESS") {
+        const connection = {
+          mentor: {
+            id: this.props.connectionEmail.role === 'mentor' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author._id ,
+            name: this.props.connectionEmail.role === 'mentor' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author.username,
+            avatar: this.props.connectionEmail.role === 'mentor' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.author.avatarUrl,
+            },
+          mentee: {
+            id: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author._id,
+            name: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author.username,
+            avatar: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.author.avatarUrl,
+            },
+          initiator: {
+            id: this.props.appState.user._id,
+            name: this.props.profiles.userProfile.username,
+            },
+          originalPost: {
+            id: this.props.posts.currentPost._id,
+            title: this.props.posts.currentPost.title,
+            },
+          status: 'pending',
+          };
+
+        // 1. Save new conversation. Use returned conversation ID to...
+        // 2. Save new connection object. If successful...
+        // 3. Send connection email
+
+        this.props.conversationActions.postConversation(token, conversation)
+        .then((result1) => {
+          if (result1.type === "POST_CONV_SUCCESS") {
+            // Build new connection object from Redux store values
+            connection.conversationId = result1.payload.conversation._id;
+            this.props.connectActions.connect(token, connection)
+            .then((result2) => {
+              console.log(result2.type);
+              if (result2.type === 'CONNECTION_SUCCESS') {
+                email.connectionId = result2.payload.connectionId;
+                this.props.emailActions.sendEmail(token, email)
+                .then((result3) => {
+                  if (result3.type === "SEND_EMAIL_SUCCESS") {
                     this.props.history.push('/connectionresult');
                     }
                   });
@@ -103,10 +103,25 @@ class ConnectionEmail extends React.Component {
           });
         break;
       case 'accept':
+      // send an email
+      // build a new message object and post to the existing conversation
         email.copySender = true;
+        console.log('Accept!');
+        console.log(this.props.connectionEmail);
+        console.log(this.props.connectionEmail.conversationId);
+        const msgBody = {
+          recipientId  : this.props.connectionEmail.recipient.id || this.props.connectionEmail.recipient._id,
+          conversation : this.props.connectionEmail.conversationId,
+          messageBody  : this.props.connectionEmail.body,
+          };
+        console.log(msgBody);
         this.props.emailActions.sendEmail(token, email)
           .then((result) => {
             if (result.type === "SEND_EMAIL_SUCCESS") {
+              this.props.conversationActions.postMessage(token,msgBody)
+              .then((result2) => {
+                console.log(result2);
+              });
               this.props.connectActions.updateConnectionStatus(
                 token,
                 {
@@ -118,7 +133,7 @@ class ConnectionEmail extends React.Component {
                 if (result.type === 'UPDATE_CONNECTION_STATUS_SUCCESS') {
                   this.props.emailActions.setEmailModal({
                     class: 'modal__show',
-                    text: `The email was sent and your Connection is now Accepted!\n\nYou will receive a copy of the email.\n\nFollow the instructions to begin your mentorship.\n\nGood Luck!`,
+                    text: `The email was sent and your connection is now active!\n\nCheck your co/ment inbox to continue the conversation.\n\nGood Luck!`,
                     title: 'SUCCESS',
                     type: 'modal__success',
                     action: () => {
@@ -129,7 +144,7 @@ class ConnectionEmail extends React.Component {
                         type: '',
                         action: null,
                       });
-                      this.props.history.push('/connections');
+                      this.props.history.push('/inbox');
                     },
                   });
                 }
@@ -217,7 +232,7 @@ class ConnectionEmail extends React.Component {
     let bodyPlaceholder = 'Include a short message to explain why you want to connect with this user...';
     if (this.props.connectionEmail.type === 'accept') {
       buttonText = 'Accept Request';
-      bodyPlaceholder = `Include a personal message. Let ${this.props.connectionEmail.recipient.username} know the best way to communicate with you to begin your mentorship...`;
+      bodyPlaceholder = `Include a personal message...`;
     }
     if (this.props.connectionEmail.type === 'decline') {
       buttonText = 'Decline Request';
@@ -234,7 +249,7 @@ class ConnectionEmail extends React.Component {
           <div className="form__input-group">
             <label className="form__label" htmlFor="recipient">TO:
             </label>
-            <input className="form__input form__connection-input" type="text" id="recipient" value={this.props.connectionEmail.recipient.username} onChange={event => this.handleChange(event)} disabled />
+            <input className="form__input form__connection-input" type="text" id="recipient" value={this.props.connectionEmail.recipient.username || this.props.connectionEmail.recipient.name} disabled />
           </div>
           <div className="form__input-group">
             <label className="form__label" htmlFor="sender">FROM:

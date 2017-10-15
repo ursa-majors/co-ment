@@ -9,6 +9,7 @@ import { CONNECTION_REQUEST, CONNECTION_SUCCESS, CONNECTION_FAILURE, GET_ALL_CON
 
 const defaultConn = {
   _id: '',
+  conversationId: '',
   mentor: {
     id: '',
     name: '',
@@ -207,20 +208,22 @@ function connection(state = INITIAL_STATE, action) {
         },
       );
     /*
-    *  Called From: <Connection />
+    *  Called From: <ConnectionEmail />
     *  Payload: None.
     *  Purpose: Set the connection spinner to indicate an API call is in progress.
     */
     case CONNECTION_REQUEST:
+    console.log('connection request');
       return Object.assign({}, state, { connectionSpinnerClass: 'spinner__show' });
 
     /*
-    *  Called From: <Connection />
+    *  Called From: <ConnectionEmail />
     *  Payload: connection ID.
     *  Purpose: Hide the spinner - user is redirected to "ConnectionResult" page
     *   so no modal is shown, and return connectionId to use in connection request email template.
     */
     case CONNECTION_SUCCESS:
+    console.log('connection success');
       return Object.assign(
         {},
         state,
@@ -231,12 +234,14 @@ function connection(state = INITIAL_STATE, action) {
       );
 
     /*
-    *  Called From: <Connection />
+    *  Called From: <ConnectionEmail />
     *  Payload: Error message
     *  Purpose: Display modal with email error message
     */
     case CONNECTION_FAILURE:
+    console.log('connection failure');
       error = `An error occurred while attempting to save connection: ${action.payload.response.message}`;
+    console.log(error);
       return Object.assign(
         {},
         state,

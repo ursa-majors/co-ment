@@ -5,6 +5,10 @@ const mongoose  = require('mongoose');
 
 const connectionSchema = new mongoose.Schema({
 
+    conversationId : {
+        type      : String,
+    },
+
     mentor : {
       id: {
         type     : String,

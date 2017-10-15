@@ -41,13 +41,15 @@ class Conversation extends React.Component {
   	if (el) {
   		scrolled = el.scrollTop > 0;
   	}
+  	console.log(this.props.conversation.currentConv);
+  	console.log(this.props.conversation.currentConv.messages);
     return (
     	<div>
     	<div id="subject" className={scrolled ? "inbox__single-subject inbox__single-subject--scrolled" : "inbox__single-subject"}>
         {this.props.conversation.currentConv.subject}
       </div>
       <div className="message" id='msgPane' onScroll={()=>this.setScrollClass()}>
-        {this.props.conversation.currentConv && this.props.conversation.currentConv.messages &&
+        {this.props.conversation.currentConv && this.props.conversation.currentConv.messages && this.props.conversation.currentConv.messages.length &&
         	<div className="inbox__single">
 	          {this.props.conversation.currentConv.messages.map(message => {
 	            const sender = this.props.conversation.currentConv.participants.find(participant => participant._id === message.author);

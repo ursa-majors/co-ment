@@ -14,13 +14,21 @@ import { formatDateInbox, scrollToBottom } from '../utils';
 class Conversations extends React.Component {
 
   componentDidMount() {
+    console.log('Conversations.jsx cDM: 17');
     const token = this.props.appState.authToken;
     this.props.api.getConversations(token)
     .then((result) => {
+      console.log('Conversations.jsx cDM: 21');
+      console.log(result);
       if (result.type === 'GET_ALL_CONVERSATIONS_SUCCESS') {
         const sortedConvs = this.props.conversation.conversations.sort((a,b) =>  new Date(b.latestMessage.createdAt) - new Date(a.latestMessage.createdAt));
         const newestConv = sortedConvs[0];
-        this.props.api.viewConv(token, newestConv._id);
+        console.log(`Conversations.jsx > 26: ${newestConv}`);
+        this.props.api.viewConv(token, newestConv._id)
+        .then((result2) => {
+          console.log('did currentConv get set correctly?');
+          console.log(`this is stored at this.props.conversation.currentConv: ${this.props.conversation.currentConv}`);
+        });
         }
       });
     }
@@ -120,7 +128,7 @@ class Conversations extends React.Component {
                 modalType={this.props.conversation.viewConvModal.type}
                 dismiss={
                   () => {
-                    this.props.actions.setConversationsModal({
+                    this.props.actions.setConversationModal({
                       class: 'modal__hide',
                       text: '',
                       type: '',
@@ -129,19 +137,26 @@ class Conversations extends React.Component {
                   }
                 }
               />
-              { this.props.conversation.currentConv ?
+              { this.props.conversation.currentConv._id && this.props.conversation.currentConv.messages && this.props.conversation.currentConv.messages.length ?
                 <div>
                   <Conversation
                     convId = {this.props.conversation.currentConv._id} />
                   <NewMessage />
                 </div> :
-                  "No messages"
+                <div className="inbox__empty--wrap">
+                  <strong> No messages! </strong><br/>
+                  To start using co/ment messaging,<br/>respond to a&nbsp;
+                  <Link to="/posts" className="inbox__link">post</Link>
+                </div>
               }
             </div>
           </div> :
           <div className="inbox__empty">
-           <strong> No messages! </strong><br/>To start using co/ment messaging, first respond to a&nbsp;
-          <Link to="/posts" className="inbox__link">post</Link>
+            <div className="inbox__empty--wrap">
+              <strong> No messages! </strong><br/>
+              To start using co/ment messaging,<br/>respond to a&nbsp;
+              <Link to="/posts" className="inbox__link">post</Link>
+            </div>
           </div>
         }
           </div>

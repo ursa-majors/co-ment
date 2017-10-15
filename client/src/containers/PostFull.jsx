@@ -116,6 +116,8 @@ class PostFull extends React.Component {
     } else {
       // TODO: go get connections, then test them as above
     }
+    console.log('this should be the recipient passed to the email form:');
+    console.log(this.props.posts.currentPost.author);
     this.props.actions.setEmailOptions({
       recipient: this.props.posts.currentPost.author,
       sender: this.props.profiles.userProfile,
@@ -125,7 +127,9 @@ class PostFull extends React.Component {
       type: 'request',
       connectionId: '',
     })
-    this.props.history.push('/connectemail');
+      .then(() => {
+        this.props.history.push('/connectemail');
+      });
   }
 
   render() {
@@ -144,7 +148,7 @@ class PostFull extends React.Component {
       compress = false;
     }
     const roleText = (post.role === 'mentor' ? 'mentor' : 'mentee');
-    const owner = (this.props.appState.userId === post.author._id);
+    const owner = (this.props.appState.user._id === post.author._id);
     const isLiked = this.props.profiles.userProfile.likedPosts.includes(post._id) ?
       'post-full__liked' :
       '';

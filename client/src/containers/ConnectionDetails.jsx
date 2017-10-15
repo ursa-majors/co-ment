@@ -52,35 +52,37 @@ class ConnectionDetails extends React.Component {
         actions = (this.props.connection.viewConnection.initiator.id !== this.props.profiles.userProfile._id) ?
           (<ul className="conn-details__btn-wrap">
             <li className="conn-details__item" >
-              <span
-
-                className="conn-details__item-link pointer"
+              <button
+                className="aria-button conn-details__item-link pointer"
                 onClick={
                   () => {
+                    console.log('this is the conversation id that should get passed to the email form:');
+                    console.log(this.props.connection.viewConnection.conversationId);
                     this.props.actions.setEmailOptions({
-                      recipient: this.props.connection.viewConnection.initiator.name,
-                      sender: this.props.profiles.userProfile.username,
+                      recipient: this.props.connection.viewConnection.initiator,
+                      sender: this.props.profiles.userProfile,
                       type: 'accept',
                       subject: 'co/ment - Great News: Connection Accepted!',
                       body: '',
                       role: '',
                       connectionId: this.props.connection.viewConnection._id,
+                      conversationId: this.props.connection.viewConnection.conversationId,
                     });
                     this.props.history.push('/connectemail');
                   }
                 }
               >
                 Accept
-              </span>
+              </button>
             </li>
             <li className="conn-details__item" >
-              <span
-                className="conn-details__item-link pointer"
+              <button
+                className="aria-button conn-details__item-link pointer"
                 onClick={
                   () => {
                     this.props.actions.setEmailOptions({
-                      recipient: this.props.connection.viewConnection.initiator.name,
-                      sender: this.props.profiles.userProfile.username,
+                      recipient: this.props.connection.viewConnection.initiator,
+                      sender: this.props.profiles.userProfile,
                       type: 'decline',
                       subject: `co/ment - Connection request to ${this.props.profiles.userProfile.username} declined`,
                       body: '',
@@ -92,7 +94,7 @@ class ConnectionDetails extends React.Component {
                 }
               >
                 Decline
-              </span>
+              </button>
             </li>
           </ul>
         ) :
@@ -102,13 +104,13 @@ class ConnectionDetails extends React.Component {
         actions = (
           <ul className="conn-details__btn-wrap">
             <li className="conn-details__item" >
-              <span
-                className="conn-details__item-link pointer"
+              <button
+                className="aria-button conn-details__item-link pointer"
                 onClick={
                   () => {
                     this.props.actions.setEmailOptions({
-                      recipient: this.props.connection.viewConnection.mentor.id === this.props.profiles.userProfile._id ? this.props.connection.viewConnection.mentee.name : this.props.connection.viewConnection.mentor.name,
-                      sender: this.props.profiles.userProfile.username,
+                      recipient: this.props.connection.viewConnection.mentor.id === this.props.profiles.userProfile._id ? this.props.connection.viewConnection.mentee : this.props.connection.viewConnection.mentor,
+                      sender: this.props.profiles.userProfile,
                       type: 'deactivate',
                       subject: `co/ment - Your mentoring connection has ended`,
                       body: '',
@@ -120,7 +122,7 @@ class ConnectionDetails extends React.Component {
                 }
               >
                 End Connection
-              </span>
+              </button>
             </li>
           </ul>
         );

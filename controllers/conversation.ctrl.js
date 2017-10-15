@@ -288,7 +288,7 @@ function createConversation(req, res, next) {
             .json({ message: 'Missing message.' });
     }
 
-    if(!req.body.message) {
+    if(!req.body.subject) {
         return res
             .status(422)
             .json({ message: 'Missing subject.' });

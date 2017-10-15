@@ -13,6 +13,7 @@ const INITIAL_STATE = {
   role: '',
   type: '',
   connectionId: '',
+  conversationId: '',
   formError: '',
   formErrorClass: 'form__hidden',
   emailSpinnerClass: 'spinner__hide',
@@ -29,7 +30,6 @@ function connectionEmail(state = INITIAL_STATE, action) {
   let error;
   switch (action.type) {
     case SET_EMAIL_OPTIONS:
-    console.log(action.payload.recipient);
       return update(
         state,
         {
@@ -40,6 +40,7 @@ function connectionEmail(state = INITIAL_STATE, action) {
           role: { $set: action.payload.role },
           type: { $set: action.payload.type },
           connectionId: { $set: action.payload.connectionId },
+          conversationId: { $set: action.payload.conversationId },
         },
       );
 

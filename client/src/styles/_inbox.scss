@@ -17,6 +17,12 @@
     text-align: center;
     padding: 20vh 20px;
     font-size: 1.2em;
+
+    &--wrap {
+    	width: 80%;
+    	margin: auto;
+    	padding: 50px;
+    }
 		@include for-phone-landscape-up {
       border-radius: 10px;
     }
@@ -24,6 +30,8 @@
 
 	&__sidebar {
 		width: 100%;
+		overflow-y: scroll;
+  	max-height: 55vh;
 		@include for-phone-landscape-up {
 			border-top-left-radius: 10px;
 			border-bottom-left-radius: 10px;
