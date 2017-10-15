@@ -8,6 +8,7 @@ export const SET_CURRENT_CONV = 'SET_CURRENT_CONV';
 export const SET_MSG_BODY = 'SET_MSG_BODY';
 export const CLEAR_MSG_BODY = 'CLEAR_MSG_BODY';
 export const SET_MSG_MODAL = 'SET_MSG_MODAL';
+export const SET_NEW_CONV_MODAL = 'SET_NEW_CONV_MODAL';
 
 export function setViewConversation(conv) {
   return ({
@@ -32,6 +33,13 @@ export function setConversationsModal(options) {
 export function setConversationModal(options) {
   return ({
     type: SET_CONVERSATION_MODAL,
+    payload: options,
+  });
+}
+
+export function setNewConvModal(options) {
+  return ({
+    type: SET_NEW_CONV_MODAL,
     payload: options,
   });
 }

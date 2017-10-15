@@ -10,6 +10,18 @@
     }
 	}
 
+		&__empty {
+		background: $color_sky_lightest;
+    margin: auto;
+    color: $color_gray_text;
+    text-align: center;
+    padding: 20vh 20px;
+    font-size: 1.2em;
+		@include for-phone-landscape-up {
+      border-radius: 10px;
+    }
+	}
+
 	&__sidebar {
 		width: 100%;
 		@include for-phone-landscape-up {
@@ -199,7 +211,7 @@
 			padding: 20px;
 
 			&--scrolled {
-				box-shadow: 0 5px 5px rgba(0,0,0,.4);
+				box-shadow: 0 5px 5px rgba(0,0,0,.2);
 			}
 	  }
 

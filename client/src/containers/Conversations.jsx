@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 
 import * as apiActions from '../store/actions/apiConversationActions';
 import * as Actions from '../store/actions/conversationActions';
@@ -49,6 +50,8 @@ class Conversations extends React.Component {
           <div className="conn-details__text-wrap">
             <div className="conn-details__title">Messages</div>
           </div>
+          <div>
+          {this.props.conversation.conversations.length ?
           <div className="inbox__wrap">
             <div className="inbox__sidebar">
               <div className="inbox__messagelist">
@@ -135,6 +138,12 @@ class Conversations extends React.Component {
                   "No messages"
               }
             </div>
+          </div> :
+          <div className="inbox__empty">
+           <strong> No messages! </strong><br/>To start using co/ment messaging, first respond to a&nbsp;
+          <Link to="/posts" className="inbox__link">post</Link>
+          </div>
+        }
           </div>
         </div>
       </div>

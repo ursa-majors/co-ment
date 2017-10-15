@@ -55,5 +55,22 @@ export function postMessage(token, body) {
     body: JSON.stringify(body),
   },
 };
-
 }
+
+export const POST_CONV_REQUEST = 'POST_CONV_REQUEST';
+export const POST_CONV_SUCCESS = 'POST_CONV_SUCCESS';
+export const POST_CONV_FAILURE = 'POST_CONV_FAILURE';
+
+export function postConversation(token, body) {
+  return {
+  [CALL_API]: {
+    endpoint: `${BASE_URL}/api/conversations`,
+    method: 'POST',
+    types: [POST_CONV_REQUEST, POST_CONV_SUCCESS, POST_CONV_FAILURE],
+    headers: { Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  },
+};
+}
+

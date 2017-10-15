@@ -270,6 +270,7 @@ function getConversation(req, res) {
 //     2) request body properties
 //          recipientId : String
 //          message     : String
+//          subject     : String
 //        }
 //   Returns: success message on success
 //
@@ -285,6 +286,12 @@ function createConversation(req, res, next) {
         return res
             .status(422)
             .json({ message: 'Missing message.' });
+    }
+
+    if(!req.body.message) {
+        return res
+            .status(422)
+            .json({ message: 'Missing subject.' });
     }
 
     const conversation = new Conversation({
@@ -317,7 +324,7 @@ function createConversation(req, res, next) {
                 .status(200)
                 .json({
                     message: 'Conversation started!',
-                    conversation: conversation._id
+                    conversation: conversation
                 });
         });
     });
