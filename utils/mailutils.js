@@ -55,12 +55,12 @@ function makeBoilerplate(type, sender, recipient) {
   switch(type) {
     case 'request':
       return {
-        boilerplate: `<div style="padding: 30px 13%;">Great news! <strong>${sender.username}</strong> (<a class="link" href="mailto:${sender.email}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${sender.email}</a>)<br />has responded to your ad on co/ment!</div>`,
+        boilerplate: `<div style="padding: 30px 13%;">Great news! <strong>${sender.username}</strong><br />has responded to your ad on co/ment!</div>`,
         recUserId: recipient._id,
         };
     case 'accept':
       return {
-        boilerplate: `<div style="padding: 30px 13%;">Great news! <strong>${sender.username}</strong> has accepted <strong>${recipient.username}</strong>'s connection request on co/ment! <br />You have each other's email addresses now:<br/><a class="link" href="mailto:${sender.email}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${sender.email}</a><br/><a class="link" href="mailto:${recipient.email}" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">${recipient.email}</a><br/>so you're on your own from here. Good luck!</div>`,
+        boilerplate: `<div style="padding: 30px 13%;">Great news! <strong>${sender.username}</strong> has accepted <strong>${recipient.username}</strong>'s connection request on co/ment! <br />Check your <a class="link" href="http://co-ment.glitch.me/inbox" style="color: #4981C2; text-decoration: none; border-bottom: 1px transparent;">co/ment inbox</a> to continue the conversation. Good luck!</div>`,
         recUserId: recipient._id,
         };
     case 'decline':

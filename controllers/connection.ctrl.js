@@ -49,12 +49,13 @@ function getConnections(req, res) {
 //   Secured: yes, valid JWT required
 //   Expects:
 //     1) request body properties : {
-//          mentor     : id
-//          mentee     : id
-//          mentorName : string
-//          menteeName : string
-//          initiator  : id
-//          status     : 'pending
+//          mentor          : id
+//          mentee          : id
+//          mentorName      : string
+//          menteeName      : string
+//          initiator       : id
+//          status          : 'pending'
+//          conversationID  : string
 //        }
 //   Returns: success message & connection _id on success
 //

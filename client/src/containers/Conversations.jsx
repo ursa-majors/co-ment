@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 
 import * as apiActions from '../store/actions/apiConversationActions';
 import * as Actions from '../store/actions/conversationActions';
@@ -8,18 +9,26 @@ import Spinner from './Spinner';
 import ModalSm from './ModalSm';
 import Conversation from './Conversation';
 import NewMessage from './NewMessage';
-import { formatDateInbox } from '../utils';
+import { formatDateInbox, scrollToBottom } from '../utils';
 
 class Conversations extends React.Component {
 
   componentDidMount() {
+    console.log('Conversations.jsx cDM: 17');
     const token = this.props.appState.authToken;
     this.props.api.getConversations(token)
     .then((result) => {
+      console.log('Conversations.jsx cDM: 21');
+      console.log(result);
       if (result.type === 'GET_ALL_CONVERSATIONS_SUCCESS') {
         const sortedConvs = this.props.conversation.conversations.sort((a,b) =>  new Date(b.latestMessage.createdAt) - new Date(a.latestMessage.createdAt));
         const newestConv = sortedConvs[0];
-        this.props.api.viewConv(token, newestConv._id);
+        console.log(`Conversations.jsx > 26: ${newestConv}`);
+        this.props.api.viewConv(token, newestConv._id)
+        .then((result2) => {
+          console.log('did currentConv get set correctly?');
+          console.log(`this is stored at this.props.conversation.currentConv: ${this.props.conversation.currentConv}`);
+        });
         }
       });
     }
@@ -49,6 +58,8 @@ class Conversations extends React.Component {
           <div className="conn-details__text-wrap">
             <div className="conn-details__title">Messages</div>
           </div>
+          <div>
+          {this.props.conversation.conversations.length ?
           <div className="inbox__wrap">
             <div className="inbox__sidebar">
               <div className="inbox__messagelist">
@@ -74,7 +85,10 @@ class Conversations extends React.Component {
                     <button
                       key={item._id}
                       className={this.props.conversation.currentConv._id === item._id ? "aria-button inbox__message inbox__message--active" : "aria-button inbox__message"}
-                      onClick={()=> {this.props.api.viewConv(token, conv2view._id)}}>
+                      onClick={()=> {
+                        this.props.api.viewConv(token, conv2view._id);
+                        scrollToBottom();
+                      }}>
                       <div className="inbox__avatar">
                         <div className="inbox__image-aspect">
                           <div className="h-nav__image-crop">
@@ -87,9 +101,10 @@ class Conversations extends React.Component {
                         </div>
                       </div>
                       <div className="inbox__message-wrap">
-                        <div className="inbox__name-date">
-                          <div className="inbox__name">{sender.name}</div>
-                          <div className="inbox__date">
+                        <div className="inbox__name">{sender.name}</div>
+                        <div className="inbox__subject">{item.subject}</div>
+                         {/* <div className="inbox__body">{item.latestMessage.body}</div> */}
+                        <div className="inbox__date">
                             {!smallCaps ?
                               <div>{formattedDate}</div> :
                               <div>
@@ -99,8 +114,6 @@ class Conversations extends React.Component {
                             }
                           </div>
                         </div>
-                        <div className="inbox__body">{item.latestMessage.body}</div>
-                      </div>
                     </button>
                   );
                 })}
@@ -115,7 +128,7 @@ class Conversations extends React.Component {
                 modalType={this.props.conversation.viewConvModal.type}
                 dismiss={
                   () => {
-                    this.props.actions.setConversationsModal({
+                    this.props.actions.setConversationModal({
                       class: 'modal__hide',
                       text: '',
                       type: '',
@@ -124,15 +137,28 @@ class Conversations extends React.Component {
                   }
                 }
               />
-              { this.props.conversation.currentConv ?
+              { this.props.conversation.currentConv._id && this.props.conversation.currentConv.messages && this.props.conversation.currentConv.messages.length ?
                 <div>
                   <Conversation
                     convId = {this.props.conversation.currentConv._id} />
                   <NewMessage />
                 </div> :
-                  "No messages"
+                <div className="inbox__empty--wrap">
+                  <strong> No messages! </strong><br/>
+                  To start using co/ment messaging,<br/>respond to a&nbsp;
+                  <Link to="/posts" className="inbox__link">post</Link>
+                </div>
               }
             </div>
+          </div> :
+          <div className="inbox__empty">
+            <div className="inbox__empty--wrap">
+              <strong> No messages! </strong><br/>
+              To start using co/ment messaging,<br/>respond to a&nbsp;
+              <Link to="/posts" className="inbox__link">post</Link>
+            </div>
+          </div>
+        }
           </div>
         </div>
       </div>

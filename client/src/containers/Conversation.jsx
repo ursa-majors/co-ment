@@ -4,18 +4,53 @@ import { bindActionCreators } from 'redux';
 
 import * as apiActions from '../store/actions/apiConversationActions';
 import * as Actions from '../store/actions/conversationActions';
-import { formatDateInbox } from '../utils';
+import { formatDateInbox, scrollToBottom } from '../utils';
 
 class Conversation extends React.Component {
 
+	componentDidMount() {
+		scrollToBottom();
+	}
+
+	componentDidUpdate() {
+		scrollToBottom();
+	}
+
+	setScrollClass = () => {
+		const el = document.getElementById('msgPane');
+    const subject = document.getElementById('subject');
+    const newMsg = document.getElementById('newMsg');
+		if (el.scrollTop > 0) {
+		// add shadow to bottom of subject div, overflow hidden at top of thread
+      subject.classList.add('inbox__single-subject--scrolled');
+    } else if (el.scrollTop === 0 && subject.classList.contains('inbox__single-subject--scrolled')) {
+      subject.classList.remove('inbox__single-subject--scrolled');
+    }
+    const isScrolledToBottom = el.scrollHeight - el.clientHeight <= el.scrollTop + 1;
+    // add shadow to top of new msg div, overflow hidden at bottom of thread
+    if (!isScrolledToBottom) {
+    	newMsg.classList.add('message__new--scrolled');
+    } else if (isScrolledToBottom && newMsg.classList.contains('message__new--scrolled')) {
+      newMsg.classList.remove('message__new--scrolled');
+    }
+	}
+
   render() {
+  	const el = document.getElementById('msgPane');
+  	let scrolled;
+  	if (el) {
+  		scrolled = el.scrollTop > 0;
+  	}
+  	console.log(this.props.conversation.currentConv);
+  	console.log(this.props.conversation.currentConv.messages);
     return (
-      <div className="message">
-        {this.props.conversation.currentConv && this.props.conversation.currentConv.messages &&
+    	<div>
+    	<div id="subject" className={scrolled ? "inbox__single-subject inbox__single-subject--scrolled" : "inbox__single-subject"}>
+        {this.props.conversation.currentConv.subject}
+      </div>
+      <div className="message" id='msgPane' onScroll={()=>this.setScrollClass()}>
+        {this.props.conversation.currentConv && this.props.conversation.currentConv.messages && this.props.conversation.currentConv.messages[0].author &&
         	<div className="inbox__single">
-            <div className="inbox__single-subject">
-            {this.props.conversation.currentConv.subject}
-            </div>
 	          {this.props.conversation.currentConv.messages.map(message => {
 	            const sender = this.props.conversation.currentConv.participants.find(participant => participant._id === message.author);
 	            const backgroundStyle = {
@@ -71,6 +106,7 @@ class Conversation extends React.Component {
 	          })}
         	</div>
         }
+      </div>
       </div>
       );
   	}

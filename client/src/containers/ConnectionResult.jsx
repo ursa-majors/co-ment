@@ -23,7 +23,7 @@ class ConnectionResult extends React.Component {
               <li>Your message has been sent to the recipient with a link to respond</li>
               <li>The recipient will log in to co/ment and accept or decline the request</li>
               <li>You will receive email notification of their action</li>
-              <li>Once a connection is made, the two of you can decide on the best way to communicate &mdash; email, Slack, video chat, or in-person meeting.</li>
+              <li>Once a connection is accepted, you can use co/ment messaging to continue the conversation.</li>
               <li>Good luck!</li>
             </ol>
           </div>
