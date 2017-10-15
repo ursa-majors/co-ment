@@ -171,65 +171,68 @@ class ConnectionDetails extends React.Component {
               Connection Details
             </div>
           </div>
-          <table className="conn-details__table">
-            <thead className="conn-details__thead">
-              <tr className="conn-details__tr">
-                <th className="conn-details__th">
-                  <div className={`conn-details__image-wrap`}>
-                    <div  className="conn-details__header">Mentor</div>
-                      <div className={`conn-details__image-aspect`}>
-                        <div className={`conn-details__image-crop`}>
-                          <div
-                            className={`conn-details__image`}
-                            style={backgroundStyleMentor}
-                            role="image"
-                            aria-label={this.props.connection.viewConnection.mentor.name} />
+          {this.props.connection.viewConnection.mentor &&
+          <div>
+            <table className="conn-details__table">
+              <thead className="conn-details__thead">
+                <tr className="conn-details__tr">
+                  <th className="conn-details__th">
+                    <div className={`conn-details__image-wrap`}>
+                      <div  className="conn-details__header">Mentor</div>
+                        <div className={`conn-details__image-aspect`}>
+                          <div className={`conn-details__image-crop`}>
+                            <div
+                              className={`conn-details__image`}
+                              style={backgroundStyleMentor}
+                              role="image"
+                              aria-label={this.props.connection.viewConnection.mentor.name} />
+                          </div>
                         </div>
-                      </div>
-                      <div className="conn-details__text">{this.props.connection.viewConnection.mentor.name}</div>
-                  </div> {/* image-wrap */}
-                </th>
-                <th className="conn-details__th">
-                  <div className={`conn-details__image-wrap`}>
-                    <div  className="conn-details__header">Mentee</div>
-                      <div className={`conn-details__image-aspect`}>
-                        <div className={`conn-details__image-crop`}>
-                          <div
-                            className={`conn-details__image`}
-                            style={backgroundStyleMentee}
-                            role="image"
-                            aria-label={this.props.connection.viewConnection.mentee.name} />
+                        <div className="conn-details__text">{this.props.connection.viewConnection.mentor.name}</div>
+                    </div> {/* image-wrap */}
+                  </th>
+                  <th className="conn-details__th">
+                    <div className={`conn-details__image-wrap`}>
+                      <div  className="conn-details__header">Mentee</div>
+                        <div className={`conn-details__image-aspect`}>
+                          <div className={`conn-details__image-crop`}>
+                            <div
+                              className={`conn-details__image`}
+                              style={backgroundStyleMentee}
+                              role="image"
+                              aria-label={this.props.connection.viewConnection.mentee.name} />
+                          </div>
                         </div>
-                      </div>
-                    <div className="conn-details__text">{this.props.connection.viewConnection.mentee.name}</div>
-                  </div> {/* image-wrap */}
-                </th>
-              </tr>
-            </thead>
-            <tbody className="conn-details__tbody">
-              <tr className="conn-details__tr">
-                <td className="conn-details__td">Initiated By</td>
-                <td className="conn-details__td">{this.props.connection.viewConnection.initiator.name}</td>
-              </tr>
-              <tr className="conn-details__tr">
-                <td className="conn-details__td">Original Post</td>
-                <td className="conn-details__td"><Link className="conn-details__link" to={`/viewpost/${this.props.connection.viewConnection.originalPost.id}`}>
-              {this.props.connection.viewConnection.originalPost.title}
-            </Link> </td>
-              </tr>
-              <tr className="conn-details__tr">
-                <td className="conn-details__td">Status</td>
-                <td className="conn-details__td">{this.props.connection.viewConnection.status}</td>
-              </tr>
-              <tr className="conn-details__tr">
-                <td className="conn-details__td">Date Updated</td>
-                <td className="conn-details__td">{formatDate(new Date(this.props.connection.viewConnection.dateStarted))}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div className="single-post__button-wrap">
-            { this.getActions() }
-          </div>
+                      <div className="conn-details__text">{this.props.connection.viewConnection.mentee.name}</div>
+                    </div> {/* image-wrap */}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="conn-details__tbody">
+                <tr className="conn-details__tr">
+                  <td className="conn-details__td">Initiated By</td>
+                  <td className="conn-details__td">{this.props.connection.viewConnection.initiator.name}</td>
+                </tr>
+                <tr className="conn-details__tr">
+                  <td className="conn-details__td">Original Post</td>
+                  <td className="conn-details__td"><Link className="conn-details__link" to={`/viewpost/${this.props.connection.viewConnection.originalPost.id}`}>
+                {this.props.connection.viewConnection.originalPost.title}
+              </Link> </td>
+                </tr>
+                <tr className="conn-details__tr">
+                  <td className="conn-details__td">Status</td>
+                  <td className="conn-details__td">{this.props.connection.viewConnection.status}</td>
+                </tr>
+                <tr className="conn-details__tr">
+                  <td className="conn-details__td">Date Updated</td>
+                  <td className="conn-details__td">{formatDate(new Date(this.props.connection.viewConnection.dateStarted))}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div className="single-post__button-wrap">
+              { this.getActions() }
+            </div>
+          </div> }
         </div>
         <Spinner cssClass={this.props.connection.connDetailsSpinnerClass} />
         <ModalSm

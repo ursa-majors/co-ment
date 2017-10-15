@@ -49,7 +49,7 @@ class Conversation extends React.Component {
         {this.props.conversation.currentConv.subject}
       </div>
       <div className="message" id='msgPane' onScroll={()=>this.setScrollClass()}>
-        {this.props.conversation.currentConv && this.props.conversation.currentConv.messages && this.props.conversation.currentConv.messages.length &&
+        {this.props.conversation.currentConv && this.props.conversation.currentConv.messages && this.props.conversation.currentConv.messages[0].author &&
         	<div className="inbox__single">
 	          {this.props.conversation.currentConv.messages.map(message => {
 	            const sender = this.props.conversation.currentConv.participants.find(participant => participant._id === message.author);
