@@ -19,8 +19,6 @@ export const CONNECTION_FAILURE = 'CONNECTION_FAILURE';
 * }
 */
 export function connect(token, details) {
-  console.log('connect');
-  console.log(details);
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/connections`,

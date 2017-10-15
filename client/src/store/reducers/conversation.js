@@ -337,6 +337,8 @@ function conversation(state = INITIAL_STATE, action) {
     *  with new conversation for redirect to inbox
     */
     case POST_CONV_SUCCESS:
+      console.log('conversation posted');
+      console.log(action.payload.conversation);
       return update(
         state,
         {
@@ -352,6 +354,8 @@ function conversation(state = INITIAL_STATE, action) {
     *  a message to user.
     */
     case POST_CONV_FAILURE:
+    console.log('post conversation failure');
+    console.log(action.payload);
       error = `An error occurred while saving your messasge: ${action.payload.message || 'Unknown error'}`;
       return Object.assign(
         {},
@@ -374,6 +378,7 @@ function conversation(state = INITIAL_STATE, action) {
     */
 
     case SET_NEW_CONV_MODAL:
+    console.log(action.payload);
       return Object.assign({}, state, { newConvModal: action.payload });
 
     default:

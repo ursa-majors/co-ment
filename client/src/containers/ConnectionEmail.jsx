@@ -6,7 +6,9 @@ import Spinner from './Spinner';
 import ModalSm from './ModalSm';
 import * as Actions from '../store/actions/emailActions';
 import { sendEmail } from '../store/actions/apiActions';
+import { setNewConvModal } from '../store/actions/conversationActions';
 import * as connectActions from '../store/actions/apiConnectionActions';
+import * as conversationActions from '../store/actions/apiConversationActions';
 import { adjustTextArea } from '../utils';
 
 class ConnectionEmail extends React.Component {
@@ -37,8 +39,8 @@ class ConnectionEmail extends React.Component {
 
     const token = this.props.appState.authToken;
     let email = {
-      recipient: this.props.connectionEmail.recipient,
-      sender: this.props.connectionEmail.sender,
+      recipient: this.props.connectionEmail.recipient.username,
+      sender: this.props.connectionEmail.sender.username,
       copySender: false,
       subject: this.props.connectionEmail.subject,
       body: this.props.connectionEmail.body,
@@ -70,17 +72,31 @@ class ConnectionEmail extends React.Component {
           },
           status: 'pending',
         };
-        // Save the connection object...send email if successful
+        // build a new conversation object
+        // save this email as the first message in that conversation
+        const conversation = {
+          recipientId: this.props.connectionEmail.recipient._id,
+          message: this.props.connectionEmail.body,
+          subject: `Re: ${this.props.posts.currentPost.title}`,
+        }
+        console.log('ConnectionEmail.jsx > 82');
+        console.log(conversation);
+        // Save the connection object
+        // ...send email if successful
+        // Save the new conversation
         this.props.connectActions.connect(token, connection)
           .then((result1) => {
-            console.log(result1);
             if (result1.type === 'CONNECTION_SUCCESS') {
               email.connectionId = result1.payload.connectionId;
               this.props.emailActions.sendEmail(token, email)
               .then((result2) => {
-                console.log(result2);
                 if (result2.type === "SEND_EMAIL_SUCCESS") {
-                  this.props.history.push('/connectionresult');
+                  this.props.conversationActions.postConversation(token, conversation)
+                  .then((result3) => {
+                    if (result3.type === "POST_CONV_SUCCESS") {
+                    this.props.history.push('/connectionresult');
+                    }
+                  });
                 }
               });
             }
@@ -137,7 +153,7 @@ class ConnectionEmail extends React.Component {
                 if (result.type === 'UPDATE_CONNECTION_STATUS_SUCCESS') {
                   this.props.emailActions.setEmailModal({
                     class: 'modal__show',
-                    text: `An email was sent to notify ${this.props.connectionEmail.recipient} that the Connection was declined`,
+                    text: `An email was sent to notify ${this.props.connectionEmail.recipient.username} that the Connection was declined`,
                     title: 'COMPLETE',
                     type: 'modal__success',
                     action: () => {
@@ -172,7 +188,7 @@ class ConnectionEmail extends React.Component {
                 if (result.type === 'UPDATE_CONNECTION_STATUS_SUCCESS') {
                   this.props.emailActions.setEmailModal({
                     class: 'modal__show',
-                    text: `Your connection with ${this.props.connectionEmail.recipient} is now deactivated.\n\nAn email was sent to both users to confirm this action.`,
+                    text: `Your connection with ${this.props.connectionEmail.recipient.username} is now deactivated.\n\nAn email was sent to both users to confirm this action.`,
                     title: 'COMPLETE',
                     type: 'modal__success',
                     action: () => {
@@ -201,7 +217,7 @@ class ConnectionEmail extends React.Component {
     let bodyPlaceholder = 'Include a short message to explain why you want to connect with this user...';
     if (this.props.connectionEmail.type === 'accept') {
       buttonText = 'Accept Request';
-      bodyPlaceholder = `Include a personal message. Let ${this.props.connectionEmail.recipient} know the best way to communicate with you to begin your mentorship...`;
+      bodyPlaceholder = `Include a personal message. Let ${this.props.connectionEmail.recipient.username} know the best way to communicate with you to begin your mentorship...`;
     }
     if (this.props.connectionEmail.type === 'decline') {
       buttonText = 'Decline Request';
@@ -218,12 +234,12 @@ class ConnectionEmail extends React.Component {
           <div className="form__input-group">
             <label className="form__label" htmlFor="recipient">TO:
             </label>
-            <input className="form__input form__connection-input" type="text" id="recipient" value={this.props.connectionEmail.recipient} onChange={event => this.handleChange(event)} disabled />
+            <input className="form__input form__connection-input" type="text" id="recipient" value={this.props.connectionEmail.recipient.username} onChange={event => this.handleChange(event)} disabled />
           </div>
           <div className="form__input-group">
             <label className="form__label" htmlFor="sender">FROM:
             </label>
-            <input className="form__input form__connection-input" type="text" id="sender" value={this.props.connectionEmail.sender} onChange={event => this.handleChange(event)} disabled />
+            <input className="form__input form__connection-input" type="text" id="sender" value={this.props.connectionEmail.sender.username} onChange={event => this.handleChange(event)} disabled />
           </div>
           <div className="form__input-group">
             <label className="form__label" htmlFor="subject">Subject:
@@ -278,6 +294,24 @@ class ConnectionEmail extends React.Component {
             }
           }
         />
+        <Spinner cssClass={this.props.conversation.newConvSpinnerClass} />
+        <ModalSm
+          modalClass={this.props.conversation.newConvModal.class}
+          modalText={this.props.conversation.newConvModal.text}
+          modalTitle={this.props.conversation.newConvModal.title}
+          modalType={this.props.conversation.newConvModal.type}
+          action={this.props.conversation.newConvModal.action}
+          dismiss={
+            () => {
+              this.props.conversationActions.setNewConvModal({
+                text: '',
+                class: 'modal__hide',
+                title: '',
+                type: '',
+              });
+            }
+          }
+        />
       </div>
     );
   }
@@ -288,11 +322,13 @@ const mapStateToProps = state => ({
   posts: state.posts,
   profiles: state.profiles,
   connectionEmail: state.connectionEmail,
+  conversation: state.conversation,
 });
 
 const mapDispatchToProps = dispatch => ({
   emailActions: bindActionCreators({ ...Actions, sendEmail }, dispatch),
   connectActions: bindActionCreators(connectActions, dispatch),
+  conversationActions: bindActionCreators({ ...conversationActions, setNewConvModal }, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConnectionEmail);

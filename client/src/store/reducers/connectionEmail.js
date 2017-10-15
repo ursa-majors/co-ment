@@ -29,6 +29,7 @@ function connectionEmail(state = INITIAL_STATE, action) {
   let error;
   switch (action.type) {
     case SET_EMAIL_OPTIONS:
+    console.log(action.payload.recipient);
       return update(
         state,
         {

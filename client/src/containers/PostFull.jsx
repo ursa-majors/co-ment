@@ -117,8 +117,8 @@ class PostFull extends React.Component {
       // TODO: go get connections, then test them as above
     }
     this.props.actions.setEmailOptions({
-      recipient: this.props.posts.currentPost.author.username,
-      sender: this.props.profiles.userProfile.username,
+      recipient: this.props.posts.currentPost.author,
+      sender: this.props.profiles.userProfile,
       subject: `co/ment - Contact Request from ${this.props.profiles.userProfile.username}`,
       body: '',
       role: this.props.posts.currentPost.role === 'mentor' ? 'mentee' : 'mentor',
