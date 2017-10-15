@@ -47,6 +47,11 @@ class ConnectionEmail extends React.Component {
       type: this.props.connectionEmail.type,
       connectionId: this.props.connectionEmail.connectionId,
     };
+    const msgBody = {
+      recipientId  : this.props.connectionEmail.recipient.id || this.props.connectionEmail.recipient._id,
+      conversation : this.props.connectionEmail.conversationId,
+      messageBody  : this.props.connectionEmail.body,
+    };
     switch(this.props.connectionEmail.type) {
       case 'request':
         // build new conversation and connection objects
@@ -106,15 +111,6 @@ class ConnectionEmail extends React.Component {
       // send an email
       // build a new message object and post to the existing conversation
         email.copySender = true;
-        console.log('Accept!');
-        console.log(this.props.connectionEmail);
-        console.log(this.props.connectionEmail.conversationId);
-        const msgBody = {
-          recipientId  : this.props.connectionEmail.recipient.id || this.props.connectionEmail.recipient._id,
-          conversation : this.props.connectionEmail.conversationId,
-          messageBody  : this.props.connectionEmail.body,
-          };
-        console.log(msgBody);
         this.props.emailActions.sendEmail(token, email)
           .then((result) => {
             if (result.type === "SEND_EMAIL_SUCCESS") {
@@ -154,9 +150,15 @@ class ConnectionEmail extends React.Component {
         break;
 
       case 'decline':
+      // send an email
+      // build a new message object and post to the existing conversation
         this.props.emailActions.sendEmail(token, email)
           .then((result) => {
-            if (result.type === 'SEND_EMAIL_SUCCESS') {
+            if (result.type === "SEND_EMAIL_SUCCESS") {
+              this.props.conversationActions.postMessage(token,msgBody)
+              .then((result2) => {
+                console.log(result2);
+              });
               this.props.connectActions.updateConnectionStatus(
                 token,
                 {
@@ -168,7 +170,7 @@ class ConnectionEmail extends React.Component {
                 if (result.type === 'UPDATE_CONNECTION_STATUS_SUCCESS') {
                   this.props.emailActions.setEmailModal({
                     class: 'modal__show',
-                    text: `An email was sent to notify ${this.props.connectionEmail.recipient.username} that the Connection was declined`,
+                    text: `An email was sent to notify ${this.props.connectionEmail.recipient.username || this.props.connectionEmail.recipient.name} that the connection was declined`,
                     title: 'COMPLETE',
                     type: 'modal__success',
                     action: () => {
