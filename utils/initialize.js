@@ -19,18 +19,22 @@
 * 3. Run `node ./utils/initialize.js` from the base co/ment
 *    directory (because .env file is needed)
 ************************************************************/
-const dotenv  = require('dotenv').config();
-const db = require('../db');
-const mongoose = require('mongoose');
-const User = require('../models/user');
-const Post = require('../models/post');
+const dotenv     = require('dotenv').config();
+const db         = require('../db');
+const mongoose   = require('mongoose');
+const User       = require('../models/user');
+const Post       = require('../models/post');
 const Connection = require('../models/connection');
 
-console.log(db.getDbConnectionString())
+console.log(db.getDbConnectionString());
+
 // new Mongo ( >= 4.11.0 ) connection logic:
 mongoose.connect(db.getDbConnectionString(), {
     useMongoClient: true
 });
+
+// set Mongoose promises = Node es6 promises
+mongoose.Promise = global.Promise;
 
 /*
 *  First identify the documents to be updated, by querying
@@ -44,20 +48,23 @@ mongoose.connect(db.getDbConnectionString(), {
 *  Close DB connection
 */
 function initialize( collection, field ){
-  const query = { [field.name]: { $exists: false } };
-  const update = { [field.name]: field.defaultValue };
-  const options = { new: true, multi: true };
+    const query   = { [field.name] : { $exists: false } };
+    const update  = { [field.name] : field.defaultValue };
+    const options = { multi : true };
 
-  collection.update(query, update, options)
-    .exec()
-    .then( (err, result) => {
-      if (err) { console.log('hi'); return console.log(err)}
-      console.log(`Documents modified: ${result.nModified}`)
-      return result.nModified
-    })
-    .then(()=>{
-      mongoose.connection.close()
-    })
+    collection.update(query, update, options)
+        .exec()
+        .then( result => {
+            console.log(`Documents modified: ${result.nModified}`);
+            return result.nModified;
+        })
+        .then(()=>{
+            mongoose.connection.close();
+        })
+        .catch( err => {
+            console.log('hi', err);
+            return console.log(err);
+        });
 }
 
-initialize( User, {name: 'contactMeta.unSubbed', defaultValue: false})
+initialize( User, {name: 'contactMeta.unSubbed', defaultValue: false});
