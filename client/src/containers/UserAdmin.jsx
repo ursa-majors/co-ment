@@ -12,7 +12,7 @@ import UserPosts from './UserPosts';
 class UserAdmin extends React.Component {
 
   componentDidMount() {
-    const userId = this.props.appState.userId;
+    const userId = this.props.appState.user._id;
     this.props.api.getUserPosts(this.props.appState.authToken, userId);
   }
 
