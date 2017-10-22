@@ -41,8 +41,6 @@ class Conversation extends React.Component {
   	if (el) {
   		scrolled = el.scrollTop > 0;
   	}
-  	console.log(this.props.conversation.currentConv);
-  	console.log(this.props.conversation.currentConv.messages);
     return (
     	<div>
     	<div id="subject" className={scrolled ? "inbox__single-subject inbox__single-subject--scrolled" : "inbox__single-subject"}>

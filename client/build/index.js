@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "6a22c1576b735f172326"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "68f85660424ff0891918"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -56884,7 +56884,7 @@ var
 UserAdmin = function (_React$Component) {_inherits(UserAdmin, _React$Component);function UserAdmin() {_classCallCheck(this, UserAdmin);return _possibleConstructorReturn(this, (UserAdmin.__proto__ || Object.getPrototypeOf(UserAdmin)).apply(this, arguments));}_createClass(UserAdmin, [{ key: 'componentDidMount', value: function componentDidMount()
 
     {
-      var userId = this.props.appState.userId;
+      var userId = this.props.appState.user._id;
       this.props.api.getUserPosts(this.props.appState.authToken, userId);
     } }, { key: 'render', value: function render()
 
@@ -57306,7 +57306,7 @@ ViewProfile = function (_React$Component) {_inherits(ViewProfile, _React$Compone
 
 
     handleKeyDown = function () {return _this.__handleKeyDown__REACT_HOT_LOADER__.apply(_this, arguments);};_this.state = { tab: 'skills', flip: false, thumb: false };return _this;}_createClass(ViewProfile, [{ key: 'componentDidMount', value: function componentDidMount() {// copy requested profile data into currentProfile
-      var profileId = void 0;if (this.props.match && this.props.match.params.id) {profileId = this.props.match.params.id;} else {profileId = this.props.appState.userId;}this.props.api.getProfile(this.props.appState.authToken, profileId);} }, { key: 'onClick', value: function onClick(e) {// handle tab navigation in bottom half of profile card
+      var profileId = void 0;if (this.props.match && this.props.match.params.id) {profileId = this.props.match.params.id;} else {profileId = this.props.appState.user._id;}this.props.api.getProfile(this.props.appState.authToken, profileId);} }, { key: 'onClick', value: function onClick(e) {// handle tab navigation in bottom half of profile card
       var newState = _extends({}, this.state);newState.tab = e.target.className.split(" ")[0];this.setState(_extends({}, newState));} }, { key: 'flip', value: function flip() {// handle card flip front/back
       var newState = _extends({}, this.state);newState.flip = !this.state.flip;this.setState(_extends({}, newState), function () {return ViewProfile.adjustCardHeight();});} }, { key: 'toggleThumb', value: function toggleThumb() {// handle toggle thumb / full-size view
       var newState = _extends({}, this.state);newState.thumb = !this.state.thumb;this.setState(_extends({}, newState));} }, { key: '__handleKeyDown__REACT_HOT_LOADER__', value: function __handleKeyDown__REACT_HOT_LOADER__(e) {// enter key fires flip / expand / toggle tabs when focused

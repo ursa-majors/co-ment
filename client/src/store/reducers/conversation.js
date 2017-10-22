@@ -109,7 +109,6 @@ function conversation(state = INITIAL_STATE, action) {
     *  spinner CSS to indicate that an API call is in progress.
     */
     case GET_ALL_CONVERSATIONS_REQUEST:
-    console.log(action.type);
       return Object.assign({}, state, {
       	getConversationsSpinnerClass: 'spinner__show'
         });
@@ -124,13 +123,14 @@ function conversation(state = INITIAL_STATE, action) {
     *  display a message to user.
     */
     case GET_ALL_CONVERSATIONS_SUCCESS:
-    console.log(action.type);
       if (action.payload.conversations.length > 0) {
         return Object.assign(
           {},
           state,
           {
             conversations: action.payload.conversations,
+            totalMessages: action.payload.totalMessages,
+            totalUnreads: action.payload.totalUnreads,
             getConversationsSpinnerClass: 'spinner__hide',
           },
         );
@@ -156,7 +156,6 @@ function conversation(state = INITIAL_STATE, action) {
     *  a message to user.
     */
     case GET_ALL_CONVERSATIONS_FAILURE:
-    console.log(action.type);
       error = `An error occurred while fetching messages: ${action.payload.message || 'Unknown error'}`;
       return Object.assign(
         {},
@@ -340,8 +339,6 @@ function conversation(state = INITIAL_STATE, action) {
     *  with new conversation for redirect to inbox
     */
     case POST_CONV_SUCCESS:
-      console.log('conversation posted');
-      console.log(action.payload.conversation);
       return update(
         state,
         {
@@ -357,8 +354,6 @@ function conversation(state = INITIAL_STATE, action) {
     *  a message to user.
     */
     case POST_CONV_FAILURE:
-    console.log('post conversation failure');
-    console.log(action.payload);
       error = `An error occurred while saving your messasge: ${action.payload.message || 'Unknown error'}`;
       return Object.assign(
         {},
@@ -381,7 +376,6 @@ function conversation(state = INITIAL_STATE, action) {
     */
 
     case SET_NEW_CONV_MODAL:
-    console.log(action.payload);
       return Object.assign({}, state, { newConvModal: action.payload });
 
     default:
