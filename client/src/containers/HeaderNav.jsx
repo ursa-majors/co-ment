@@ -6,11 +6,19 @@ import { bindActionCreators } from 'redux';
 
 import { skip } from '../utils';
 import { setMenuState, setAdminMenuState, setMenuBackground } from '../store/actions';
+import * as apiActions from '../store/actions/apiConversationActions';
 
 class Nav extends React.Component {
 
+  componentDidMount() {
+    const token = this.props.appState.authToken;
+    this.props.api.getConversations(token);
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
+      const token = this.props.appState.authToken;
+      this.props.api.getConversations(token);
       this.props.actions.setMenuState('closing');
       this.props.actions.setAdminMenuState('closing');
       this.props.actions.setMenuBackground();
@@ -240,6 +248,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators({ setMenuState, setMenuBackground, setAdminMenuState }, dispatch),
+  api: bindActionCreators(apiActions, dispatch),
 });
 
 const connectedNav = connect(mapStateToProps, mapDispatchToProps)(Nav)

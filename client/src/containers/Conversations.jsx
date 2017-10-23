@@ -81,6 +81,9 @@ class Conversations extends React.Component {
                         this.props.api.viewConv(token, conv2view._id);
                         scrollToBottom();
                       }}>
+                      {item.latestMessage.unread &&
+                        <span className="inbox__new" />
+                      }
                       <div className="inbox__avatar">
                         <div className="inbox__image-aspect">
                           <div className="h-nav__image-crop">
@@ -95,7 +98,6 @@ class Conversations extends React.Component {
                       <div className="inbox__message-wrap">
                         <div className="inbox__name">{sender.name}</div>
                         <div className="inbox__subject">{item.subject}</div>
-                         {/* <div className="inbox__body">{item.latestMessage.body}</div> */}
                         <div className="inbox__date">
                             {!smallCaps ?
                               <div>{formattedDate}</div> :
