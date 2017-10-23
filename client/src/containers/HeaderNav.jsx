@@ -11,14 +11,18 @@ import * as apiActions from '../store/actions/apiConversationActions';
 class Nav extends React.Component {
 
   componentDidMount() {
-    const token = this.props.appState.authToken;
-    this.props.api.getConversations(token);
+    if (this.props.appState.loggedIn) {
+      const token = this.props.appState.authToken;
+      this.props.api.getConversations(token);
+    }
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
+      if (this.props.appState.loggedIn) {
       const token = this.props.appState.authToken;
       this.props.api.getConversations(token);
+    }
       this.props.actions.setMenuState('closing');
       this.props.actions.setAdminMenuState('closing');
       this.props.actions.setMenuBackground();
