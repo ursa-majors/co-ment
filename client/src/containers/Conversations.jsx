@@ -14,21 +14,13 @@ import { formatDateInbox, scrollToBottom } from '../utils';
 class Conversations extends React.Component {
 
   componentDidMount() {
-    console.log('Conversations.jsx cDM: 17');
     const token = this.props.appState.authToken;
     this.props.api.getConversations(token)
     .then((result) => {
-      console.log('Conversations.jsx cDM: 21');
-      console.log(result);
       if (result.type === 'GET_ALL_CONVERSATIONS_SUCCESS') {
         const sortedConvs = this.props.conversation.conversations.sort((a,b) =>  new Date(b.latestMessage.createdAt) - new Date(a.latestMessage.createdAt));
         const newestConv = sortedConvs[0];
-        console.log(`Conversations.jsx > 26: ${newestConv}`);
         this.props.api.viewConv(token, newestConv._id)
-        .then((result2) => {
-          console.log('did currentConv get set correctly?');
-          console.log(`this is stored at this.props.conversation.currentConv: ${this.props.conversation.currentConv}`);
-        });
         }
       });
     }
@@ -89,6 +81,9 @@ class Conversations extends React.Component {
                         this.props.api.viewConv(token, conv2view._id);
                         scrollToBottom();
                       }}>
+                      {item.latestMessage.unread &&
+                        <span className="inbox__new" />
+                      }
                       <div className="inbox__avatar">
                         <div className="inbox__image-aspect">
                           <div className="h-nav__image-crop">
@@ -103,7 +98,6 @@ class Conversations extends React.Component {
                       <div className="inbox__message-wrap">
                         <div className="inbox__name">{sender.name}</div>
                         <div className="inbox__subject">{item.subject}</div>
-                         {/* <div className="inbox__body">{item.latestMessage.body}</div> */}
                         <div className="inbox__date">
                             {!smallCaps ?
                               <div>{formattedDate}</div> :

@@ -6,11 +6,19 @@ import { bindActionCreators } from 'redux';
 
 import { skip } from '../utils';
 import { setMenuState, setAdminMenuState, setMenuBackground } from '../store/actions';
+import * as apiActions from '../store/actions/apiConversationActions';
 
 class Nav extends React.Component {
 
+  componentDidMount() {
+    const token = this.props.appState.authToken;
+    this.props.api.getConversations(token);
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
+      const token = this.props.appState.authToken;
+      this.props.api.getConversations(token);
       this.props.actions.setMenuState('closing');
       this.props.actions.setAdminMenuState('closing');
       this.props.actions.setMenuBackground();
@@ -113,6 +121,21 @@ class Nav extends React.Component {
         className="skip"
         data-taborder=""
         onClick={ () => skip('main')}><span className="skip__text">Skip to content</span> <i className="fa fa-angle-right" /></button>
+      {this.props.appState.loggedIn &&
+        <NavLink
+            to='/inbox'
+            className="h-nav__inbox aria-button"
+            data-taborder=""
+            aria-label="messages"
+            activeClassName="h-nav__inbox--active"
+          >
+            <i className="fa fa-comment-o h-nav__inbox--icon" aria-hidden="true">
+              {this.props.conversation.totalUnreads > 0 &&
+                <span className="h-nav__inbox--badge">{this.props.conversation.totalUnreads}</span>
+              }
+            </i>
+        </NavLink>
+      }
       <div className={classObj[this.props.appState.menuState].menu} aria-expanded={classObj[this.props.appState.menuState].ariaE} aria-controls="nav" onClick={this.navToggle}>
         <span className={classObj[this.props.appState.menuState].span}>
           <button className="h-nav__icon" data-taborder="" >
@@ -191,7 +214,6 @@ class Nav extends React.Component {
             </button>
             <div className="a-nav__wrap">
               <div>
-             {/*} <button className="dismiss aria-button modal-close modal-close-sm a-nav__close" onClick={() => this.adminNavToggle()} data-taborder="">&times;</button> */}
                 <ul className={adminNavClass}>
                   {adminLinks.map((item) => {
                     return (
@@ -221,10 +243,12 @@ class Nav extends React.Component {
 
 const mapStateToProps = state => ({
   appState: state.appState,
+  conversation: state.conversation,
 });
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators({ setMenuState, setMenuBackground, setAdminMenuState }, dispatch),
+  api: bindActionCreators(apiActions, dispatch),
 });
 
 const connectedNav = connect(mapStateToProps, mapDispatchToProps)(Nav)
