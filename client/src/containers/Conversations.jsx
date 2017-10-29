@@ -86,6 +86,7 @@ class Conversations extends React.Component {
                               className={this.props.conversation.currentConv._id === item._id ? 'aria-button inbox__message inbox__message--active' : 'aria-button inbox__message'}
                               onClick={() => {
                                 this.props.api.viewConv(token, conv2view._id);
+                                this.props.api.getConversations(token);
                                 scrollToBottom();
                               }}
                             >
@@ -174,9 +175,9 @@ class Conversations extends React.Component {
 
 Conversations.propTypes = {
   appState: PropTypes.shape({
-    authToken: PropTypes.String,
+    authToken: PropTypes.string,
     user: PropTypes.shape({
-      _id: PropTypes.String,
+      _id: PropTypes.string,
     }).isRequired,
   }).isRequired,
   api: PropTypes.shape({
@@ -189,26 +190,26 @@ Conversations.propTypes = {
     viewConv: PropTypes.func,
   }).isRequired,
   conversation: PropTypes.shape({
-    conversations: PropTypes.Array,
-    viewConvSpinnerClass: PropTypes.String,
-    getConversationsSpinnerClass: PropTypes.String,
+    conversations: PropTypes.array,
+    viewConvSpinnerClass: PropTypes.string,
+    getConversationsSpinnerClass: PropTypes.string,
     viewConvModal: PropTypes.shape({
-      class: PropTypes.String,
-      text: PropTypes.String,
-      title: PropTypes.String,
-      type: PropTypes.String,
+      class: PropTypes.string,
+      text: PropTypes.string,
+      title: PropTypes.string,
+      type: PropTypes.string,
     }).isRequired,
     getConversationsModal: PropTypes.shape({
-      class: PropTypes.String,
-      text: PropTypes.String,
-      title: PropTypes.String,
-      type: PropTypes.String,
+      class: PropTypes.string,
+      text: PropTypes.string,
+      title: PropTypes.string,
+      type: PropTypes.string,
     }).isRequired,
     currentConv: PropTypes.shape({
-      _id: PropTypes.String,
-      subject: PropTypes.String,
-      messages: PropTypes.Array,
-      participants: PropTypes.Array,
+      _id: PropTypes.string,
+      subject: PropTypes.string,
+      messages: PropTypes.array,
+      participants: PropTypes.array,
     }).isRequired,
   }).isRequired,
 };

@@ -4,11 +4,12 @@ import { SET_VIEW_CONVERSATION, CLEAR_VIEW_CONVERSATION, SET_CONVERSATIONS_MODAL
 
 import { GET_ALL_CONVERSATIONS_REQUEST,
   GET_ALL_CONVERSATIONS_SUCCESS, GET_ALL_CONVERSATIONS_FAILURE,
-  VIEW_CONV_REQUEST, VIEW_CONV_SUCCESS, VIEW_CONV_FAILURE, POST_MSG_REQUEST, POST_MSG_SUCCESS, POST_MSG_FAILURE, POST_CONV_REQUEST, POST_CONV_SUCCESS, POST_CONV_FAILURE
+  VIEW_CONV_REQUEST, VIEW_CONV_SUCCESS, VIEW_CONV_FAILURE, POST_MSG_REQUEST,
+  POST_MSG_SUCCESS, POST_MSG_FAILURE, POST_CONV_REQUEST, POST_CONV_SUCCESS, POST_CONV_FAILURE,
   } from '../actions/apiConversationActions';
 
 const defaultConv = {
-	_id: undefined,
+  _id: undefined,
   subject: '',
   qtyMessages: 0,
   qtyUnreads: 0,
@@ -22,11 +23,11 @@ const defaultConv = {
     author: '',
     recipient: '',
     unread: '',
-  }
+  },
 };
 
 const INITIAL_STATE = {
-	totalMessages: 0,
+  totalMessages: 0,
   totalUnreads: 0,
   // Conversations state
   getConversationsSpinnerClass: 'spinner__hide',
@@ -76,7 +77,7 @@ const INITIAL_STATE = {
 
 function conversation(state = INITIAL_STATE, action) {
   let error;
-  let index;
+  // let index;
   switch (action.type) {
 
     /*
@@ -100,7 +101,7 @@ function conversation(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { viewConversation: defaultConv });
 
 
-		/*-----------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------------*/
 
     /*
     *  Called From: <Conversations />
@@ -110,8 +111,8 @@ function conversation(state = INITIAL_STATE, action) {
     */
     case GET_ALL_CONVERSATIONS_REQUEST:
       return Object.assign({}, state, {
-      	getConversationsSpinnerClass: 'spinner__show'
-        });
+        getConversationsSpinnerClass: 'spinner__show',
+      });
 
     /*
     *  Called From: <Conversations />
@@ -265,9 +266,9 @@ function conversation(state = INITIAL_STATE, action) {
           newMsgSpinnerClass: { $set: 'spinner__hide' },
           currentConv: {
             messages: {
-              $push: [ action.payload.message ] },
+              $push: [action.payload.message] },
           },
-        }
+        },
       );
 
     /*
@@ -344,7 +345,7 @@ function conversation(state = INITIAL_STATE, action) {
         {
           newConvSpinnerClass: { $set: 'spinner__hide' },
           currentConv: { $set: action.payload.conversation },
-        }
+        },
       );
 
     /*
@@ -381,7 +382,7 @@ function conversation(state = INITIAL_STATE, action) {
     default:
       return state;
 
-	}
+  }
 }
 
 export default conversation;

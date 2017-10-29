@@ -118,9 +118,9 @@ class Conversation extends React.Component {
 Conversation.propTypes = {
   conversation: PropTypes.shape({
     currentConv: PropTypes.shape({
-      subject: PropTypes.String,
-      messages: PropTypes.Array,
-      participants: PropTypes.Array,
+      subject: PropTypes.string,
+      messages: PropTypes.array,
+      participants: PropTypes.array,
     }).isRequired,
   }).isRequired,
 };

@@ -32,7 +32,7 @@ UserAdmin.propTypes = {
     userId: PropTypes.string,
   }).isRequired,
   posts: PropTypes.shape({
-    entries: PropTypes.Array,
+    entries: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
   api: PropTypes.shape({
     getUserPosts: PropTypes.func,
