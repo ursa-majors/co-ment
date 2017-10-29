@@ -108,6 +108,7 @@
     z-index: 30;
     font-size: 1.5em !important;
     color: white !important;
+    z-index: 51;
     @include mobile-nav-breakpoint {
       right: 85px;
       top: 15px;

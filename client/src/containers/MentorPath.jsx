@@ -104,8 +104,8 @@ class MentorPath extends React.Component {
 
 MentorPath.propTypes = {
   appState: PropTypes.shape({
-    authToken: PropTypes.String,
-    userId: PropTypes.String,
+    authToken: PropTypes.string,
+    userId: PropTypes.string,
   }).isRequired,
   posts: PropTypes.shape({
     searchPost: PropTypes.object,
@@ -114,7 +114,7 @@ MentorPath.propTypes = {
     userProfile: PropTypes.object,
   }).isRequired,
   connection: PropTypes.shape({
-    connections: PropTypes.Array,
+    connections: PropTypes.array,
   }).isRequired,
   actions: PropTypes.shape({
     setSearchCriteria: PropTypes.func,

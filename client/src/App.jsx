@@ -116,11 +116,11 @@ class App extends React.Component {
 App.propTypes = {
   appState: PropTypes.shape({
     loggedIn: PropTypes.boolean,
-    menuState: PropTypes.String,
-    menuBackground: PropTypes.String,
+    menuState: PropTypes.string,
+    menuBackground: PropTypes.string,
     windowScrolled: PropTypes.boolean,
     windowSize: PropTypes.shape({
-      width: PropTypes.Number,
+      width: PropTypes.number,
     }).isRequired,
   }).isRequired,
   actions: PropTypes.shape({
