@@ -20,9 +20,9 @@ class Nav extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
       if (this.props.appState.loggedIn) {
-      const token = this.props.appState.authToken;
-      this.props.api.getConversations(token);
-    }
+        const token = this.props.appState.authToken;
+        this.props.api.getConversations(token);
+      }
       this.props.actions.setMenuState('closing');
       this.props.actions.setAdminMenuState('closing');
       this.props.actions.setMenuBackground();
@@ -52,15 +52,15 @@ class Nav extends React.Component {
 
 
   adminNavToggle = () => {
-      if (this.props.appState.adminMenuState === 'closed') {
-        this.props.actions.setAdminMenuState('open');
-      } else {
-        this.props.actions.setAdminMenuState('closing');
-        setTimeout(() => {
-          this.props.actions.setAdminMenuState('closed');
-        }, 300);
-      }
+    if (this.props.appState.adminMenuState === 'closed') {
+      this.props.actions.setAdminMenuState('open');
+    } else {
+      this.props.actions.setAdminMenuState('closing');
+      setTimeout(() => {
+        this.props.actions.setAdminMenuState('closed');
+      }, 300);
     }
+  }
 
   render() {
     const classObj = {
@@ -103,15 +103,15 @@ class Nav extends React.Component {
 
     let avatarUrl;
     if (this.props.appState.user.avatarUrl === 'https://cdn.glitch.com/4965fcd8-26e0-4a69-a667-bb075062e086%2Fandroid-chrome-384x384.png?1504907183396' || !this.props.appState.user.avatarUrl ) {
-      avatarUrl = 'https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/usericon2.png'
+      avatarUrl = 'https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/usericon2.png';
     } else {
       avatarUrl = this.props.appState.user.avatarUrl;
     }
     const backgroundStyle = {
       backgroundImage: `url(${avatarUrl})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center center",
-    }
+      backgroundSize: 'cover',
+      backgroundPosition: 'center center',
+    };
 
     const adminLinks = ['inbox', 'profile', 'connections', 'logout'];
 

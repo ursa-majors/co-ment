@@ -31,7 +31,7 @@
 	&__sidebar {
 		width: 100%;
 		overflow-y: scroll;
-  	max-height: 55vh;
+  	max-height: 65vh;
 		@include for-phone-landscape-up {
 			border-top-left-radius: 10px;
 			border-bottom-left-radius: 10px;
@@ -69,7 +69,7 @@
 		width: 10px;
 		height: 10px;
 		border-radius: 100%;
-		background-color: Lime;
+		background-color: $color_sky;
 	}
 
 	&__avatar {
@@ -103,6 +103,10 @@
 			padding-top: 20px;
 			@include for-phone-landscape-up {
 			border-top-left-radius: 10px;
+
+			& .inbox__new {
+				top: 40px;
+			}
 		}
 		}
 

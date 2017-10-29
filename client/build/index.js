@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "ccf5d36ae4ae4767accc"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a257a03ce07935f165d0"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -53910,6 +53910,10 @@ Nav = function (_React$Component) {_inherits(Nav, _React$Component);function Nav
 
 
 
+
+
+
+
     navToggle = function () {var _this2;return (_this2 = _this).__navToggle__REACT_HOT_LOADER__.apply(_this2, arguments);}, _this.
 
 
@@ -53926,7 +53930,7 @@ Nav = function (_React$Component) {_inherits(Nav, _React$Component);function Nav
 
 
 
-    adminNavToggle = function () {var _this3;return (_this3 = _this).__adminNavToggle__REACT_HOT_LOADER__.apply(_this3, arguments);}, _temp), _possibleConstructorReturn(_this, _ret);}_createClass(Nav, [{ key: 'componentDidMount', value: function componentDidMount() {var token = this.props.appState.authToken;this.props.api.getConversations(token);} }, { key: 'componentDidUpdate', value: function componentDidUpdate(prevProps) {var _this4 = this;if (this.props.location !== prevProps.location) {var token = this.props.appState.authToken;this.props.api.getConversations(token);this.props.actions.setMenuState('closing');this.props.actions.setAdminMenuState('closing');this.props.actions.setMenuBackground();setTimeout(function () {_this4.props.actions.setMenuState('closed');_this4.props.actions.setAdminMenuState('closed');_this4.props.actions.setMenuBackground();}, 300);}} }, { key: '__navToggle__REACT_HOT_LOADER__', value: function __navToggle__REACT_HOT_LOADER__() {var _this5 = this;if (this.props.appState.windowSize.width < 650) {if (this.props.appState.menuState === 'closed') {this.props.actions.setMenuState('open');this.props.actions.setMenuBackground();} else {this.props.actions.setMenuState('closing');setTimeout(function () {_this5.props.actions.setMenuState('closed');_this5.props.actions.setMenuBackground();}, 300);}}} }, { key: '__adminNavToggle__REACT_HOT_LOADER__', value: function __adminNavToggle__REACT_HOT_LOADER__() {var _this6 = this;
+    adminNavToggle = function () {var _this3;return (_this3 = _this).__adminNavToggle__REACT_HOT_LOADER__.apply(_this3, arguments);}, _temp), _possibleConstructorReturn(_this, _ret);}_createClass(Nav, [{ key: 'componentDidMount', value: function componentDidMount() {if (this.props.appState.loggedIn) {var token = this.props.appState.authToken;this.props.api.getConversations(token);}} }, { key: 'componentDidUpdate', value: function componentDidUpdate(prevProps) {var _this4 = this;if (this.props.location !== prevProps.location) {if (this.props.appState.loggedIn) {var token = this.props.appState.authToken;this.props.api.getConversations(token);}this.props.actions.setMenuState('closing');this.props.actions.setAdminMenuState('closing');this.props.actions.setMenuBackground();setTimeout(function () {_this4.props.actions.setMenuState('closed');_this4.props.actions.setAdminMenuState('closed');_this4.props.actions.setMenuBackground();}, 300);}} }, { key: '__navToggle__REACT_HOT_LOADER__', value: function __navToggle__REACT_HOT_LOADER__() {var _this5 = this;if (this.props.appState.windowSize.width < 650) {if (this.props.appState.menuState === 'closed') {this.props.actions.setMenuState('open');this.props.actions.setMenuBackground();} else {this.props.actions.setMenuState('closing');setTimeout(function () {_this5.props.actions.setMenuState('closed');_this5.props.actions.setMenuBackground();}, 300);}}} }, { key: '__adminNavToggle__REACT_HOT_LOADER__', value: function __adminNavToggle__REACT_HOT_LOADER__() {var _this6 = this;
       if (this.props.appState.adminMenuState === 'closed') {
         this.props.actions.setAdminMenuState('open');
       } else {
