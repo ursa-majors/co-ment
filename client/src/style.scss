@@ -140,6 +140,7 @@ body.user-is-tabbing *:focus {
     cursor: pointer;
   }
   &__link {
+    border-bottom: 1px solid transparent;
     text-align: left;
     font-family: inherit;
     font-weight: inherit;
