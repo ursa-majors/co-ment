@@ -69,12 +69,8 @@ class Conversations extends React.Component {
                             backgroundPosition: 'center center',
                           };
                           const conv2view = { ...item };
-                          console.log(`Message created at: ${item.latestMessage.createdAt}`);
-                          console.log(`new Date(): ${new Date(
-                            item.latestMessage.createdAt)}`);
                           const formattedDate = formatDateInbox(new Date(
                             item.latestMessage.createdAt));
-                          console.log(`formattedDate: ${formattedDate}`);
                           let dateOnly;
                           let amPm;
                           let smallCaps = false;
