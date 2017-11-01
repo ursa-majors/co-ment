@@ -144,7 +144,7 @@ export const formatDateInbox = (date) => {
   const year = date.getYear();
   const hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
   const minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-  const am_pm = date.getHours() >= 12 ? "pm" : "am";
+  const amPm = date.getHours() >= 12 ? "pm" : "am";
   const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
   const now = new Date();
@@ -158,14 +158,14 @@ export const formatDateInbox = (date) => {
 
   // if message is less than a day old, only show the time sent
   if (daysDiff < 1) {
-    return `${hours}:${minutes} ${am_pm}`;
+    return `${hours}:${minutes} ${amPm}`;
   } else if (daysDiff < 6) {
   // if message is less than a week old,
   // show the day of week and time
-    return `${daysOfWeek[date.getDay()]}, ${hours}:${minutes} ${am_pm}`;
+    return `${daysOfWeek[date.getDay()]}, ${hours}:${minutes} ${amPm}`;
   } else {
   // otherwise show month, day, and year as MM/DD/YY
-    return `${month}/${day}/${year-100}`;
+    return `${month+1}/${day}/${year-100}`;
   }
 
 
