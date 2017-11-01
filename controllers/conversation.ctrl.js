@@ -65,7 +65,7 @@ function formatConvData(convs, user) {
     const totalMessages = convs.reduce( (sum, conv) => {
         return sum + conv.messages.length;
     }, 0);
-    
+
     // count unread messages where user is the recipient
     const totalUnreads = convs.reduce( (sum, conv) => {
         return sum + countUnreads(conv.messages, user);
@@ -80,10 +80,10 @@ function formatConvData(convs, user) {
             qtyUnreads    : countUnreads(c.messages, user),
             startDate     : c.startDate,
             participants  : c.participants,
-            latestMessage : c.messages[0]
+            latestMessage : c.messages[c.messages.length - 1]
         };
     });
-    
+
     return { totalMessages, totalUnreads, conversations };
 }
 
@@ -98,9 +98,9 @@ function formatConvData(convs, user) {
  * @returns   [object]            [populated conversation(s)]
 */
 function populateMessages(convos, user) {
-    
+
     let convIsArray = Array.isArray(convos);
-    
+
     if (convIsArray) {
         return Message.find({ $or: [ { author : user }, { recipient : user } ]})
             .sort({ createdAt: -1 })
@@ -119,7 +119,7 @@ function populateMessages(convos, user) {
                         messages     : messages
                     };
                 });
-        
+
         });
     } else {
         return Message.find({ conversation : convos._id })
@@ -153,10 +153,10 @@ function populateMessages(convos, user) {
                     startDate    : convos.startDate,
                     messages     : msgs
                 };
-        
+
         });
     }
-        
+
 }
 
 
@@ -173,20 +173,20 @@ function getConversations(req, res) {
 
     Conversation.find({ participants: req.token._id })
         .select('subject startDate messages participants')
-        
+
         // add conversation participant details
         .populate({
             path   : 'participants',
             select : 'username name avatarUrl'
         })
         .exec()
-    
+
         // add messages to each conversation in the results array
         .then( convos => populateMessages(convos, req.token._id) )
-    
+
         // get unreads and filter messages
         .then( convos => formatConvData(convos, req.token._id) )
-    
+
         .then( data => res.status(200).json(data) )
         .catch( err => {
             return res
@@ -212,7 +212,7 @@ function getConversation(req, res) {
             select: 'username name avatarUrl'
         })
         .exec()
-        
+
         // add messages array to the conversation
         .then( convo => populateMessages(convo, req.token._id) )
 
@@ -233,6 +233,7 @@ function getConversation(req, res) {
 //     2) request body properties
 //          recipientId : String
 //          message     : String
+//          subject     : String
 //        }
 //   Returns: success message on success
 //
@@ -248,6 +249,12 @@ function createConversation(req, res, next) {
         return res
             .status(422)
             .json({ message: 'Missing message.' });
+    }
+
+    if(!req.body.subject) {
+        return res
+            .status(422)
+            .json({ message: 'Missing subject.' });
     }
 
     const conversation = new Conversation({
@@ -280,7 +287,7 @@ function createConversation(req, res, next) {
                 .status(200)
                 .json({
                     message: 'Conversation started!',
-                    conversation: conversation._id
+                    conversation: conversation
                 });
         });
     });

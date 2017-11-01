@@ -156,14 +156,35 @@ export const formatDateInbox = (date) => {
   // 24 hrs/day * 60 minutes/hour * 60 seconds/minute * 1000 msecs/second
   const daysDiff = Math.floor(microSecondsDiff/(1000 * 60 * 60 * 24));
 
-  if (daysDiff < 7) {
+  // if message is less than a day old, only show the time sent
+  if (daysDiff < 1) {
+    return `${hours}:${minutes} ${am_pm}`;
+  } else if (daysDiff < 6) {
+  // if message is less than a week old,
+  // show the day of week and time
     return `${daysOfWeek[date.getDay()]}, ${hours}:${minutes} ${am_pm}`;
   } else {
+  // otherwise show month, day, and year as MM/DD/YY
     return `${month}/${day}/${year-100}`;
   }
 
 
 };
+
+////// load message list scrolled to bottom to show newest messages ///////
+export const scrollToBottom = () => {
+    const el = document.getElementById('msgPane');
+    const subject = document.getElementById('subject');
+    let isScrolledToBottom = el.scrollHeight - el.clientHeight <= el.scrollTop + 1;
+    if (!isScrolledToBottom) {
+      el.scrollTop = el.scrollHeight - el.clientHeight;
+    }
+    if (el.scrollTop > 0) {
+      subject.classList.add('inbox__single-subject--scrolled');
+    } else if (el.scrollTop === 0 && subject.classList.contains('inbox__single-subject--scrolled')) {
+      subject.classList.remove('inbox__single-subject--scrolled');
+    }
+  }
 
 ////// adjust textarea size to fit content ///////
 export const adjustTextArea = (target) => {

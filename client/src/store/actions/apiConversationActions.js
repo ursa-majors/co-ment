@@ -17,8 +17,11 @@ export function getConversations(token) {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/conversations`,
       method: 'GET',
-      types:
-        [GET_ALL_CONVERSATIONS_REQUEST, GET_ALL_CONVERSATIONS_SUCCESS, GET_ALL_CONVERSATIONS_FAILURE],
+      types: [
+        GET_ALL_CONVERSATIONS_REQUEST,
+        GET_ALL_CONVERSATIONS_SUCCESS,
+        GET_ALL_CONVERSATIONS_FAILURE,
+      ],
       headers: { Authorization: `Bearer ${token}` },
     },
   };
@@ -45,18 +48,32 @@ export const POST_MSG_SUCCESS = 'POST_MSG_SUCCESS';
 export const POST_MSG_FAILURE = 'POST_MSG_FAILURE';
 
 export function postMessage(token, body) {
-  console.log(token);
-  console.log(body);
-  console.log(JSON.stringify(body));
   return {
-  [CALL_API]: {
-    endpoint: `${BASE_URL}/api/messages`,
-    method: 'POST',
-    types: [POST_MSG_REQUEST, POST_MSG_SUCCESS, POST_MSG_FAILURE],
-    headers: { Authorization: `Bearer ${token}`,
+    [CALL_API]: {
+      endpoint: `${BASE_URL}/api/messages`,
+      method: 'POST',
+      types: [POST_MSG_REQUEST, POST_MSG_SUCCESS, POST_MSG_FAILURE],
+      headers: { Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  },
-};
-
+      body: JSON.stringify(body),
+    },
+  };
 }
+
+export const POST_CONV_REQUEST = 'POST_CONV_REQUEST';
+export const POST_CONV_SUCCESS = 'POST_CONV_SUCCESS';
+export const POST_CONV_FAILURE = 'POST_CONV_FAILURE';
+
+export function postConversation(token, body) {
+  return {
+    [CALL_API]: {
+      endpoint: `${BASE_URL}/api/conversations`,
+      method: 'POST',
+      types: [POST_CONV_REQUEST, POST_CONV_SUCCESS, POST_CONV_FAILURE],
+      headers: { Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    },
+  };
+}
+

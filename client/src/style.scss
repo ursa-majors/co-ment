@@ -123,6 +123,7 @@ body.user-is-tabbing *:focus {
   letter-spacing: inherit;
   text-transform: inherit;
   font-weight: inherit;
+  cursor: pointer;
 
   &:hover, &:active, &:focus {
     -webkit-appearance: none;
@@ -136,6 +137,7 @@ body.user-is-tabbing *:focus {
     letter-spacing: inherit;
     text-transform: inherit;
     font-weight: inherit;
+    cursor: pointer;
   }
   &__link {
     text-align: left;

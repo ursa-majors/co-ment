@@ -240,25 +240,25 @@
   }
 
   &__item-link {
-    color: rgba(255, 255, 255, 0.8);
-    font-family: 'Alegreya Sans SC', sans-serif;
-    text-transform: lowercase;
-    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-family: 'Alegreya Sans SC', sans-serif !important;
+    text-transform: lowercase !important;
+    font-weight: 700 !important;
     font-size: 16px;
     text-decoration: none;
     margin-bottom: 5px;
     padding: 7px 12px;
-    letter-spacing: 2px;
+    letter-spacing: 2px !important;
     border-radius: 25px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    background: $color_sky;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    background: $color_sky !important;
 
     &:hover, &:focus {
-      background: $color_aqua;
-      color: rgba(255, 2555, 255, 1);
-      text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      transition: box-shadow 300ms ease-in-out;
+      background: $color_aqua !important;
+      color: rgba(255, 2555, 255, 1) !important;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.8) !important;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
+      transition: box-shadow 300ms ease-in-out !important;
     }
   }
 }
