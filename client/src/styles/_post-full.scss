@@ -180,7 +180,6 @@
       bottom: 0;
       left: 0;
       right: 0;
-      border: 2px solid rgba(255,255,255,.9);
       overflow: hidden;
       text-align: center;
       display: flex;
@@ -220,7 +219,7 @@
   &__username {
     font-weight: 400;
     font-size: 18px;
-    border-bottom: 1px transparent;
+    border-bottom: 1px solid transparent;
     display: inline-block;
 
     &:hover {
