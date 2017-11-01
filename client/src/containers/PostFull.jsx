@@ -308,7 +308,7 @@ class PostFull extends React.Component {
                   </Link>
                 </div>
                 <div className={`post-full__name-wrap`}>
-                  <Link id="username" className="unstyled-link post-full__username" to={`/viewprofile/${post.author._id}`}>
+                  <Link id="username" className="unstyled-link" to={`/viewprofile/${post.author._id}`}>
                     <span className={`post-full__name`}>
                     {post.author.name}</span>
                   </Link>
