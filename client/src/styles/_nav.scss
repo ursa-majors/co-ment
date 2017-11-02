@@ -100,6 +100,42 @@
     }
   }
 
+  &__inbox {
+    display: block;
+    position: absolute;
+    right: 40px;
+    top: 12px;
+    z-index: 30;
+    font-size: 1.5em !important;
+    color: white !important;
+    z-index: 51;
+    @include mobile-nav-breakpoint {
+      right: 85px;
+      top: 15px;
+    }
+      &--active {
+        background-color: transparent !important;
+        color: white !important;
+      }
+
+      &--icon {
+        position: relative;
+      }
+
+      &--badge {
+        font-family: 'Alegreya Sans', sans-serif;
+        font-weight: 700;
+        background-color: $color_error_text;
+        border-radius: 100%;
+        color: white;
+        padding: 2px 3px;
+        font-size: 10px;
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+  }
+
   &__image-aspect {
       width: 40px;
       height: 40px;

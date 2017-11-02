@@ -12,7 +12,7 @@ import UserPosts from './UserPosts';
 class UserAdmin extends React.Component {
 
   componentDidMount() {
-    const userId = this.props.appState.userId;
+    const userId = this.props.appState.user._id;
     this.props.api.getUserPosts(this.props.appState.authToken, userId);
   }
 
@@ -32,7 +32,7 @@ UserAdmin.propTypes = {
     userId: PropTypes.string,
   }).isRequired,
   posts: PropTypes.shape({
-    entries: PropTypes.Array,
+    entries: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
   api: PropTypes.shape({
     getUserPosts: PropTypes.func,

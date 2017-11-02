@@ -1,7 +1,7 @@
 .message  {
 	width: 100%;
   overflow-y: scroll;
-  max-height: 55vh;
+  max-height: calc(65vh - 169px);
 
   &__new {
     padding: 10px 10px 0 10px;

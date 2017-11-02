@@ -167,10 +167,10 @@ Registration.propTypes = {
     dismissRegModal: PropTypes.func,
   }).isRequired,
   register: PropTypes.shape({
-    registrationSpinnerClass: PropTypes.String,
-    registrationModalText: PropTypes.String,
-    registrationModalClass: PropTypes.String,
-    regErrorMsg: PropTypes.String,
+    registrationSpinnerClass: PropTypes.string,
+    registrationModalText: PropTypes.string,
+    registrationModalClass: PropTypes.string,
+    regErrorMsg: PropTypes.string,
   }).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,

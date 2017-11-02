@@ -278,9 +278,9 @@ About.propTypes = {
     windowSize: PropTypes.object,
   }).isRequired,
   tour: PropTypes.shape({
-    imageIndex: PropTypes.Number,
-    slides: PropTypes.Array,
-    faq: PropTypes.Array,
+    imageIndex: PropTypes.number,
+    slides: PropTypes.array,
+    faq: PropTypes.array,
   }).isRequired,
   actions: PropTypes.shape({
     setIndex: PropTypes.func,
