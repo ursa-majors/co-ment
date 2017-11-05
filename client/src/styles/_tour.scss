@@ -140,7 +140,7 @@
     cursor: pointer;
     margin: 0 10px;
     padding: 5px 8px;
-    color: $color_sky;
+    color: $color_sky !important;
     opacity: .4;
     border-radius: 100%;
 
@@ -252,16 +252,16 @@
   }
 
   &__question {
-    font-size: 26px;
-    color: $color_gray_text;
+    font-size: 26px !important;
+    color: $color_gray_text !important;
     cursor: pointer;
     text-decoration: none;
-    border-bottom: 1px dotted white;
+    border-bottom: 1px dotted white !important;
     display: inline-block;
 
     &:hover {
-      color: $color_sky;
-      border-bottom: 1px dotted $color_sky;
+      color: $color_sky !important;
+      border-bottom: 1px dotted $color_sky !important;
     }
   }
 
