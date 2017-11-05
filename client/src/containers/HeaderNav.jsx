@@ -15,7 +15,8 @@ class Nav extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.location.pathname !== prevProps.location.pathname ||
-      this.props.appState.loggedIn !== prevProps.appState.loggedIn) {
+      this.props.appState.loggedIn !== prevProps.appState.loggedIn ||
+      this.props.conversation.currentConv._id !== prevProps.conversation.currentConv._id) {
       if (this.props.appState.loggedIn) {
         const token = this.props.appState.authToken;
         this.props.api.getConversations(token);
@@ -119,22 +120,22 @@ class Nav extends React.Component {
     return (
       <div>
         <Spinner cssClass={this.props.conversation.getConversationsSpinnerClass} />
-          <ModalSm
-            modalClass={this.props.conversation.getConversationsModal.class}
-            modalText={this.props.conversation.getConversationsModal.text}
-            modalTitle={this.props.conversation.getConversationsModal.title}
-            modalType={this.props.conversation.getConversationsModal.type}
-            dismiss={
-              () => {
-                this.props.actions.setConversationsModal({
-                  class: 'modal__hide',
-                  text: '',
-                  type: '',
-                  title: '',
-                });
-              }
+        <ModalSm
+          modalClass={this.props.conversation.getConversationsModal.class}
+          modalText={this.props.conversation.getConversationsModal.text}
+          modalTitle={this.props.conversation.getConversationsModal.title}
+          modalType={this.props.conversation.getConversationsModal.type}
+          dismiss={
+            () => {
+              this.props.actions.setConversationsModal({
+                class: 'modal__hide',
+                text: '',
+                type: '',
+                title: '',
+              });
             }
-          />
+          }
+        />
         <div className={`h-nav__side-bkg ${this.props.appState.menuBackground}`}>
           <button
             className="skip"
@@ -302,7 +303,16 @@ Nav.propTypes = {
   conversation: PropTypes.shape({
     totalUnreads: PropTypes.number,
     getConversationsSpinnerClass: PropTypes.string,
+    currentConv: PropTypes.shape({
+      _id: PropTypes.string,
+    }).isRequired,
     getConversationsModal: PropTypes.shape({
+      class: PropTypes.string,
+      text: PropTypes.string,
+      title: PropTypes.string,
+      type: PropTypes.string,
+    }).isRequired,
+    setConversationsModal: PropTypes.shape({
       class: PropTypes.string,
       text: PropTypes.string,
       title: PropTypes.string,

@@ -69,8 +69,8 @@ class Conversations extends React.Component {
                             backgroundPosition: 'center center',
                           };
                           const conv2view = { ...item };
-                          const formattedDate = formatDateInbox(new Date(
-                            item.latestMessage.createdAt));
+                          const formattedDate = formatDateInbox(
+                            item.latestMessage.createdAt);
                           let dateOnly;
                           let amPm;
                           let smallCaps = false;
@@ -85,10 +85,19 @@ class Conversations extends React.Component {
                               key={item._id}
                               className={this.props.conversation.currentConv._id === item._id ? 'aria-button inbox__message inbox__message--active' : 'aria-button inbox__message'}
                               onClick={() => {
-                                this.props.api.viewConv(token, conv2view._id);
-                                this.props.api.getConversations(token);
-                                scrollToBottom();
-                              }}
+                                this.props.api.viewConv(token, conv2view._id)
+                                  .then((result) => {
+                                    if (result.type === 'VIEW_CONV_SUCCESS') {
+                                      console.log('successfully marked conv read, now getting all convs');
+                                      this.props.api.getConversations(token)
+                                        .then((result2) => {
+                                          console.log(result2);
+                                        });
+                                      scrollToBottom();
+                                    }
+                                  });
+                              }
+                                }
                             >
                               {item.latestMessage.unread &&
                                 <span className="inbox__new" />
