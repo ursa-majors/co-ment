@@ -1,3 +1,5 @@
+// check whether user is tabbing or using mouse,
+// set focus classes conditionally
 const handleFirstTab = (e) => {
   if (e.keyCode === 9) {
     document.body.classList.add('user-is-tabbing');
@@ -14,6 +16,8 @@ const handleMouseDownOnce = () => {
 
 window.addEventListener('keydown', handleFirstTab);
 
+// picklist values for languages, skills, and timezones for CreateProfile
+
 export const languages = ['Afrikaans', 'Albanian', 'Amharic', 'Arabic', 'Armenian', 'Azerbaijani', 'Basque', 'Belarusian', 'Bengali', 'Bosnian', 'Bulgarian', 'Catalan', 'Cebuano', 'Chichewa', 'Chinese', 'Corsican', 'Croatian', 'Czech', 'Danish', 'Dutch', 'English', 'Esperanto', 'Estonian', 'Filipino', 'Finnish', 'French', 'Frisian', 'Galician', 'Georgian', 'German', 'Greek', 'Gujarati', 'Haitian Creole', 'Hausa', 'Hawaiian', 'Hebrew', 'Hindi', 'Hmong', 'Hungarian', 'Icelandic', 'Igbo', 'Indonesian', 'Irish', 'Italian', 'Japanese', 'Javanese', 'Kannada', 'Kazakh', 'Khmer', 'Korean', 'Kurdish (Kurmanji)', 'Kyrgyz', 'Lao', 'Latin', 'Latvian', 'Lithuanian', 'Luxembourgish', 'Macedonian', 'Malagasy', 'Malay', 'Malayalam', 'Maltese', 'Maori', 'Marathi', 'Mongolian', 'Myanmar (Burmese)', 'Nepali', 'Norwegian', 'Pashto', 'Persian', 'Polish', 'Portuguese', 'Punjabi', 'Romanian', 'Russian', 'Samoan', 'Scots Gaelic', 'Serbian', 'Sesotho', 'Shona', 'Sindhi', 'Sinhala', 'Slovak', 'Slovenian', 'Somali', 'Spanish', 'Sundanese', 'Swahili', 'Swedish', 'Tajik', 'Tamil', 'Telugu', 'Thai', 'Turkish', 'Ukrainian', 'Urdu', 'Uzbek', 'Vietnamese', 'Welsh', 'Xhosa', 'Yiddish', 'Yoruba', 'Zulu'];
 
 export const skills = ['.NET', 'ASP', 'ABAP', 'Android', 'AngularJS', 'Angular', 'Apache', 'Aurelia', 'Back End Development', 'Bash', 'Bootstrap', 'es2015', 'C', 'C#', 'C++', 'Canvas', 'Chai', 'Clojure', 'Closure', 'CoffeeScript', 'ColdFusion', 'Cordova', 'CSS', 'D', 'D3.js', 'Dart', 'Data Science', 'Databases', 'Delphi', 'Design', 'Django', 'Drupal', 'EJS', 'Elasticsearch', 'Elm', 'Elixir', 'Erlang', 'ExpressJS', 'F#', 'Flask', 'Fortran', 'Functional Programming', 'Git', 'GitHub', 'Go', 'GraphQL', 'Grommet', 'Groovy', 'gRPC', 'Grunt', 'Hadoop', 'Heroku', 'HTML', 'InDesign', 'Ionic', 'iOS', 'Jasmine', 'Java', 'JavaScript', 'JavaScript closures', 'Jekyll', 'Jest', 'jQuery', 'Julia', 'Keras', 'Kotlin', 'LAMP', 'Linux', 'Lisp', 'Lua', 'Machine Learning', 'Maths', 'MATLAB', 'Meteor', 'Mocha', 'MomentJS', 'MongoDB', 'Mongoose', 'Mustache.js', 'MVC', 'Node.js', 'Objective-C', 'OCaml', 'p5.js', 'Perl', 'PhaserJS', 'PhoneGap', 'Photoshop', 'Phaser', 'PHP', 'PostgreSQL', 'PowerShell', 'Promises', 'Processing', 'Pug', 'Python', 'QUnit', 'R', 'ReactJS', 'React Native', 'react-router', 'Redis', 'Redux', 'redux-saga', 'Regular Expressions', 'REST', 'Ruby', 'Rust', 'Salesforce', 'SASS', 'Scala', 'SCSS', 'SharePoint', 'Sketch', 'Smalltalk', 'Socket.io', 'Spark', 'Spring', 'SQL', 'Surge', 'SVG', 'Swift', 'TensorFlow', 'Test Driven Development', 'TypeScript', 'Unity', 'Vim', 'VirtualBox', 'Visual Basic', 'Vue.js', 'webpack', 'WordPress', 'Xamarin'];
@@ -21,7 +25,7 @@ export const skills = ['.NET', 'ASP', 'ABAP', 'Android', 'AngularJS', 'Angular',
 export const timezones = [
 ['-12', 'Eniwetok, Kwajalein'], ['-11', 'Midway Island, Samoa'], ['-10', 'Hawaii'], ['-9', 'Alaska'], ['-8', 'Pacific Time (US & Canada)'], ['-7', 'Mountain Time (US & Canada)'], ['-6', 'Central Time (US & Canada), Mexico City'], ['-5', 'Eastern Time (US & Canada), Bogota, Lima'], ['-4.5', 'Caracas'], ['-4', 'Atlantic Time (Canada), La Paz, Santiago'], ['-3.5', 'Newfoundland'], ['-3', 'Brazil, Buenos Aires, Georgetown'], ['-2', 'Mid-Atlantic'], ['-1', 'Azores, Cape Verde Islands'], ['+0', 'Western Europe Time, London, Lisbon, Casablanca, Greenwich'], ['+1', 'Brussels, Copenhagen, Madrid, Paris'], ['+2', 'Kaliningrad, South Africa, Cairo'], ['+3', 'Baghdad, Riyadh, Moscow, St. Petersburg'], ['+3.5', 'Tehran'], ['+4', 'Abu Dhabi, Muscat, Yerevan, Baku, Tbilisi'], ['+4.5', 'Kabul'], ['+5', 'Ekaterinburg, Islamabad, Karachi, Tashkent'], ['+5.5', 'Mumbai, Kolkata, Chennai, New Delhi'], ['+5.75', 'Kathmandu'], ['+6', 'Almaty, Dhaka, Colombo'], ['+6.5', 'Yangon, Cocos Islands'], ['+7', 'Bangkok, Hanoi, Jakarta'], ['+8', 'Beijing, Perth, Singapore, Hong Kong'], ['+9', 'Tokyo, Seoul, Osaka, Sapporo, Yakutsk'], ['+9.5', 'Adelaide, Darwin'], ['+10', 'Eastern Australia, Guam, Vladivostok'], ['+11', 'Magadan, Solomon Islands, New Caledonia'], ['+12', 'Auckland, Wellington, Fiji, Kamchatka']];
 
-// ////// autosuggest helper functions ///////
+// autosuggest helper functions
 
 export const parse = (text, matches) => {
   const result = [];
@@ -104,7 +108,7 @@ export const match = (txt, query) => {
     .sort((match1, match2) => match1[0] - match2[0]);
 };
 
-// date formatter for post display //////
+// date formatter for post display
 
 export const formatDate = (date) => {
   const monthNames = [
@@ -117,39 +121,44 @@ export const formatDate = (date) => {
   return `${day} ${monthNames[monthIndex]} ${year}`;
 };
 
-// date formatter for message list //////
+/** formatDateInbox
+ * If 'date' is a string, converts to js Date object
+ * @param     [object]   date   [javascript Date object]
+ * @returns   [string]          [custom formatted date/time message]
+*/
+export const formatDateInbox = (dateInput) => {
+  let date = dateInput;
 
-export const formatDateInbox = (date) => {
+  // if 'date' is not a javascript Date object, make it so
+  if (typeof date === 'string') {
+    date = new Date(dateInput);
+  }
+
   const day = date.getDate();
-  const month = date.getMonth();
+  const dayIdx = date.getDay();
+  const month = date.getMonth() + 1;
   const year = date.getYear();
   const hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-  const minutes = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
+  const mins = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
   const amPm = date.getHours() >= 12 ? 'pm' : 'am';
-  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-  const now = new Date();
-  const dateTimeStamp = (new Date(date)).getTime();
-  const nowTimeStamp = now.getTime();
+  // delta t in ms
+  const timeDiff = Math.abs(date.getTime() - Date.now());
 
-  const microSecondsDiff = Math.abs(dateTimeStamp - nowTimeStamp);
-  // Number of milliseconds per day =
-  // 24 hrs/day * 60 minutes/hour * 60 seconds/minute * 1000 msecs/second
-  const daysDiff = Math.floor(microSecondsDiff / (1000 * 60 * 60 * 24));
-
-  // if message is less than a day old, only show the time sent
-  if (daysDiff < 1) {
-    return `${hours}:${minutes} ${amPm}`;
-  } else if (daysDiff < 6) {
-  // if message is less than a week old,
-  // show the day of week and time
-    return `${daysOfWeek[date.getDay()]}, ${hours}:${minutes} ${amPm}`;
+  // if message is less than 1 day old (86400000ms)...
+  if (timeDiff < 86400000) {
+    // show time HH:MM message was sent
+    return `${hours}:${mins} ${amPm}`;
+  } else if (timeDiff < (7 * 86400000)) {
+    // if less than a week old, show day of week + time
+    return `${weekDays[dayIdx]}, ${hours}:${mins} ${amPm}`;
   }
-  // otherwise show month, day, and year as MM/DD/YY
-  return `${month + 1}/${day}/${year - 100}`;
+  // otherwise show MM/DD/YY
+  return `${month}/${day}/${year - 100}`;
 };
 
-// load message list scrolled to bottom to show newest messages ///////
+// load message list scrolled to bottom to show newest messages
 export const scrollToBottom = () => {
   const el = document.getElementById('msgPane');
   const subject = document.getElementById('subject');
@@ -164,7 +173,7 @@ export const scrollToBottom = () => {
   }
 };
 
-// adjust textarea size to fit content ///////
+// adjust textarea size to fit content
 export const adjustTextArea = (target) => {
   // expand input height to fit content without scrollbar
   const el = target;
@@ -173,7 +182,7 @@ export const adjustTextArea = (target) => {
   if (adjustedHeight > el.clientHeight) { el.style.height = `${adjustedHeight + 20}px`; }
 };
 
-// animated page scrolling //////
+// animated page scrolling
 // source: https://codepen.io/pawelgrzybek/pen/ZeomJB
 
 export const scrollIt = (destination, duration = 200, easing = 'linear', callback) => {

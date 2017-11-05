@@ -210,6 +210,9 @@ function conversation(state = INITIAL_STATE, action) {
     *  object.
     */
     case VIEW_CONV_SUCCESS:
+      console.log('View Conv Success');
+      console.log(action.payload);
+
       return Object.assign(
         {},
         state,
