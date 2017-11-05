@@ -53,7 +53,7 @@
       z-index: -1;
       content: '';
       display: block;
-      border: 5px solid $color_sky_darker;
+      border: 4px solid $color_sky_darker;
       border-top-color: transparent;
       border-left-color: transparent;
     }
@@ -61,6 +61,7 @@
     &::before {
         top: 0;
         right: 42px;
+        height: 1px;
       }
 
     &::after {
@@ -83,7 +84,7 @@
         z-index: -1;
         content: '';
         display: block;
-        border: 5px solid $color_aqua_darker;
+        border: 4px solid $color_aqua_darker;
         border-top-color: transparent;
         border-left-color: transparent;
       }
@@ -91,6 +92,7 @@
       &::before {
         top: 0;
         right: 42px;
+        height: 1px;
       }
 
       &::after {
@@ -178,7 +180,6 @@
       bottom: 0;
       left: 0;
       right: 0;
-      border: 2px solid rgba(255,255,255,.9);
       overflow: hidden;
       text-align: center;
       display: flex;
@@ -218,7 +219,7 @@
   &__username {
     font-weight: 400;
     font-size: 18px;
-    border-bottom: 1px transparent;
+    border-bottom: 1px solid transparent;
     display: inline-block;
 
     &:hover {

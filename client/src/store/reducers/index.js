@@ -5,12 +5,13 @@ import login from '../reducers/login';
 import posts from '../reducers/posts';
 import profiles from '../reducers/profiles';
 import connection from '../reducers/connection';
+import conversation from '../reducers/conversation';
 import gridControls from '../reducers/gridControls';
 import tour from '../reducers/tour';
 import connectionEmail from '../reducers/connectionEmail';
 
 const rootReducer = combineReducers({
-  appState, register, login, posts, profiles, connection, gridControls, tour, connectionEmail,
+  appState, register, login, posts, profiles, connection, conversation, gridControls, tour, connectionEmail,
 });
 
 export default rootReducer;

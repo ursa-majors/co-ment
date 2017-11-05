@@ -21,6 +21,7 @@ import PostFull from './containers/PostFull';
 import ViewProfile from './containers/ViewProfile';
 import ConnectionEmail from './containers/ConnectionEmail';
 import Connections from './containers/Connections';
+import Conversations from './containers/Conversations';
 import ConnectionResult from './containers/ConnectionResult';
 import ConnectionDetails from './containers/ConnectionDetails';
 import Validate from './containers/Validate';
@@ -73,7 +74,7 @@ class App extends React.Component {
   }
 
   render() {
-    const links = (this.props.appState.loggedIn ? ['posts', 'profile', 'connections', 'logout'] : ['login']);
+    const links = (this.props.appState.loggedIn ? ['posts'] : ['login']);
     return (
       <BrowserRouter>
         <ScrollToTop>
@@ -94,6 +95,7 @@ class App extends React.Component {
                 <Route path="/editpost/:id?" component={EditPost} />
                 <Route path="/mentorpath" component={MentorPath} />
                 <Route path="/connectemail" component={ConnectionEmail} />
+                <Route path="/inbox" component={Conversations} />
                 <Route path="/connections" component={Connections} />
                 <Route path="/connectionresult" component={ConnectionResult} />
                 <Route path="/connectiondetails/:id" component={ConnectionDetails} />
@@ -114,11 +116,11 @@ class App extends React.Component {
 App.propTypes = {
   appState: PropTypes.shape({
     loggedIn: PropTypes.boolean,
-    menuState: PropTypes.String,
-    menuBackground: PropTypes.String,
+    menuState: PropTypes.string,
+    menuBackground: PropTypes.string,
     windowScrolled: PropTypes.boolean,
     windowSize: PropTypes.shape({
-      width: PropTypes.Number,
+      width: PropTypes.number,
     }).isRequired,
   }).isRequired,
   actions: PropTypes.shape({

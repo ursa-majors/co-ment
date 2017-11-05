@@ -34,7 +34,7 @@ class ViewProfile extends React.Component {
     if (this.props.match && this.props.match.params.id) {
      profileId = this.props.match.params.id;
     } else {
-     profileId = this.props.appState.userId;
+     profileId = this.props.appState.user._id;
     }
     this.props.api.getProfile(this.props.appState.authToken, profileId);
   }
