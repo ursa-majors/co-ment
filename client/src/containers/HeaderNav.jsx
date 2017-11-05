@@ -299,6 +299,7 @@ Nav.propTypes = {
     setMenuState: PropTypes.func,
     setAdminMenuState: PropTypes.func,
     setMenuBackground: PropTypes.func,
+    setConversationsModal: PropTypes.func,
   }).isRequired,
   conversation: PropTypes.shape({
     totalUnreads: PropTypes.number,
@@ -307,12 +308,6 @@ Nav.propTypes = {
       _id: PropTypes.string,
     }).isRequired,
     getConversationsModal: PropTypes.shape({
-      class: PropTypes.string,
-      text: PropTypes.string,
-      title: PropTypes.string,
-      type: PropTypes.string,
-    }).isRequired,
-    setConversationsModal: PropTypes.shape({
       class: PropTypes.string,
       text: PropTypes.string,
       title: PropTypes.string,

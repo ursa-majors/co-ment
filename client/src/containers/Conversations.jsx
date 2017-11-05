@@ -88,10 +88,9 @@ class Conversations extends React.Component {
                                 this.props.api.viewConv(token, conv2view._id)
                                   .then((result) => {
                                     if (result.type === 'VIEW_CONV_SUCCESS') {
-                                      console.log('successfully marked conv read, now getting all convs');
                                       this.props.api.getConversations(token)
                                         .then((result2) => {
-                                          console.log(result2);
+                                          // console.log(result2);
                                         });
                                       scrollToBottom();
                                     }
