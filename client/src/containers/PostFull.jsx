@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import * as Actions from '../store/actions/postActions';
 import * as apiActions from '../store/actions/apiPostActions';
@@ -33,14 +34,19 @@ class PostFull extends React.Component {
   componentDidMount() {
     let postId;
     if (this.props.match && this.props.match.params.id) {
-     postId = this.props.match.params.id;
+      postId = this.props.match.params.id;
     } else {
-     postId = this.props.post._id;
+      postId = this.props.post._id;
     }
     const token = this.props.appState.authToken;
     if (this.props.posts.currentPost._id !== postId) {
       this.props.actions.clearCurrentPost();
-      this.props.api.viewPost(token, postId);
+      this.props.api.viewPost(token, postId)
+        .then((result) => {
+          if (result.type === 'VIEW_POST_SUCCESS') {
+            this.props.api.incrementPostView(token, postId);
+          }
+        });
     }
     // force focus on first focusable element trap focus inside modal when opening on postsgrid page
     document.getElementById('username').focus();
@@ -50,7 +56,7 @@ class PostFull extends React.Component {
     this.setState({
       modal: true,
     });
-    document.getElementsByClassName('.ReactModal__Content')[0].style.background = "transparent !important";
+    document.getElementsByClassName('.ReactModal__Content')[0].style.background = 'transparent !important';
   }
 
   deletePost = () => {
@@ -63,8 +69,8 @@ class PostFull extends React.Component {
 
   handleKeyDown(e) {
     // enter key fires flip / readmore when focused
-    const action = e.target.className.split(" ")[0];
-    if (e.keyCode === 13 || e.which === 13 ) {
+    const action = e.target.className.split(' ')[0];
+    if (e.keyCode === 13 || e.which === 13) {
       switch (action) {
         case 'flip-it':
           this.flip();
@@ -79,7 +85,8 @@ class PostFull extends React.Component {
           this.openDeleteModal();
           break;
         case 'dismiss':
-          this.setState({modal:false,});
+          this.setState({ modal: false });
+          break;
         case 'like':
           this.props.api.likePost(this.props.appState.authToken, this.props.post._id);
           break;
@@ -87,7 +94,7 @@ class PostFull extends React.Component {
           return null;
       }
     }
-
+    return null;
   }
 
   flip() {
@@ -106,7 +113,7 @@ class PostFull extends React.Component {
     const connections = this.props.connection.connections;
     if (connections.length > 0) {
       for (let i = 0; i < connections.length; i += 1) {
-        if (connections[i].initiator === this.props.appState.userId &&
+        if (connections[i].initiator === this.props.appState.user._id &&
           connections[i][this.props.post.role] === this.props.post.author._id) {
           this.props.actions.setViewPostModalText('You already have a connection to this poster');
           this.props.actions.setViewPostModalClass('modal__show');
@@ -116,20 +123,23 @@ class PostFull extends React.Component {
     } else {
       // TODO: go get connections, then test them as above
     }
+
     this.props.actions.setEmailOptions({
-      recipient: this.props.posts.currentPost.author.username,
-      sender: this.props.profiles.userProfile.username,
+      recipient: this.props.posts.currentPost.author,
+      sender: this.props.profiles.userProfile,
       subject: `co/ment - Contact Request from ${this.props.profiles.userProfile.username}`,
       body: '',
       role: this.props.posts.currentPost.role === 'mentor' ? 'mentee' : 'mentor',
       type: 'request',
       connectionId: '',
     })
-    this.props.history.push('/connectemail');
+      .then(() => {
+        this.props.history.push('/connectemail');
+      });
   }
 
   render() {
-    let post = {}
+    let post = {};
     let postWrapper = '';
     let compress = true;
     // check to see if this component recieved a full post object from props
@@ -137,14 +147,14 @@ class PostFull extends React.Component {
     // or if it's rendering as a stand-alone view & is pulling data from store.
     // there has got to be a better way to do this...
     if (this.props.post && this.props.post.role) {
-      post = { ...this.props.post }
+      post = { ...this.props.post };
     } else {
-      post = { ...this.props.posts.currentPost }
+      post = { ...this.props.posts.currentPost };
       postWrapper = 'post-full__standalone-wrap';
       compress = false;
     }
     const roleText = (post.role === 'mentor' ? 'mentor' : 'mentee');
-    const owner = (this.props.appState.userId === post.author._id);
+    const owner = (this.props.appState.user._id === post.author._id);
     const isLiked = this.props.profiles.userProfile.likedPosts.includes(post._id) ?
       'post-full__liked' :
       '';
@@ -158,27 +168,36 @@ class PostFull extends React.Component {
               aria-label="close"
               name="close"
               data-dismiss="modal"
-              onClick={()=>this.props.closeModal()}>
-                  <i className="close fa fa-compress thumb__icon--compress"
-                    aria-label="close"/>
+              onClick={() => this.props.closeModal()}
+            >
+              <i
+                className="close fa fa-compress thumb__icon--compress"
+                aria-label="close"
+              />
             </button>
           }
           <button
-            className={`edit post-full__edit`}
+            className="edit post-full__edit"
             aria-label="edit"
             name="edit"
             onKeyDown={e => this.handleKeyDown(e)}
             onClick={() => this.props.history.push(`/editpost/${post._id}`)}>
-            <i className={`fa fa-pencil post-full__icon--edit`}
-             aria-label="edit" />
+            <i
+              className="fa fa-pencil post-full__icon--edit"
+              aria-label="edit"
+            />
           </button>
           <button
-            className={`delete post-full__delete`}
+            className="delete post-full__delete"
             aria-label="delete"
             name="delete"
             onKeyDown={e => this.handleKeyDown(e)}
-            onClick={() => this.openDeleteModal()}>
-            <i className={`fa fa-trash post-full__icon--delete`} aria-label="delete" />
+            onClick={() => this.openDeleteModal()}
+          >
+            <i
+              className="fa fa-trash post-full__icon--delete"
+              aria-label="delete"
+            />
           </button>
         </div>
       );
@@ -192,9 +211,12 @@ class PostFull extends React.Component {
               name="close"
               data-dismiss="modal"
               onKeyDown={e => this.handleKeyDown(e)}
-              onClick={()=>this.props.closeModal()}>
-                  <i className="close fa fa-compress thumb__icon--compress"
-                    aria-label="close"/>
+              onClick={() => this.props.closeModal()}
+            >
+              <i
+                className="close fa fa-compress thumb__icon--compress"
+                aria-label="close"
+              />
             </button>
           }
           <button
@@ -219,13 +241,16 @@ class PostFull extends React.Component {
             />
           </button>
           <button
-            className={`connect post-full__connect`}
+            className="connect post-full__connect"
             aria-label="request connection"
             name="connect"
             onKeyDown={e => this.handleKeyDown(e)}
-            onClick={this.checkConnectionRequest}>
-            <i className={`fa fa-envelope post-full__icon--connect`}
-            aria-label="connect" />
+            onClick={this.checkConnectionRequest}
+          >
+            <i
+              className="fa fa-envelope post-full__icon--connect"
+              aria-label="connect"
+            />
           </button>
         </div>
       );
@@ -240,91 +265,104 @@ class PostFull extends React.Component {
           </span>
         </span>
        ));
-      }
+    }
 
     const backgroundStyle = {
       backgroundImage: `url(${post.author.avatarUrl})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center center",
-    }
+      backgroundSize: 'cover',
+      backgroundPosition: 'center center',
+    };
 
     return (
       <div className={postWrapper}>
-      { post.meta ?
-        <div className="post-full">
-          <div className={post.role === 'mentor' ? `post-full__ribbon` : `post-full__ribbon--green`}>
-            <span className={post.role === 'mentor' ? `post-full__ribbon-span` : `post-full__ribbon-span--green`}>{roleText}</span>
-          </div>
-          <div className={this.state.flip ? "post-full__side front flip" : "post-full__side front"} id="front">
-            <div className="post-full__metadata">
-              <span className="post-full__views">
-                <i className="fa fa-eye" />
-                &nbsp;
-                {this.props.appState.userId === post.author._id ? post.meta.views : post.meta.views + 1}
-              </span>
-              <span className="post-full__likes">
-                <i className="fa fa-heart" />&nbsp;{post.meta.likes}
-              </span>
-              <div className={`post-full__date`}>
-                <span className="tag-value">
-                  <span className="tag-value__label">
-                    {formatDate(new Date(post.updatedAt))}
-                  </span>
-                </span>
-              </div>
+        { post.meta ?
+          <div className="post-full">
+            <div className={post.role === 'mentor' ? 'post-full__ribbon' : 'post-full__ribbon--green'}>
+              <span className={post.role === 'mentor' ? 'post-full__ribbon-span' : 'post-full__ribbon-span--green'}>{roleText}</span>
             </div>
-            <div className={`post-full__card-body`}>
-              <div className={`post-full__text-wrap`}>
-                <div className={`post-full__title`}>
-                  {post.title}
+            <div className={this.state.flip ? 'post-full__side front flip' : 'post-full__side front'} id="front">
+              <div className="post-full__metadata">
+                <span className="post-full__views">
+                  <i className="fa fa-eye" />
+                  &nbsp;
+                  {this.props.appState.user._id === post.author._id ?
+                    post.meta.views : post.meta.views + 1}
+                </span>
+                <span className="post-full__likes">
+                  <i className="fa fa-heart" />&nbsp;{post.meta.likes}
+                </span>
+                <div className="post-full__date">
+                  <span className="tag-value">
+                    <span className="tag-value__label">
+                      {formatDate(new Date(post.updatedAt))}
+                    </span>
+                  </span>
                 </div>
-                  <div className={`post-full__body`}>
+              </div>
+              <div className="post-full__card-body">
+                <div className="post-full__text-wrap">
+                  <div className="post-full__title">
+                    {post.title}
+                  </div>
+                  <div className="post-full__body">
                     {post.body}
                   </div>
-                {!this.state.thumb &&
-                <div className="tag-value__wrapper">
-                    {keywordsDisp ? keywordsDisp : ''}
-                </div> }
-              </div>
-              <div className={`post-full__image-wrap`}>
-                <div className={`post-full__image-aspect`}>
-                  <Link id="username" className="unstyled-link post-full__username" to={`/viewprofile/${post.author._id}`}>
-                    <div className={`post-full__image-crop`}>
-                      {post.author.avatarUrl ?
-                        <div
-                          className={`post-full__image`}
-                          style={backgroundStyle}
-                          role="image"
-                          aria-label={post.author.username} /> :
-                        <i
-                          className={`fa fa-user-circle fa-5x post-full__icon--avatar`}
-                          aria-hidden="true" />
-                        }
-                    </div>
-                  </Link>
+                  {!this.state.thumb &&
+                  <div className="tag-value__wrapper">
+                      {keywordsDisp || ''}
+                  </div> }
                 </div>
-                <div className={`post-full__name-wrap`}>
-                  <Link id="username" className="unstyled-link post-full__username" to={`/viewprofile/${post.author._id}`}>
-                    <span className={`post-full__name`}>
-                    {post.author.name}</span>
-                  </Link>
-                  <Link id="username" className="unstyled-link post-full__username" to={`/viewprofile/${post.author._id}`}>
+                <div className="post-full__image-wrap">
+                  <div className="post-full__image-aspect">
+                    <Link id="username" className="unstyled-link post-full__username" to={`/viewprofile/${post.author._id}`}>
+                      <div className="post-full__image-crop">
+                        {post.author.avatarUrl ?
+                          <div
+                            className="post-full__image"
+                            style={backgroundStyle}
+                            role="img"
+                            aria-label={post.author.username}
+                          /> :
+                          <i
+                            className="fa fa-user-circle fa-5x post-full__icon--avatar"
+                            aria-hidden="true"
+                          />
+                          }
+                      </div>
+                    </Link>
+                  </div>
+                  <div className="post-full__name-wrap">
+                    <Link
+                      id="username"
+                      className="unstyled-link"
+                      to={`/viewprofile/${post.author._id}`}
+                    >
+                      <span className="post-full__name">
+                        {post.author.name}
+                      </span>
+                    </Link>
+                    <Link
+                      id="username"
+                      className="unstyled-link post-full__username"
+                      to={`/viewprofile/${post.author._id}`}
+                    >
                       @{post.author.username}
-                </Link>
+                    </Link>
+                  </div>
                 </div>
               </div>
+              <div className={!owner ? 'post-full__button-wrap' : 'post-full__button-wrap post-full__button-wrap--edit'}>
+                {actions}
+              </div>
             </div>
-            <div className={ !owner ? `post-full__button-wrap` : `post-full__button-wrap post-full__button-wrap--edit`}>
-            { actions }
-            </div>
-           </div>
-        </div> : <Spinner cssClass={'spinner__show'} /> }
+          </div> : <Spinner cssClass={'spinner__show'} />
+        }
         <ModalSm
           modalClass={this.state.modal ? 'modal modal__show' : 'modal__hide'}
           modalText="Are you sure? This action cannot be undone."
           modalTitle="Confirm Delete"
           modalType="modal__error"
-          modalDanger={true}
+          modalDanger
           action={() => this.deletePost()}
           dismiss={
             () => {
@@ -334,10 +372,83 @@ class PostFull extends React.Component {
             }
           }
         />
-        </div>
+      </div>
     );
   }
 }
+
+PostFull.propTypes = {
+  actions: PropTypes.shape({
+    clearCurrentPost: PropTypes.func,
+    setViewPostModalText: PropTypes.func,
+    setViewPostModalClass: PropTypes.func,
+    setEmailOptions: PropTypes.func,
+  }).isRequired,
+  api: PropTypes.shape({
+    viewPost: PropTypes.func,
+    deletePost: PropTypes.func,
+    likePost: PropTypes.func,
+    unlikePost: PropTypes.func,
+    incrementPostView: PropTypes.func,
+  }).isRequired,
+  appState: PropTypes.shape({
+    loggedIn: PropTypes.bool,
+    authToken: PropTypes.string,
+    user: PropTypes.shape({
+      _id: PropTypes.string,
+      avatarUrl: PropTypes.string,
+      username: PropTypes.string,
+    }).isRequired,
+  }).isRequired,
+  closeModal: PropTypes.func.isRequired,
+  connection: PropTypes.shape({
+    connections: PropTypes.arrayOf(PropTypes.object),
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  post: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    role: PropTypes.string.isRequired,
+    author: PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+    }),
+  }).isRequired,
+  posts: PropTypes.shape({
+    currentPost: PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      role: PropTypes.string.isRequired,
+      author: PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
+  profiles: PropTypes.shape({
+    userProfile: PropTypes.shape({
+      likedPosts: PropTypes.arrayOf(PropTypes.string),
+      username: PropTypes.string.isRequired,
+    }),
+  }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string,
+    }),
+  }),
+  shuffle: PropTypes.func.isRequired,
+};
+
+PostFull.defaultProps = {
+  match: {
+    params: {
+      id: '',
+    },
+  },
+  posts: {
+    currentPost: {
+      _id: '',
+    },
+  },
+};
 
 const mapStateToProps = state => ({
   appState: state.appState,

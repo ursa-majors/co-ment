@@ -1,5 +1,5 @@
 import { CALL_API } from 'redux-api-middleware';
-import { BASE_URL } from './apiConfig.js';
+import { BASE_URL } from './apiConfig';
 
 export const GET_POST_REQUEST = 'GET_POST_REQUEST';
 export const GET_POST_SUCCESS = 'GET_POST_SUCCESS';
@@ -127,6 +127,8 @@ export const INCREMENT_POSTVIEW_SUCCESS = 'INCREMENT_POSTVIEW_SUCCESS';
 export const INCREMENT_POSTVIEW_FAILURE = 'INCREMENT_POSTVIEW_FAILURE';
 
 export function incrementPostView(token, postId) {
+  console.log(token);
+  console.log(postId);
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/posts/${postId}/viewsplusplus`,

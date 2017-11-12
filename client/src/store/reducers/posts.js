@@ -26,13 +26,13 @@ const defaultForm = {
 const defaultPost = {
   active: '',
   author: {
-      _id: '',
-      username: '',
-      name: '',
-      avatarUrl: '',
-      time_zone: '',
-      languages: [],
-      gender: '',
+    _id: '',
+    username: '',
+    name: '',
+    avatarUrl: '',
+    time_zone: '',
+    languages: [],
+    gender: '',
   },
   availability: '',
   keywords: [],
@@ -377,6 +377,7 @@ function posts(state = INITIAL_STATE, action) {
     *  nothing because we do not block operations when this request is dispatched.
     */
     case INCREMENT_POSTVIEW_REQUEST:
+      console.log('request: incrementing view count');
       return state;
 
     /*
@@ -386,9 +387,13 @@ function posts(state = INITIAL_STATE, action) {
     *   If post ID is not found, return previous state.
     */
     case INCREMENT_POSTVIEW_SUCCESS:
+      console.log(action);
+      console.log(action.meta);
+      console.log(`succes: incrementing view count for Post ${action.meta.postId}`);
       for (let i = 0; i < state.entries.length; i += 1) {
         if (state.entries[i]._id === action.meta.postId) {
           index = i;
+          console.log(index);
           break;
         }
       }
@@ -408,6 +413,7 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case INCREMENT_POSTVIEW_FAILURE:
+      console.log('failure: incrementing view count');
       return state;
 
     /*
@@ -494,6 +500,7 @@ function posts(state = INITIAL_STATE, action) {
     default:
       return state;
   }
+  return null;
 }
 
 export default posts;

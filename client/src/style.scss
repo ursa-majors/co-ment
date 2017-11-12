@@ -23,6 +23,8 @@
 @import 'styles/notfound';
 @import 'styles/footer';
 @import 'styles/privacy';
+@import 'styles/inbox';
+@import 'styles/message';
 
 * {
   -moz-box-sizing: border-box;
@@ -116,6 +118,12 @@ body.user-is-tabbing *:focus {
   border: none;
   background: transparent;
   color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  font-weight: inherit;
+  cursor: pointer;
 
   &:hover, &:active, &:focus {
     -webkit-appearance: none;
@@ -124,8 +132,15 @@ body.user-is-tabbing *:focus {
     background: transparent;
     outline: none;
     color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    font-weight: inherit;
+    cursor: pointer;
   }
   &__link {
+    border-bottom: 1px solid transparent;
     text-align: left;
     font-family: inherit;
     font-weight: inherit;
