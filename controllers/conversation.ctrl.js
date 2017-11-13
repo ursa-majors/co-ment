@@ -5,8 +5,11 @@
 
 /* ================================= SETUP ================================= */
 
-const Conversation = require('../models/conversation');
-const Message      = require('../models/message');
+const Conversation        = require('../models/conversation');
+const Message             = require('../models/message');
+const User                = require('../models/user');
+const mailer              = require('../utils/mailer');
+const { unreadsReminder } = require('../utils/mailtemplates');
 
 
 /* =============================== UTILITIES =============================== */
@@ -160,6 +163,72 @@ function populateMessages(convos, user) {
 }
 
 
+/* Dispatch reminder email to user if OK to do so
+ * First, gets recipient's user document and check contactMeta.
+ *   if   :  `contactMeta.alreadyContacted` = true, fail
+ *   else : dispatch reminder email.
+ * 
+ * @params    [string]   recipient   [recipient's user _id]
+*/
+function duckDuckSpam(recipient) {
+    
+    const projection = {
+        username : 1,
+        email    : 1,
+        'contactMeta.alreadyContacted' : 1
+    };
+    
+    User.findById(recipient, projection)
+        .exec()
+        .then( user => {
+
+            if (user.contactMeta.alreadyContacted) {
+                // not ok to contact
+                return false;
+            } else {
+                // OK to contact - dispatch email
+                sendReminderEmail({
+                    to_name  : user.username,
+                    to_email : user.email
+                });
+                
+                // update user's `contactMeta.alreadyContacted` field
+                user.contactMeta.alreadyContacted = true;
+                user.save( err => {
+                    if (err) { throw new Error(err); }
+                });
+                
+                return true;
+            }
+        
+        })
+        .catch( err => {
+            throw new Error(err);
+        });
+    
+}
+
+
+function sendReminderEmail(params) {
+
+    const url     = 'https://co-ment-dev.glitch.me/inbox';
+    const subject = 'co/ment - New unread messages';
+    const body    = {
+        type: 'html',
+        text: unreadsReminder(url, params.to_name)
+    };
+
+    // send mail using `mailer` util
+    try {
+        mailer(params.to_email, subject, body);
+        console.log(`emailing: ${params.to_email} unread messages reminder.`);
+    } catch (err) {
+        console.log(`Mailer error: $(err)`);
+    }
+
+}
+
+
 /* ============================ ROUTE HANDLERS ============================= */
 
 // GET CONVERSATIONS - with projection!
@@ -187,7 +256,16 @@ function getConversations(req, res) {
         // get unreads and filter messages
         .then( convos => formatConvData(convos, req.token._id) )
 
-        .then( data => res.status(200).json(data) )
+        .then( data => {
+            // set user's alreadyContacted flag to false so they rec 
+            // reminders of new messages
+            User.findByIdAndUpdate(
+                req.token._id,
+                { $set : {'contactMeta.alreadyContacted' : false }}
+            ).exec();
+            
+            return res.status(200).json(data);
+        })
         .catch( err => {
             return res
                 .status(400)
@@ -263,10 +341,11 @@ function createConversation(req, res, next) {
     });
 
     const message = new Message({
-        conversation : conversation._id,
-        body         : req.body.message,
-        author       : req.token._id,
-        recipient    : req.body.recipientId
+        conversation   : conversation._id,
+        body           : req.body.message,
+        author         : req.token._id,
+        recipient      : req.body.recipientId,
+        originatedFrom : 'connection'
     });
 
     conversation.messages.push(message._id);
@@ -305,13 +384,15 @@ function createConversation(req, res, next) {
 //          messageBody  : String
 //        }
 //   Returns: new message object
+//   Triggers check for & send 'unreads available' email to recipient
 //
 function postMessage (req, res) {
     const message = new Message({
-        conversation : req.body.conversation,
-        body         : req.body.messageBody,
-        author       : req.token._id,
-        recipient    : req.body.recipientId
+        conversation   : req.body.conversation,
+        body           : req.body.messageBody,
+        author         : req.token._id,
+        recipient      : req.body.recipientId,
+        originatedFrom : 'conversation'
     });
 
     message.save( (err, sentMessage) => {
@@ -319,6 +400,9 @@ function postMessage (req, res) {
             console.log('Error!', err);
             return res.send({ error: err });
         }
+        
+        // call utility to check for and send unreads waiting email
+        duckDuckSpam(message.recipient);
 
         return res
             .status(200)
@@ -330,9 +414,8 @@ function postMessage (req, res) {
 /* ============================== EXPORT API =============================== */
 
 module.exports = {
-    getConversations : getConversations,
-//    getConversations : getConversationsAggregate,
-    getConversation : getConversation,
-    createConversation : createConversation,
-    postMessage : postMessage
+    getConversations,
+    getConversation,
+    createConversation,
+    postMessage
 };

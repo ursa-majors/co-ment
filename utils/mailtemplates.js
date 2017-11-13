@@ -6,6 +6,14 @@
 
 const baseUrl = "http://co-ment.glitch.me/";
 
+
+const unreadsReminder = (url, to_name) => {
+    return `Hello @${to_name}, you have new unread messages in <a href="${url}">your co/ment Inbox</a>!
+    <br><br>
+    ${url}`;
+};
+
+
 const longEmail = (title, url, toUser, subhead, bodyText, buttonText, recUserId) => {
   return `
       <!DOCTYPE html>
@@ -249,9 +257,10 @@ const longEmail = (title, url, toUser, subhead, bodyText, buttonText, recUserId)
   </tbody>
 </table>
 </body>
-      </html>
-`
+</html>
+`;
 };
+
 
 const shortEmail = (title, url, headline, body, buttonText, recUserId) => {
   return `
@@ -468,7 +477,7 @@ const shortEmail = (title, url, headline, body, buttonText, recUserId) => {
           </tbody>
         </table>
         </body>
-        </html>`
+    </html>`;
 };
 
 const pwResetTemplate = (url, recUserId) => {
@@ -493,7 +502,8 @@ const contactTemplate = (toUser, fromUser, fromEmail, bodyText, connectionId, bo
 };
 
 module.exports = {
-    pwResetTemplate    : pwResetTemplate,
-    validationTemplate : validationTemplate,
-    contactTemplate    : contactTemplate
+    pwResetTemplate,
+    validationTemplate,
+    contactTemplate,
+    unreadsReminder
 };
