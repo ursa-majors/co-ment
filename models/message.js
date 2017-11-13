@@ -34,6 +34,11 @@ const messageSchema = new mongoose.Schema({
     unread: {
         type     : Boolean,
         default  : true
+    },
+    
+    originatedFrom : {
+        type     : String,
+        enum     : ['connection', 'conversation']
     }
 
 },

@@ -10,10 +10,12 @@ const app           = express();
 const morgan        = require('morgan');
 const bodyParser    = require('body-parser');
 const path          = require('path');
+const comentCors    = require('./config/cors');
 
 // passport auth
 const passport      = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const strategy      = require('./config/strategy');
 
 // db
 const db            = require('./db');
@@ -50,59 +52,13 @@ app.use(express.static(path.join(__dirname, '/client/build/')));
 
 /* ================================= CORS ================================= */
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-
-    // intercepts OPTIONS method
-    if ('OPTIONS' === req.method) {
-        // respond with 200
-        res.sendStatus(200);
-    } else {
-        next();
-    }
-});
+app.use(comentCors);
 
 
 /* =============================== PASSPORT ================================ */
 
 app.use(passport.initialize());
-
-passport.use(new LocalStrategy(
-
-    // Authenticate users by username & password
-    function(username, password, done) {
-        User.findOne(
-            // query - find by username
-            { username : username },
-            // projection - select fields to return
-            'username salt hash',
-            // callback - gets error & result of query
-            (err, user) => {
-
-                // denial
-                if (err) {
-                    return done(err);
-                }
-
-                // anger
-                if (!user) {
-                    return done(null, false, { message : 'Invalid User Name'});
-                }
-
-                // bargaining
-                if (!user.validatePassword(password)) {
-                    return done(null, false, { message: 'Invalid Password'});
-                }
-
-                // acceptance!
-                return done(null, user);
-
-            });
-    }
-
-));
+passport.use(strategy(LocalStrategy, User));
 
 
 /* ================================ ROUTES ================================= */

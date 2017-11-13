@@ -114,6 +114,13 @@ const userSchema = new mongoose.Schema({
     },
 
     likedPosts : [String],
+    
+
+    contactMeta : {
+        unSubbed            : { type : Boolean, default: false },
+        alreadyContacted    : { type : Boolean, default: false },
+        addPostReminderSent : Date
+    },
 
     hash       : String,
 
