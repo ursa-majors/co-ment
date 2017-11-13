@@ -34,6 +34,8 @@ const errorHandler  = require('./utils/errorhandler');
 // port
 const port          = process.env.PORT || 3001;
 
+// bulk email notifier
+const spammy        = require('./utils/spammer');
 
 /* ============================= CONFIGURATION ============================= */
 
@@ -141,3 +143,6 @@ mongoose.Promise = global.Promise;
 app.listen(port, () => {
     console.log(`Server listening on port ${port}.`);
 });
+
+/* EXPERIMENTAL */
+//spammy();
