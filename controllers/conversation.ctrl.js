@@ -169,13 +169,13 @@ function populateMessages(convos, user) {
  * @returns   [boolean]                [true if OK to contact the user]
 */
 function okToContact(contactMeta) {
-    return !contactMeta.unsubscribed && !contactMeta.alreadyContacted;
+    return !contactMeta.unSubbed && !contactMeta.alreadyContacted;
 }
 
 
 /* Dispatch reminder email to user if OK to do so
  * First, gets recipient's user document and check contactMeta.
- *     if `contactMeta.unsubscribed`     = true, fail
+ *     if `contactMeta.unSubbed`         = true, fail
  *     if `contactMeta.alreadyContacted` = true, fail
  * ... else: dispatch reminder email.
  * 
@@ -186,7 +186,7 @@ function duckDuckSpam(recipient) {
     const projection = {
         username : 1,
         email    : 1,
-        'contactMeta.unsubscribed'     : 1,
+        'contactMeta.unSubbed    '     : 1,
         'contactMeta.alreadyContacted' : 1
     };
     
@@ -274,7 +274,16 @@ function getConversations(req, res) {
         // get unreads and filter messages
         .then( convos => formatConvData(convos, req.token._id) )
 
-        .then( data => res.status(200).json(data) )
+        .then( data => {
+            // set user's alreadyContacted flag to false so they rec 
+            // reminders of new messages
+            User.findByIdAndUpdate(
+                req.token._id,
+                { $set : {'contactMeta.alreadyContacted' : false }}
+            ).exec();
+            
+            return res.status(200).json(data);
+        })
         .catch( err => {
             return res
                 .status(400)
