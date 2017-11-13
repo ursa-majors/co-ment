@@ -107,8 +107,8 @@ passport.use(new LocalStrategy(
 
 /* ================================ ROUTES ================================= */
 
-app.use(authRoutes);
-app.use(apiRoutes);
+app.use('/api', authRoutes);
+app.use('/api', apiRoutes);
 app.use(staticRoutes);
 
 
