@@ -115,7 +115,7 @@ function conversation(state = INITIAL_STATE, action) {
       });
 
     /*
-    *  Called From: <Conversations />
+    *  Called From: <Conversations /> and <HeaderNav />
     *  Payload: An array of conversation objects
     *  Purpose: Called when the API call succeeds. Populate the conversation
     *  list for a user.
@@ -151,13 +151,13 @@ function conversation(state = INITIAL_STATE, action) {
       );
 
     /*
-    *  Called From: <Conversations />
+    *  Called From: <Conversations /> and <HeaderNav />
     *  Payload: An error message
     *  Purpose: Called when the API call fails. Set the state to display
     *  a message to user.
     */
     case GET_ALL_CONVERSATIONS_FAILURE:
-      error = `An error occurred while fetching messages: ${action.payload.message || 'Unknown error'}`;
+      error = `THIS IS THE ONE An error occurred while fetching messages: ${action.payload.message || 'Unknown error'}`;
       return Object.assign(
         {},
         state,
@@ -175,7 +175,7 @@ function conversation(state = INITIAL_STATE, action) {
   /*-----------------------------------------------------------------------*/
 
     /*
-    *  Called From: <Conversations />
+    *  Called From: <Conversations /> and <HeaderNav />
     *  Payload: CSS class to show/hide the modal
     *  Purpose: Called from the modal to dismiss the modal
     */
