@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { skip } from '../utils';
 import { setMenuState, setAdminMenuState, setMenuBackground } from '../store/actions';
 import * as apiActions from '../store/actions/apiConversationActions';
+import { setConversationsModal } from '../store/actions/conversationActions';
 import Spinner from './Spinner';
 import ModalSm from './ModalSm';
 
@@ -17,7 +18,8 @@ class Nav extends React.Component {
     if (this.props.location.pathname !== prevProps.location.pathname ||
       this.props.appState.loggedIn !== prevProps.appState.loggedIn ||
       this.props.conversation.currentConv._id !== prevProps.conversation.currentConv._id) {
-      if (this.props.appState.loggedIn) {
+      if (this.props.appState.loggedIn && this.props.appState.user.validated) {
+        console.log('validated user, calling getConversations');
         const token = this.props.appState.authToken;
         this.props.api.getConversations(token);
       }
@@ -127,6 +129,7 @@ class Nav extends React.Component {
           modalType={this.props.conversation.getConversationsModal.type}
           dismiss={
             () => {
+              console.log('clicking dismiss on getConversationsModal');
               this.props.actions.setConversationsModal({
                 class: 'modal__hide',
                 text: '',
@@ -290,6 +293,7 @@ Nav.propTypes = {
       _id: PropTypes.string,
       avatarUrl: PropTypes.string,
       username: PropTypes.string,
+      validated: PropTypes.bool,
     }).isRequired,
   }).isRequired,
   api: PropTypes.shape({
@@ -322,7 +326,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({ setMenuState, setMenuBackground, setAdminMenuState }, dispatch),
+  actions: bindActionCreators({
+    setMenuState,
+    setMenuBackground,
+    setAdminMenuState,
+    setConversationsModal,
+  }, dispatch),
   api: bindActionCreators(apiActions, dispatch),
 });
 

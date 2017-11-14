@@ -85,7 +85,7 @@ function appState(state = INITIAL_STATE, action) {
             _id: action.payload._id,
             avatarUrl: action.payload.avatarUrl,
             username: action.payload.username,
-            },
+          },
           authToken: action.meta.token,
         },
        );
@@ -129,7 +129,7 @@ function appState(state = INITIAL_STATE, action) {
             _id: action.payload.profile._id,
             avatarUrl: action.payload.profile.avatarUrl,
             username: action.payload.profile.username,
-            },
+          },
           authToken: action.payload.token,
         },
        );
@@ -140,8 +140,6 @@ function appState(state = INITIAL_STATE, action) {
     * Populate the store with userId and token, set logged in to true.
     */
     case REGISTRATION_SUCCESS:
-    console.log('registration success');
-    console.log(action.payload);
       window.localStorage.setItem('authToken', JSON.stringify(action.payload.token));
       window.localStorage.setItem('userId', JSON.stringify(action.payload.profile._id));
       return Object.assign(
@@ -153,7 +151,7 @@ function appState(state = INITIAL_STATE, action) {
             _id: action.payload.profile._id,
             avatarUrl: action.payload.profile.avatarUrl || '',
             username: action.payload.profile.username,
-            },
+          },
           authToken: action.payload.token,
         },
        );
