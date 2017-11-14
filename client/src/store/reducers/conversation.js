@@ -157,7 +157,7 @@ function conversation(state = INITIAL_STATE, action) {
     *  a message to user.
     */
     case GET_ALL_CONVERSATIONS_FAILURE:
-      error = `THIS IS THE ONE An error occurred while fetching messages: ${action.payload.message || 'Unknown error'}`;
+      error = `An error occurred while fetching messages: ${action.payload.message || 'Unknown error'}`;
       return Object.assign(
         {},
         state,
