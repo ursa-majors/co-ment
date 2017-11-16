@@ -438,14 +438,10 @@ PostFull.propTypes = {
 };
 
 PostFull.defaultProps = {
-  match: {
-    params: {
-      id: '',
-    },
-  },
+  match: null,
   posts: {
     currentPost: {
-      _id: '',
+      _id: null,
     },
   },
 };

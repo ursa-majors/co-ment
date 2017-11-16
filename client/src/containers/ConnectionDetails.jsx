@@ -338,11 +338,7 @@ ConnectionDetails.propTypes = {
 };
 
 ConnectionDetails.defaultProps = {
-  match: {
-    params: {
-      id: '',
-    },
-  },
+  match: null,
 };
 
 

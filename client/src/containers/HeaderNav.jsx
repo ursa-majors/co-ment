@@ -9,8 +9,8 @@ import { skip } from '../utils';
 import { setMenuState, setAdminMenuState, setMenuBackground } from '../store/actions';
 import * as apiActions from '../store/actions/apiConversationActions';
 import { setConversationsModal } from '../store/actions/conversationActions';
-import Spinner from './Spinner';
-import ModalSm from './ModalSm';
+// import Spinner from './Spinner';
+// import ModalSm from './ModalSm';
 
 class Nav extends React.Component {
 
@@ -19,7 +19,6 @@ class Nav extends React.Component {
       this.props.appState.loggedIn !== prevProps.appState.loggedIn ||
       this.props.conversation.currentConv._id !== prevProps.conversation.currentConv._id) {
       if (this.props.appState.loggedIn && this.props.appState.user.validated) {
-        console.log('validated user, calling getConversations');
         const token = this.props.appState.authToken;
         this.props.api.getConversations(token);
       }
@@ -123,7 +122,7 @@ class Nav extends React.Component {
 
     return (
       <div>
-        <Spinner cssClass={this.props.conversation.getConversationsSpinnerClass} />
+        {/* <Spinner cssClass={this.props.conversation.getConversationsSpinnerClass} />
         <ModalSm
           modalClass={this.props.conversation.getConversationsModal.class}
           modalText={this.props.conversation.getConversationsModal.text}
@@ -139,7 +138,7 @@ class Nav extends React.Component {
               });
             }
           }
-        />
+        />*/}
         <div className={`h-nav__side-bkg ${this.props.appState.menuBackground}`}>
           <button
             className="skip"

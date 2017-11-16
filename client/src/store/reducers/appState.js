@@ -13,7 +13,7 @@ const INITIAL_STATE = {
     _id: '',
     avatarUrl: '',
     username: '',
-    validated: '',
+    validated: false,
   },
   loginSpinnerClass: 'spinner__hide',
   redirectUrl: '',
@@ -40,7 +40,6 @@ const INITIAL_STATE = {
 *    Client will attempt to load the expected page for the user.
 */
 function appState(state = INITIAL_STATE, action) {
-  console.log(action.type);
   switch (action.type) {
 
     /*
