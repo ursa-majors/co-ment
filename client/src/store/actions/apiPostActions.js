@@ -51,6 +51,8 @@ export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
 
 export function addPost(token, body) {
+  console.log('sending post to api');
+  console.log(body);
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/posts`,
