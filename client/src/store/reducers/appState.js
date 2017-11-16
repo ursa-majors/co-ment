@@ -13,6 +13,7 @@ const INITIAL_STATE = {
     _id: '',
     avatarUrl: '',
     username: '',
+    validated: '',
   },
   loginSpinnerClass: 'spinner__hide',
   redirectUrl: '',
@@ -39,7 +40,6 @@ const INITIAL_STATE = {
 *    Client will attempt to load the expected page for the user.
 */
 function appState(state = INITIAL_STATE, action) {
-  let newBG='';
   switch (action.type) {
 
     /*
@@ -56,7 +56,7 @@ function appState(state = INITIAL_STATE, action) {
           loggedIn: { $set: false },
           windowSize: {
             width: { $set: window.innerWidth },
-            }
+          },
         },
       );
     /*
@@ -129,6 +129,7 @@ function appState(state = INITIAL_STATE, action) {
             _id: action.payload.profile._id,
             avatarUrl: action.payload.profile.avatarUrl,
             username: action.payload.profile.username,
+            validated: action.payload.profile.validated,
           },
           authToken: action.payload.token,
         },
@@ -230,9 +231,9 @@ function appState(state = INITIAL_STATE, action) {
     */
     case SET_SCROLLED:
       return Object.assign({}, state, {
-          windowScrolled: action.payload.windowScrolled,
-          scrollPosition: action.payload.scrollPosition,
-        });
+        windowScrolled: action.payload.windowScrolled,
+        scrollPosition: action.payload.scrollPosition,
+      });
 
     default:
       return state;

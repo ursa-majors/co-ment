@@ -358,7 +358,7 @@ function conversation(state = INITIAL_STATE, action) {
     *  a message to user.
     */
     case POST_CONV_FAILURE:
-      error = `An error occurred while saving your messasge: ${action.payload.message || 'Unknown error'}`;
+      error = `An error occurred while saving your message: ${action.payload.message || 'Unknown error'}`;
       return Object.assign(
         {},
         state,
