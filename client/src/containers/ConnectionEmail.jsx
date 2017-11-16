@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 
 import Spinner from './Spinner';
 import ModalSm from './ModalSm';
@@ -28,6 +29,7 @@ class ConnectionEmail extends React.Component {
 
     this.props.emailActions.setFormField(event.target.id, event.target.value);
     this.props.emailActions.clearFormError();
+    return null;
   }
 
   sendMsg = () => {
@@ -38,8 +40,9 @@ class ConnectionEmail extends React.Component {
     }
 
     const token = this.props.appState.authToken;
-    let email = {
-      recipient: this.props.connectionEmail.recipient.username || this.props.connectionEmail.recipient.name,
+    const email = {
+      recipient: this.props.connectionEmail.recipient.username ||
+      this.props.connectionEmail.recipient.name,
       sender: this.props.connectionEmail.sender.username,
       copySender: false,
       subject: this.props.connectionEmail.subject,
@@ -48,47 +51,53 @@ class ConnectionEmail extends React.Component {
       connectionId: this.props.connectionEmail.connectionId,
     };
     const msgBody = {
-      recipientId  : this.props.connectionEmail.recipient.id || this.props.connectionEmail.recipient._id,
-      conversation : this.props.connectionEmail.conversationId,
-      messageBody  : this.props.connectionEmail.body,
+      recipientId: this.props.connectionEmail.recipient.id ||
+      this.props.connectionEmail.recipient._id,
+      conversation: this.props.connectionEmail.conversationId,
+      messageBody: this.props.connectionEmail.body,
     };
-    switch(this.props.connectionEmail.type) {
+    // build new conversation and connection objects
+    const conversation = {
+      recipientId: this.props.connectionEmail.recipient._id,
+      message: this.props.connectionEmail.body,
+      subject: `Re: ${this.props.posts.currentPost.title}`,
+    };
+    const connection = {
+      mentor: {
+        id: this.props.connectionEmail.role === 'mentor' ?
+        this.props.profiles.userProfile._id :
+        this.props.posts.currentPost.author._id,
+        name: this.props.connectionEmail.role === 'mentor' ?
+        this.props.profiles.userProfile.username :
+        this.props.posts.currentPost.author.username,
+        avatar: this.props.connectionEmail.role === 'mentor' ?
+        this.props.profiles.userProfile.avatarUrl :
+        this.props.posts.currentPost.author.avatarUrl,
+      },
+      mentee: {
+        id: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author._id,
+        name: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author.username,
+        avatar: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.author.avatarUrl,
+      },
+      initiator: {
+        id: this.props.appState.user._id,
+        name: this.props.profiles.userProfile.username,
+      },
+      originalPost: {
+        id: this.props.posts.currentPost._id,
+        title: this.props.posts.currentPost.title,
+      },
+      status: 'pending',
+    };
+    switch (this.props.connectionEmail.type) {
       case 'request':
-        // build new conversation and connection objects
-        const conversation = {
-          recipientId: this.props.connectionEmail.recipient._id,
-          message: this.props.connectionEmail.body,
-          subject: `Re: ${this.props.posts.currentPost.title}`,
-        }
-        const connection = {
-          mentor: {
-            id: this.props.connectionEmail.role === 'mentor' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author._id ,
-            name: this.props.connectionEmail.role === 'mentor' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author.username,
-            avatar: this.props.connectionEmail.role === 'mentor' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.author.avatarUrl,
-            },
-          mentee: {
-            id: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile._id : this.props.posts.currentPost.author._id,
-            name: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile.username : this.props.posts.currentPost.author.username,
-            avatar: this.props.connectionEmail.role === 'mentee' ? this.props.profiles.userProfile.avatarUrl : this.props.posts.currentPost.author.avatarUrl,
-            },
-          initiator: {
-            id: this.props.appState.user._id,
-            name: this.props.profiles.userProfile.username,
-            },
-          originalPost: {
-            id: this.props.posts.currentPost._id,
-            title: this.props.posts.currentPost.title,
-            },
-          status: 'pending',
-          };
-
         // 1. Save new conversation. Use returned conversation ID to...
         // 2. Save new connection object. If successful...
         // 3. Send connection email
 
         this.props.conversationActions.postConversation(token, conversation)
         .then((result1) => {
-          if (result1.type === "POST_CONV_SUCCESS") {
+          if (result1.type === 'POST_CONV_SUCCESS') {
             // Build new connection object from Redux store values
             connection.conversationId = result1.payload.conversation._id;
             this.props.connectActions.connect(token, connection)
@@ -98,14 +107,14 @@ class ConnectionEmail extends React.Component {
                 email.connectionId = result2.payload.connectionId;
                 this.props.emailActions.sendEmail(token, email)
                 .then((result3) => {
-                  if (result3.type === "SEND_EMAIL_SUCCESS") {
+                  if (result3.type === 'SEND_EMAIL_SUCCESS') {
                     this.props.history.push('/connectionresult');
-                    }
-                  });
-                }
-              });
-            }
-          });
+                  }
+                });
+              }
+            });
+          }
+        });
         break;
       case 'accept':
       // send an email
@@ -113,8 +122,8 @@ class ConnectionEmail extends React.Component {
         email.copySender = true;
         this.props.emailActions.sendEmail(token, email)
           .then((result) => {
-            if (result.type === "SEND_EMAIL_SUCCESS") {
-              this.props.conversationActions.postMessage(token,msgBody)
+            if (result.type === 'SEND_EMAIL_SUCCESS') {
+              this.props.conversationActions.postMessage(token, msgBody)
               .then((result2) => {
                 console.log(result2);
               });
@@ -125,11 +134,11 @@ class ConnectionEmail extends React.Component {
                   type: 'ACCEPT',
                 },
               )
-              .then((result) => {
-                if (result.type === 'UPDATE_CONNECTION_STATUS_SUCCESS') {
+              .then((result3) => {
+                if (result3.type === 'UPDATE_CONNECTION_STATUS_SUCCESS') {
                   this.props.emailActions.setEmailModal({
                     class: 'modal__show',
-                    text: `The email was sent and your connection is now active!\n\nCheck your co/ment inbox to continue the conversation.\n\nGood Luck!`,
+                    text: 'The email was sent and your connection is now active!\n\nCheck your co/ment inbox to continue the conversation.\n\nGood Luck!',
                     title: 'SUCCESS',
                     type: 'modal__success',
                     action: () => {
@@ -201,8 +210,8 @@ class ConnectionEmail extends React.Component {
                   type: 'DEACTIVATE',
                 },
               )
-              .then((result) => {
-                if (result.type === 'UPDATE_CONNECTION_STATUS_SUCCESS') {
+              .then((result4) => {
+                if (result4.type === 'UPDATE_CONNECTION_STATUS_SUCCESS') {
                   this.props.emailActions.setEmailModal({
                     class: 'modal__show',
                     text: `Your connection with ${this.props.connectionEmail.recipient.username} is now deactivated.\n\nAn email was sent to both users to confirm this action.`,
@@ -234,7 +243,7 @@ class ConnectionEmail extends React.Component {
     let bodyPlaceholder = 'Include a short message to explain why you want to connect with this user...';
     if (this.props.connectionEmail.type === 'accept') {
       buttonText = 'Accept Request';
-      bodyPlaceholder = `Include a personal message...`;
+      bodyPlaceholder = 'Include a personal message...';
     }
     if (this.props.connectionEmail.type === 'decline') {
       buttonText = 'Decline Request';
@@ -276,7 +285,8 @@ class ConnectionEmail extends React.Component {
             </label>
             <textarea
               className="form__input form__connection-input"
-              id="body" value={this.props.connectionEmail.body}
+              id="body"
+              value={this.props.connectionEmail.body}
               onChange={event => this.handleChange(event)}
               ref={(input) => { this.textInput = input; }}
               placeholder={bodyPlaceholder}
@@ -333,6 +343,96 @@ class ConnectionEmail extends React.Component {
     );
   }
 }
+
+ConnectionEmail.propTypes = {
+  appState: PropTypes.shape({
+    authToken: PropTypes.string,
+    user: PropTypes.shape({
+      _id: PropTypes.string,
+    }).isRequired,
+    windowSize: PropTypes.shape({
+      mobile: PropTypes.bool,
+    }).isRequired,
+  }).isRequired,
+  emailActions: PropTypes.shape({
+    clearFormError: PropTypes.func,
+    setFormField: PropTypes.func,
+    setFormError: PropTypes.func,
+    sendEmail: PropTypes.func,
+    setEmailModal: PropTypes.func,
+  }).isRequired,
+  conversationActions: PropTypes.shape({
+    postConversation: PropTypes.func,
+    postMessage: PropTypes.func,
+    setNewConvModal: PropTypes.func,
+  }).isRequired,
+  connectActions: PropTypes.shape({
+    connect: PropTypes.func,
+    updateConnectionStatus: PropTypes.func,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  posts: PropTypes.shape({
+    currentPost: PropTypes.shape({
+      _id: PropTypes.string,
+      title: PropTypes.string,
+      author: PropTypes.shape({
+        _id: PropTypes.string,
+        username: PropTypes.string,
+        avatarUrl: PropTypes.string,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
+  profiles: PropTypes.shape({
+    userProfile: PropTypes.shape({
+      username: PropTypes.string,
+      name: PropTypes.string,
+      _id: PropTypes.string,
+      avatarUrl: PropTypes.string,
+    }).isRequired,
+  }).isRequired,
+  conversation: PropTypes.shape({
+    newConvSpinnerClass: PropTypes.string,
+    newConvModal: PropTypes.shape({
+      class: PropTypes.string,
+      type: PropTypes.string,
+      text: PropTypes.string,
+      title: PropTypes.string,
+      action: PropTypes.func,
+    }).isRequired,
+  }).isRequired,
+  connectionEmail: PropTypes.shape({
+    body: PropTypes.string,
+    formErrorClass: PropTypes.string,
+    formError: PropTypes.string,
+    emailSpinnerClass: PropTypes.string,
+    emailModal: PropTypes.shape({
+      class: PropTypes.string,
+      type: PropTypes.string,
+      text: PropTypes.string,
+      title: PropTypes.string,
+      action: PropTypes.func,
+    }).isRequired,
+    recipient: PropTypes.shape({
+      name: PropTypes.string,
+      username: PropTypes.string,
+      id: PropTypes.string,
+      _id: PropTypes.string,
+    }).isRequired,
+    sender: PropTypes.shape({
+      name: PropTypes.string,
+      username: PropTypes.string,
+      id: PropTypes.string,
+      _id: PropTypes.string,
+    }).isRequired,
+    connectionId: PropTypes.string,
+    conversationId: PropTypes.string,
+    type: PropTypes.string,
+    subject: PropTypes.string,
+    role: PropTypes.string,
+  }).isRequired,
+};
 
 const mapStateToProps = state => ({
   appState: state.appState,
