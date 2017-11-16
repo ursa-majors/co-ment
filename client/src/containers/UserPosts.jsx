@@ -140,19 +140,6 @@ UserPosts.propTypes = {
   }).isRequired,
 };
 
-UserPosts.defaultProps = {
-  match: {
-    params: {
-      id: '',
-    },
-  },
-  posts: {
-    currentPost: {
-      _id: '',
-    },
-  },
-};
-
 const mapStateToProps = state => ({
   appState: state.appState,
   posts: state.posts,
