@@ -112,8 +112,10 @@ class Nav extends React.Component {
       backgroundSize: 'cover',
       backgroundPosition: 'center center',
     };
-
-    const adminLinks = ['inbox', 'profile', 'connections', 'logout'];
+    let adminLinks = ['profile', 'logout'];
+    if (this.props.appState.user.validated) {
+      adminLinks = ['inbox', 'profile', 'connections', 'logout'];
+    }
 
     const navItemClass = this.props.appState.adminMenuState === 'open' ? 'a-nav__item--expanded' : 'a-nav__item';
     const navLinkClass = this.props.appState.adminMenuState === 'open' ? 'a-nav__item-link a-nav__item-link--expanded' : 'a-nav__item-link';
@@ -129,7 +131,6 @@ class Nav extends React.Component {
           modalType={this.props.conversation.getConversationsModal.type}
           dismiss={
             () => {
-              console.log('clicking dismiss on getConversationsModal');
               this.props.actions.setConversationsModal({
                 class: 'modal__hide',
                 text: '',
@@ -148,6 +149,7 @@ class Nav extends React.Component {
             <span className="skip__text">Skip to content</span> <i className="fa fa-angle-right" />
           </button>
           {this.props.appState.loggedIn &&
+            this.props.appState.user.validated &&
             <NavLink
               to="/inbox"
               className="h-nav__inbox aria-button"

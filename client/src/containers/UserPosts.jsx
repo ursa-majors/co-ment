@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router';
+import PropTypes from 'prop-types';
 
 import * as Actions from '../store/actions/postActions';
 import * as apiActions from '../store/actions/apiPostActions';
@@ -19,7 +20,7 @@ class UserPosts extends React.Component {
   }
 
   componentDidMount() {
-    const userId = this.props.appState.userId;
+    const userId = this.props.appState.user._id;
     this.props.api.getUserPosts(this.props.appState.authToken, userId);
   }
 
@@ -54,39 +55,36 @@ class UserPosts extends React.Component {
                   <th className="user-posts__th">Role</th>
                   <th className="user-posts__th">Title</th>
                   <th className="user-posts__th">Date</th>
-                  <th className="user-posts__th"><i className={`fa fa-eye`} /></th>
-                  <th className="user-posts__th"><i className={`fa fa-heart`} /></th>
+                  <th className="user-posts__th"><i className="fa fa-eye" /></th>
+                  <th className="user-posts__th"><i className="fa fa-heart" /></th>
                 </tr>
               </thead>
               <tbody className="user-posts__tbody">
                 {this.props.posts.entries &&
-                  this.props.posts.entries.sort((a, b) => {
-                    return Date.parse(a.updatedAt) - Date.parse(b.updatedAt);
-                  })
+                  this.props.posts.entries.sort((a, b) =>
+                    Date.parse(a.updatedAt) - Date.parse(b.updatedAt))
                   .reverse()
-                  .map((post) => {
-                    return (
-                      <tr key={post._id} className="user-posts__tr">
-                        <td className="user-posts__td"> {post.role} </td>
-                        <td className="user-posts__td">
-                          <button
-                            className="aria-button user-posts__link"
-                            onClick={
-                              () => {
-                                this.props.actions.setCurrentPost(post);
-                                this.props.history.push(`/editpost/${post._id}`);
-                              }
+                  .map(post => (
+                    <tr key={post._id} className="user-posts__tr">
+                      <td className="user-posts__td"> {post.role} </td>
+                      <td className="user-posts__td">
+                        <button
+                          className="aria-button user-posts__link"
+                          onClick={
+                            () => {
+                              this.props.actions.setCurrentPost(post);
+                              this.props.history.push(`/editpost/${post._id}`);
                             }
-                          >
-                            {post.title}
-                          </button>
-                        </td>
-                        <td className="user-posts__td"> {formatDate(new Date(post.updatedAt))} </td>
-                        <td className="user-posts__td"> {post.meta.views} </td>
-                        <td className="user-posts__td"> {post.meta.likes} </td>
-                      </tr>
-                    );
-                  })
+                          }
+                        >
+                          {post.title}
+                        </button>
+                      </td>
+                      <td className="user-posts__td"> {formatDate(new Date(post.updatedAt))} </td>
+                      <td className="user-posts__td"> {post.meta.views} </td>
+                      <td className="user-posts__td"> {post.meta.likes} </td>
+                    </tr>
+                  ))
                 }
               </tbody>
             </table>
@@ -95,6 +93,65 @@ class UserPosts extends React.Component {
     );
   }
 }
+
+UserPosts.propTypes = {
+  actions: PropTypes.shape({
+    clearCurrentPost: PropTypes.func,
+    setCurrentPost: PropTypes.func,
+    setViewPostModalText: PropTypes.func,
+    setViewPostModalClass: PropTypes.func,
+    setEmailOptions: PropTypes.func,
+    setLoadPostsModal: PropTypes.func,
+  }).isRequired,
+  api: PropTypes.shape({
+    viewPost: PropTypes.func,
+    getUserPosts: PropTypes.func,
+  }).isRequired,
+  appState: PropTypes.shape({
+    loggedIn: PropTypes.bool,
+    authToken: PropTypes.string,
+    user: PropTypes.shape({
+      _id: PropTypes.string,
+      avatarUrl: PropTypes.string,
+      username: PropTypes.string,
+    }).isRequired,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  posts: PropTypes.shape({
+    loadPostsSpinnerClass: PropTypes.string,
+    loadPostsModal: PropTypes.shape({
+      type: PropTypes.string,
+      text: PropTypes.string,
+      class: PropTypes.string,
+      title: PropTypes.string,
+    }),
+    entries: PropTypes.arrayOf(PropTypes.shape({
+      _id: PropTypes.string,
+    })),
+    currentPost: PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      role: PropTypes.string.isRequired,
+      author: PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
+};
+
+UserPosts.defaultProps = {
+  match: {
+    params: {
+      id: '',
+    },
+  },
+  posts: {
+    currentPost: {
+      _id: '',
+    },
+  },
+};
 
 const mapStateToProps = state => ({
   appState: state.appState,

@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import * as Actions from '../store/actions/profileActions';
 import * as apiActions from '../store/actions/apiActions';
@@ -148,7 +149,7 @@ class ViewProfile extends React.Component {
     let owner;
     if (!this.props.match)  {
       owner = true;
-    } else if (this.props.match && this.props.appState.userId === this.props.match.params.id) {
+    } else if (this.props.match && this.props.appState.user._id === this.props.match.params.id) {
       owner = true;
     } else {
       owner = false;
@@ -183,7 +184,7 @@ class ViewProfile extends React.Component {
             { !this.state.thumb && owner ?
               <Link
                 className="full__edit"
-                to={`/editprofile/${this.props.appState.userId}`} >
+                to={`/editprofile/${this.props.appState.user._id}`} >
                 <i className="fa fa-pencil full__icon--edit" aria-label="edit" />
               </Link> : ''/* edit link */
             } {/* post owner, full size */}
@@ -339,6 +340,73 @@ class ViewProfile extends React.Component {
     );
   }
 }
+
+ViewProfile.propTypes = {
+  appState: PropTypes.shape({
+    authToken: PropTypes.string,
+    user: PropTypes.shape({
+      _id: PropTypes.string,
+    }).isRequired,
+    windowSize: PropTypes.shape({
+      mobile: PropTypes.bool,
+    }).isRequired,
+  }).isRequired,
+  api: PropTypes.shape({
+    resendAcctValidation: PropTypes.func,
+    modifyProfile: PropTypes.func,
+  }).isRequired,
+  actions: PropTypes.shape({
+    setEditProfile: PropTypes.func,
+    setFormField: PropTypes.func,
+    removeLanguage: PropTypes.func,
+    removeSkill: PropTypes.func,
+    addSkill: PropTypes.func,
+    addLanguage: PropTypes.func,
+    setUpdProfileModal: PropTypes.func,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  profiles: PropTypes.shape({
+    savingProfile: PropTypes.bool,
+    saveError: PropTypes.bool,
+    updProfileSpinnerClass: PropTypes.string,
+    updProfileModal: PropTypes.shape({
+      class: PropTypes.string,
+      text: PropTypes.string,
+      title: PropTypes.string,
+      type: PropTypes.string,
+    }).isRequired,
+    userProfile: PropTypes.shape({
+      _id: PropTypes.string,
+      validated: PropTypes.bool,
+      username: PropTypes.string,
+    }).isRequired,
+    editForm: PropTypes.shape({
+      languages: PropTypes.array,
+      language: PropTypes.string,
+      skills: PropTypes.array,
+      skill: PropTypes.string,
+      name: PropTypes.string,
+      email: PropTypes.string,
+      time_zone: PropTypes.string,
+      github: PropTypes.string,
+      twitter: PropTypes.string,
+      facebook: PropTypes.string,
+      link: PropTypes.string,
+      codepen: PropTypes.string,
+      linkedin: PropTypes.string,
+      avatarUrl: PropTypes.string,
+      gender: PropTypes.string,
+      location: PropTypes.string,
+      about: PropTypes.string,
+      errMsg: PropTypes.string,
+      contactMeta: PropTypes.shape({
+        unSubbed: PropTypes.bool,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
+};
 
 const mapStateToProps = state => ({
   appState: state.appState,

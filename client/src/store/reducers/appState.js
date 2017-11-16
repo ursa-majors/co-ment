@@ -40,6 +40,7 @@ const INITIAL_STATE = {
 *    Client will attempt to load the expected page for the user.
 */
 function appState(state = INITIAL_STATE, action) {
+  console.log(action.type);
   switch (action.type) {
 
     /*
@@ -75,6 +76,8 @@ function appState(state = INITIAL_STATE, action) {
     * Save the userId and token in the redux store...set loggedIn to TRUE.
     */
     case VALIDATE_TOKEN_SUCCESS:
+      console.log('validate token');
+      console.log(action.payload);
       return Object.assign(
         {},
         state,
@@ -85,6 +88,7 @@ function appState(state = INITIAL_STATE, action) {
             _id: action.payload._id,
             avatarUrl: action.payload.avatarUrl,
             username: action.payload.username,
+            validated: action.payload.validated,
           },
           authToken: action.meta.token,
         },
@@ -118,6 +122,8 @@ function appState(state = INITIAL_STATE, action) {
     case LOGIN_SUCCESS:
       window.localStorage.setItem('authToken', JSON.stringify(action.payload.token));
       window.localStorage.setItem('userId', JSON.stringify(action.payload.profile._id));
+      console.log('login');
+      console.log(action.payload.profile);
       return Object.assign(
         {},
         state,
