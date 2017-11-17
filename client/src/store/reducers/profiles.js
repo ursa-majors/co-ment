@@ -86,9 +86,6 @@ const INITIAL_STATE = {
 
 function profiles(state = INITIAL_STATE, action) {
   let error;
-  let name;
-  let avatar_url;
-  let time_zone;
   switch (action.type) {
 
     /*

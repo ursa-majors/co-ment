@@ -9,8 +9,8 @@ import { skip } from '../utils';
 import { setMenuState, setAdminMenuState, setMenuBackground } from '../store/actions';
 import * as apiActions from '../store/actions/apiConversationActions';
 import { setConversationsModal } from '../store/actions/conversationActions';
-import Spinner from './Spinner';
-import ModalSm from './ModalSm';
+// import Spinner from './Spinner';
+// import ModalSm from './ModalSm';
 
 class Nav extends React.Component {
 
@@ -19,7 +19,6 @@ class Nav extends React.Component {
       this.props.appState.loggedIn !== prevProps.appState.loggedIn ||
       this.props.conversation.currentConv._id !== prevProps.conversation.currentConv._id) {
       if (this.props.appState.loggedIn && this.props.appState.user.validated) {
-        console.log('validated user, calling getConversations');
         const token = this.props.appState.authToken;
         this.props.api.getConversations(token);
       }
@@ -112,8 +111,10 @@ class Nav extends React.Component {
       backgroundSize: 'cover',
       backgroundPosition: 'center center',
     };
-
-    const adminLinks = ['inbox', 'profile', 'connections', 'logout'];
+    let adminLinks = ['profile', 'logout'];
+    if (this.props.appState.user.validated) {
+      adminLinks = ['inbox', 'profile', 'connections', 'logout'];
+    }
 
     const navItemClass = this.props.appState.adminMenuState === 'open' ? 'a-nav__item--expanded' : 'a-nav__item';
     const navLinkClass = this.props.appState.adminMenuState === 'open' ? 'a-nav__item-link a-nav__item-link--expanded' : 'a-nav__item-link';
@@ -121,7 +122,7 @@ class Nav extends React.Component {
 
     return (
       <div>
-        <Spinner cssClass={this.props.conversation.getConversationsSpinnerClass} />
+        {/* <Spinner cssClass={this.props.conversation.getConversationsSpinnerClass} />
         <ModalSm
           modalClass={this.props.conversation.getConversationsModal.class}
           modalText={this.props.conversation.getConversationsModal.text}
@@ -129,7 +130,6 @@ class Nav extends React.Component {
           modalType={this.props.conversation.getConversationsModal.type}
           dismiss={
             () => {
-              console.log('clicking dismiss on getConversationsModal');
               this.props.actions.setConversationsModal({
                 class: 'modal__hide',
                 text: '',
@@ -138,7 +138,7 @@ class Nav extends React.Component {
               });
             }
           }
-        />
+        />*/}
         <div className={`h-nav__side-bkg ${this.props.appState.menuBackground}`}>
           <button
             className="skip"
@@ -148,6 +148,7 @@ class Nav extends React.Component {
             <span className="skip__text">Skip to content</span> <i className="fa fa-angle-right" />
           </button>
           {this.props.appState.loggedIn &&
+            this.props.appState.user.validated &&
             <NavLink
               to="/inbox"
               className="h-nav__inbox aria-button"

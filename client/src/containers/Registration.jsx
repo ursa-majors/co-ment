@@ -96,12 +96,21 @@ class Registration extends React.Component {
             Create account
           </div>
           <div className="form__input-group">
+            <label htmlFor="username" className="form__label">
+              User Name
+            </label>
             <input className="form__input" type="text" placeholder="Username" id="username" onChange={event => this.handleInput(event)} required />
           </div>
           <div className="form__input-group">
+            <label htmlFor="email" className="form__label">
+              Email
+            </label>
             <input className="form__input" type="email" placeholder="Email" id="email" onChange={event => this.handleInput(event)} required />
           </div>
           <div className="form__input-group">
+            <label htmlFor="password" className="form__label">
+              Password
+            </label>
             <input
               className="form__input"
               type="password"
@@ -113,6 +122,9 @@ class Registration extends React.Component {
             />
           </div>
           <div className="form__input-group">
+            <label htmlFor="confirmPwd" className="form__label">
+              Confirm Password
+            </label>
             <input
               className="form__input"
               type="password"

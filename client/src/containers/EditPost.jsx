@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 
 import InputAutosuggest from './InputAutosuggest';
-import { languages, skills, adjustTextArea } from '../utils';
+import { skills, adjustTextArea } from '../utils';
 import parseSKill from '../utils/skillsparser';
 
 import * as Actions from '../store/actions/postActions';
@@ -28,19 +29,16 @@ class EditPost extends React.Component {
     this.props.actions.resetForm();
   }
 
-  // Add Keywords on Comma or Enter
-  handleKeyPressAdd = (e) => {
-    if (e.charCode === 44 || e.which === 44 || e.charCode === 13 || e.which === 13) {
-      e.preventDefault();
-      this.addKeyword();
-    }
+  // handle autosuggest selection
+  onChange = (id, newValue) => {
+    this.props.actions.setFormField(id, newValue);
   }
 
   // event handler for form inputs...sets the state value based on element id
   handleChange = (event) => {
     // limit post body to 620 chars
     if (event.target.id === 'content' && event.target.value.length > 620) {
-      event.preventDefault;
+      event.preventDefault();
       return null;
     }
     // handle input
@@ -49,11 +47,15 @@ class EditPost extends React.Component {
     if (event.target.id === 'content') {
       adjustTextArea(this.textInput);
     }
+    return null;
   }
 
-  // handle autosuggest selection
-  onChange = (id, newValue) => {
-    this.props.actions.setFormField(id, newValue);
+  // Add Keywords on Comma or Enter
+  handleKeyPressAdd = (e) => {
+    if (e.charCode === 44 || e.which === 44 || e.charCode === 13 || e.which === 13) {
+      e.preventDefault();
+      this.addKeyword();
+    }
   }
 
   // event handler for checkbox change
@@ -84,7 +86,6 @@ class EditPost extends React.Component {
 
   // allow user to remove the keywords
   removeKeyword = (event) => {
-    const newArray = this.props.posts.editForm.keywords;
     for (let i = 0; i < this.props.posts.editForm.keywords.length; i += 1) {
       if (this.props.posts.editForm.keywords[i] === event.target.id) {
         this.props.actions.removeKeyword(i);
@@ -105,14 +106,15 @@ class EditPost extends React.Component {
       msg += 'At least 1 keyword is required.';
     }
     if (msg.length > 0) {
-      this.props.actions.setFormField( 'errMsg', msg);
-      this.props.actions.setFormField( 'hideErr', '');
+      this.props.actions.setFormField('errMsg', msg);
+      this.props.actions.setFormField('hideErr', '');
       return false;
     }
     return true;
   }
 
   savePost = () => {
+    console.log('savePost');
     // clear previous errors
     this.props.actions.setFormField('hideErr', 'hidden');
 
@@ -125,11 +127,11 @@ class EditPost extends React.Component {
     if (!this.validateInputs()) { return; }
 
     let excerpt;
-      if (this.props.posts.editForm.content.length > 140) {
-        excerpt = this.props.posts.editForm.content.substr(0, 140);
-      } else {
-        excerpt = null;
-      }
+    if (this.props.posts.editForm.content.length > 140) {
+      excerpt = this.props.posts.editForm.content.substr(0, 140);
+    } else {
+      excerpt = null;
+    }
 
     const body = {
       author: this.props.profiles.userProfile.username,
@@ -142,18 +144,23 @@ class EditPost extends React.Component {
       role: this.props.posts.editForm.role,
       title: this.props.posts.editForm.title,
       body: this.props.posts.editForm.content,
-      excerpt: excerpt,
+      excerpt,
       keywords: this.props.posts.editForm.keywords,
       active: this.props.posts.editForm.active,
       availability: '',
     };
 
+    console.log(body);
+
     if (this.props.posts.editForm.update) {
+      console.log('update');
       this.props.api.modifyPost(this.props.appState.authToken, this.props.match.params.id, body)
         .then(() => {
           this.props.history.push('/posts');
         });
     } else {
+      console.log('add post');
+      console.log(this.props.appState.authToken);
       this.props.api.addPost(this.props.appState.authToken, body)
       .then(() => {
         this.props.history.push('/posts');
@@ -162,10 +169,6 @@ class EditPost extends React.Component {
   }
 
   render() {
-    // seed values for autosuggest fields
-    const languageList = languages.map(i => (<option key={i}>{i}</option>));
-    const skillsList = skills.map(i => (<option key={i}>{i}</option>));
-
     return (
       <div className="posts">
         <div className="form__body">
@@ -230,7 +233,7 @@ class EditPost extends React.Component {
               value={this.props.posts.editForm.keyword}
               addTag={this.addKeyword}
               removeTag={this.removeKeyword}
-              ref={instance => { this.skillInput = instance; }}
+              ref={(instance) => { this.skillInput = instance; }}
             />
           </div>
           <div className="form__input-group">
@@ -252,9 +255,9 @@ class EditPost extends React.Component {
           <div className="form__input-group" >
             <input
               className="form__input--option form__input--checkbox"
-              type='checkbox'
-              id='active'
-              name='active'
+              type="checkbox"
+              id="active"
+              name="active"
               onChange={this.handleCheckboxChange}
               value={this.props.posts.editForm.active}
               checked={this.props.posts.editForm.active}
@@ -277,6 +280,80 @@ class EditPost extends React.Component {
     );
   }
 }
+
+EditPost.propTypes = {
+  actions: PropTypes.shape({
+    clearCurrentPost: PropTypes.func,
+    resetForm: PropTypes.func,
+    setFormField: PropTypes.func,
+    setEditPost: PropTypes.func,
+    addKeyword: PropTypes.func,
+    removeKeyword: PropTypes.func,
+  }).isRequired,
+  api: PropTypes.shape({
+    viewPost: PropTypes.func,
+    modifyPost: PropTypes.func,
+    addPost: PropTypes.func,
+  }).isRequired,
+  appState: PropTypes.shape({
+    loggedIn: PropTypes.bool,
+    authToken: PropTypes.string,
+    user: PropTypes.shape({
+      _id: PropTypes.string,
+      avatarUrl: PropTypes.string,
+      username: PropTypes.string,
+    }).isRequired,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  posts: PropTypes.shape({
+    editForm: PropTypes.shape({
+      keyword: PropTypes.string,
+      keywords: PropTypes.arrayOf(PropTypes.string),
+      title: PropTypes.string,
+      content: PropTypes.string,
+      role: PropTypes.string,
+      active: PropTypes.bool,
+      update: PropTypes.bool,
+      hideErr: PropTypes.string,
+      errMsg: PropTypes.string,
+    }),
+    currentPost: PropTypes.shape({
+      _id: PropTypes.string,
+      role: PropTypes.string.isRequired,
+      author: PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
+  profiles: PropTypes.shape({
+    userProfile: PropTypes.shape({
+      likedPosts: PropTypes.arrayOf(PropTypes.string),
+      username: PropTypes.string.isRequired,
+      _id: PropTypes.string.isRequired,
+      avatarUrl: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      time_zone: PropTypes.string.isRequired,
+      languages: PropTypes.arrayOf(PropTypes.string),
+      gender: PropTypes.string,
+    }),
+  }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string,
+    }),
+  }),
+};
+
+EditPost.defaultProps = {
+  match: null,
+  posts: {
+    currentPost: {
+      _id: null,
+    },
+  },
+};
 
 const mapStateToProps = state => ({
   appState: state.appState,

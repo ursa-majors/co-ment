@@ -13,7 +13,7 @@ import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE, ADD_POST_REQUEST,
 } from '../actions/apiPostActions';
 
 const defaultForm = {
-  active: 'true',
+  active: true,
   title: '',
   role: 'mentor',
   keywords: [],
@@ -24,7 +24,7 @@ const defaultForm = {
   update: false,
 };
 const defaultPost = {
-  active: '',
+  active: true,
   author: {
     _id: '',
     username: '',
