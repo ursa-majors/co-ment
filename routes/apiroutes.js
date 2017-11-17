@@ -24,9 +24,9 @@ const conversationCtrl = require('../controllers/conversation.ctrl');
 // Checks wheather user has validated their account.
 // If `validated: false`, bail out early.
 function checkValidated(req, res, next) {
-    
-    const validatedErrMsg = 'You need to validate your account before you can access this resource. Please visit your Profile and generate a new validation email.';
-    
+
+    const validatedErrMsg = 'You need to validate your account before you can access this resource.\nPlease visit your Profile and generate a new validation email.';
+
     if (!req.token.validated) {
         return res
             .status(400)  // bad request
@@ -34,7 +34,7 @@ function checkValidated(req, res, next) {
     } else {
         next();
     }
-    
+
 }
 
 
