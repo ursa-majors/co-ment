@@ -13,7 +13,7 @@ import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE, ADD_POST_REQUEST,
 } from '../actions/apiPostActions';
 
 const defaultForm = {
-  active: 'true',
+  active: true,
   title: '',
   role: 'mentor',
   keywords: [],
@@ -24,7 +24,7 @@ const defaultForm = {
   update: false,
 };
 const defaultPost = {
-  active: '',
+  active: true,
   author: {
     _id: '',
     username: '',
@@ -255,11 +255,9 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case ADD_POST_REQUEST:
-      console.log('add post request');
       return Object.assign({}, state, { addingPost: true, addError: null });
 
     case ADD_POST_SUCCESS:
-      console.log('add post success');
       return update(
         state,
         {
@@ -272,9 +270,7 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case ADD_POST_FAILURE:
-      console.log('add post failure');
       error = action.payload.message || 'An unknown error occurred';
-      console.log(error);
       return Object.assign({}, state, { addingPost: false, addError: error });
 
     case MODIFY_POST_REQUEST:

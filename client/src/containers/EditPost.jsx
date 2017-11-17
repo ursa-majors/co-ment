@@ -316,11 +316,11 @@ EditPost.propTypes = {
       role: PropTypes.string,
       active: PropTypes.bool,
       update: PropTypes.bool,
-      hideErr: PropTypes.bool,
+      hideErr: PropTypes.string,
       errMsg: PropTypes.string,
     }),
     currentPost: PropTypes.shape({
-      _id: PropTypes.string.isRequired,
+      _id: PropTypes.string,
       role: PropTypes.string.isRequired,
       author: PropTypes.shape({
         _id: PropTypes.string.isRequired,
