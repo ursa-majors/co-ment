@@ -14,6 +14,11 @@ const unreadsReminder = (url, to_name) => {
 };
 
 
+const engagementTpl = () => {
+    return `Hi, we noticed that you haven't been active on co/ment in over a week. Please re-engage!`;
+};
+
+
 const longEmail = (title, url, toUser, subhead, bodyText, buttonText, recUserId) => {
   return `
       <!DOCTYPE html>
@@ -505,5 +510,6 @@ module.exports = {
     pwResetTemplate,
     validationTemplate,
     contactTemplate,
-    unreadsReminder
+    unreadsReminder,
+    engagementTpl
 };
