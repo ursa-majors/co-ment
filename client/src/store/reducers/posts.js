@@ -189,7 +189,7 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case GET_ALL_POSTS_FAILURE:
-      error = action.payload.response.message || 'An unknown error occurred while loading posts';
+      error = 'An unknown error occurred while loading posts';
       return Object.assign(
         {},
         state,
