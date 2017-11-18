@@ -121,8 +121,8 @@ const userSchema = new mongoose.Schema({
     },
     
     engagementMeta : {
-        addPostReminder    : { type : Date, default : Date.now },
-        addProfileReminder : { type : Date, default : Date.now }
+        addPostReminder    : { type : Date },
+        addProfileReminder : { type : Date }
     },
 
     hash       : String,
