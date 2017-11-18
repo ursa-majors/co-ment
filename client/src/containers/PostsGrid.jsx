@@ -201,7 +201,7 @@ class PostsGrid extends React.Component {
           modalClass={this.state.valModalOpen ? 'modal__show' : 'modal__hide'}
           modalText="You must validate your email before making a post. Check your inbox for a validation email or visit your profile page to generate a new one"
           modalTitle="Unvalidated user"
-          modalType="Danger"
+          modalType="danger"
           dismiss={
             () => {
               this.setState({ valModalOpen: false });

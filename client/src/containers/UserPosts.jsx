@@ -131,10 +131,10 @@ UserPosts.propTypes = {
       _id: PropTypes.string,
     })),
     currentPost: PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      role: PropTypes.string.isRequired,
+      _id: PropTypes.string,
+      role: PropTypes.string,
       author: PropTypes.shape({
-        _id: PropTypes.string.isRequired,
+        _id: PropTypes.string,
       }).isRequired,
     }).isRequired,
   }).isRequired,

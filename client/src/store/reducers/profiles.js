@@ -270,7 +270,7 @@ function profiles(state = INITIAL_STATE, action) {
     * Purpose: Populate the ViewProfile modal with an error message
     */
     case GET_PROFILE_FAILURE:
-      error = action.payload.response.message || 'An error occurred while getting the profile';
+      error = 'An error occurred while getting the profile';
       return Object.assign(
         {},
         state,
@@ -321,7 +321,7 @@ function profiles(state = INITIAL_STATE, action) {
     * Purpose: Display an error message to the user.
     */
     case MODIFY_PROFILE_FAILURE:
-      error = action.payload.response.message || 'An unknown error occurred while modifying profile';
+      error = 'An unknown error occurred while updating profile';
       return Object.assign(
         {},
         state,
@@ -378,7 +378,7 @@ function profiles(state = INITIAL_STATE, action) {
     * Purpose: Display an error message to the user.
     */
     case GITHUB_PROFILE_FAILURE:
-      error = action.payload.data || 'An unknown error occurred while getting Github Profile';
+      error = 'An unknown error occurred while getting Github Profile';
       return Object.assign(
         {},
         state,
@@ -410,7 +410,7 @@ function profiles(state = INITIAL_STATE, action) {
       );
 
     case RESEND_ACCT_VALIDATION_FAILURE:
-      error = action.payload.response.message || 'An unknown error occurred while sending message';
+      error = 'An unknown error occurred while sending message';
       return Object.assign(
         {},
         state,
