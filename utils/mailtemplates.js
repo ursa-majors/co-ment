@@ -4,7 +4,7 @@
 
 */
 
-const baseUrl = "http://co-ment.glitch.me/";
+const baseUrl = "https://co-ment.glitch.me/";
 
 
 const unreadsReminder = (url, to_name) => {
@@ -14,8 +14,23 @@ const unreadsReminder = (url, to_name) => {
 };
 
 
-const engagementTpl = () => {
-    return `Hi, we noticed that you haven't been active on co/ment in over a week. Please re-engage!`;
+const engagementTpl = (engageType) => {
+    
+    let url;
+    let inaction;
+    let blurb;
+    
+    if (engageType === 'profile') {
+        url = baseUrl + 'profile';
+        inaction = 'updated your profile';
+        blurb = 'updating your profile so others can get a better sense for your skills and compatibility';
+    } else if (engageType === 'post')  {
+        url = baseUrl + 'editpost';
+        inaction = 'created a post';
+        blurb = 'creating a post to help others based on your coding knowledge/insights';
+    }
+    
+    return `<p>Hi, thanks for participating in <strong>co/ment</strong>. We noticed that you haven't ${inaction} yet. Please consider ${blurb}.</p>`;
 };
 
 
