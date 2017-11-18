@@ -6,30 +6,28 @@ const mongoose = require('mongoose');
 /* ================================ SCHEMA ================================= */
 
 const logSchema = new mongoose.Schema({
-	
-	category : {
-		type     : String,
-		enum     : ['engagement_email'],
-		required : true
+    
+    category : {
+        type     : String,
+        enum     : ['engagement_email'],
+        required : true
 	},
-	
-	affectedUsers : [{
+    
+    affectedUsers : [{
         email    : { type : String },
         username : { type : String },
         name     : { type : String },
         _id      : { type : String }
     }],
-	
-	actionTaken: {
-		type     : String,
-		retuired : true
-	},
-	
-	createdAt : {
-		type     : Date,
-		default  : Date.now
-	}
-	
+    
+    actionTaken: {
+        type     : String,
+        retuired : true
+    }
+
+},
+{
+    timestamps : true
 });
 
 
