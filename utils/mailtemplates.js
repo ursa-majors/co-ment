@@ -4,13 +4,33 @@
 
 */
 
-const baseUrl = "http://co-ment.glitch.me/";
+const baseUrl = "https://co-ment.glitch.me/";
 
 
 const unreadsReminder = (url, to_name) => {
     return `Hello @${to_name}, you have new unread messages in <a href="${url}">your co/ment Inbox</a>!
     <br><br>
     ${url}`;
+};
+
+
+const engagementTpl = (engageType) => {
+    
+    let url;
+    let inaction;
+    let blurb;
+    
+    if (engageType === 'profile') {
+        url = baseUrl + 'profile';
+        inaction = 'updated your profile';
+        blurb = 'updating your profile so others can get a better sense for your skills and compatibility';
+    } else if (engageType === 'post')  {
+        url = baseUrl + 'editpost';
+        inaction = 'created a post';
+        blurb = 'creating a post to help others based on your coding knowledge/insights';
+    }
+    
+    return `<p>Hi, thanks for participating in <strong>co/ment</strong>. We noticed that you haven't ${inaction} yet. Please consider ${blurb}.</p>`;
 };
 
 
@@ -505,5 +525,6 @@ module.exports = {
     pwResetTemplate,
     validationTemplate,
     contactTemplate,
-    unreadsReminder
+    unreadsReminder,
+    engagementTpl
 };

@@ -33,6 +33,9 @@ const staticRoutes  = require('./routes/staticroutes');
 // error handler
 const errorHandler  = require('./utils/errorhandler');
 
+// email functions
+const engagement    = require('./utils/engagement');
+
 // port
 const port          = process.env.PORT || 3001;
 
@@ -95,5 +98,6 @@ mongoose.Promise = global.Promise;
 /* ================================ STARTUP ================================ */
 
 app.listen(port, () => {
+    engagement();
     console.log(`Server listening on port ${port}.`);
 });
