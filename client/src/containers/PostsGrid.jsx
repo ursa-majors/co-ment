@@ -226,36 +226,39 @@ class PostsGrid extends React.Component {
         </Modal>
         <div className="posts-grid__wrap">
           <PostsGridControls openValModal={this.openValModal} />
-          <div ref={element => this.element === element} className="flex-row my-shuffle shuffle posts-grid__cont">
-            <div className="flex-col-1-sp sizer" />
-            {this.props.posts.entries.map((post) => {
-              const languages = post.author && post.author.languages ?
-                post.author.languages.map(lang => lang.toLowerCase()) : [];
-              const keywords = post.keywords ?
-                post.keywords.map(keyword => keyword.toLowerCase()) : [];
-              const gender = post.author && post.author.gender ?
-                post.author.gender.toLowerCase() : '';
-              const timeZone = post.author ? post.author.time_zone : '';
-              return (
-                <div
-                  key={post._id}
-                  className="flex-col-12-xs flex-col-6-md flex-col-4-lg flex-col-3-xl flex-col-2-xxl shuffle-item shuffle-item--visible post"
-                  data-groups={[post.role, gender, timeZone, languages, keywords]}
-                  data-updated={post.updatedAt}
-                  data-popular={Number(post.meta.likes) + Number(post.meta.views)}
-                >
-                  <PostThumb
-                    id={post._id}
-                    post={post}
-                    shuffle={reset}
-                    openModal={this.openModal}
-                  />
-                </div>
-              );
-            },
-          )}
-            <div ref={element => this.sizer === element} className="col-1@xs col-1@sm post-grid__sizer" />
-          </div>
+          {this.shuffle && !this.shuffle.visibleItems ?
+            <div className="posts-grid__filters-applied">No results. Try broadening your search or filter criteria</div> :
+            <div ref={(element) => { this.element = element; }} className="flex-row my-shuffle shuffle posts-grid__cont">
+              <div className="flex-col-1-sp sizer" />
+              {this.props.posts.entries.map((post) => {
+                const languages = post.author && post.author.languages ?
+                  post.author.languages.map(lang => lang.toLowerCase()) : [];
+                const keywords = post.keywords ?
+                  post.keywords.map(keyword => keyword.toLowerCase()) : [];
+                const gender = post.author && post.author.gender ?
+                  post.author.gender.toLowerCase() : '';
+                const timeZone = post.author ? post.author.time_zone : '';
+                return (
+                  <div
+                    key={post._id}
+                    className="flex-col-12-xs flex-col-6-md flex-col-4-lg flex-col-3-xl flex-col-2-xxl shuffle-item shuffle-item--visible post"
+                    data-groups={[post.role, gender, timeZone, languages, keywords]}
+                    data-updated={post.updatedAt}
+                    data-popular={Number(post.meta.likes) + Number(post.meta.views)}
+                  >
+                    <PostThumb
+                      id={post._id}
+                      post={post}
+                      shuffle={reset}
+                      openModal={this.openModal}
+                    />
+                  </div>
+                );
+              },
+            )}
+              <div ref={(element) => { this.sizer = element; }} className="col-1@xs col-1@sm post-grid__sizer" />
+            </div>
+          }
         </div>
       </div>
     );
@@ -289,10 +292,20 @@ PostsGrid.propTypes = {
     }),
   }).isRequired,
   gridControls: PropTypes.shape({
-    filterGroup: PropTypes.array,
+    filterGroup: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.array,
+    ]),
     operation: PropTypes.string,
     searchText: PropTypes.string,
-    sortOptions: PropTypes.array,
+    sortBtn: PropTypes.shape({
+      dateUpdated: PropTypes.string,
+      popular: PropTypes.string,
+    }),
+    sortOptions: PropTypes.shape({
+      by: PropTypes.func,
+      reverse: PropTypes.bool,
+    }),
   }).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,

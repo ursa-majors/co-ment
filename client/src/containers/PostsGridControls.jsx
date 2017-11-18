@@ -264,7 +264,7 @@ class PostsGridControls extends React.Component {
               list={languages}
               value={this.props.gridControls.filterBtn.language}
               gridControls
-              ref={instance => this.languageInput === instance}
+              ref={(instance) => { this.languageInput = instance; }}
             />
           </div>
           <div className="filters-group--flush flex-col-12-xs flex-col-6-sm flex-col-4-md flex-col-2-xl">
@@ -279,7 +279,7 @@ class PostsGridControls extends React.Component {
               list={skills}
               value={this.props.gridControls.filterBtn.keyword}
               gridControls
-              ref={instance => this.skillInput === instance}
+              ref={(instance) => { this.skillInput = instance; }}
             />
           </div>
           <div className="filters-group--flush flex-col-12-xs flex-col-6-sm flex-col-4-md flex-col-2-xl">
@@ -365,11 +365,20 @@ PostsGridControls.propTypes = {
     }).isRequired,
   }).isRequired,
   gridControls: PropTypes.shape({
-    filterGroup: PropTypes.array,
+    filterGroup: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.array,
+    ]),
     operation: PropTypes.string,
     searchText: PropTypes.string,
-    sortOptions: PropTypes.array,
-    sortBtn: PropTypes.string,
+    sortBtn: PropTypes.shape({
+      dateUpdated: PropTypes.string,
+      popular: PropTypes.string,
+    }),
+    sortOptions: PropTypes.shape({
+      by: PropTypes.func,
+      reverse: PropTypes.bool,
+    }),
     filterBtn: PropTypes.shape({
       role: PropTypes.string,
       language: PropTypes.string,
