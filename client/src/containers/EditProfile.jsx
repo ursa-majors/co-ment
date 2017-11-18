@@ -37,8 +37,8 @@ class EditProfile extends React.Component {
     // copy the current profile properties into the editable object
     this.props.actions.setEditProfile(this.props.profiles.userProfile);
     // show error messages for users that are not validated yet.
-    if (!this.props.profiles.userProfile.validated) {
-      const msg = 'You need to validate your account before you can access this resource. Check your inbox for a validation email.';
+    if (!this.props.profiles.userProfile.validated || !this.props.appState.user.validated) {
+      const msg = 'You need to validate your account before you can access this resource. \n\nCheck your inbox for a validation email.';
       this.props.actions.setFormField('errMsg', msg);
       this.props.actions.setFormField('hideErr', '');
     }
@@ -642,6 +642,7 @@ EditProfile.propTypes = {
     authToken: PropTypes.string,
     user: PropTypes.shape({
       _id: PropTypes.string,
+      validated: PropTypes.bool,
     }).isRequired,
     windowSize: PropTypes.shape({
       mobile: PropTypes.bool,

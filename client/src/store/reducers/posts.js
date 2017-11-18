@@ -230,14 +230,13 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case GET_USERPOSTS_FAILURE:
-      error = action.payload.response.message || 'An unknown error occurred while loading posts';
       return Object.assign(
         {},
         state,
         {
           loadPostsSpinnerClass: 'spinner__hide',
           loadPostsModal: {
-            text: error,
+            text: 'An unknown error occurred while loading posts',
             class: 'modal__show',
             type: 'modal__error',
             title: 'ERROR',
