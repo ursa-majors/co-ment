@@ -105,7 +105,7 @@ class Conversations extends React.Component {
                               }
                                 }
                             >
-                              {item.latestMessage.unread &&
+                              {item.latestMessage.unread && item.latestMessage.recipient === this.props.appState.user._id &&
                                 <span className="inbox__new" />
                               }
                               <div className="inbox__avatar">
