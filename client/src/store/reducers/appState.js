@@ -1,9 +1,12 @@
 import update from 'immutability-helper';
 
-import { LOGOUT, SET_REDIRECT_URL, SET_WINDOW_SIZE, SET_MENU_STATE, SET_SCROLLED, SET_ADMIN_MENU_STATE,
+import { LOGOUT, SET_REDIRECT_URL, SET_WINDOW_SIZE, SET_MENU_STATE,
+  SET_SCROLLED, SET_ADMIN_MENU_STATE,
   SET_MENU_BACKGROUND, SET_CONTROLS_BACKGROUND } from '../actions';
-import { VALIDATE_TOKEN_REQUEST, VALIDATE_TOKEN_SUCCESS, VALIDATE_TOKEN_FAILURE, LOGIN_SUCCESS,
-  REGISTRATION_SUCCESS, REFRESH_TOKEN_SUCCESS } from '../actions/apiLoginActions';
+import { VALIDATE_TOKEN_REQUEST, VALIDATE_TOKEN_SUCCESS,
+  VALIDATE_TOKEN_FAILURE, LOGIN_SUCCESS, REFRESH_TOKEN_REQUEST,
+  REFRESH_TOKEN_SUCCESS, REFRESH_TOKEN_FAILURE,
+  REGISTRATION_SUCCESS, RESET_VALIDATE_MODAL } from '../actions/apiLoginActions';
 
 const INITIAL_STATE = {
   loggedIn: false,
@@ -28,6 +31,14 @@ const INITIAL_STATE = {
   controlsBackground: '',
   windowScrolled: false,
   scrollPosition: 0,
+  tokenRefreshComplete: undefined,
+  validateSpinnerClass: 'spinner__hide',
+  validateModal: {
+    class: 'modal__hide',
+    text: '',
+    title: '',
+    type: '',
+  },
 };
 
 /*
@@ -169,11 +180,6 @@ function appState(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { redirectUrl: action.payload });
 
 
-    case REFRESH_TOKEN_SUCCESS:
-      window.localStorage.setItem('authToken', JSON.stringify(action.payload.token));
-      return Object.assign({}, state, { authToken: action.payload.token });
-
-
     /*
     * This action is issued from <App/> component.
     * When the client window is resized, this action will be dispatched.
@@ -235,6 +241,49 @@ function appState(state = INITIAL_STATE, action) {
         windowScrolled: action.payload.windowScrolled,
         scrollPosition: action.payload.scrollPosition,
       });
+
+    case REFRESH_TOKEN_REQUEST:
+      return Object.assign(
+        {},
+        state,
+        {
+          validateSpinnerClass: 'spinner__show',
+          tokenRefreshComplete: undefined,
+        },
+      );
+
+    case REFRESH_TOKEN_SUCCESS:
+      window.localStorage.setItem('authToken', JSON.stringify(action.payload.token));
+      return update(
+        state,
+        {
+          validateSpinnerClass: { $set: 'spinner__hide' },
+          tokenRefreshComplete: { $set: true },
+          authToken: { $set: action.payload.token },
+          user: {
+            validated: { $set: true },
+          },
+        },
+      );
+
+    case REFRESH_TOKEN_FAILURE:
+      return Object.assign(
+        {},
+        state,
+        {
+          validateSpinnerClass: 'spinner__hide',
+          tokenRefreshComplete: false,
+          validateModal: {
+            type: 'modal__error',
+            text: 'An unknown error occurred while refreshing token',
+            title: 'ERROR',
+            class: 'modal__show',
+          },
+        },
+      );
+
+    case RESET_VALIDATE_MODAL:
+      return Object.assign({}, state, { validateModal: action.payload });
 
     default:
       return state;

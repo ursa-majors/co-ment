@@ -105,7 +105,7 @@ class App extends React.Component {
                 <Route path="*" component={NotFound} />
               </Switch>
             </main>
-            <Footer mobile={this.props.appState.windowSize.mobile}/>
+            <Footer mobile={this.props.appState.windowSize.mobile} />
           </div>
         </ScrollToTop>
       </BrowserRouter>
@@ -121,6 +121,7 @@ App.propTypes = {
     windowScrolled: PropTypes.boolean,
     windowSize: PropTypes.shape({
       width: PropTypes.number,
+      mobile: PropTypes.book,
     }).isRequired,
   }).isRequired,
   actions: PropTypes.shape({

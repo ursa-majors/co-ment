@@ -157,7 +157,7 @@ function conversation(state = INITIAL_STATE, action) {
     *  a message to user.
     */
     case GET_ALL_CONVERSATIONS_FAILURE:
-      error = `An error occurred while fetching messages: ${action.payload.message || 'Unknown error'}`;
+      error = `An error occurred while fetching messages`;
       return Object.assign(
         {},
         state,
@@ -278,7 +278,7 @@ function conversation(state = INITIAL_STATE, action) {
     *  a message to user.
     */
     case POST_MSG_FAILURE:
-      error = `An error occurred while posting your message: ${action.payload.message || 'Unknown error'}`;
+      error = `An error occurred while posting your message`;
       return Object.assign(
         {},
         state,
@@ -355,7 +355,7 @@ function conversation(state = INITIAL_STATE, action) {
     *  a message to user.
     */
     case POST_CONV_FAILURE:
-      error = `An error occurred while saving your message: ${action.payload.message || 'Unknown error'}`;
+      error = `An error occurred while saving your message`;
       return Object.assign(
         {},
         state,
