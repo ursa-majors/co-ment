@@ -28,6 +28,7 @@ class PostFull extends React.Component {
       flip: false,
       post: {},
       modal: false,
+      valModalOpen: false,
     };
   }
 
@@ -57,6 +58,14 @@ class PostFull extends React.Component {
       modal: true,
     });
     document.getElementsByClassName('.ReactModal__Content')[0].style.background = 'transparent !important';
+  }
+
+  openValModal = () => {
+    const newState = { ...this.state };
+    newState.valModalOpen = true;
+    this.setState({
+      ...newState,
+    });
   }
 
   deletePost = () => {
@@ -245,7 +254,14 @@ class PostFull extends React.Component {
             aria-label="request connection"
             name="connect"
             onKeyDown={e => this.handleKeyDown(e)}
-            onClick={this.checkConnectionRequest}
+            onClick={() => {
+              if (!this.props.appState.user.validated) {
+                this.openValModal();
+              } else {
+                this.checkConnectionRequest();
+              }
+            }
+            }
           >
             <i
               className="fa fa-envelope post-full__icon--connect"
@@ -372,6 +388,17 @@ class PostFull extends React.Component {
             }
           }
         />
+        <ModalSm
+          modalClass={this.state.valModalOpen ? 'modal__show' : 'modal__hide'}
+          modalText="You must validate your email before contacting another user. Check your inbox for a validation email or visit your profile page to generate a new one"
+          modalTitle="Unvalidated user"
+          modalType="danger"
+          dismiss={
+            () => {
+              this.setState({ valModalOpen: false });
+            }
+          }
+        />
       </div>
     );
   }
@@ -398,6 +425,7 @@ PostFull.propTypes = {
       _id: PropTypes.string,
       avatarUrl: PropTypes.string,
       username: PropTypes.string,
+      validated: PropTypes.bool,
     }).isRequired,
   }).isRequired,
   closeModal: PropTypes.func.isRequired,
@@ -416,10 +444,10 @@ PostFull.propTypes = {
   }).isRequired,
   posts: PropTypes.shape({
     currentPost: PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      role: PropTypes.string.isRequired,
+      _id: PropTypes.string,
+      role: PropTypes.string,
       author: PropTypes.shape({
-        _id: PropTypes.string.isRequired,
+        _id: PropTypes.string,
       }).isRequired,
     }).isRequired,
   }).isRequired,

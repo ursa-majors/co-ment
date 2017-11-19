@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Spinner from './Spinner';
@@ -141,9 +140,6 @@ class Registration extends React.Component {
           <div className="form__input-group">
             <div className="form__button-wrap">
               <button className="form__button pointer" type="submit" id="btn-register" onClick={() => this.handleRegister()} >Register</button>
-              <Link to="/login">
-                <button className="form__button pointer" id="btn-login">Sign In</button>
-              </Link>
             </div>
           </div>
         </div>

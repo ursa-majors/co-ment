@@ -61,12 +61,17 @@ class Conversations extends React.Component {
                 <div className="inbox__sidebar">
                   <div className="inbox__messagelist">
                     {this.props.conversation.conversations
+                      .filter(conversation => conversation.participants.length === 2)
                       .sort((a, b) => new Date(b.latestMessage.createdAt) -
                         new Date(a.latestMessage.createdAt)).map((item) => {
                           const sender = item.participants.find(participant => participant._id !==
                             this.props.appState.user._id);
+                          const avatarUrl = sender && sender.avatarUrl ?
+                            sender.avatarUrl :
+                            'https://cdn.glitch.com/4965fcd8-26e0-4a69-a667-bb075062e086%2Fandroid-chrome-384x384.png?1504907183396';
+                          const name = sender && sender.name ? sender.name : sender.username;
                           const backgroundStyle = {
-                            backgroundImage: `url(${sender.avatarUrl})`,
+                            backgroundImage: `url(${avatarUrl})`,
                             backgroundSize: 'cover',
                             backgroundPosition: 'center center',
                           };
@@ -110,13 +115,13 @@ class Conversations extends React.Component {
                                       className="h-nav__image"
                                       style={backgroundStyle}
                                       role="img"
-                                      aria-label={sender.name}
+                                      aria-label={name}
                                     />
                                   </div>
                                 </div>
                               </div>
                               <div className="inbox__message-wrap">
-                                <div className="inbox__name">{sender.name}</div>
+                                <div className="inbox__name">{name}</div>
                                 <div className="inbox__subject">{item.subject}</div>
                                 <div className="inbox__date">
                                   {!smallCaps ?

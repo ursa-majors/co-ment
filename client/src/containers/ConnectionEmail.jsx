@@ -102,7 +102,6 @@ class ConnectionEmail extends React.Component {
             connection.conversationId = result1.payload.conversation._id;
             this.props.connectActions.connect(token, connection)
             .then((result2) => {
-              console.log(result2.type);
               if (result2.type === 'CONNECTION_SUCCESS') {
                 email.connectionId = result2.payload.connectionId;
                 this.props.emailActions.sendEmail(token, email)
@@ -125,7 +124,7 @@ class ConnectionEmail extends React.Component {
             if (result.type === 'SEND_EMAIL_SUCCESS') {
               this.props.conversationActions.postMessage(token, msgBody)
               .then((result2) => {
-                console.log(result2);
+                // console.log(result2);
               });
               this.props.connectActions.updateConnectionStatus(
                 token,
@@ -163,10 +162,10 @@ class ConnectionEmail extends React.Component {
       // build a new message object and post to the existing conversation
         this.props.emailActions.sendEmail(token, email)
           .then((result) => {
-            if (result.type === "SEND_EMAIL_SUCCESS") {
-              this.props.conversationActions.postMessage(token,msgBody)
+            if (result.type === 'SEND_EMAIL_SUCCESS') {
+              this.props.conversationActions.postMessage(token, msgBody)
               .then((result2) => {
-                console.log(result2);
+                // console.log(result2);
               });
               this.props.connectActions.updateConnectionStatus(
                 token,
@@ -175,8 +174,8 @@ class ConnectionEmail extends React.Component {
                   type: 'DECLINE',
                 },
               )
-              .then((result) => {
-                if (result.type === 'UPDATE_CONNECTION_STATUS_SUCCESS') {
+              .then((result3) => {
+                if (result3.type === 'UPDATE_CONNECTION_STATUS_SUCCESS') {
                   this.props.emailActions.setEmailModal({
                     class: 'modal__show',
                     text: `An email was sent to notify ${this.props.connectionEmail.recipient.username || this.props.connectionEmail.recipient.name} that the connection was declined`,

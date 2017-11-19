@@ -55,11 +55,15 @@ class Conversation extends React.Component {
               {this.props.conversation.currentConv.messages.map((message) => {
                 const sender = this.props.conversation.currentConv.participants
                 .find(participant => participant._id === message.author);
+                const avatarUrl = sender && sender.avatarUrl ?
+                  sender.avatarUrl :
+                  'https://cdn.glitch.com/4965fcd8-26e0-4a69-a667-bb075062e086%2Fandroid-chrome-384x384.png?1504907183396';
                 const backgroundStyle = {
-                  backgroundImage: `url(${sender.avatarUrl})`,
+                  backgroundImage: `url(${avatarUrl})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center center',
                 };
+                const name = sender && sender.name ? sender.name : sender.username;
                 const formattedDate = formatDateInbox(new Date(message.createdAt));
                 let dateOnly;
                 let amPm;
@@ -81,13 +85,13 @@ class Conversation extends React.Component {
                                 className="h-nav__image"
                                 style={backgroundStyle}
                                 role="img"
-                                aria-label={sender.name}
+                                aria-label={name}
                               />
                             </div>
                           </div>
                         </div>
                         <div className="inbox__single-sender">
-                          {sender.name}
+                          {name}
                         </div>
                         <div className="inbox__single-date">
                           {!smallCaps ?

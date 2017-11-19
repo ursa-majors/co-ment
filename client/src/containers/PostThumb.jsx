@@ -47,70 +47,74 @@ class PostThumb extends React.Component {
          ))}{keywordsRest && keywordsRest.map(word => (<span className="tag-value__label sr-only" key={word}>{word}</span>))}</div>
         );
     }
+    const avatarUrl = this.props.post.author ?
+      this.props.post.author.avatarUrl :
+      'https://cdn.glitch.com/4965fcd8-26e0-4a69-a667-bb075062e086%2Fandroid-chrome-384x384.png?1504907183396';
     const backgroundStyle = {
-      backgroundImage: `url(${this.props.post.author.avatarUrl})`,
+      backgroundImage: `url(${avatarUrl})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center center',
     };
 
     return (
       <div>
-        <div className="post-thumb">
-          <div className={this.props.post.role === 'mentor' ? 'post-thumb__ribbon' : 'post-thumb__ribbon--green'}>
-            <span className={this.props.post.role === 'mentor' ? 'post-thumb__ribbon-span' : 'post-thumb__ribbon-span--green'}>{roleText}</span>
-          </div>
-          <div className="side front" id="front">
-            <div className="post-thumb__metadata">
-              <span className="post-thumb__views">
-                 <i className="fa fa-eye" /> &nbsp;{this.props.post.meta.views}
-              </span>
-              <span className="post-thumb__likes">
-                <i className="fa fa-heart" />&nbsp;{this.props.post.meta.likes}
-              </span>
-              {this.props.post.updatedAt &&
-              <div className="post-thumb__date">
-                <span className="tag-value">
-                  <span className="tag-value__label">
-                    {formatDate(new Date(this.props.post.updatedAt))}
-                  </span>
-                </span>
-              </div> }
+        {this.props.post.author &&
+          <div className="post-thumb">
+            <div className={this.props.post.role === 'mentor' ? 'post-thumb__ribbon' : 'post-thumb__ribbon--green'}>
+              <span className={this.props.post.role === 'mentor' ? 'post-thumb__ribbon-span' : 'post-thumb__ribbon-span--green'}>{roleText}</span>
             </div>
-            <div className="post-thumb__card-body">
-              <div className="post-thumb__text-wrap">
-                <button
-                  className="aria-button aria-button__link"
-                  aria-label="expand"
-                  name="expand"
-                  data-taborder="visual"
-                  onKeyDown={e => this.handleKeyDown(e, this.props.post)}
-                  onClick={
-                    () => {
-                      if (this.props.appState.user._id !== this.props.post.author._id) {
-                        this.props.api.incrementPostView(
-                          this.props.appState.authToken, this.props.post._id);
-                      }
-                      this.props.openModal(this.props.post);
-                    }
-                    }
-                >
-                  <div className={'post-thumb__title'}>
-                    {this.props.post.title}
-                  </div>
-                </button>
-                {this.props.post.excerpt ?
-                  <div className={'post-thumb__body post-thumb__excerpt'}>
-                    {`${this.props.post.excerpt}...`}
-                  </div> :
-                  <div className={'post-thumb__body'}>
-                    {this.props.post.body}
-                  </div>
-                  }
-                <div className="tag-value__wrapper">
-                  {keywordsDisp || ''}
-                </div>
+            <div className="side front" id="front">
+              <div className="post-thumb__metadata">
+                <span className="post-thumb__views">
+                  <i className="fa fa-eye" /> &nbsp;{this.props.post.meta.views}
+                </span>
+                <span className="post-thumb__likes">
+                  <i className="fa fa-heart" />&nbsp;{this.props.post.meta.likes}
+                </span>
+                {this.props.post.updatedAt &&
+                <div className="post-thumb__date">
+                  <span className="tag-value">
+                    <span className="tag-value__label">
+                      {formatDate(new Date(this.props.post.updatedAt))}
+                    </span>
+                  </span>
+                </div> }
               </div>
-              <div className="post-thumb__image-wrap">
+              <div className="post-thumb__card-body">
+                <div className="post-thumb__text-wrap">
+                  <button
+                    className="aria-button aria-button__link"
+                    aria-label="expand"
+                    name="expand"
+                    data-taborder="visual"
+                    onKeyDown={e => this.handleKeyDown(e, this.props.post)}
+                    onClick={
+                      () => {
+                        if (this.props.appState.user._id !== this.props.post.author._id) {
+                          this.props.api.incrementPostView(
+                            this.props.appState.authToken, this.props.post._id);
+                        }
+                        this.props.openModal(this.props.post);
+                      }
+                      }
+                  >
+                    <div className={'post-thumb__title'}>
+                      {this.props.post.title}
+                    </div>
+                  </button>
+                  {this.props.post.excerpt ?
+                    <div className={'post-thumb__body post-thumb__excerpt'}>
+                      {`${this.props.post.excerpt}...`}
+                    </div> :
+                    <div className={'post-thumb__body'}>
+                      {this.props.post.body}
+                    </div>
+                    }
+                  <div className="tag-value__wrapper">
+                    {keywordsDisp || ''}
+                  </div>
+                </div>
+                <div className="post-thumb__image-wrap">
                   <div className="post-thumb__link-wrap">
                     <div className="post-thumb__image-aspect">
                       <Link
@@ -146,34 +150,35 @@ class PostThumb extends React.Component {
                       </Link>
                     </div>
                   </div>
+                </div>
+              </div>
+              <div className="post-thumb__button-wrap">
+                <button
+                  className="expand post-thumb__expand"
+                  aria-label="expand"
+                  name="expand"
+                  data-taborder="visual"
+                  onKeyDown={e => this.handleKeyDown(e, this.props.post)}
+                  onClick={
+                    () => {
+                      if (this.props.appState.user._id !==
+                        this.props.post.author._id) {
+                        this.props.api.incrementPostView(
+                          this.props.appState.authToken, this.props.post._id);
+                      }
+                      this.props.openModal(this.props.post);
+                    }
+                  }
+                >
+                  <i
+                    className="fa fa-expand post-thumb__icon--expand"
+                    aria-label="expand"
+                  />
+                </button>
               </div>
             </div>
-            <div className="post-thumb__button-wrap">
-              <button
-                className="expand post-thumb__expand"
-                aria-label="expand"
-                name="expand"
-                data-taborder="visual"
-                onKeyDown={e => this.handleKeyDown(e, this.props.post)}
-                onClick={
-                  () => {
-                    if (this.props.appState.user._id !==
-                      this.props.post.author._id) {
-                      this.props.api.incrementPostView(
-                        this.props.appState.authToken, this.props.post._id);
-                    }
-                    this.props.openModal(this.props.post);
-                  }
-                }
-              >
-                <i
-                  className="fa fa-expand post-thumb__icon--expand"
-                  aria-label="expand"
-                />
-              </button>
-            </div>
           </div>
-        </div>
+        }
       </div>
     );
   }

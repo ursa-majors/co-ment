@@ -29,7 +29,9 @@ class UserAdmin extends React.Component {
 UserAdmin.propTypes = {
   appState: PropTypes.shape({
     authToken: PropTypes.string,
-    userId: PropTypes.string,
+    user: PropTypes.shape({
+      _id: PropTypes.string,
+    }),
   }).isRequired,
   posts: PropTypes.shape({
     entries: PropTypes.arrayOf(PropTypes.object),
