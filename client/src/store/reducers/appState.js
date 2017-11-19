@@ -253,6 +253,7 @@ function appState(state = INITIAL_STATE, action) {
       );
 
     case REFRESH_TOKEN_SUCCESS:
+      console.log(action.payload);
       window.localStorage.setItem('authToken', JSON.stringify(action.payload.token));
       return update(
         state,
