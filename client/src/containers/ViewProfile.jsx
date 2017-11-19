@@ -36,7 +36,6 @@ class ViewProfile extends React.Component {
       profileId = this.props.match.params.id;
     } else {
       profileId = this.props.appState.user._id;
-      console.log(profileId);
     }
     this.props.api.getProfile(this.props.appState.authToken, profileId);
   }
@@ -164,7 +163,6 @@ class ViewProfile extends React.Component {
     } else {
       owner = false;
     }
-    console.log(`owner: ${owner}`);
     let avatar;
     if (this.props.profile.currentProfile) {
       if (!this.props.profile.currentProfile.avatarUrl) {

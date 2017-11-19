@@ -114,7 +114,6 @@ class EditPost extends React.Component {
   }
 
   savePost = () => {
-    console.log('savePost');
     // clear previous errors
     this.props.actions.setFormField('hideErr', 'hidden');
 
@@ -150,17 +149,12 @@ class EditPost extends React.Component {
       availability: '',
     };
 
-    console.log(body);
-
     if (this.props.posts.editForm.update) {
-      console.log('update');
       this.props.api.modifyPost(this.props.appState.authToken, this.props.match.params.id, body)
         .then(() => {
           this.props.history.push('/posts');
         });
     } else {
-      console.log('add post');
-      console.log(this.props.appState.authToken);
       this.props.api.addPost(this.props.appState.authToken, body)
       .then(() => {
         this.props.history.push('/posts');

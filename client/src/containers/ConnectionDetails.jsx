@@ -58,8 +58,6 @@ class ConnectionDetails extends React.Component {
                 className="aria-button conn-details__item-link pointer"
                 onClick={
                   () => {
-                    console.log('this is the conversation id that should get passed to the email form:');
-                    console.log(this.props.connection.viewConnection.conversationId);
                     this.props.actions.setEmailOptions({
                       recipient: this.props.connection.viewConnection.initiator,
                       sender: this.props.profiles.userProfile,

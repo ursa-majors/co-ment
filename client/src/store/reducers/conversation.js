@@ -210,9 +210,6 @@ function conversation(state = INITIAL_STATE, action) {
     *  object.
     */
     case VIEW_CONV_SUCCESS:
-      console.log('View Conv Success');
-      console.log(action.payload);
-
       return Object.assign(
         {},
         state,
@@ -229,7 +226,7 @@ function conversation(state = INITIAL_STATE, action) {
     *  a message to user.
     */
     case VIEW_CONV_FAILURE:
-      error = `An error occurred while fetching messages: ${action.payload.message || 'Unknown error'}`;
+      error = 'An error occurred while fetching messages';
       return Object.assign(
         {},
         state,
