@@ -28,7 +28,7 @@ class About extends React.Component {
     adjustBkgSize(document.querySelector('.tour'));
   }
 
-  handleCallback(index, elem, dir) {
+  handleCallback = (index) => {
     this.props.actions.setIndex(index);
     // scroll to top when slide changes
     // (for shorter viewports with slide footer nav)
@@ -81,7 +81,7 @@ class About extends React.Component {
               onKeyDown={
                 (e) => {
                   if (e.keyCode === 13 || e.which === 13) {
-                    this.slidePrev()
+                    this.slidePrev();
                   }
                 }
               }
@@ -92,141 +92,115 @@ class About extends React.Component {
               { this.props.tour.slides.map((slide, index) => {
                 let active;
                 if (this.swipe && this.swipe.instance) {
-                 active = (this.swipe.instance.getPos() === index ? '-active' : '');
-                  }
-                  return (
-                    <div
-                      className={`tour__dot${active}`}
-                      key={slide.slideId}
-                      id={index}
-                      aria-label={this.props.tour.slides[index].title}
-                      tabIndex={0}
-                      onClick={e => this.handleControlAction(e)}
-                      onKeyDown={
-                        (e) => {
-                          if (e.keyCode === 13 || e.which === 13) {
-                            this.handleControlAction(e);
-                          }
-                        }
-                      }
-                    >
-                      <i className={active ? 'fa fa-circle' : 'fa fa-circle-o'} id={index} />
-                    </div>
-                  );
-                })
+                  active = (this.swipe.instance.getPos() === index ? '-active' : '');
+                }
+                return (
+                  <button
+                    className={`aria-button tour__dot${active}`}
+                    key={slide.slideId}
+                    id={index}
+                    aria-label={this.props.tour.slides[index].title}
+                    onClick={e => this.handleControlAction(e)}
+                  >
+                    <i className={active ? 'fa fa-circle' : 'fa fa-circle-o'} id={index} />
+                  </button>
+                );
+              })
               }
             </div>
             <button
               className="tour__chevron-right aria-button"
-              tabIndex={0}
               aria-label="next slide"
               onClick={this.slideNext}
-              onKeyDown={
-                (e) => {
-                  if (e.keyCode === 13 || e.which === 13) {
-                    this.slideNext();
-                  }
-                }
-              }
             >
               <i className="fa fa-chevron-right" />
             </button>
           </div>
-          <Swipe className='custom-swipe-container-class'
-             ref={(instance) => { this.swipe = instance; }}
-             startSlide={0}
-             speed={500}
-             auto={null}
-             draggable={false}
-             continuous={true}
-             autoRestart={false}
-             disableScroll={false}
-             stopPropagation={false}
-             callback={this.handleCallback.bind(this)}
-             // transitionEnd={this.onTransactionEnd.bind(this)}
-             >
-             {this.props.tour.slides.map(slide => {
-              return (
-              <SwipeItem className='swipe-slide' key={slide.title}>
+          <Swipe
+            className="custom-swipe-container-class"
+            ref={(instance) => { this.swipe = instance; }}
+            startSlide={0}
+            speed={500}
+            auto={null}
+            draggable={false}
+            continuous
+            autoRestart={false}
+            disableScroll={false}
+            stopPropagation={false}
+            callback={this.handleCallback}
+          >
+            {this.props.tour.slides.map(slide => (
+              <SwipeItem className="swipe-slide" key={slide.title}>
                 <div className="tour__slide-title">
                   {this.props.tour.slides[this.props.tour.imageIndex].title}
                 </div>
                 <div className="tour__slide-flexwrap">
-                  <div className="tour__slide-text" dangerouslySetInnerHTML={{__html: slide.__html}} />
+                  <div className="tour__slide-text" dangerouslySetInnerHTML={{ __html: slide.__html }} />
                   { slide.image &&
                     <div className="tour__image">
-                        <img
-                          src={slide.image}
-                          alt={slide.imageAlt}
-                        />
+                      <img
+                        src={slide.image}
+                        alt={slide.imageAlt}
+                      />
                     </div>
                   }
                 </div>
               </SwipeItem>
-              );
-             })}
+              ))}
           </Swipe>
           {this.props.appState.windowSize.height <= 700 &&
             <div className="tour__slide-footer">
               {/* Dot-controls for carousel repeated beneath each slide for short viewports */}
               <button
-              className="tour__chevron-left aria-button"
-              tabIndex={0}
-              aria-label="previous slide"
-              onClick={this.slidePrev}
-              onKeyDown={
-                (e) => {
-                  if (e.keyCode === 13 || e.which === 13) {
-                    this.slidePrev()
+                className="tour__chevron-left aria-button"
+                tabIndex={0}
+                aria-label="previous slide"
+                onClick={this.slidePrev}
+                onKeyDown={
+                  (e) => {
+                    if (e.keyCode === 13 || e.which === 13) {
+                      this.slidePrev();
+                    }
                   }
                 }
-              }
-            >
-              <i className="fa fa-chevron-left" />
-            </button>
-            <div className="tour__controls">
-              { this.props.tour.slides.map((slide, index) => {
-                let active;
-                if (this.swipe && this.swipe.instance) {
-                 active = (this.swipe.instance.getPos() === index ? '-active' : '');
+              >
+                <i className="fa fa-chevron-left" />
+              </button>
+              <div className="tour__controls">
+                {this.props.tour.slides.map((slide, index) => {
+                  let active;
+                  if (this.swipe && this.swipe.instance) {
+                    active = (this.swipe.instance.getPos() === index ? '-active' : '');
                   }
                   return (
-                    <div
-                      className={`tour__dot${active}`}
+                    <button
+                      className={`aria-button tour__dot${active}`}
                       key={slide.slideId}
                       id={index}
                       aria-label={this.props.tour.slides[index].title}
-                      tabIndex={0}
-                      onClick={(e) => this.handleControlAction(e)}
-                      onKeyDown={
-                        (e) => {
-                          if (e.keyCode === 13 || e.which === 13) {
-                            this.handleControlAction(e)
-                          }
-                        }
-                      }
+                      onClick={e => this.handleControlAction(e)}
                     >
                       <i className={active ? 'fa fa-circle' : 'fa fa-circle-o'} id={index} />
-                    </div>
+                    </button>
                   );
                 })
               }
-            </div>
-            <button
-              className="tour__chevron-right aria-button"
-              tabIndex={0}
-              aria-label="next slide"
-              onClick={this.slideNext}
-              onKeyDown={
-                (e) => {
-                  if (e.keyCode === 13 || e.which === 13) {
-                    this.slideNext()
+              </div>
+              <button
+                className="tour__chevron-right aria-button"
+                tabIndex={0}
+                aria-label="next slide"
+                onClick={this.slideNext}
+                onKeyDown={
+                  (e) => {
+                    if (e.keyCode === 13 || e.which === 13) {
+                      this.slideNext();
+                    }
                   }
                 }
-              }
-            >
-              <i className="fa fa-chevron-right" />
-            </button>
+              >
+                <i className="fa fa-chevron-right" />
+              </button>
             </div>
             }
         </div>
@@ -237,8 +211,8 @@ class About extends React.Component {
           <div className="faq__content faq__row">
             {this.props.tour.faq.map(question => (
               <div key={question.id} className="faq__card">
-                <div
-                  className="faq__question"
+                <button
+                  className="aria-button faq__question"
                   onClick={
                     () => {
                       const el = document.getElementById(`${question.id}-answer`);
@@ -258,7 +232,7 @@ class About extends React.Component {
                   }
                 >
                   {question.question}
-                </div>
+                </button>
                 <div
                   id={`${question.id}-answer`}
                   className="faq__answer "
@@ -278,9 +252,9 @@ About.propTypes = {
     windowSize: PropTypes.object,
   }).isRequired,
   tour: PropTypes.shape({
-    imageIndex: PropTypes.Number,
-    slides: PropTypes.Array,
-    faq: PropTypes.Array,
+    imageIndex: PropTypes.number,
+    slides: PropTypes.array,
+    faq: PropTypes.array,
   }).isRequired,
   actions: PropTypes.shape({
     setIndex: PropTypes.func,

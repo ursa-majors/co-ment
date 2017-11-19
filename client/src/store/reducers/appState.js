@@ -1,6 +1,6 @@
 import update from 'immutability-helper';
 
-import { LOGOUT, SET_REDIRECT_URL, SET_WINDOW_SIZE, SET_MENU_STATE, SET_SCROLLED,
+import { LOGOUT, SET_REDIRECT_URL, SET_WINDOW_SIZE, SET_MENU_STATE, SET_SCROLLED, SET_ADMIN_MENU_STATE,
   SET_MENU_BACKGROUND, SET_CONTROLS_BACKGROUND } from '../actions';
 import { VALIDATE_TOKEN_REQUEST, VALIDATE_TOKEN_SUCCESS, VALIDATE_TOKEN_FAILURE, LOGIN_SUCCESS,
   REGISTRATION_SUCCESS, REFRESH_TOKEN_SUCCESS } from '../actions/apiLoginActions';
@@ -8,7 +8,13 @@ import { VALIDATE_TOKEN_REQUEST, VALIDATE_TOKEN_SUCCESS, VALIDATE_TOKEN_FAILURE,
 const INITIAL_STATE = {
   loggedIn: false,
   authToken: '',
-  userId: '',
+  // userId: '',
+  user: {
+    _id: '',
+    avatarUrl: '',
+    username: '',
+    validated: false,
+  },
   loginSpinnerClass: 'spinner__hide',
   redirectUrl: '',
   windowSize: {
@@ -16,6 +22,7 @@ const INITIAL_STATE = {
     height: undefined,
     mobile: false,
   },
+  adminMenuState: 'closed',
   menuState: 'closed',
   menuBackground: '',
   controlsBackground: '',
@@ -33,7 +40,6 @@ const INITIAL_STATE = {
 *    Client will attempt to load the expected page for the user.
 */
 function appState(state = INITIAL_STATE, action) {
-  let newBG='';
   switch (action.type) {
 
     /*
@@ -50,7 +56,7 @@ function appState(state = INITIAL_STATE, action) {
           loggedIn: { $set: false },
           windowSize: {
             width: { $set: window.innerWidth },
-            }
+          },
         },
       );
     /*
@@ -75,7 +81,12 @@ function appState(state = INITIAL_STATE, action) {
         {
           loginSpinnerClass: 'spinner__hide',
           loggedIn: true,
-          userId: action.payload._id,
+          user: {
+            _id: action.payload._id,
+            avatarUrl: action.payload.avatarUrl,
+            username: action.payload.username,
+            validated: action.payload.validated,
+          },
           authToken: action.meta.token,
         },
        );
@@ -114,7 +125,13 @@ function appState(state = INITIAL_STATE, action) {
         {
           loginSpinnerClass: 'spinner__hide',
           loggedIn: true,
-          userId: action.payload.profile._id,
+          // userId: action.payload.profile._id,
+          user: {
+            _id: action.payload.profile._id,
+            avatarUrl: action.payload.profile.avatarUrl,
+            username: action.payload.profile.username,
+            validated: action.payload.profile.validated,
+          },
           authToken: action.payload.token,
         },
        );
@@ -132,7 +149,11 @@ function appState(state = INITIAL_STATE, action) {
         state,
         {
           loggedIn: true,
-          userId: action.payload.profile._id,
+          user: {
+            _id: action.payload.profile._id,
+            avatarUrl: action.payload.profile.avatarUrl || '',
+            username: action.payload.profile.username,
+          },
           authToken: action.payload.token,
         },
        );
@@ -170,6 +191,13 @@ function appState(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { menuState: action.payload });
 
     /*
+    * This action is issued from <HeaderNav/> component.
+    * Toggles the admin menu between open/closed states
+    */
+    case SET_ADMIN_MENU_STATE:
+      return Object.assign({}, state, { adminMenuState: action.payload });
+
+    /*
     * This action is issued from <HeaderNav/> and <App/> components.
     * Sets the background CSS on the menu.  If it is scrolled, the background must be set
     * If it is mobile and open, the background must be set
@@ -204,9 +232,9 @@ function appState(state = INITIAL_STATE, action) {
     */
     case SET_SCROLLED:
       return Object.assign({}, state, {
-          windowScrolled: action.payload.windowScrolled,
-          scrollPosition: action.payload.scrollPosition,
-        });
+        windowScrolled: action.payload.windowScrolled,
+        scrollPosition: action.payload.scrollPosition,
+      });
 
     default:
       return state;

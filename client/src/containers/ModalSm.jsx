@@ -6,19 +6,19 @@ import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 import { setEmailModal } from '../store/actions/emailActions';
 
-const modalStyles = { overlay: { zIndex: 1001, background: 'rgba(0,0,0,.7)', }, content: { background: 'transparent', border: 0} };
+const modalStyles = { overlay: { zIndex: 1001, background: 'rgba(0,0,0,.7)' }, content: { background: 'transparent', border: 0 } };
 
 const ModalSm = props => (
   <Modal
     style={modalStyles}
-    isOpen={props.modalClass === "modal modal__show" || props.modalClass === "modal__show"}
+    isOpen={props.modalClass === 'modal modal__show' || props.modalClass === 'modal__show'}
     onRequestClose={props.dismiss}
     contentLabel={props.modalTitle}
-        >
+  >
     <div className={`modal ${props.modalClass}`} >
       <div className={`modal__header ${props.modalType}`}>
         {props.modalTitle}
-        <button className="dismiss aria-button modal-close modal-close-sm" onClick={props.dismiss} role="button" tabIndex="0">&times;</button>
+        <button className="dismiss aria-button modal-close modal-close-sm" onClick={props.dismiss} tabIndex="0">&times;</button>
       </div>
       <div className="modal__body">
         {props.modalText}
@@ -29,9 +29,9 @@ const ModalSm = props => (
           <button className="modal__button modal__danger" onClick={props.action}>Delete</button>
         </div>
       :
-      <div className="modal__action">
-        <button className="modal__button" onClick={props.action || props.dismiss}>Continue</button>
-      </div>
+        <div className="modal__action">
+          <button className="modal__button" onClick={props.action || props.dismiss}>Continue</button>
+        </div>
     }
     </div>
   </Modal>
@@ -44,12 +44,13 @@ ModalSm.propTypes = {
   modalTitle: PropTypes.string,
   action: PropTypes.func,
   dismiss: PropTypes.func.isRequired,
-  danger: PropTypes.bool,
+  modalDanger: PropTypes.bool,
 };
 ModalSm.defaultProps = {
   modalType: 'modal__info',
   modalTitle: '',
   action: null,
+  modalDanger: false,
 };
 
 const mapStateToProps = state => ({

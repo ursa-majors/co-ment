@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Spinner from './Spinner';
@@ -96,12 +95,21 @@ class Registration extends React.Component {
             Create account
           </div>
           <div className="form__input-group">
+            <label htmlFor="username" className="form__label">
+              User Name
+            </label>
             <input className="form__input" type="text" placeholder="Username" id="username" onChange={event => this.handleInput(event)} required />
           </div>
           <div className="form__input-group">
+            <label htmlFor="email" className="form__label">
+              Email
+            </label>
             <input className="form__input" type="email" placeholder="Email" id="email" onChange={event => this.handleInput(event)} required />
           </div>
           <div className="form__input-group">
+            <label htmlFor="password" className="form__label">
+              Password
+            </label>
             <input
               className="form__input"
               type="password"
@@ -113,6 +121,9 @@ class Registration extends React.Component {
             />
           </div>
           <div className="form__input-group">
+            <label htmlFor="confirmPwd" className="form__label">
+              Confirm Password
+            </label>
             <input
               className="form__input"
               type="password"
@@ -129,9 +140,6 @@ class Registration extends React.Component {
           <div className="form__input-group">
             <div className="form__button-wrap">
               <button className="form__button pointer" type="submit" id="btn-register" onClick={() => this.handleRegister()} >Register</button>
-              <Link to="/login">
-                <button className="form__button pointer" id="btn-login">Sign In</button>
-              </Link>
             </div>
           </div>
         </div>
@@ -167,10 +175,10 @@ Registration.propTypes = {
     dismissRegModal: PropTypes.func,
   }).isRequired,
   register: PropTypes.shape({
-    registrationSpinnerClass: PropTypes.String,
-    registrationModalText: PropTypes.String,
-    registrationModalClass: PropTypes.String,
-    regErrorMsg: PropTypes.String,
+    registrationSpinnerClass: PropTypes.string,
+    registrationModalText: PropTypes.string,
+    registrationModalClass: PropTypes.string,
+    regErrorMsg: PropTypes.string,
   }).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,

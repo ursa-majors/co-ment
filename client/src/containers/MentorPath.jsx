@@ -12,7 +12,7 @@ import * as Actions from '../store/actions/postActions';
 class MentorPath extends React.Component {
 
   componentDidMount() {
-    this.props.api.getPost(this.props.appState.authToken, this.props.appState.userId, 'mentor')
+    this.props.api.getPost(this.props.appState.authToken, this.props.appState.user._id, 'mentor')
       .then(() => {
         this.props.api.getConnections(this.props.appState.authToken);
       });
@@ -47,7 +47,7 @@ class MentorPath extends React.Component {
     // ComponentDidMount tried to load connections.  Does this user already have a Mentee?
     const conns = this.props.connection.connections;
     for (let i = 0; i < conns.length; i += 1) {
-      if (conns[i].mentor.id === this.props.appState.userId &&
+      if (conns[i].mentor.id === this.props.appState.user._id &&
           (conns[i].status === 'pending' || conns[i].status === 'accepted')) {
         menteeFound = 'mentor__button-done';
       }
@@ -82,8 +82,8 @@ class MentorPath extends React.Component {
             >
               Create Ad
             </Link>
-            <span
-              className={`mentor__button ${menteeFound}`}
+            <button
+              className={`mentor__button aria-button ${menteeFound}`}
               onClick={
                 () => {
                   this.props.actions.setFilter('role', 'Mentee');
@@ -93,7 +93,7 @@ class MentorPath extends React.Component {
               }
             >
               Find Mentee
-            </span>
+            </button>
           </div>
 
         </div>
@@ -103,9 +103,14 @@ class MentorPath extends React.Component {
 }
 
 MentorPath.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
   appState: PropTypes.shape({
-    authToken: PropTypes.String,
-    userId: PropTypes.String,
+    authToken: PropTypes.string,
+    user: PropTypes.shape({
+      _id: PropTypes.string,
+    }),
   }).isRequired,
   posts: PropTypes.shape({
     searchPost: PropTypes.object,
@@ -114,7 +119,7 @@ MentorPath.propTypes = {
     userProfile: PropTypes.object,
   }).isRequired,
   connection: PropTypes.shape({
-    connections: PropTypes.Array,
+    connections: PropTypes.array,
   }).isRequired,
   actions: PropTypes.shape({
     setSearchCriteria: PropTypes.func,

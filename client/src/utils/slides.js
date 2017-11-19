@@ -47,19 +47,23 @@ const slides = [
 
 const faq = [
   { question: 'Who can be a mentor?',
-    __html: `<div>Anyone! The only requirement is a willingness to share your skills.`,
+    __html: `<div>
+    Anyone! The only requirement is a willingness to share your skills.`,
     id: 'q1',
   },
   { question: 'How does the mentor/mentee relationship work?',
-    __html: `<div>Once a user accepts your connection request, you will be notified by email. At that point, the mentor and mentee will agree on the best way to continue the relationship. Communication will take place outside the <strong>co/ment</strong> platform, and can use any format that works for you&mdash;phone, email, Slack, hangouts, in-person&mdash;the possibilities are endless.</div>`,
+    __html: `<div>
+    Once a user accepts your connection request, you will be notified by email. At that point, the mentor and mentee will agree on the best way to continue the relationship. You can use <strong>co/ment</strong> in-app messaging, or any other format that works for you&mdash;phone, email, Slack, hangouts, or in-person.</div>`,
     id: 'q2',
   },
   { question: 'How long does a mentorship last?',
-    __html: `<div>It's up to  you! Depending on your goals, you may have a single meeting or work together for an entire year. Keep it up as long as the connection is productive for you.</div>`,
+    __html: `<div>
+    It's up to  you! Depending on your goals, you may have a single meeting or work together for an entire year. Keep it up as long as the connection is productive for you.</div>`,
     id: 'q3',
   },
   { question: 'I can\'t find a mentor for skill XYZ. What do I do?',
-    __html: `<div><a href="mailto:findyourguidingstar@gmail.com">Contact us</a> and we'll do our best to find you a mentor.</div>`,
+    __html: `<div>
+    <a href="mailto:findyourguidingstar@gmail.com">Contact us</a> and we'll do our best to find you a mentor.</div>`,
     id: 'q4',
   },
 ];

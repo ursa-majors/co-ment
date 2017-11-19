@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
+
 import * as Actions from '../store/actions/profileActions';
 import * as apiActions from '../store/actions/apiActions';
 
@@ -35,84 +37,16 @@ class EditProfile extends React.Component {
     // copy the current profile properties into the editable object
     this.props.actions.setEditProfile(this.props.profiles.userProfile);
     // show error messages for users that are not validated yet.
-    if (!this.props.profiles.userProfile.validated) {
-      const msg = 'You need to validate your account before you can access this resource. Check your inbox for a validation email.';
+    if (!this.props.profiles.userProfile.validated || !this.props.appState.user.validated) {
+      const msg = 'You need to validate your account before you can access this resource. \n\nCheck your inbox for a validation email.';
       this.props.actions.setFormField('errMsg', msg);
       this.props.actions.setFormField('hideErr', '');
     }
   }
 
-  togglePage(direction) {
-    // navigate between form pages
-    const newState = { ...this.state }
-    if (direction === 'fwd') {
-      newState.page = this.state.page + 1;
-    } else {
-      newState.page = this.state.page - 1;
-    }
-    this.setState({ ...newState }, () => {
-      if (this.state.page === 2) {
-        adjustTextArea(this.textInput);
-      }
-    });
-  }
-
-  handleInput = (e) => {
-    // // send form field values to editForm object
-    this.props.actions.setFormField(e.target.name, e.target.value);
-  }
-
-  handleTextAreaInput(e) {
-    // limit length to 620 characters
-    if (e.target.value.length > 620) {
-      return null;
-    }
-    // handle input
-    this.props.actions.setFormField(e.target.name, e.target.value);
-    // expand textarea height to match content
-    adjustTextArea(e.target);
-  }
-
-  handleRadioChange(e) {
-    // handle radio group value change
-    this.props.actions.setFormField('gender', e.target.value);
-  }
-
-  addLanguage() {
-    // add field value to array of languages, display tags above input field, clear input
-    const newLang = this.props.profiles.editForm.language;
-    for (let i = 0; i < this.props.profiles.editForm.languages.length; i ++ ) {
-      if (this.props.profiles.editForm.languages[i] === newLang) {
-        this.props.actions.setFormField('language', '');
-        return;
-      }
-    }
-    this.props.actions.addLanguage(newLang);
-  }
-
-  addSkill() {
-    // add field value to array of skills, display tags above input field, clear input
-    const newSkill = this.props.profiles.editForm.skill;
-    for (let i = 0; i < this.props.profiles.editForm.skills.length; i ++ ) {
-      if (this.props.profiles.editForm.skills[i] === newSkill) {
-        this.props.actions.setFormField('skill', '');
-        return;
-      }
-    }
-    this.props.actions.addSkill(parseSKill(newSkill));
-  }
-
-  handleKeyPressAdd(e) {
-    // add tags on comma or enter keypress
-    if (e.charCode === 44 || e.which === 44 || e.charCode === 13 || e.which === 13) {
-      e.preventDefault();
-      const type = e.target.name;
-      if (type === 'language') {
-        this.addLanguage();
-      } else if (type === 'skill') {
-        this.addSkill();
-      }
-    }
+  onChange(id, newValue) {
+  // handle autosuggest selection
+    this.props.actions.setFormField(id, newValue);
   }
 
   handleKeyDownRemove(e) {
@@ -188,12 +122,12 @@ class EditProfile extends React.Component {
       msg += 'CodePen URL is invalid.  ';
     }
     if (this.props.profiles.editForm.avatarUrl === '') {
-      this.props.actions.setFormField('avatarUrl', 'https://cdn.glitch.com/4965fcd8-26e0-4a69-a667-bb075062e086%2Fandroid-chrome-384x384.png?1504907183396')
+      this.props.actions.setFormField('avatarUrl', 'https://cdn.glitch.com/4965fcd8-26e0-4a69-a667-bb075062e086%2Fandroid-chrome-384x384.png?1504907183396');
       msg += 'Avatar URL is required. Click save again to use our default.';
     }
     if (msg.length > 0) {
-      this.props.actions.setFormField( 'errMsg', msg);
-      this.props.actions.setFormField( 'hideErr', '');
+      this.props.actions.setFormField('errMsg', msg);
+      this.props.actions.setFormField('hideErr', '');
       return false;
     }
     return true;
@@ -239,47 +173,100 @@ class EditProfile extends React.Component {
     };
 
     // write data to db
-    this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.userId, body)
-      .then(result => {
+    this.props.api.modifyProfile(this.props.appState.authToken, this.props.appState.user._id, body)
+      .then((result) => {
         // redirect to profile card if successful
         if (result.type === 'MODIFY_PROFILE_SUCCESS') {
-          this.props.history.push(`/viewprofile/${this.props.appState.userId}`);
+          this.props.history.push(`/viewprofile/${this.props.appState.user._id}`);
         }
-      })
+      });
   }
 
-  onChange(id, newValue) {
-  // handle autosuggest selection
-    this.props.actions.setFormField(id, newValue);
+  handleKeyPressAdd(e) {
+    // add tags on comma or enter keypress
+    if (e.charCode === 44 || e.which === 44 || e.charCode === 13 || e.which === 13) {
+      e.preventDefault();
+      const type = e.target.name;
+      if (type === 'language') {
+        this.addLanguage();
+      } else if (type === 'skill') {
+        this.addSkill();
+      }
+    }
+  }
+
+  addSkill() {
+    // add field value to array of skills, display tags above input field, clear input
+    const newSkill = this.props.profiles.editForm.skill;
+    for (let i = 0; i < this.props.profiles.editForm.skills.length; i++) {
+      if (this.props.profiles.editForm.skills[i] === newSkill) {
+        this.props.actions.setFormField('skill', '');
+        return;
+      }
+    }
+    this.props.actions.addSkill(parseSKill(newSkill));
+  }
+
+  addLanguage() {
+    // add field value to array of languages, display tags above input field, clear input
+    const newLang = this.props.profiles.editForm.language;
+    for (let i = 0; i < this.props.profiles.editForm.languages.length; i++) {
+      if (this.props.profiles.editForm.languages[i] === newLang) {
+        this.props.actions.setFormField('language', '');
+        return;
+      }
+    }
+    this.props.actions.addLanguage(newLang);
+  }
+
+  handleRadioChange(e) {
+    // handle radio group value change
+    this.props.actions.setFormField('gender', e.target.value);
+  }
+
+  handleTextAreaInput(e) {
+    // limit length to 620 characters
+    if (e.target.value.length > 620) {
+      return null;
+    }
+    // handle input
+    this.props.actions.setFormField(e.target.name, e.target.value);
+    // expand textarea height to match content
+    adjustTextArea(e.target);
+    return null;
+  }
+
+  togglePage(direction) {
+    // navigate between form pages
+    const newState = { ...this.state };
+    if (direction === 'fwd') {
+      newState.page = this.state.page + 1;
+    } else {
+      newState.page = this.state.page - 1;
+    }
+    this.setState({ ...newState }, () => {
+      if (this.state.page === 2) {
+        adjustTextArea(this.textInput);
+      }
+    });
+  }
+
+  handleInput = (e) => {
+    // // send form field values to editForm object
+    this.props.actions.setFormField(e.target.name, e.target.value);
   }
 
   render() {
-    let langDisp;
-    let skillsDisp;
-    let ghProfile;
-    let name;
-    let avatarUrl;
     const formError = this.props.profiles.editForm.errMsg ? 'error' : 'hidden';
-    const msgClass = this.props.profiles.saveError ? 'error' : 'hidden';
-
-    // seed values for autosuggest fields
-    const languageList = languages.map(i => (<option key={i}>{i}</option>));
-    const skillsList = skills.map(i => (<option key={i}>{i}</option>));
 
     // render timezone select
     const tzList = timezones.map(i => (
       <option key={i[1]} value={`UTC ${i[0]}`}>{`(UTC ${i[0]}) ${i[1]}`}</option>
       ));
 
-    // render arrays of skills and languages for tag lists
-    if (this.props.profiles.editForm.skills && this.props.profiles.editForm.languages) {
-      skillsDisp = this.props.profiles.editForm.skills.join(', ');
-      langDisp = this.props.profiles.editForm.languages.join(', ');
-    }
-
     return (
       <div className="container profile" id="profile-form">
-      <Spinner cssClass={this.props.profiles.updProfileSpinnerClass} />
+        <Spinner cssClass={this.props.profiles.updProfileSpinnerClass} />
         <ModalSm
           modalClass={this.props.profiles.updProfileModal.class}
           modalText={this.props.profiles.updProfileModal.text}
@@ -302,7 +289,7 @@ class EditProfile extends React.Component {
             {this.props.profiles.userProfile.username}
           </div>
           <div className="profile__column-wrap">
-          {this.state.page === 1 &&
+            {this.state.page === 1 &&
             <div className="profile__pageOne">
               <div className="profile__column-L">
                 <div className="form__input-group">
@@ -315,7 +302,9 @@ class EditProfile extends React.Component {
                     id="email"
                     name="email"
                     value={this.props.profiles.editForm.email || ''}
-                    onChange={e => this.handleInput(e)} required />
+                    onChange={e => this.handleInput(e)}
+                    required
+                  />
                 </div>
                 <div className="form__input-group">
                   <label htmlFor="name" className="form__label">Full name
@@ -351,9 +340,10 @@ class EditProfile extends React.Component {
                       type="checkbox"
                       defaultChecked={this.props.profiles.editForm.contactMeta.unSubbed}
                       name="contactMeta"
-                      onChange={e => this.props.actions.setFormField(e.target.name, { unSubbed: e.target.checked })}
+                      onChange={e => this.props.actions.setFormField(
+                        e.target.name, { unSubbed: e.target.checked })}
                     />
-                    <label htmlFor="unSubbed"></label>
+                    <label htmlFor="unSubbed" />
                     <span title="You won't receive emails from co/ment, but individual users may contact you for mentoring connections.">
                       Unsubscribe from system-generated emails
                       <i
@@ -414,25 +404,26 @@ class EditProfile extends React.Component {
                   <label htmlFor="language" className="form__label">Languages you speak fluently
                   </label>
                   <div className="skill-value__wrapper">
-                    {this.props.profiles.editForm.languages && this.props.profiles.editForm.languages.map(lang => (
-                      <span className="skill-value" key={lang}>
-                        <span className="skill-value__icon" aria-hidden="true">
-                          <span
-                            className="language"
-                            id={lang}
-                            role="button"
-                            tabIndex="0"
-                            onClick={e => this.removeLanguage(e)}
-                            onKeyDown={e => this.handleKeyDownRemove(e)}
-                          >
+                    {this.props.profiles.editForm.languages &&
+                      this.props.profiles.editForm.languages.map(lang => (
+                        <span className="skill-value" key={lang}>
+                          <span className="skill-value__icon" aria-hidden="true">
+                            <span
+                              className="language"
+                              id={lang}
+                              role="button"
+                              tabIndex="0"
+                              onClick={e => this.removeLanguage(e)}
+                              onKeyDown={e => this.handleKeyDownRemove(e)}
+                            >
                              &times;
                             </span>
+                          </span>
+                          <span className="skill-value__label" role="option" aria-selected="true">
+                            {lang}
+                            <span className="skill-aria-only">&nbsp;</span>
+                          </span>
                         </span>
-                        <span className="skill-value__label" role="option" aria-selected="true">
-                          {lang}
-                          <span className="skill-aria-only">&nbsp;</span>
-                        </span>
-                      </span>
                      ))}
                   </div>
                   <InputAutosuggest
@@ -445,7 +436,7 @@ class EditProfile extends React.Component {
                     value={this.props.profiles.editForm.language}
                     addTag={this.addLanguage}
                     removeTag={this.removeLanguage}
-                    ref={instance => { this.languageInput = instance; }}
+                    ref={(instance) => { this.languageInput = instance; }}
                   />
                 </div>
                 <div className="form__input-group">
@@ -462,32 +453,33 @@ class EditProfile extends React.Component {
                     rows="3"
                   />
                   {this.props.profiles.editForm.about &&
-              <div className="character-count"> {620 - this.props.profiles.editForm.about.length} characters remaining</div> }
+                  <div className="character-count"> {620 - this.props.profiles.editForm.about.length} characters remaining</div> }
                 </div>
               </div>
               <div className="profile__column-R">
                 <div className="form__input-group">
                   <label className="form__label" htmlFor="skills">Skills</label>
                   <div className="skill-value__wrapper">
-                  {this.props.profiles.editForm.skills && this.props.profiles.editForm.skills.map(skill => (
-                    <span className="skill-value" key={skill}>
-                      <span className="skill-value__icon" aria-hidden="true">
-                        <span
-                          className="skill"
-                          id={skill}
-                          role="button"
-                          tabIndex="0"
-                          onClick={e => this.removeSkill(e)}
-                          onKeyDown={e => this.handleKeyDownRemove(e)}
-                        >
-                           &times;
+                    {this.props.profiles.editForm.skills &&
+                    this.props.profiles.editForm.skills.map(skill => (
+                      <span className="skill-value" key={skill}>
+                        <span className="skill-value__icon" aria-hidden="true">
+                          <span
+                            className="skill"
+                            id={skill}
+                            role="button"
+                            tabIndex="0"
+                            onClick={e => this.removeSkill(e)}
+                            onKeyDown={e => this.handleKeyDownRemove(e)}
+                          >
+                             &times;
+                          </span>
+                        </span>
+                        <span className="skill-value__label" role="option" aria-selected="true">
+                          {skill}
+                          <span className="skill-aria-only">&nbsp;</span>
                         </span>
                       </span>
-                      <span className="skill-value__label" role="option" aria-selected="true">
-                        {skill}
-                        <span className="skill-aria-only">&nbsp;</span>
-                      </span>
-                    </span>
                    ))}
                   </div>
                   <InputAutosuggest
@@ -500,12 +492,12 @@ class EditProfile extends React.Component {
                     value={this.props.profiles.editForm.skill}
                     addTag={this.addSkill}
                     removeTag={this.removeSkill}
-                    ref={instance => { this.skillInput = instance; }}
+                    ref={(instance) => { this.skillInput = instance; }}
                   />
                 </div>
               </div>
             </div> }
-          {this.state.page === 3 &&
+            {this.state.page === 3 &&
             <div className="profile__pageThree">
               <div className="profile__column-L">
                 <div className="form__input-group">
@@ -606,16 +598,16 @@ class EditProfile extends React.Component {
           {this.state.page > 1 && this.props.profiles.userProfile.validated &&
             <button
               className="pageBack pageNav"
-              onClick={()=>this.togglePage('back')}
+              onClick={() => this.togglePage('back')}
             >
-              <i className="fa fa-chevron-left pageBack__icon" aria-hidden="true" /><span className='pageNav__text'>back</span>
+              <i className="fa fa-chevron-left pageBack__icon" aria-hidden="true" /><span className="pageNav__text">back</span>
             </button>
           }
 
           <div className="form__input-group">
             <div className="form__button-wrap">
               {
-                this.props.profiles.userProfile.validated  && this.state.page === 3 ?
+                this.props.profiles.userProfile.validated && this.state.page === 3 ?
                   (
                     <button className="form__button pointer" id="btn-edit" onClick={() => this.handleSubmit()}>
                       {this.props.profiles.savingProfile ? 'Saving...' : 'Save'}
@@ -635,7 +627,7 @@ class EditProfile extends React.Component {
             <button
               className="pageFwd pageNav"
               onClick={() => this.togglePage('fwd')}
-            ><span className='pageNav__text'>next</span>
+            ><span className="pageNav__text">next</span>
               <i className="fa fa-chevron-right pageBack__icon" aria-hidden="true" />
             </button>
           }
@@ -644,6 +636,74 @@ class EditProfile extends React.Component {
     );
   }
 }
+
+EditProfile.propTypes = {
+  appState: PropTypes.shape({
+    authToken: PropTypes.string,
+    user: PropTypes.shape({
+      _id: PropTypes.string,
+      validated: PropTypes.bool,
+    }).isRequired,
+    windowSize: PropTypes.shape({
+      mobile: PropTypes.bool,
+    }).isRequired,
+  }).isRequired,
+  api: PropTypes.shape({
+    resendAcctValidation: PropTypes.func,
+    modifyProfile: PropTypes.func,
+  }).isRequired,
+  actions: PropTypes.shape({
+    setEditProfile: PropTypes.func,
+    setFormField: PropTypes.func,
+    removeLanguage: PropTypes.func,
+    removeSkill: PropTypes.func,
+    addSkill: PropTypes.func,
+    addLanguage: PropTypes.func,
+    setUpdProfileModal: PropTypes.func,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  profiles: PropTypes.shape({
+    savingProfile: PropTypes.bool,
+    saveError: PropTypes.bool,
+    updProfileSpinnerClass: PropTypes.string,
+    updProfileModal: PropTypes.shape({
+      class: PropTypes.string,
+      text: PropTypes.string,
+      title: PropTypes.string,
+      type: PropTypes.string,
+    }).isRequired,
+    userProfile: PropTypes.shape({
+      _id: PropTypes.string,
+      validated: PropTypes.bool,
+      username: PropTypes.string,
+    }).isRequired,
+    editForm: PropTypes.shape({
+      languages: PropTypes.array,
+      language: PropTypes.string,
+      skills: PropTypes.array,
+      skill: PropTypes.string,
+      name: PropTypes.string,
+      email: PropTypes.string,
+      time_zone: PropTypes.string,
+      github: PropTypes.string,
+      twitter: PropTypes.string,
+      facebook: PropTypes.string,
+      link: PropTypes.string,
+      codepen: PropTypes.string,
+      linkedin: PropTypes.string,
+      avatarUrl: PropTypes.string,
+      gender: PropTypes.string,
+      location: PropTypes.string,
+      about: PropTypes.string,
+      errMsg: PropTypes.string,
+      contactMeta: PropTypes.shape({
+        unSubbed: PropTypes.bool,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
+};
 
 const mapStateToProps = state => ({
   appState: state.appState,

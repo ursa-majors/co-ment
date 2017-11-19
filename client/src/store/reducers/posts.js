@@ -13,7 +13,7 @@ import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE, ADD_POST_REQUEST,
 } from '../actions/apiPostActions';
 
 const defaultForm = {
-  active: 'true',
+  active: true,
   title: '',
   role: 'mentor',
   keywords: [],
@@ -24,15 +24,15 @@ const defaultForm = {
   update: false,
 };
 const defaultPost = {
-  active: '',
+  active: true,
   author: {
-      _id: '',
-      username: '',
-      name: '',
-      avatarUrl: '',
-      time_zone: '',
-      languages: [],
-      gender: '',
+    _id: '',
+    username: '',
+    name: '',
+    avatarUrl: '',
+    time_zone: '',
+    languages: [],
+    gender: '',
   },
   availability: '',
   keywords: [],
@@ -189,7 +189,7 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case GET_ALL_POSTS_FAILURE:
-      error = action.payload.response.message || 'An unknown error occurred while loading posts';
+      error = 'An unknown error occurred while loading posts';
       return Object.assign(
         {},
         state,
@@ -230,14 +230,13 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case GET_USERPOSTS_FAILURE:
-      error = action.payload.response.message || 'An unknown error occurred while loading posts';
       return Object.assign(
         {},
         state,
         {
           loadPostsSpinnerClass: 'spinner__hide',
           loadPostsModal: {
-            text: error,
+            text: 'An unknown error occurred while loading posts',
             class: 'modal__show',
             type: 'modal__error',
             title: 'ERROR',
@@ -494,6 +493,7 @@ function posts(state = INITIAL_STATE, action) {
     default:
       return state;
   }
+  return null;
 }
 
 export default posts;
