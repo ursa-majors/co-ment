@@ -5,15 +5,15 @@ import PropTypes from 'prop-types';
 import * as Actions from '../store/actions';
 import Loading from '../containers/Loading';
 
-const ConnectionResult = () => (
+const ConnectionResult = props => (
   <div>
-    {this.props.connection.contact_loading &&
+    {props.connection.contact_loading &&
       <div className="container logout">
         <Loading text="Sending Email" />
       </div>
     }
-    {!this.props.connection.contact_loading &&
-    !this.props.connection.contact_error &&
+    {!props.connection.contact_loading &&
+    !props.connection.contact_error &&
       <div className="container logout">
         <div className="logout__header">Email Sent</div>
         <div className="result">
@@ -29,7 +29,7 @@ const ConnectionResult = () => (
         </div>
       </div>
     }
-    {this.props.connection.contact_error &&
+    {props.connection.contact_error &&
       <div className="container logout">
         <div className="logout__header">An Error Occurred</div>
       </div>
