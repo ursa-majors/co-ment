@@ -22,10 +22,10 @@ const { engagementTpl } = require('./mailtemplates');
 */
 function basicEligibility(user) {
 
-    let unSubbed         = user.contactMeta.unSubbed;
-    let createdInMs      = new Date(user.createdAt).getTime();
-    let weekInMs         = 7 * 24 * 60 * 60 * 1000;
-    let tooSoon          = createdInMs + weekInMs > Date.now();
+    let unSubbed    = user.contactMeta.unSubbed;
+    let createdInMs = new Date(user.createdAt).getTime();
+    let weekInMs    = 7 * 24 * 60 * 60 * 1000;
+    let tooSoon     = createdInMs + weekInMs > Date.now();
 
     // if user has unSubbed or it's too soon, user is not eligible
     return (unSubbed || tooSoon) ? false : true;    
@@ -59,7 +59,7 @@ function makePostAuthorsArr(posts) {
     const uniques = {};
 
     return posts
-        .map( post => post.author_id )
+        .map( post => post.author.toString() )  // Obj >> String
         .sort( (a, b) => a - b )
         .reduce( (list, curr) => {
             if (!uniques[curr]) {
@@ -93,7 +93,8 @@ function checkAlreadyRun() {
 
             console.log('Last log taken: ', log[0].createdAt);
 
-            return (today > lastLogDate + 86400) ? true : false;
+//            return (today > lastLogDate + 86400) ? true : false;
+            return true;
 
         });
 
@@ -151,30 +152,32 @@ function getPostAuthors() {
 */
 function sendEmail(users) {
 
-    const pool = users.map( user => {
-
-        let subject = 'co/ment - Operation: User Engagement!';
-        let body    = {
-            type : 'html',
-            text : engagementTpl(user.engageType)
-        };
-
-        return new Promise( (resolve, reject) => {
-            try {
-                mailer(user.email, subject, body);
-                resolve();
-            }
-            catch (err) {
-                reject(err);
-            }
-        });
-    });
-
-    return Promise.all(pool)
-        .then( () => {
-            console.log(`Sent ${pool.length} reminder emails.`);
-            return users;
-        });
+//    const pool = users.map( user => {
+//
+//        let subject = 'co/ment - Operation: User Engagement!';
+//        let body    = {
+//            type : 'html',
+//            text : engagementTpl(user.engageType)
+//        };
+//
+//        return new Promise( (resolve, reject) => {
+//            try {
+//                mailer(user.email, subject, body);
+//                resolve();
+//            }
+//            catch (err) {
+//                reject(err);
+//            }
+//        });
+//    });
+//
+//    return Promise.all(pool)
+//        .then( () => {
+//            console.log(`Sent ${pool.length} reminder emails.`);
+//            return users;
+//        });
+    
+    return users;
 
 }
 
@@ -191,9 +194,9 @@ function saveLog(users) {
 		actionTaken: 'dispatched_emails'
     });
 
-    newLog.save( (err, result) => {
-        if (err) { throw new Error(err); }
-    });
+//    newLog.save( (err, result) => {
+//        if (err) { throw new Error(err); }
+//    });
 
     return users;
 }
@@ -209,7 +212,7 @@ function logStats(users) {
 ***************************************************
 ${users.length} users meet 'inactive' criteria:
 
-${users.map( u => u._id + ' ( ' + u.username + ' )' ).join('\n')}
+${users.map( u => u._id + ' : ' + u.username + ' ( ' + u.email + ' )').join('\n')}
     `);
 }
 
