@@ -31,7 +31,6 @@ const INITIAL_STATE = {
     codepen: '',
     contactMeta: {
       unSubbed: false,
-      addPostReminderSent: null,
     },
   },
   userProfile: {},
@@ -63,7 +62,6 @@ const INITIAL_STATE = {
     codepen: '',
     contactMeta: {
       unSubbed: false,
-      addPostReminderSent: null,
     },
     hideErr: 'form__hidden',
     errMsg: '',
@@ -84,6 +82,10 @@ const INITIAL_STATE = {
 
 function profiles(state = INITIAL_STATE, action) {
   let error;
+  let unSubbed = false;
+  if (action.payload && action.payload.contactMeta) {
+    unSubbed = action.payload.contactMeta.unSubbed;
+  }
   switch (action.type) {
 
     /*
@@ -160,7 +162,9 @@ function profiles(state = INITIAL_STATE, action) {
             link: { $set: action.payload.link || '' },
             linkedin: { $set: action.payload.linkedin || '' },
             codepen: { $set: action.payload.codepen || '' },
-            contactMeta: { $set: action.payload.contactMeta },
+            contactMeta: {
+              unSubbed: { $set: unSubbed },
+            },
             hideErr: { $set: 'form__hidden' },
             errMsg: { $set: '' },
             update: { $set: true },
@@ -257,7 +261,31 @@ function profiles(state = INITIAL_STATE, action) {
         {
           getSuccess: { $set: true },
           currentProfile: { $set: action.payload },
-          editForm: { $set: action.payload },
+          editForm: {
+            skill: { $set: '' },
+            language: { $set: '' },
+            skills: { $set: action.payload.skills || [] },
+            gender: { $set: action.payload.gender || '' },
+            languages: { $set: action.payload.languages || [] },
+            time_zone: { $set: action.payload.time_zone || 'Choose your time zone' },
+            name: { $set: action.payload.name || '' },
+            email: { $set: action.payload.email || '' },
+            location: { $set: action.payload.location || '' },
+            about: { $set: action.payload.about || '' },
+            github: { $set: action.payload.github || '' },
+            avatarUrl: { $set: action.payload.avatarUrl || '' },
+            twitter: { $set: action.payload.twitter || '' },
+            facebook: { $set: action.payload.facebook || '' },
+            link: { $set: action.payload.link || '' },
+            linkedin: { $set: action.payload.linkedin || '' },
+            codepen: { $set: action.payload.codepen || '' },
+            contactMeta: {
+              unSubbed: { $set: unSubbed },
+            },
+            hideErr: { $set: 'form__hidden' },
+            errMsg: { $set: '' },
+            update: { $set: true },
+          },
           profileSpinnerClass: { $set: 'spinner__hide' },
         },
       );
@@ -307,7 +335,31 @@ function profiles(state = INITIAL_STATE, action) {
         {
           savingProfile: { $set: false },
           saveError: { $set: null },
-          editForm: { $set: action.payload.user },
+          editForm: {
+            skill: { $set: '' },
+            language: { $set: '' },
+            skills: { $set: action.payload.user.skills || [] },
+            gender: { $set: action.payload.user.gender || '' },
+            languages: { $set: action.payload.user.languages || [] },
+            time_zone: { $set: action.payload.user.time_zone || 'Choose your time zone' },
+            name: { $set: action.payload.user.name || '' },
+            email: { $set: action.payload.user.email || '' },
+            location: { $set: action.payload.user.location || '' },
+            about: { $set: action.payload.user.about || '' },
+            github: { $set: action.payload.user.github || '' },
+            avatarUrl: { $set: action.payload.user.avatarUrl || '' },
+            twitter: { $set: action.payload.user.twitter || '' },
+            facebook: { $set: action.payload.user.facebook || '' },
+            link: { $set: action.payload.user.link || '' },
+            linkedin: { $set: action.payload.user.linkedin || '' },
+            codepen: { $set: action.payload.user.codepen || '' },
+            contactMeta: {
+              unSubbed: { $set: unSubbed },
+            },
+            hideErr: { $set: 'form__hidden' },
+            errMsg: { $set: '' },
+            update: { $set: true },
+          },
           currentProfile: { $set: action.payload.user },
           userProfile: { $set: action.payload.user },
         },

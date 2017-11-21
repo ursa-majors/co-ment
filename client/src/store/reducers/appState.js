@@ -86,6 +86,8 @@ function appState(state = INITIAL_STATE, action) {
     * Save the userId and token in the redux store...set loggedIn to TRUE.
     */
     case VALIDATE_TOKEN_SUCCESS:
+    console.log('validate token success');
+    console.log(action.payload);
       return Object.assign(
         {},
         state,
