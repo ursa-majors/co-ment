@@ -220,7 +220,7 @@ class PostsGridControls extends React.Component {
                   if (!this.props.appState.user.validated) {
                     this.props.openValModal();
                   } else if (!this.props.appState.user.avatarUrl) {
-                    this.openPflModal();
+                    this.props.openPflModal();
                   } else {
                     this.props.history.push('/editpost');
                   }
@@ -393,6 +393,7 @@ PostsGridControls.propTypes = {
     push: PropTypes.func,
   }).isRequired,
   openValModal: PropTypes.func.isRequired,
+  openPflModal: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
