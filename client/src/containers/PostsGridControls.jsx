@@ -137,7 +137,7 @@ class PostsGridControls extends React.Component {
             <span className="form__label--white">Sort</span>
             <div className="btn-group sort-options sort__large">
               <button
-                className={`btn btn--primary ${this.props.gridControls.sortBtn['date-updated']}`}
+                className={`btn btn--primary ${this.props.gridControls.sortBtn.dateUpdated}`}
                 data-taborder="visual"
                 value="date-updated"
                 aria-label="sort by date"
@@ -217,10 +217,12 @@ class PostsGridControls extends React.Component {
                 data-taborder="visual"
                 aria-label="New Post"
                 onClick={() => {
-                  if (this.props.appState.user.validated) {
-                    this.props.history.push('/editpost');
-                  } else {
+                  if (!this.props.appState.user.validated) {
                     this.props.openValModal();
+                  } else if (!this.props.appState.user.avatarUrl) {
+                    this.openPflModal();
+                  } else {
+                    this.props.history.push('/editpost');
                   }
                 }}
               >

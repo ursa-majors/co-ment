@@ -70,7 +70,7 @@ const INITIAL_STATE = {
   getSuccess: null,
   getGHError: null,
   getGHSuccess: null,
-  editForm: defaultForm,
+  editForm: { ...defaultForm },
   addingProfile: false,
   addError: null,
   savingProfile: false,
