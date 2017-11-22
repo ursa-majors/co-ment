@@ -174,6 +174,11 @@ class PostFull extends React.Component {
     const roleText = (post.role === 'mentor' ? 'mentor' : 'mentee');
     const owner = (this.props.appState.user._id === post.author._id);
     let isLiked = '';
+    let canLikePosts = false;
+    if (this.props.profiles.userProfile &&
+      this.props.profiles.userProfile.likedPosts) {
+      canLikePosts = true;
+    }
     if (this.props.profiles.userProfile &&
       this.props.profiles.userProfile.likedPosts &&
       this.props.profiles.userProfile.likedPosts.includes(post._id)) {
@@ -240,27 +245,29 @@ class PostFull extends React.Component {
               />
             </button>
           }
-          <button
-            className="like post-full__like"
-            aria-label="like"
-            name="like"
-            data-dismiss="modal"
-            onKeyDown={e => this.handleKeyDown(e)}
-            onClick={
-               () => {
-                 if (!this.props.profiles.userProfile.likedPosts.includes(post._id)) {
-                   this.props.api.likePost(this.props.appState.authToken, post._id);
-                 } else {
-                   this.props.api.unlikePost(this.props.appState.authToken, post._id);
+          {canLikePosts &&
+            <button
+              className="like post-full__like"
+              aria-label="like"
+              name="like"
+              data-dismiss="modal"
+              onKeyDown={e => this.handleKeyDown(e)}
+              onClick={
+                 () => {
+                   if (!this.props.profiles.userProfile.likedPosts.includes(post._id)) {
+                     this.props.api.likePost(this.props.appState.authToken, post._id);
+                   } else {
+                     this.props.api.unlikePost(this.props.appState.authToken, post._id);
+                   }
                  }
                }
-             }
-          >
-            <i
-              className={`fa fa-heart thumb__icon--heart ${isLiked}`}
-              aria-label="like"
-            />
-          </button>
+            >
+              <i
+                className={`fa fa-heart thumb__icon--heart ${isLiked}`}
+                aria-label="like"
+              />
+            </button>
+          }
           <button
             className="connect post-full__connect"
             aria-label="request connection"
