@@ -173,9 +173,12 @@ class PostFull extends React.Component {
     }
     const roleText = (post.role === 'mentor' ? 'mentor' : 'mentee');
     const owner = (this.props.appState.user._id === post.author._id);
-    const isLiked = this.props.profiles.userProfile.likedPosts.includes(post._id) ?
-      'post-full__liked' :
-      '';
+    let isLiked = '';
+    if (this.props.profiles.userProfile &&
+      this.props.profiles.userProfile.likedPosts &&
+      this.props.profiles.userProfile.likedPosts.includes(post._id)) {
+      isLiked = 'post-full__liked';
+    }
     let actions;
     if (owner) {
       actions = (
