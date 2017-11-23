@@ -20,10 +20,6 @@ class ConnectionEmail extends React.Component {
 
   handleChange(event) {
     if (event.target.id === 'body') {
-      if (this.props.connectionEmail.body.length > 620) {
-        event.preventDefault();
-        return null;
-      }
       adjustTextArea(event.target);
     }
 
@@ -290,8 +286,6 @@ class ConnectionEmail extends React.Component {
               ref={(input) => { this.textInput = input; }}
               placeholder={bodyPlaceholder}
             />
-            {this.props.connectionEmail.body &&
-              <div className="character-count"> {620 - this.props.connectionEmail.body.length} characters remaining</div> }
           </div>
           <div className="form__input-group">
             <div className={`${this.props.connectionEmail.formErrorClass}`}>{this.props.connectionEmail.formError}</div>
