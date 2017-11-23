@@ -229,6 +229,50 @@ function deleteProfile(req, res) {
 }
 
 
+// REFRESH USER TOKEN
+//   Example: GET >> /api/refresh_token
+//   Secured: yes, valid JWT required
+//   Expects:
+//     1) '_id' from JWT
+//   Returns: user profile and new JWT on success
+//
+function refreshToken(req, res) {
+    
+    const userId = req.token._id;
+    
+    User.findById(userId)
+        .exec()
+        .then( user => {
+
+            // generate a token
+            const token = user.generateJWT();
+
+            // return the user profile & JWT
+            return res
+                .status(200)
+                .json({
+                    profile : user,
+                    token   : token
+                });
+
+        })
+        .catch( err => {
+            console.log('Error!!!', err);
+                return res
+                    .status(400)
+                    .json({ message: err});
+        });
+
+}
+
+
+
 /* ============================== EXPORT API =============================== */
 
-module.exports = { getProfiles, getOneProfile, updateProfile, deleteProfile };
+module.exports = {
+    getProfiles,
+    getOneProfile,
+    updateProfile,
+    deleteProfile,
+    refreshToken
+};

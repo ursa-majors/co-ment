@@ -198,7 +198,7 @@ class PostFull extends React.Component {
             >
               <i
                 className="close fa fa-compress thumb__icon--compress"
-                aria-label="close"
+                aria-hidden
               />
             </button>
           }
