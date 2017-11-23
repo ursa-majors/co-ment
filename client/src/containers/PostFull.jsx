@@ -29,6 +29,7 @@ class PostFull extends React.Component {
       post: {},
       modal: false,
       valModalOpen: false,
+      pflModalOpen: false,
     };
   }
 
@@ -63,6 +64,14 @@ class PostFull extends React.Component {
   openValModal = () => {
     const newState = { ...this.state };
     newState.valModalOpen = true;
+    this.setState({
+      ...newState,
+    });
+  }
+
+  openPflModal = () => {
+    const newState = { ...this.state };
+    newState.pflModalOpen = true;
     this.setState({
       ...newState,
     });
@@ -257,6 +266,8 @@ class PostFull extends React.Component {
             onClick={() => {
               if (!this.props.appState.user.validated) {
                 this.openValModal();
+              } else if (!this.props.appState.user.avatarUrl) {
+                this.openPflModal();
               } else {
                 this.checkConnectionRequest();
               }
@@ -396,6 +407,17 @@ class PostFull extends React.Component {
           dismiss={
             () => {
               this.setState({ valModalOpen: false });
+            }
+          }
+        />
+        <ModalSm
+          modalClass={this.state.pflModalOpen ? 'modal__show' : 'modal__hide'}
+          modalText="You must complete your own user profile before contacting another user. Please visit your profile page and fill out required fields."
+          modalTitle="Incomplete User Profile"
+          modalType="danger"
+          dismiss={
+            () => {
+              this.setState({ pflModalOpen: false });
             }
           }
         />

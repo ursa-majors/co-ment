@@ -1,5 +1,5 @@
 import { CALL_API } from 'redux-api-middleware';
-import { BASE_URL } from './apiConfig.js';
+import { BASE_URL } from './apiConfig';
 
 export const VALIDATE_TOKEN_REQUEST = 'VALIDATE_TOKEN_REQUEST';
 export const VALIDATE_TOKEN_SUCCESS = 'VALIDATE_TOKEN_SUCCESS';
@@ -150,7 +150,7 @@ export const REFRESH_TOKEN_FAILURE = 'REFRESH_TOKEN_FAILURE';
 export function refreshToken(token) {
   return {
     [CALL_API]: {
-      endpoint: `${BASE_URL}/api/refreshToken`,
+      endpoint: `${BASE_URL}/api/refresh_token`,
       method: 'GET',
       types: [REFRESH_TOKEN_REQUEST, REFRESH_TOKEN_SUCCESS, REFRESH_TOKEN_FAILURE],
       headers: { Authorization: `Bearer ${token}` },

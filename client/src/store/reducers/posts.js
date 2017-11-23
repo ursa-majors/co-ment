@@ -160,7 +160,7 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case GET_POST_FAILURE:
-      error = action.payload.data || { message: action.payload.message };
+      error = action.payload.data || 'An unknown error occurred while fetching posts';
       return Object.assign({}, state, { gettingPost: false, getError: error, searchPost: null });
 
     case GET_ALL_POSTS_REQUEST:
@@ -269,7 +269,7 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case ADD_POST_FAILURE:
-      error = action.payload.message || 'An unknown error occurred';
+      error = 'An unknown error occurred while attempting to add this post';
       return Object.assign({}, state, { addingPost: false, addError: error });
 
     case MODIFY_POST_REQUEST:
@@ -293,7 +293,7 @@ function posts(state = INITIAL_STATE, action) {
       return state;
 
     case MODIFY_POST_FAILURE:
-      error = action.payload.data || { message: action.payload.message };
+      error = 'An unknown error occurred while attempting to edit this post';
       return Object.assign({}, state, { savingPost: false, saveError: error });
 
     case VIEW_POST_REQUEST:
@@ -310,7 +310,7 @@ function posts(state = INITIAL_STATE, action) {
       );
 
     case VIEW_POST_FAILURE:
-      error = action.payload.message || 'An error occurred';
+      error = 'An error occurred while trying to view this post';
       return Object.assign(
         {},
         state,
@@ -342,7 +342,7 @@ function posts(state = INITIAL_STATE, action) {
       break;
 
     case DELETE_POST_FAILURE:
-      error = action.payload.response.message || 'An unknown error occurred';
+      error = 'An unknown error occurred while attempting to delete this post';
       return Object.assign(
         {},
         state,
@@ -447,7 +447,7 @@ function posts(state = INITIAL_STATE, action) {
       return state;
 
     case LIKE_POST_FAILURE:
-      error = action.payload.response.message || 'An unknown error occurred';
+      error = 'An unknown error occurred';
       return Object.assign({}, state);
 
     /*
