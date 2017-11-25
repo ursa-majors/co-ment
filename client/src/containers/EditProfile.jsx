@@ -169,7 +169,9 @@ class EditProfile extends React.Component {
       link: this.props.profiles.editForm.link,
       linkedin: this.props.profiles.editForm.linkedin,
       codepen: this.props.profiles.editForm.codepen,
-      contactMeta: this.props.profiles.editForm.contactMeta,
+      contactMeta: {
+        unSubbed: this.props.profiles.editForm.contactMeta.unSubbed,
+      },
     };
 
     // write data to db

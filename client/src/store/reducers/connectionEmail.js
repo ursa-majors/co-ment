@@ -115,7 +115,7 @@ function connectionEmail(state = INITIAL_STATE, action) {
     *  Purpose: Provide user a description of why the API call fialed.
     */
     case UPDATE_CONNECTION_STATUS_FAILURE:
-      error = action.payload.message || 'An error occurred while updating connection status';
+      error = 'An error occurred while updating connection status';
       return Object.assign(
         {},
         state,

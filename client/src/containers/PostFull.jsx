@@ -29,6 +29,7 @@ class PostFull extends React.Component {
       post: {},
       modal: false,
       valModalOpen: false,
+      pflModalOpen: false,
     };
   }
 
@@ -63,6 +64,14 @@ class PostFull extends React.Component {
   openValModal = () => {
     const newState = { ...this.state };
     newState.valModalOpen = true;
+    this.setState({
+      ...newState,
+    });
+  }
+
+  openPflModal = () => {
+    const newState = { ...this.state };
+    newState.pflModalOpen = true;
     this.setState({
       ...newState,
     });
@@ -164,9 +173,17 @@ class PostFull extends React.Component {
     }
     const roleText = (post.role === 'mentor' ? 'mentor' : 'mentee');
     const owner = (this.props.appState.user._id === post.author._id);
-    const isLiked = this.props.profiles.userProfile.likedPosts.includes(post._id) ?
-      'post-full__liked' :
-      '';
+    let isLiked = '';
+    let canLikePosts = false;
+    if (this.props.profiles.userProfile &&
+      this.props.profiles.userProfile.likedPosts) {
+      canLikePosts = true;
+    }
+    if (this.props.profiles.userProfile &&
+      this.props.profiles.userProfile.likedPosts &&
+      this.props.profiles.userProfile.likedPosts.includes(post._id)) {
+      isLiked = 'post-full__liked';
+    }
     let actions;
     if (owner) {
       actions = (
@@ -181,7 +198,7 @@ class PostFull extends React.Component {
             >
               <i
                 className="close fa fa-compress thumb__icon--compress"
-                aria-label="close"
+                aria-hidden
               />
             </button>
           }
@@ -228,27 +245,29 @@ class PostFull extends React.Component {
               />
             </button>
           }
-          <button
-            className="like post-full__like"
-            aria-label="like"
-            name="like"
-            data-dismiss="modal"
-            onKeyDown={e => this.handleKeyDown(e)}
-            onClick={
-               () => {
-                 if (!this.props.profiles.userProfile.likedPosts.includes(post._id)) {
-                   this.props.api.likePost(this.props.appState.authToken, post._id);
-                 } else {
-                   this.props.api.unlikePost(this.props.appState.authToken, post._id);
+          {canLikePosts &&
+            <button
+              className="like post-full__like"
+              aria-label="like"
+              name="like"
+              data-dismiss="modal"
+              onKeyDown={e => this.handleKeyDown(e)}
+              onClick={
+                 () => {
+                   if (!this.props.profiles.userProfile.likedPosts.includes(post._id)) {
+                     this.props.api.likePost(this.props.appState.authToken, post._id);
+                   } else {
+                     this.props.api.unlikePost(this.props.appState.authToken, post._id);
+                   }
                  }
                }
-             }
-          >
-            <i
-              className={`fa fa-heart thumb__icon--heart ${isLiked}`}
-              aria-label="like"
-            />
-          </button>
+            >
+              <i
+                className={`fa fa-heart thumb__icon--heart ${isLiked}`}
+                aria-label="like"
+              />
+            </button>
+          }
           <button
             className="connect post-full__connect"
             aria-label="request connection"
@@ -257,6 +276,8 @@ class PostFull extends React.Component {
             onClick={() => {
               if (!this.props.appState.user.validated) {
                 this.openValModal();
+              } else if (!this.props.appState.user.avatarUrl) {
+                this.openPflModal();
               } else {
                 this.checkConnectionRequest();
               }
@@ -396,6 +417,17 @@ class PostFull extends React.Component {
           dismiss={
             () => {
               this.setState({ valModalOpen: false });
+            }
+          }
+        />
+        <ModalSm
+          modalClass={this.state.pflModalOpen ? 'modal__show' : 'modal__hide'}
+          modalText="You must complete your own user profile before contacting another user. Please visit your profile page and fill out required fields."
+          modalTitle="Incomplete User Profile"
+          modalType="danger"
+          dismiss={
+            () => {
+              this.setState({ pflModalOpen: false });
             }
           }
         />

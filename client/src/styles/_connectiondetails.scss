@@ -21,7 +21,7 @@
         padding: 10px 10px 20px 10px;
       }
 
-    @include for-tablet-landscape-up {
+    @include for-desktop-up {
       width: 60%;
     }
   }
