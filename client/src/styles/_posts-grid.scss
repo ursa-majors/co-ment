@@ -160,9 +160,9 @@
 
 	&__modal {
     position: absolute;
-    top: 50%;
+    top: 0;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, 0);
     border: none;
     padding: 0;
     margin: -20px 0 0 -20px;
@@ -200,6 +200,10 @@
     display: inline-block;
   }
 	}
+}
+
+.ReactModal__Overlay {
+  overflow-y: scroll !important;
 }
 
 .filters-group {

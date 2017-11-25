@@ -162,7 +162,7 @@ function connection(state = INITIAL_STATE, action) {
     *  Purpose: Called when the API call fails. Set the state to display a message to user.
     */
     case GET_ALL_CONNECTIONS_FAILURE:
-      error = action.payload.response.message || 'An error occurred while fetching connections';
+      error = 'An error occurred while fetching connections';
       return Object.assign(
         {},
         state,
@@ -237,7 +237,7 @@ function connection(state = INITIAL_STATE, action) {
     *  Purpose: Display modal with email error message
     */
     case CONNECTION_FAILURE:
-      error = `An error occurred while attempting to save connection: ${action.payload.response.message}`;
+      error = `An error occurred while attempting to save connection:`;
       return Object.assign(
         {},
         state,

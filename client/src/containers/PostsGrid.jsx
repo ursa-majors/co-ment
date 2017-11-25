@@ -30,6 +30,7 @@ class PostsGrid extends React.Component {
       post: {},
       modalOpen: false,
       valModalOpen: false,
+      pflModalOpen: false,
     };
   }
 
@@ -163,6 +164,14 @@ class PostsGrid extends React.Component {
     });
   }
 
+  openPflModal = () => {
+    const newState = { ...this.state };
+    newState.pflModalOpen = true;
+    this.setState({
+      ...newState,
+    });
+  }
+
   addShuffleEventListeners = () => {
     this.shuffle.on(Shuffle.EventType.LAYOUT, () => {
       PostsGrid.adjustBkgSize();
@@ -208,6 +217,17 @@ class PostsGrid extends React.Component {
             }
           }
         />
+        <ModalSm
+          modalClass={this.state.pflModalOpen ? 'modal__show' : 'modal__hide'}
+          modalText="You must complete your user profile before making a post. Please visit your profile page and fill out required fields."
+          modalTitle="Incomplete User Profile"
+          modalType="danger"
+          dismiss={
+            () => {
+              this.setState({ pflModalOpen: false });
+            }
+          }
+        />
         <Modal
           style={modalStyles}
           isOpen={this.state.modalOpen}
@@ -225,7 +245,7 @@ class PostsGrid extends React.Component {
           />
         </Modal>
         <div className="posts-grid__wrap">
-          <PostsGridControls openValModal={this.openValModal} />
+          <PostsGridControls openValModal={this.openValModal} openPflModal={this.openPflModal} />
           {this.shuffle && !this.shuffle.visibleItems ?
             <div className="posts-grid__filters-applied">No results. Try broadening your search or filter criteria</div> :
             <div ref={(element) => { this.element = element; }} className="flex-row my-shuffle shuffle posts-grid__cont">

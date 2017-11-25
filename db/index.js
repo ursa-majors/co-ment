@@ -16,7 +16,7 @@ module.exports = {
     getDbConnectionString: function() {
         
         // live database
-//         return `mongodb://${dbUname}:${dbPwd}@ds127983.mlab.com:27983/co-ment`;
+        // return `mongodb://${dbUname}:${dbPwd}@ds127983.mlab.com:27983/co-ment`;
         
         // test database
         return `mongodb://${dbUname}:${dbPwd}@ds161503.mlab.com:61503/co-ment-test`;

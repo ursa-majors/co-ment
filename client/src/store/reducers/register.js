@@ -4,9 +4,10 @@ import { REGISTRATION_REQUEST, REGISTRATION_SUCCESS, REGISTRATION_FAILURE } from
 const regSuccessTxt =
 `Thank you for registering with Co/Ment! Check your inbox for an account validation email.\n
 Next Steps:
+You must validate your email before using other features.
 Complete your profile.
-Create a post to advertise as a Mentor or Mentee
-Connect with other users`;
+Create a post to advertise as a Mentor or Mentee.
+Connect with other users.`;
 
 const INITIAL_STATE = {
   registrationSpinnerClass: 'spinner__hide',
