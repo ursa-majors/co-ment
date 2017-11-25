@@ -98,6 +98,6 @@ mongoose.Promise = global.Promise;
 /* ================================ STARTUP ================================ */
 
 app.listen(port, () => {
-    engagement();
+//    engagement();
     console.log(`Server listening on port ${port}.`);
 });
