@@ -150,7 +150,7 @@ export const REFRESH_TOKEN_FAILURE = 'REFRESH_TOKEN_FAILURE';
 export function refreshToken(token) {
   return {
     [CALL_API]: {
-      endpoint: `${BASE_URL}/api/refreshToken`,
+      endpoint: `${BASE_URL}/api/refresh_token`,
       method: 'GET',
       types: [REFRESH_TOKEN_REQUEST, REFRESH_TOKEN_SUCCESS, REFRESH_TOKEN_FAILURE],
       headers: { Authorization: `Bearer ${token}` },
