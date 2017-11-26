@@ -110,7 +110,7 @@
     background: linear-gradient(to top, $color_aqua, $color_sky);
 
     @include for-tablet-portrait-up {
-      padding: 20px;
+      padding: 12px 20px;
       font-size: 20px;
     }
 

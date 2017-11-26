@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import Spinner from './Spinner';
 import ModalSm from './ModalSm';
@@ -75,6 +76,9 @@ class ResetPassword extends React.Component {
             Reset Password
           </div>
           <div className="form__input-group">
+            <label htmlFor="username" className="form__label">
+              UserName
+            </label>
             <input
               className="form__input"
               type="text"
@@ -85,6 +89,9 @@ class ResetPassword extends React.Component {
             />
           </div>
           <div className="form__input-group">
+            <label htmlFor="username" className="form__label">
+              Password
+            </label>
             <input
               className="form__input"
               type="password"
@@ -96,6 +103,9 @@ class ResetPassword extends React.Component {
             />
           </div>
           <div className="form__input-group">
+            <label htmlFor="username" className="form__label">
+              Confirm password
+            </label>
             <input
               className="form__input"
               type="password"
@@ -111,10 +121,7 @@ class ResetPassword extends React.Component {
           </div>
           <div className="form__input-group">
             <div className="form__button-wrap">
-              <button className="splash__button pointer" id="btn-reset" onClick={() => this.handleReset()}>Reset</button>
-              <Link to="/login">
-                <button className="splash__button pointer" id="btn-login">Sign In</button>
-              </Link>
+              <button className="form__button pointer" id="btn-reset" onClick={() => this.handleReset()}>Reset</button>
             </div>
           </div>
         </div>
@@ -134,6 +141,26 @@ class ResetPassword extends React.Component {
     );
   }
 }
+
+ResetPassword.propTypes = {
+  actions: PropTypes.shape({
+    dismissPWResetModal: PropTypes.func,
+  }).isRequired,
+  api: PropTypes.shape({
+    resetPassword: PropTypes.func,
+  }).isRequired,
+  login: PropTypes.shape({
+    pwResetModalType: PropTypes.string,
+    pwResetSpinnerClass: PropTypes.string,
+    pwResetModalClass: PropTypes.string,
+    pwResetModalText: PropTypes.string,
+  }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      key: PropTypes.string,
+    }),
+  }).isRequired,
+};
 
 const mapStateToProps = state => ({
   login: state.login,

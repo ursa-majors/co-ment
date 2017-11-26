@@ -404,7 +404,7 @@ input:not([type=checkbox]):not([type=radio]), textarea {
     text-transform: lowercase !important;
     font-weight: 700;
     font-size: 15px;
-    margin: 5px 0 0 5px;
+    margin: 5px 0;
     border-bottom: 1px dotted transparent !important;
     text-align: left !important;
     border-radius: 0 !important;
@@ -415,7 +415,7 @@ input:not([type=checkbox]):not([type=radio]), textarea {
 
     &:hover, &:active{
       color: rgba(255,255,255,1);
-      margin: 5px 0 0 5px;
+      margin: 5px 0;
       border-bottom: 1px dotted white !important;
       transition: all 300ms ease-in-out;
     }

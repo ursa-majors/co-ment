@@ -81,6 +81,9 @@ class Login extends React.Component {
         <div className="form__body">
           <div className="form__header">Sign In</div>
           <div className="form__input-group">
+            <label htmlFor="username" className="form__label">
+              UserName
+            </label>
             <input
               className="form__input"
               type="text"
@@ -90,6 +93,9 @@ class Login extends React.Component {
             />
           </div>
           <div className="form__input-group">
+            <label htmlFor="username" className="form__label">
+              Password
+            </label>
             <input
               className="form__input"
               type="password"
