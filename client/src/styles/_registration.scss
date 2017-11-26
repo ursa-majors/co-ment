@@ -10,6 +10,12 @@ input:not([type=checkbox]):not([type=radio]), textarea {
   font-family: 'Alegreya Sans', sans-serif;
   flex-direction: column;
 
+  &__link-group {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
   &__body {
   width: 100%;
   margin: 0 auto;
@@ -20,6 +26,7 @@ input:not([type=checkbox]):not([type=radio]), textarea {
 
   @include for-tablet-portrait-up {
       width: 60%;
+      max-width: 600px;
     }
   }
   &__header {
@@ -390,15 +397,17 @@ input:not([type=checkbox]):not([type=radio]), textarea {
 
   &__login-link {
     cursor: pointer;
-    color: rgba(255,255,255,1);
+    color: $color_gray_text !important;
+    text-decoration: none !important;
     background-color: transparent;
-    font-family: 'Alegreya Sans SC', sans-serif;
-    text-transform: lowercase;
-    letter-spacing: 1px;
+    font-family: 'Alegreya Sans SC', sans-serif !important;
+    text-transform: lowercase !important;
     font-weight: 700;
     font-size: 15px;
     margin: 5px 0 0 5px;
-    border: 1px transparent !important;
+    border-bottom: 1px dotted transparent !important;
+    text-align: left !important;
+    border-radius: 0 !important;
 
     @include for-tablet-portrait-up {
       font-weight: 400;
@@ -407,7 +416,7 @@ input:not([type=checkbox]):not([type=radio]), textarea {
     &:hover, &:active{
       color: rgba(255,255,255,1);
       margin: 5px 0 0 5px;
-      border-bottom: 1px dotted rgba(255,255,255,.7) !important;
+      border-bottom: 1px dotted white !important;
       transition: all 300ms ease-in-out;
     }
   }

@@ -2,13 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import Spinner from './Spinner';
 import ModalSm from './ModalSm';
 import * as Actions from '../store/actions';
 import * as profileActions from '../store/actions/profileActions';
 import * as loginActions from '../store/actions/apiLoginActions';
-// Placeholder component for login //
 
 class Login extends React.Component {
 
@@ -99,8 +99,10 @@ class Login extends React.Component {
               onKeyUp={event => this.handleInput(event)}
             />
           </div>
-          <div className="form__input-group">
+          <div className="form__input-group  form__link-group">
             <button className="aria-button form__login-link" onClick={this.resetPassword}>Reset Password</button>
+            <Link className="aria-button form__login-link" to="/register">
+            Create new account</Link>
           </div>
           <div className="form__input-group">
             <div className={errorClass}>{this.props.login.errorMsg}</div>
@@ -108,9 +110,6 @@ class Login extends React.Component {
           <div className="form__input-group">
             <div className="form__button-wrap">
               <button className="form__button pointer" id="btn-login" onClick={() => this.handleLogin()}>Sign In</button>
-              <Link to='/register'>
-                <button className="form__button pointer" id="btn-register">Register</button>
-              </Link>
             </div>
           </div>
         </div>
@@ -130,6 +129,34 @@ class Login extends React.Component {
     );
   }
 }
+
+Login.propTypes = {
+  appState: PropTypes.shape({
+    redirectUrl: PropTypes.string,
+  }).isRequired,
+  actions: PropTypes.shape({
+    setLoginError: PropTypes.func,
+    setRedirectUrl: PropTypes.func,
+    setLoginUser: PropTypes.func,
+    setLoginPwd: PropTypes.func,
+    dismissLoginModal: PropTypes.func,
+  }).isRequired,
+  api: PropTypes.shape({
+    login: PropTypes.func,
+    sendResetEmail: PropTypes.func,
+  }).isRequired,
+  login: PropTypes.shape({
+    loginUsername: PropTypes.string,
+    loginPassword: PropTypes.string,
+    errorMsg: PropTypes.string,
+    loginSpinnerClass: PropTypes.string,
+    loginModalClass: PropTypes.string,
+    loginModalText: PropTypes.string,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+};
 
 const mapStateToProps = state => ({
   appState: state.appState,
