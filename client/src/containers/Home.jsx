@@ -17,11 +17,12 @@ class Home extends React.Component {
       const hash = this.props.location.hash.slice(2);
       const url = `/${hash.split('=')[1]}`;
       if (url.startsWith('/resetpassword')) {
-        this.props.history.push(url)
+        this.props.history.push(url);
+        return;
       } else if (url.startsWith('/validate')) {
         // do this in case validate forces login
         this.props.actions.setRedirectUrl(url);
-        this.props.history.push(url)
+        this.props.history.push(url);
       } else {
         this.props.actions.setRedirectUrl(url);
       }

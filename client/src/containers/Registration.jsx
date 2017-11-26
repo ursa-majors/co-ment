@@ -96,7 +96,7 @@ class Registration extends React.Component {
           </div>
           <div className="form__input-group">
             <label htmlFor="username" className="form__label">
-              User Name
+              UserName
             </label>
             <input className="form__input" type="text" placeholder="Username" id="username" onChange={event => this.handleInput(event)} required />
           </div>
