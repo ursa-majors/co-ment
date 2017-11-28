@@ -11,6 +11,7 @@ const morgan        = require('morgan');
 const bodyParser    = require('body-parser');
 const path          = require('path');
 const comentCors    = require('./config/cors');
+const compression   = require('compression');
 
 // passport auth
 const passport      = require('passport');
@@ -42,6 +43,9 @@ const port          = process.env.PORT || 3001;
 
 /* ============================= CONFIGURATION ============================= */
 
+// gzip responses
+app.use(compression());
+
 // enable logger
 app.use(morgan('dev'));
 
@@ -52,9 +56,7 @@ app.use(bodyParser.urlencoded({ extended : true }));
 // set static path
 app.use(express.static(path.join(__dirname, '/client/build/')));
 
-
-/* ================================= CORS ================================= */
-
+// CORS
 app.use(comentCors);
 
 
