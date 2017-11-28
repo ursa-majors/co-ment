@@ -60,9 +60,7 @@ app.use(bodyParser.urlencoded({ extended : true }));
 // set static path
 app.use(express.static(path.join(__dirname, '/client/build/')));
 
-
-/* ================================= CORS ================================= */
-
+// CORS
 app.use(comentCors);
 
 
