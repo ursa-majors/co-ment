@@ -12,6 +12,7 @@ const bodyParser    = require('body-parser');
 const path          = require('path');
 const comentCors    = require('./config/cors');
 const compression   = require('compression');
+const forceHttps    = require('./config/force-https');
 
 // passport auth
 const passport      = require('passport');
@@ -42,6 +43,9 @@ const port          = process.env.PORT || 3001;
 
 
 /* ============================= CONFIGURATION ============================= */
+
+// force https
+app.use(forceHttps);
 
 // gzip responses
 app.use(compression());
