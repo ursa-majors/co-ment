@@ -3,7 +3,6 @@
 */
 
 module.exports = function (req, res, next) {
-
     if (req.headers['x-forwarded-proto'].match(/https/g)) {
         // Secure protocol, continue as normal
         return next();
