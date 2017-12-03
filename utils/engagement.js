@@ -112,8 +112,6 @@ function checkAlreadyRun() {
  *  @returns   {Promise}                 Promise w/array of inactive users
 */
 function getInactiveUsers(postAuthors) {
-    
-    console.log(typeof postAuthors[0]);
 
     const projection = {
         _id            : 1,
@@ -132,8 +130,6 @@ function getInactiveUsers(postAuthors) {
 
         // filter for only users who haven't authored posts
         .then( users => users.filter( u => {
-            console.log(u._id.toString(), u.username);
-            console.log(postAuthors.indexOf(u._id.toString()) === -1);
             return postAuthors.indexOf(u._id.toString()) === -1;
         }))
 
