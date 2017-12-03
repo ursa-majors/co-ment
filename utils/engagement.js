@@ -77,28 +77,6 @@ function finalEligibility(user) {
 }
 
 
-/** map/reduce posts to array of unique authors 
- *  @param     {array}   posts   Array of post objects from db
- *  @returns   {array}           Array of unique post author '_id's
-*/
-function makePostAuthorsArr(posts) {
-
-    const uniques = {};
-
-    return posts
-        .map( post => post.author.toString() )  // Obj >> String
-        .sort( (a, b) => a - b )
-        .reduce( (list, curr) => {
-            if (!uniques[curr]) {
-                uniques[curr] = 1;
-                list.push(curr);
-            }
-            return list;
-        }, []);
-
-}
-
-
 /* ============================ PRIVATE METHODS ============================ */
 
 /** Check db logs for previous engagement run today
@@ -134,6 +112,8 @@ function checkAlreadyRun() {
  *  @returns   {Promise}                 Promise w/array of inactive users
 */
 function getInactiveUsers(postAuthors) {
+    
+    console.log(typeof postAuthors[0]);
 
     const projection = {
         _id            : 1,
@@ -152,6 +132,8 @@ function getInactiveUsers(postAuthors) {
 
         // filter for only users who haven't authored posts
         .then( users => users.filter( u => {
+            console.log(u._id.toString(), u.username);
+            console.log(postAuthors.indexOf(u._id.toString()) === -1);
             return postAuthors.indexOf(u._id.toString()) === -1;
         }))
 
@@ -164,15 +146,22 @@ function getInactiveUsers(postAuthors) {
 }
 
 
-/** Get list of all post authors
- *  @returns   {Object}   Promise object w/filtered list of post authors
+/** get unique post authors
+ *  Note: author IDs are objects - thus the .map() and toString()
+ *  @returns   Promise object w/payload including unique post authors
 */
-function getPostAuthors() {
+function getUniquePostAuthors() {
 
-    return Post.find({})
+    return Post.aggregate(
+            { $project : { _id: 0, author: 1 } },
+            { $group : {
+                _id     : 'unique_authors',
+                count   : { $sum : 1 },
+                authors : { $addToSet : '$author' }
+            } }
+        )
         .exec()
-        .then(makePostAuthorsArr);
-
+        .then( docs => docs[0].authors.map(a => a.toString()) );
 }
 
 
@@ -291,7 +280,7 @@ module.exports = function() {
         .then(okToProceed => {
             
             if (okToProceed) {
-                getPostAuthors()
+                getUniquePostAuthors()
                     .then(getInactiveUsers)
                     .then(sendEmail)
                     .then(saveLog)
