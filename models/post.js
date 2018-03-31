@@ -62,6 +62,7 @@ const postSchema = Schema({
         views    : { type : Number, default  : 0, min : 0 },
         likes    : { type : Number, default  : 0, min : 0 }
     }
+},
 {
     timestamps : true
 });
