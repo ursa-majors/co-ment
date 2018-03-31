@@ -5,6 +5,10 @@ const mongoose  = require('mongoose');
 
 const connectionSchema = new mongoose.Schema({
 
+    conversationId : {
+        type      : String,
+    },
+
     mentor : {
       id: {
         type     : String,
@@ -75,7 +79,7 @@ const connectionSchema = new mongoose.Schema({
 
     status : {
         type      : String,
-        enum      : ['pending', 'accepted', 'declined', 'expired'],
+        enum      : ['pending', 'accepted', 'declined', 'inactive'],
         default   : 'pending',
     },
   }

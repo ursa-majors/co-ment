@@ -55,6 +55,11 @@ const userSchema = new mongoose.Schema({
         trim     : true
     },
 
+    github    : {
+        type     : String,
+        trim     : true
+    },
+
     twitter    : {
         type     : String,
         trim     : true
@@ -107,8 +112,18 @@ const userSchema = new mongoose.Schema({
         type     : String,
         trim     : true
     },
-    
+
     likedPosts : [String],
+    
+    contactMeta : {
+        unSubbed           : { type : Boolean, default: false },
+        alreadyContacted   : { type : Boolean, default: false }
+    },
+    
+    engagementMeta : {
+        addPostReminder    : { type : Date },
+        addProfileReminder : { type : Date }
+    },
 
     hash       : String,
 

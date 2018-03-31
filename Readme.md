@@ -2,7 +2,7 @@
 
 **(c) 2017 - The Ursa Majors**
 
-**https://github.com/ursa-majors/co-ment**
+**http://co-ment.glitch.me**
 
 ## Nav
 

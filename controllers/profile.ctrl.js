@@ -27,7 +27,7 @@ function getProfiles(req, res) {
                 .status(400)
                 .json({ message: err });
         });
-    
+
 }
 
 
@@ -66,7 +66,7 @@ function getOneProfile(req, res) {
 //     2) '_id' from request params
 //     3) optional request body properties : {
 //          name       : String
-//          ghUserName : String
+//          email      : String
 //          avatarUrl  : String
 //          languages  : Array
 //          location   : String
@@ -74,6 +74,7 @@ function getOneProfile(req, res) {
 //          about      : String
 //          skills     : Array
 //          time_zone  : String
+//          github     : String
 //          twitter    : String
 //          facebook   : String
 //          link       : String
@@ -104,7 +105,7 @@ function updateProfile(req, res) {
 
         // map enumerable req body properties to updates object
         const updates = Object.assign({}, req.body);
-        
+
         // parse skills array if update includes skills
         if (updates.skills) {
             updates.skills = (updates.skills).map( skill => parseSKill(skill) );
@@ -113,7 +114,7 @@ function updateProfile(req, res) {
         const options = {
             new: true  // return updated document rather than the original
         };
-        
+
         User.findOneAndUpdate(target, updates, options)
             .exec()
             .then( user => {
@@ -157,7 +158,7 @@ function updateProfile(req, res) {
 //   Returns: success message & deleted user profile on success
 //
 function deleteProfile(req, res) {
-    
+
     const targetUser = {
         _id      : req.params.id,
         username : req.token.username
@@ -169,7 +170,7 @@ function deleteProfile(req, res) {
             .status(400)
             .json({ message: 'Error: user ID mismatch.'});
     }
-    
+
     User.findOneAndRemove(targetUser)
         .exec()
         .then( user => {
@@ -181,40 +182,40 @@ function deleteProfile(req, res) {
                     .json({message: 'User not found!'});
 
             } else {
-                
+
                 const postAuthor = {
                     author_id : targetUser._id,
                     author    : targetUser.username
                 };
-                
+
                 const updates = {
                     deleted   : true,
                     active    : false
                 };
-                
+
                 const options = {
                     multi     : true
                 };
-                
+
                 // "delete" all posts from same author. Sets "deleted" to true,
                 // and "active" to false
                 Post.update(postAuthor, updates, options, (err, raw) => {
-                    
+
                     if (err) { throw err; }
-                    
+
                     else {
                         console.log('The raw response from Mongo was ', raw);
-                        
+
                         return res
                             .status(200)
                             .json({
                                 message : 'User profile deleted!',
                                 user    : user
                             });
-                    }                    
-                    
-                }); 
-                
+                    }
+
+                });
+
             }
 
         })
@@ -228,6 +229,50 @@ function deleteProfile(req, res) {
 }
 
 
+// REFRESH USER TOKEN
+//   Example: GET >> /api/refresh_token
+//   Secured: yes, valid JWT required
+//   Expects:
+//     1) '_id' from JWT
+//   Returns: user profile and new JWT on success
+//
+function refreshToken(req, res) {
+    
+    const userId = req.token._id;
+    
+    User.findById(userId)
+        .exec()
+        .then( user => {
+
+            // generate a token
+            const token = user.generateJWT();
+
+            // return the user profile & JWT
+            return res
+                .status(200)
+                .json({
+                    profile : user,
+                    token   : token
+                });
+
+        })
+        .catch( err => {
+            console.log('Error!!!', err);
+                return res
+                    .status(400)
+                    .json({ message: err});
+        });
+
+}
+
+
+
 /* ============================== EXPORT API =============================== */
 
-module.exports = { getProfiles, getOneProfile, updateProfile, deleteProfile };
+module.exports = {
+    getProfiles,
+    getOneProfile,
+    updateProfile,
+    deleteProfile,
+    refreshToken
+};

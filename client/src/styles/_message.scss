@@ -1,0 +1,55 @@
+.message  {
+	width: 100%;
+  overflow-y: scroll;
+  @include for-phone-landscape-up {
+    max-height: calc(65vh - 169px);
+  }
+
+  &__new {
+    padding: 10px 10px 0 10px;
+
+    &--scrolled {
+      box-shadow: 0 -5px 5px rgba(0,0,0,.2);
+    }
+  }
+
+  &__input-wrap {
+    display: flex;
+    justify-content: space-between;
+
+  }
+
+  &__send {
+    padding: 12px 17px 12px 13px;
+    border-radius: 30px;
+    height: 47px;
+    margin: 3px 0 0 10px;
+    background: $color_sky !important;
+    border: none;
+    color: rgba(255,255,255, .8);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+    font-size: 1.2em;
+    display: inline-block;
+
+    &:hover, &:focus, &:active {
+      background: $color_aqua !important;
+      box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.4);
+      transition: all 300ms ease-in-out;
+      border: none;
+      color: rgba(255,255,255,1);
+      }
+  }
+
+  &__icon--send {
+    color: white;
+
+    &:hover, &:focus, &:active {
+      color: white;
+    }
+
+  }
+
+  &__input {
+
+  }
+}

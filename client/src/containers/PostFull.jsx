@@ -2,10 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import * as Actions from '../store/actions/postActions';
 import * as apiActions from '../store/actions/apiPostActions';
+import { setEmailOptions } from '../store/actions/emailActions';
 import { formatDate } from '../utils/';
+
+import Spinner from './Spinner';
+import ModalSm from './ModalSm';
 
 class PostFull extends React.Component {
 
@@ -21,32 +26,69 @@ class PostFull extends React.Component {
     super(props);
     this.state = {
       flip: false,
+      post: {},
+      modal: false,
+      valModalOpen: false,
+      pflModalOpen: false,
     };
   }
 
   componentDidMount() {
-    const postId = this.props.post._id;
+    let postId;
+    if (this.props.match && this.props.match.params.id) {
+      postId = this.props.match.params.id;
+    } else {
+      postId = this.props.post._id;
+    }
     const token = this.props.appState.authToken;
-        if (this.props.posts.currentPost._id !== postId) {
+    if (this.props.posts.currentPost._id !== postId) {
       this.props.actions.clearCurrentPost();
-      this.props.api.viewPost(token, postId);
+      this.props.api.viewPost(token, postId)
+        .then((result) => {
+          if (result.type === 'VIEW_POST_SUCCESS') {
+            this.props.api.incrementPostView(token, postId);
+          }
+        });
     }
-    }
+    // force focus on first focusable element trap focus inside modal when opening on postsgrid page
+    document.getElementById('username').focus();
+  }
 
-  deletePost = (event) => {
-    const postId = this.props.post._id;
+  openDeleteModal = () => {
+    this.setState({
+      modal: true,
+    });
+    document.getElementsByClassName('.ReactModal__Content')[0].style.background = 'transparent !important';
+  }
+
+  openValModal = () => {
+    const newState = { ...this.state };
+    newState.valModalOpen = true;
+    this.setState({
+      ...newState,
+    });
+  }
+
+  openPflModal = () => {
+    const newState = { ...this.state };
+    newState.pflModalOpen = true;
+    this.setState({
+      ...newState,
+    });
+  }
+
+  deletePost = () => {
+    const id = this.props.posts.currentPost._id;
     const token = this.props.appState.authToken;
-    this.props.api.deletePost(token, postId);
+    this.props.api.deletePost(token, id);
     this.props.closeModal();
     this.props.shuffle();
   }
 
   handleKeyDown(e) {
     // enter key fires flip / readmore when focused
-    const action = e.target.className.split(" ")[0];
-    console.log(action);
-    if (e.keyCode === 13 || e.which === 13 ) {
-      console.log('enter');
+    const action = e.target.className.split(' ')[0];
+    if (e.keyCode === 13 || e.which === 13) {
       switch (action) {
         case 'flip-it':
           this.flip();
@@ -58,10 +100,10 @@ class PostFull extends React.Component {
           this.checkConnectionRequest();
           break;
         case 'delete':
-          this.deletePost();
+          this.openDeleteModal();
           break;
-        case 'close':
-          this.props.closeModal();
+        case 'dismiss':
+          this.setState({ modal: false });
           break;
         case 'like':
           this.props.api.likePost(this.props.appState.authToken, this.props.post._id);
@@ -70,7 +112,7 @@ class PostFull extends React.Component {
           return null;
       }
     }
-
+    return null;
   }
 
   flip() {
@@ -79,19 +121,18 @@ class PostFull extends React.Component {
     newState.flip = !this.state.flip;
     this.setState({
       ...newState,
-    }, ()=>PostFull.adjustCardHeight() )
+    }, () => PostFull.adjustCardHeight());
   }
 
-  /**
+  /*
   *  Check to see if there is already a similar connection between the user and poster
-  **/
+  */
   checkConnectionRequest = () => {
-    console.log('check connection');
     const connections = this.props.connection.connections;
     if (connections.length > 0) {
       for (let i = 0; i < connections.length; i += 1) {
-        if (connections[i].initiator === this.props.appState.userId &&
-          connections[i][this.props.post.role] === this.props.post.author_id) {
+        if (connections[i].initiator === this.props.appState.user._id &&
+          connections[i][this.props.post.role] === this.props.post.author._id) {
           this.props.actions.setViewPostModalText('You already have a connection to this poster');
           this.props.actions.setViewPostModalClass('modal__show');
           return;
@@ -100,211 +141,370 @@ class PostFull extends React.Component {
     } else {
       // TODO: go get connections, then test them as above
     }
-    this.props.history.push('/connection');
+
+    this.props.actions.setEmailOptions({
+      recipient: this.props.posts.currentPost.author,
+      sender: this.props.profiles.userProfile,
+      subject: `co/ment - Contact Request from ${this.props.profiles.userProfile.username}`,
+      body: '',
+      role: this.props.posts.currentPost.role === 'mentor' ? 'mentee' : 'mentor',
+      type: 'request',
+      connectionId: '',
+    })
+      .then(() => {
+        this.props.history.push('/connectemail');
+      });
   }
 
   render() {
-    const roleText = (this.props.post.role === 'mentor' ? 'mentor' : 'mentee');
-    const owner = (this.props.appState.userId === this.props.post.author_id);
-    const isLiked = this.props.profiles.userProfile.likedPosts.includes(this.props.post._id) ?
-      'post-full__liked' :
-      '';
+    let post = {};
+    let postWrapper = '';
+    let compress = true;
+    // check to see if this component recieved a full post object from props
+    // (clicked openModal from thumb view)
+    // or if it's rendering as a stand-alone view & is pulling data from store.
+    // there has got to be a better way to do this...
+    if (this.props.post && this.props.post.role) {
+      post = { ...this.props.post };
+    } else {
+      post = { ...this.props.posts.currentPost };
+      postWrapper = 'post-full__standalone-wrap';
+      compress = false;
+    }
+    const roleText = (post.role === 'mentor' ? 'mentor' : 'mentee');
+    const owner = (this.props.appState.user._id === post.author._id);
+    let isLiked = '';
+    let canLikePosts = false;
+    if (this.props.profiles.userProfile &&
+      this.props.profiles.userProfile.likedPosts) {
+      canLikePosts = true;
+    }
+    if (this.props.profiles.userProfile &&
+      this.props.profiles.userProfile.likedPosts &&
+      this.props.profiles.userProfile.likedPosts.includes(post._id)) {
+      isLiked = 'post-full__liked';
+    }
     let actions;
     if (owner) {
       actions = (
         <div>
+          {compress &&
+            <button
+              className="close post-full__compress"
+              aria-label="close"
+              name="close"
+              data-dismiss="modal"
+              onClick={() => this.props.closeModal()}
+            >
+              <i
+                className="close fa fa-compress thumb__icon--compress"
+                aria-hidden
+              />
+            </button>
+          }
           <button
-            className="close post-full__compress"
-            aria-label="close"
-            name="close"
-            data-dismiss="modal"
-            onKeyDown={e => this.handleKeyDown(e)}
-            onClick={()=>this.props.closeModal()}>
-                <i className="close fa fa-compress thumb__icon--compress"
-                  aria-label="close"/>
-          </button>
-          <button
-            className={`edit post-full__edit`}
+            className="edit post-full__edit"
             aria-label="edit"
             name="edit"
             onKeyDown={e => this.handleKeyDown(e)}
-            onClick={() => this.props.history.push(`/editpost/${this.props.post._id}`)}>
-            <i className={`fa fa-pencil post-full__icon--edit`}
-             aria-label="edit" />
+            onClick={() => this.props.history.push(`/editpost/${post._id}`)}>
+            <i
+              className="fa fa-pencil post-full__icon--edit"
+              aria-label="edit"
+            />
           </button>
           <button
-            className={`delete post-full__delete`}
+            className="delete post-full__delete"
             aria-label="delete"
             name="delete"
             onKeyDown={e => this.handleKeyDown(e)}
-            onClick={() => this.deletePost()}>
-            <i className={`fa fa-trash post-full__icon--delete`} aria-label="delet4e" />
+            onClick={() => this.openDeleteModal()}
+          >
+            <i
+              className="fa fa-trash post-full__icon--delete"
+              aria-label="delete"
+            />
           </button>
         </div>
       );
     } else {
       actions = (
         <div>
-          <button
+          {compress &&
+            <button
               className="close post-full__compress"
               aria-label="close"
               name="close"
               data-dismiss="modal"
               onKeyDown={e => this.handleKeyDown(e)}
-              onClick={()=>this.props.closeModal()}>
-                  <i className="close fa fa-compress thumb__icon--compress"
-                    aria-label="close"/>
-          </button>
-          <button
-            className="like post-full__like"
-            aria-label="like"
-            name="like"
-            data-dismiss="modal"
-            onKeyDown={e => this.handleKeyDown(e)}
-            onClick={
-               () => {
-                 if (!this.props.profiles.userProfile.likedPosts.includes(this.props.post._id)) {
-                   this.props.api.likePost(this.props.appState.authToken, this.props.post._id);
-                 } else {
-                   this.props.api.unlikePost(this.props.appState.authToken, this.props.post._id);
+              onClick={() => this.props.closeModal()}
+            >
+              <i
+                className="close fa fa-compress thumb__icon--compress"
+                aria-label="close"
+              />
+            </button>
+          }
+          {canLikePosts &&
+            <button
+              className="like post-full__like"
+              aria-label="like"
+              name="like"
+              data-dismiss="modal"
+              onKeyDown={e => this.handleKeyDown(e)}
+              onClick={
+                 () => {
+                   if (!this.props.profiles.userProfile.likedPosts.includes(post._id)) {
+                     this.props.api.likePost(this.props.appState.authToken, post._id);
+                   } else {
+                     this.props.api.unlikePost(this.props.appState.authToken, post._id);
+                   }
                  }
                }
-             }
-          >
-            <i
-              className={`fa fa-heart heart__icon--compress ${isLiked}`}
-              aria-label="like"
-            />
-          </button>
+            >
+              <i
+                className={`fa fa-heart thumb__icon--heart ${isLiked}`}
+                aria-label="like"
+              />
+            </button>
+          }
           <button
-            className={`connect post-full__connect`}
+            className="connect post-full__connect"
             aria-label="request connection"
             name="connect"
             onKeyDown={e => this.handleKeyDown(e)}
-            onClick={this.checkConnectionRequest}>
-            <i className={`fa fa-envelope post-full__icon--connect`}
-            aria-label="connect" />
+            onClick={() => {
+              if (!this.props.appState.user.validated) {
+                this.openValModal();
+              } else if (!this.props.appState.user.avatarUrl) {
+                this.openPflModal();
+              } else {
+                this.checkConnectionRequest();
+              }
+            }
+            }
+          >
+            <i
+              className="fa fa-envelope post-full__icon--connect"
+              aria-label="connect"
+            />
           </button>
         </div>
       );
     }
 
     let keywordsDisp;
-    if (this.props.post.keywords) {
-      keywordsDisp = this.props.post.keywords.map(word => (
+    if (post.keywords) {
+      keywordsDisp = post.keywords.map(word => (
         <span className="tag-value" key={word}>
           <span className="tag-value__label">
             {word}
           </span>
         </span>
        ));
-      }
+    }
+
+    const backgroundStyle = {
+      backgroundImage: `url(${post.author.avatarUrl})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center center',
+    };
 
     return (
-        <div className="post-full">
-        {!this.state.flip &&
-          <div className={this.props.post.role === 'mentor' ? `post-full__ribbon` : `post-full__ribbon--green`}>
-            <span className={this.props.post.role === 'mentor' ? `post-full__ribbon-span` : `post-full__ribbon-span--green`}>{roleText}</span>
-          </div> }
-          <div className={this.state.flip ? "post-full__side front flip" : "post-full__side front"} id="front">
-            <div className={`post-full__date`}>
-              <span className="tag-value">
-                <span className="tag-value__label">
-                  {formatDate(new Date(this.props.post.updatedAt))}
+      <div className={postWrapper}>
+        { post.meta ?
+          <div className="post-full">
+            <div className={post.role === 'mentor' ? 'post-full__ribbon' : 'post-full__ribbon--green'}>
+              <span className={post.role === 'mentor' ? 'post-full__ribbon-span' : 'post-full__ribbon-span--green'}>{roleText}</span>
+            </div>
+            <div className={this.state.flip ? 'post-full__side front flip' : 'post-full__side front'} id="front">
+              <div className="post-full__metadata">
+                <span className="post-full__views">
+                  <i className="fa fa-eye" />
+                  &nbsp;
+                  {this.props.appState.user._id === post.author._id ?
+                    post.meta.views : post.meta.views + 1}
                 </span>
-              </span>
-            </div>
-            <div className={`post-full__card-body`}>
-              <div className={`post-full__image-wrap`}>
-                {this.props.post.author_avatar ?
-                  <img
-                    className={`post-full__image`}
-                    src={this.props.post.author_avatar}
-                    alt={this.props.post.author} /> :
-                  <i className={`fa fa-user-circle fa-5x post-full__icon--avatar`} aria-hidden="true" /> }
-                <div className={`post-full__name-wrap`}>
-                  <span className={`post-full__name`}>
-                    {this.props.post.author_name}</span>
-                  <Link className="unstyled-link" to={`/viewprofile/${this.props.post.author_id}`}>
-                    <span className={`post-full__username`}>
-                      @{this.props.post.author}
-                    </span>
-                </Link>
-                </div>
-              </div>
-              <div className={`post-full__text-wrap`}>
-                <div className={`post-full__title`}>
-                  {this.props.post.title}
-                </div>
-                { this.props.posts.excerpt ?
-                  <div className={`post-full__body post-full__excerpt`}>
-                    {`${this.props.posts.excerpt}...`}
-                    <span
-                      className="flip-it post-full__readmore tag-value"
-                      onClick={()=>this.flip()}
-                      tabIndex={0}
-                      name='flip'
-                      aria-label='flip'
-                      onKeyDown={e => this.handleKeyDown(e)}
-                      >
-                      <span className="tag-value__label">
-                      more &nbsp;
-                      <i className="fa fa-chevron-right post-full__icon--readmore" aria-hidden="true" />
-                      </span>
-                    </span>
-                  </div> :
-                  <div className={`post-full__body`}>
-                    {this.props.post.body}
-                  </div>
-                }
-                {!this.state.thumb &&
-                <div className="tag-value__wrapper">
-                    {keywordsDisp ? keywordsDisp : ''}
-                </div> }
-              </div>
-            </div>
-            <div className={ !owner ? `post-full__button-wrap` : `post-full__button-wrap post-full__button-wrap--edit`}>
-            { actions }
-            </div>
-            </div>
-            {this.props.posts.excerpt &&
-              <div className={this.state.flip ? "post-full__side back flip" : "post-full__side back"} id="back">
+                <span className="post-full__likes">
+                  <i className="fa fa-heart" />&nbsp;{post.meta.likes}
+                </span>
                 <div className="post-full__date">
-                <span className="tag-value">
-                  <span className="tag-value__label">
-                    {formatDate(new Date(this.props.post.updatedAt))}
+                  <span className="tag-value">
+                    <span className="tag-value__label">
+                      {formatDate(new Date(post.updatedAt))}
+                    </span>
                   </span>
-                </span>
+                </div>
               </div>
-              <div className="post-full__back-wrap">
-                <div className="post-full__title">
-                  {this.props.post.title}
+              <div className="post-full__card-body">
+                <div className="post-full__text-wrap">
+                  <div className="post-full__title">
+                    {post.title}
                   </div>
                   <div className="post-full__body">
-                  {this.props.post.body}
+                    {post.body}
                   </div>
-                  <div className={ !owner ? "post-full__button-wrap" : "post-full__button-wrap post-full__button-wrap--edit"}>
-              { actions }
-              </div>
-                  <div className="post-full__card-footer--back">
-                    <div
-                      className='flip-it post-full__nav-item--flip'
-                      name='flip'
-                      aria-label='flip'
-                      onKeyDown={e => this.handleKeyDown(e)}
-                      onClick={() => this.flip()}
-                      tabIndex={0}
+                  {!this.state.thumb &&
+                  <div className="tag-value__wrapper">
+                      {keywordsDisp || ''}
+                  </div> }
+                </div>
+                <div className="post-full__image-wrap">
+                  <div className="post-full__image-aspect">
+                    <Link id="username" className="unstyled-link post-full__username" to={`/viewprofile/${post.author._id}`}>
+                      <div className="post-full__image-crop">
+                        {post.author.avatarUrl ?
+                          <div
+                            className="post-full__image"
+                            style={backgroundStyle}
+                            role="img"
+                            aria-label={post.author.username}
+                          /> :
+                          <i
+                            className="fa fa-user-circle fa-5x post-full__icon--avatar"
+                            aria-hidden="true"
+                          />
+                          }
+                      </div>
+                    </Link>
+                  </div>
+                  <div className="post-full__name-wrap">
+                    <Link
+                      id="username"
+                      className="unstyled-link"
+                      to={`/viewprofile/${post.author._id}`}
                     >
-                      <i className="fa fa-refresh post-full__icon--flip" aria-hidden="true" />
-                    </div>
+                      <span className="post-full__name">
+                        {post.author.name}
+                      </span>
+                    </Link>
+                    <Link
+                      id="username"
+                      className="unstyled-link post-full__username"
+                      to={`/viewprofile/${post.author._id}`}
+                    >
+                      @{post.author.username}
+                    </Link>
                   </div>
                 </div>
               </div>
+              <div className={!owner ? 'post-full__button-wrap' : 'post-full__button-wrap post-full__button-wrap--edit'}>
+                {actions}
+              </div>
+            </div>
+          </div> : <Spinner cssClass={'spinner__show'} />
+        }
+        <ModalSm
+          modalClass={this.state.modal ? 'modal modal__show' : 'modal__hide'}
+          modalText="Are you sure? This action cannot be undone."
+          modalTitle="Confirm Delete"
+          modalType="modal__error"
+          modalDanger
+          action={() => this.deletePost()}
+          dismiss={
+            () => {
+              this.setState({
+                modal: false,
+              });
             }
-          </div>
+          }
+        />
+        <ModalSm
+          modalClass={this.state.valModalOpen ? 'modal__show' : 'modal__hide'}
+          modalText="You must validate your email before contacting another user. Check your inbox for a validation email or visit your profile page to generate a new one"
+          modalTitle="Unvalidated user"
+          modalType="danger"
+          dismiss={
+            () => {
+              this.setState({ valModalOpen: false });
+            }
+          }
+        />
+        <ModalSm
+          modalClass={this.state.pflModalOpen ? 'modal__show' : 'modal__hide'}
+          modalText="You must complete your own user profile before contacting another user. Please visit your profile page and fill out required fields."
+          modalTitle="Incomplete User Profile"
+          modalType="danger"
+          dismiss={
+            () => {
+              this.setState({ pflModalOpen: false });
+            }
+          }
+        />
+      </div>
     );
   }
 }
+
+PostFull.propTypes = {
+  actions: PropTypes.shape({
+    clearCurrentPost: PropTypes.func,
+    setViewPostModalText: PropTypes.func,
+    setViewPostModalClass: PropTypes.func,
+    setEmailOptions: PropTypes.func,
+  }).isRequired,
+  api: PropTypes.shape({
+    viewPost: PropTypes.func,
+    deletePost: PropTypes.func,
+    likePost: PropTypes.func,
+    unlikePost: PropTypes.func,
+    incrementPostView: PropTypes.func,
+  }).isRequired,
+  appState: PropTypes.shape({
+    loggedIn: PropTypes.bool,
+    authToken: PropTypes.string,
+    user: PropTypes.shape({
+      _id: PropTypes.string,
+      avatarUrl: PropTypes.string,
+      username: PropTypes.string,
+      validated: PropTypes.bool,
+    }).isRequired,
+  }).isRequired,
+  closeModal: PropTypes.func.isRequired,
+  connection: PropTypes.shape({
+    connections: PropTypes.arrayOf(PropTypes.object),
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  post: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    role: PropTypes.string.isRequired,
+    author: PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+    }),
+  }).isRequired,
+  posts: PropTypes.shape({
+    currentPost: PropTypes.shape({
+      _id: PropTypes.string,
+      role: PropTypes.string,
+      author: PropTypes.shape({
+        _id: PropTypes.string,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
+  profiles: PropTypes.shape({
+    userProfile: PropTypes.shape({
+      likedPosts: PropTypes.arrayOf(PropTypes.string),
+      username: PropTypes.string.isRequired,
+    }),
+  }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string,
+    }),
+  }),
+  shuffle: PropTypes.func.isRequired,
+};
+
+PostFull.defaultProps = {
+  match: null,
+  posts: {
+    currentPost: {
+      _id: null,
+    },
+  },
+};
 
 const mapStateToProps = state => ({
   appState: state.appState,
@@ -314,7 +514,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(Actions, dispatch),
+  actions: bindActionCreators({ ...Actions, setEmailOptions }, dispatch),
   api: bindActionCreators(apiActions, dispatch),
 });
 

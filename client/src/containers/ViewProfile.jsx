@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import * as Actions from '../store/actions/profileActions';
 import * as apiActions from '../store/actions/apiActions';
@@ -32,9 +33,9 @@ class ViewProfile extends React.Component {
     // copy requested profile data into currentProfile
     let profileId;
     if (this.props.match && this.props.match.params.id) {
-     profileId = this.props.match.params.id;
+      profileId = this.props.match.params.id;
     } else {
-     profileId = this.props.appState.userId;
+      profileId = this.props.appState.user._id;
     }
     this.props.api.getProfile(this.props.appState.authToken, profileId);
   }
@@ -42,10 +43,10 @@ class ViewProfile extends React.Component {
   onClick(e) {
     // handle tab navigation in bottom half of profile card
     const newState = { ...this.state };
-    newState.tab = e.target.id;
+    newState.tab = e.target.className.split('')[0];
     this.setState({
       ...newState,
-    })
+    });
   }
 
   flip() {
@@ -54,7 +55,7 @@ class ViewProfile extends React.Component {
     newState.flip = !this.state.flip;
     this.setState({
       ...newState,
-    }, ()=>ViewProfile.adjustCardHeight())
+    }, () => ViewProfile.adjustCardHeight());
   }
 
   toggleThumb() {
@@ -63,15 +64,13 @@ class ViewProfile extends React.Component {
     newState.thumb = !this.state.thumb;
     this.setState({
       ...newState,
-    })
+    });
   }
 
   handleKeyDown = (e) => {
     // enter key fires flip / expand / toggle tabs when focused
-    const action = e.target.className.split(" ")[0];
-    console.log(action);
-    if (e.keyCode === 13 || e.which === 13 ) {
-      console.log('enter');
+    const action = e.target.className.split('')[0];
+    if (e.keyCode === 13 || e.which === 13) {
       switch (action) {
         case 'flip-it':
           this.flip();
@@ -85,68 +84,98 @@ class ViewProfile extends React.Component {
           break;
         case 'languages':
           this.onClick(e);
+          break;
         default:
           return null;
       }
-    }
-
+    } return null;
   }
 
 
   render() {
     let langDisp;
     let skillsDisp;
-    let smDisp;
-    let smArr = [];
-    const { skills, languages, twitter, facebook, link, linkedin, codepen, ghProfile } = this.props.profile.currentProfile;
+    const smArr = [];
+    const {
+      skills,
+      languages,
+      twitter,
+      facebook,
+      link,
+      linkedin,
+      codepen,
+      github,
+    } = this.props.profile.currentProfile;
     // render skills tags for profile card
     if (skills) {
       skillsDisp = this.props.profile.currentProfile.skills.map(skill => (
-                  <span className="tag-value" key={skill}>
-                    <span className="tag-value__label">
-                      {skill}
-                    </span>
-                  </span>
-                 ));
+        <span className="tag-value" key={skill}>
+          <span className="tag-value__label">
+            {skill}
+          </span>
+        </span>
+       ));
     }
     // render language tags for profile card
     if (languages) {
-       langDisp = this.props.profile.currentProfile.languages.map(lang => (
-                  <span className="tag-value" key={lang}>
-                    <span className="tag-value__label">
-                      {lang}
-                    </span>
-                  </span>
-                 ));
+      langDisp = this.props.profile.currentProfile.languages.map(lang => (
+        <span className="tag-value" key={lang}>
+          <span className="tag-value__label">
+            {lang}
+          </span>
+        </span>
+       ));
     }
     // generate a 2d array of social media links
-    if (ghProfile) { smArr.push([ 'github', ghProfile.html_url ]); }
-    if (twitter) { smArr.push([ 'twitter', twitter]); }
-    if (facebook) { smArr.push([ 'facebook', facebook]); }
-    if (link) { smArr.push([ 'link', link]); }
-    if (linkedin) { smArr.push([ 'linkedin', linkedin]); }
-    if (codepen) { smArr.push([ 'codepen', codepen]); }
+    if (github) { smArr.push(['github', github]); }
+    if (twitter) { smArr.push(['twitter', twitter]); }
+    if (facebook) { smArr.push(['facebook', facebook]); }
+    if (link) { smArr.push(['link', link]); }
+    if (linkedin) { smArr.push(['linkedin', linkedin]); }
+    if (codepen) { smArr.push(['codepen', codepen]); }
     // render social media icons & links for profile card
-    smDisp = smArr.map(sm => (
-                <span className="full__icon--sm-wrap" key={sm[0]}>
-                  <a
-                    href={sm[1]}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    className={`full__icon--sm full__icon--${sm[0]}`}>
-                    <i className={`fa fa-${sm[0]}`} aria-hidden="true" />
-                  </a>
-                  </span>
-               ));
+    const smDisp = smArr.map(sm => (
+      <span className="full__icon--sm-wrap" key={sm[0]}>
+        <a
+          href={sm[1]}
+          rel="noopener noreferrer"
+          target="_blank"
+          className={`full__icon--sm full__icon--${sm[0]}`}
+        >
+          <i className={`fa fa-${sm[0]}`} aria-hidden="true" />
+        </a>
+      </span>
+     ));
     // placeholder for empty bio field:
     let aboutText;
     if (!this.props.profile.currentProfile.about) {
-        aboutText = 'This user has not yet added a bio.';
+      aboutText = 'This user has not yet added a bio.';
     } else {
       aboutText = this.props.profile.currentProfile.about;
     }
 
-    let cardSize = this.state.thumb ? 'thumb' : 'full';
+    const cardSize = this.state.thumb ? 'thumb' : 'full';
+    let owner;
+    if (!this.props.match) {
+      owner = true;
+    } else if (this.props.match && this.props.appState.user._id === this.props.match.params.id) {
+      owner = true;
+    } else {
+      owner = false;
+    }
+    let avatar;
+    if (this.props.profile.currentProfile) {
+      if (!this.props.profile.currentProfile.avatarUrl) {
+        avatar = 'https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/android-chrome-384x384.png';
+      } else {
+        avatar = this.props.profile.currentProfile.avatarUrl;
+      }
+    }
+    const backgroundStyle = {
+      backgroundImage: `url(${avatar})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center center',
+    };
 
     return (
       <div className="view-profile" id="view-profile">
@@ -160,105 +189,120 @@ class ViewProfile extends React.Component {
         />
         {this.props.profile.getSuccess &&
           <div className={cardSize}>
-            <div className={this.state.flip ? "side front flip" : "side front"} id="front">
-            { !this.state.thumb &&
-              <Link
-                className="full__edit"
-                to={'/profile'} >
-                <i className="fa fa-pencil full__icon--edit" aria-label="edit" />
-              </Link> /* edit link */
+            <div
+              className={this.state.flip ? 'side front flip' : 'side front'}
+              id="front"
+            >
+              {!this.state.thumb && owner ?
+                <Link
+                  className="full__edit"
+                  to={`/editprofile/${this.props.appState.user._id}`}
+                >
+                  <i className="fa fa-pencil full__icon--edit" aria-label="edit" />
+                </Link> : ''/* edit link */
             } {/* post owner, full size */}
-            {/* !this.state.thumb &&
-              <div className="thumb__compress">
-                <i className="compress fa fa-compress thumb__icon--compress"
-                  aria-label="compress"
-                  tabIndex={0}
-                  onClick={()=>this.toggleThumb()}
-                  onKeyDown={(e)=>this.handleKeyDown(e)}/>
-                </div>
-            } {/* compress button, full only */}
-            <div className={`${cardSize}__top-wrap`}>
-              <div className={`${cardSize}__image-wrap`}>
-                {this.props.profile.currentProfile.avatarUrl ?
-                  <img
-                    className={`${cardSize}__image`}
-                    src={this.props.profile.currentProfile.avatarUrl}
-                    alt={this.props.profile.currentProfile.username} /> :
-                  <i
-                    className={`fa-user-circle fa-5x ${cardSize}__icon--avatar`}
-                    aria-hidden="true" />
-                }
-              </div> {/* images-wrap */}
-              <div className={`${cardSize}__card-top ${cardSize}__text-wrap`}>
-                <div className={`${cardSize}__name`}>
-                  {this.props.profile.currentProfile.name}</div>
-                <div className={`${cardSize}__username`}>
-                  @{this.props.profile.currentProfile.username}</div>
-                {this.props.profile.currentProfile.location &&
-                  <div className={`${cardSize}__location-wrap`}>
-                    <i className="fa fa-map-marker full__icon--location" aria-hidden="true" />
-                    <span className={`${cardSize}__location`}>
-                    {this.props.profile.currentProfile.location} &bull; {this.props.profile.currentProfile.time_zone}</span>
-                  </div>}
-              </div> {/* text-wrap */}
+              <div className={`${cardSize}__top-wrap`}>
+                <div className={`${cardSize}__image-wrap`}>
+                  <div className={`${cardSize}__image-aspect`}>
+                    <div className={`${cardSize}__image-crop`}>
+                      <div
+                        className={`${cardSize}__image`}
+                        style={backgroundStyle}
+                        role="img"
+                        aria-label={this.props.profile.currentProfile.username}
+                      />
+                    </div>
+                  </div>
+                </div> {/* image-wrap */}
+                <div className={`${cardSize}__card-top ${cardSize}__text-wrap`}>
+                  <div className={`${cardSize}__name`}>
+                    {this.props.profile.currentProfile.name}</div>
+                  <div className={`${cardSize}__username`}>
+                    @{this.props.profile.currentProfile.username}</div>
+                  {this.props.profile.currentProfile.location &&
+                    <div className={`${cardSize}__location-wrap`}>
+                      <i className="fa fa-map-marker full__icon--location" aria-hidden="true" />
+                      <span className={`${cardSize}__location`}>
+                        {this.props.profile.currentProfile.location} &bull;
+                        {this.props.profile.currentProfile.time_zone}</span>
+                    </div>}
+                </div> {/* text-wrap */}
               </div>
               { !this.state.thumb &&
-                <div className={"full__card-nav"}>
-                  <div
-                    className={this.state.tab === 'skills' ? 'skills full__nav-item full__nav-item--active' : 'skills full__nav-item'}
-                    name='skills'
+                <div className="full__card-nav">
+                  <button
+                    className="skills aria-button"
                     tabIndex={0}
                     onClick={e => this.onClick(e)}
-                    onKeyDown={(e)=>this.handleKeyDown(e)}>
-                    <i className="fa fa-code full__icon--nav" aria-hidden="true" />
-                    <span
-                      className={this.state.tab === 'skills' ?
-                      'full__nav-item-text--active' :
-                      'full__nav-item-text'}
-                      id='skills'>Skills</span>
-                  </div> {/* skills */}
-                  <div
-                    className={this.state.tab === 'languages' ?
-                    'languages full__nav-item full__nav-item--active':
-                    'languages full__nav-item'}
-                    name='languages'
-                    tabIndex={0}
-                    onClick={e => this.onClick(e)}
-                    onKeyDown={(e)=>this.handleKeyDown(e)}
+                    onKeyDown={e => this.handleKeyDown(e)}
+                  >
+                    <div
+                      className={this.state.tab === 'skills' ? 'skills full__nav-item full__nav-item--active' : 'skills full__nav-item'}
                     >
-                    <i className="fa fa-commenting-o full__icon--nav" aria-hidden="true" />
-                    <span
-                      className={this.state.tab === 'languages' ?
-                        'full__nav-item-text--active' :
-                        'full__nav-item-text'}
-                      id='languages'>Languages</span>
-                  </div> {/* languages */}
-                  <div
-                    className={this.state.tab === 'about' ?
-                    'flip-it full__nav-item full__nav-item--active' :
-                    'flip-it full__nav-item'}
-                    name='about'
+                      <i
+                        className="skills fa fa-code full__icon--nav"
+                        aria-hidden="true"
+                      />
+                      <span
+                        className={this.state.tab === 'skills' ?
+                        'skills full__nav-item-text--active' :
+                        'skills full__nav-item-text'}
+                        id="skills"
+                      >Skills</span>
+                    </div> {/* skills */}
+                  </button>
+                  <button
+                    className="languages aria-button"
                     tabIndex={0}
-                    onClick={e => this.flip()}
-                    onKeyDown={(e)=>this.handleKeyDown(e)}>
-                    <i className="fa fa-user full__icon--nav" aria-hidden="true" />
-                    <span className={this.state.tab === 'about' ?
-                    'full__nav-item-text--active' :
-                    'full__nav-item-text'}
-                    id='about'>About</span>
-                  </div> {/* about */}
+                    onClick={e => this.onClick(e)}
+                    onKeyDown={e => this.handleKeyDown(e)}
+                  >
+                    <div
+                      className={this.state.tab === 'languages' ?
+                      'languages full__nav-item full__nav-item--active' :
+                      'languages full__nav-item'}
+                    >
+                      <i className="languages fa fa-commenting-o full__icon--nav" aria-hidden="true" />
+                      <span
+                        className={this.state.tab === 'languages' ?
+                          'languages full__nav-item-text--active' :
+                          'languages full__nav-item-text'}
+                        id="languages"
+                      >Languages</span>
+                    </div> {/* languages */}
+                  </button>
+                  <button
+                    className="about aria-button"
+                    tabIndex={0}
+                    onClick={() => this.flip()}
+                    onKeyDown={e => this.handleKeyDown(e)}
+                  >
+                    <div
+                      className={this.state.tab === 'about' ?
+                      'about flip-it full__nav-item full__nav-item--active' :
+                      'about flip-it full__nav-item'}
+                    >
+                      <i className="about fa fa-user full__icon--nav" aria-hidden="true" />
+                      <span
+                        className={this.state.tab === 'about' ?
+                      'about full__nav-item-text--active' :
+                      'about full__nav-item-text'}
+                        id="about"
+                      >About</span>
+                    </div> {/* about */}
+                  </button>
                 </div> /* card-nav */
               } {/* !this.state.thumb */}
               { !this.state.thumb &&
                 <div>
-                <div className="full__card-body">
+                  <div className="full__card-body">
                     {this.state.tab === 'skills' &&
                       <div className="tag-value__wrapper">
-                        {skillsDisp ? skillsDisp : ''}
+                        {skillsDisp || ''}
                       </div>}
                     {this.state.tab === 'languages' &&
                       <div className="tag-value__wrapper">
-                        {langDisp ? langDisp : ''}
+                        {langDisp || ''}
                       </div>}
                     {this.state.tab === 'about' &&
                       this.props.profile.currentProfile.about &&
@@ -267,29 +311,34 @@ class ViewProfile extends React.Component {
                       </div>}
                   </div> {/* full__card-body */}
                   <div className="full__card-footer">
-                    {smDisp ? smDisp : ''}
+                    {smDisp || ''}
                   </div>
                 </div> /* body & footer for full-size view */
               } {/* !this.state.thumb */}
               { this.state.thumb &&
                 <div className="thumb__card-body">
                   <div className="tag-value__wrapper">
-                    {skillsDisp ? skillsDisp : ''}
+                    {skillsDisp || ''}
                   </div>
                 </div> /* thumb body */
               } {/* this.state.thumb */}
               {this.state.thumb &&
               <div className="thumb__expand">
-                <i className="expand fa fa-expand thumb__icon--expand"
+                <button
+                  className="expand fa fa-expand thumb__icon--expand aria-button"
                   aria-label="expand"
                   tabIndex={0}
-                  onClick={()=>this.toggleThumb()}
-                  onKeyDown={(e)=>this.handleKeyDown(e)}/>
+                  onClick={() => this.toggleThumb()}
+                  onKeyDown={e => this.handleKeyDown(e)}
+                />
                 </div>
             } {/* expand button, thumb only */}
             </div> {/* card front */}
             { !this.state.thumb &&
-              <div className={this.state.flip ? "side back flip" : "side back"} id="back">
+              <div
+                className={this.state.flip ? 'side back flip' : 'side back'}
+                id="back"
+              >
                 <div className="full__text-wrap full__card-top">
                   <div className="full__name">{this.props.profile.currentProfile.name}</div>
                   <div className="full__username">@{this.props.profile.currentProfile.username}</div>
@@ -298,12 +347,13 @@ class ViewProfile extends React.Component {
                   {aboutText}
                 </div>
                 <div className="full__card-footer--back">
-                  <div
-                    className='full__card-nav-item--flip'
-                    name='flip'
-                    onClick={e => this.flip()}>
+                  <button
+                    className="full__card-nav-item--flip aria-button"
+                    name="flip"
+                    onClick={() => this.flip()}
+                  >
                     <i className="fa fa-refresh full__icon--flip" aria-hidden="true" />
-                  </div>
+                  </button>
                 </div>
               </div> /* card back */
             } {/* !thumb */}
@@ -313,6 +363,60 @@ class ViewProfile extends React.Component {
     );
   }
 }
+
+ViewProfile.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string,
+    }),
+  }),
+  appState: PropTypes.shape({
+    authToken: PropTypes.string,
+    user: PropTypes.shape({
+      _id: PropTypes.string,
+    }).isRequired,
+    windowSize: PropTypes.shape({
+      mobile: PropTypes.bool,
+    }).isRequired,
+  }).isRequired,
+  api: PropTypes.shape({
+    getProfile: PropTypes.func,
+  }).isRequired,
+  actions: PropTypes.shape({
+    dismissViewProfileModal: PropTypes.func,
+    setUpdProfileModal: PropTypes.func,
+  }).isRequired,
+  profile: PropTypes.shape({
+    getSuccess: PropTypes.bool,
+    profileSpinnerClass: PropTypes.string,
+    viewProfileModalClass: PropTypes.string,
+    viewProfileModalText: PropTypes.string,
+    viewProfileModalType: PropTypes.string,
+    currentProfile: PropTypes.shape({
+      languages: PropTypes.array,
+      skills: PropTypes.array,
+      name: PropTypes.string,
+      username: PropTypes.string,
+      email: PropTypes.string,
+      time_zone: PropTypes.string,
+      github: PropTypes.string,
+      twitter: PropTypes.string,
+      facebook: PropTypes.string,
+      link: PropTypes.string,
+      codepen: PropTypes.string,
+      linkedin: PropTypes.string,
+      avatarUrl: PropTypes.string,
+      gender: PropTypes.string,
+      location: PropTypes.string,
+      about: PropTypes.string,
+      errMsg: PropTypes.string,
+    }).isRequired,
+  }).isRequired,
+};
+
+ViewProfile.defaultProps = {
+  match: null,
+};
 
 const mapStateToProps = state => ({
   appState: state.appState,

@@ -1,4 +1,5 @@
 import { CALL_API } from 'redux-api-middleware';
+import { BASE_URL } from './apiConfig';
 
 export const VALIDATE_TOKEN_REQUEST = 'VALIDATE_TOKEN_REQUEST';
 export const VALIDATE_TOKEN_SUCCESS = 'VALIDATE_TOKEN_SUCCESS';
@@ -20,7 +21,7 @@ export const VALIDATE_TOKEN_FAILURE = 'VALIDATE_TOKEN_FAILURE';
 export function validateToken(token, profileId) {
   return {
     [CALL_API]: {
-      endpoint: `https://co-ment.glitch.me/api/profile/${profileId}`,
+      endpoint: `${BASE_URL}/api/profile/${profileId}`,
       method: 'GET',
       types: [
         VALIDATE_TOKEN_REQUEST,
@@ -53,7 +54,7 @@ export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export function login(body) {
   return {
     [CALL_API]: {
-      endpoint: 'https://co-ment.glitch.me/api/login',
+      endpoint: `${BASE_URL}/api/login`,
       method: 'POST',
       types: [LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE],
       headers: { 'Content-Type': 'application/json' },
@@ -81,7 +82,7 @@ export const REGISTRATION_FAILURE = 'REGISTRATION_FAILURE';
 export function register(body) {
   return {
     [CALL_API]: {
-      endpoint: 'https://co-ment.glitch.me/api/register',
+      endpoint: `${BASE_URL}/api/register`,
       method: 'POST',
       types: [REGISTRATION_REQUEST, REGISTRATION_SUCCESS, REGISTRATION_FAILURE],
       headers: { 'Content-Type': 'application/json' },
@@ -100,7 +101,7 @@ export const RESET_PW_FAILURE = 'RESET_PW_FAILURE';
 export function resetPassword(body) {
   return {
     [CALL_API]: {
-      endpoint: 'https://co-ment.glitch.me/api/resetpassword',
+      endpoint: `${BASE_URL}/api/resetpassword`,
       method: 'POST',
       types: [RESET_PW_REQUEST, RESET_PW_SUCCESS, RESET_PW_FAILURE],
       headers: { 'Content-Type': 'application/json' },
@@ -120,7 +121,7 @@ export const SEND_RESET_EMAIL_FAILURE = 'SEND_RESET_EMAIL_FAILURE';
 export function sendResetEmail(username) {
   return {
     [CALL_API]: {
-      endpoint: 'https://co-ment.glitch.me/api/sendresetemail',
+      endpoint: `${BASE_URL}/api/sendresetemail`,
       method: 'POST',
       types: [
         SEND_RESET_EMAIL_REQUEST,
@@ -149,7 +150,7 @@ export const REFRESH_TOKEN_FAILURE = 'REFRESH_TOKEN_FAILURE';
 export function refreshToken(token) {
   return {
     [CALL_API]: {
-      endpoint: 'https://co-ment.glitch.me/api/refreshToken',
+      endpoint: `${BASE_URL}/api/refresh_token`,
       method: 'GET',
       types: [REFRESH_TOKEN_REQUEST, REFRESH_TOKEN_SUCCESS, REFRESH_TOKEN_FAILURE],
       headers: { Authorization: `Bearer ${token}` },

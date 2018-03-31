@@ -9,7 +9,7 @@ const ModalGuts = (props) => (
           </div>
           <div className="modal__body">
           	<PostFull
-          		id={props.post._id}
+              onRequestClose={props.onRequestClose}
               post={props.post}
               closeModal={props.closeModal}
               history={props.history}

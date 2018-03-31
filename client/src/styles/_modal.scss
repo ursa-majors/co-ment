@@ -6,11 +6,11 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  border: 1px solid rgba(0,0,0,.6);
   border-radius: 6px;
   background-color: $color_gray_bkgrd;
   z-index: 20;
   font-family: 'Alegreya Sans', sans-serif;
+  box-shadow: 10px 10px 20px rgba(0,0,0,.5);
 
   &__hide {
     display: none;
@@ -21,6 +21,11 @@
   &__header {
     color: white;
     line-height: 2em;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    font-weight: 300;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    font-size: 1.3em;
     background-color: $color_sky_darker;
     padding: 5px;
     text-align: center;
@@ -44,7 +49,42 @@
     cursor: pointer;
     padding: 5px 40px;
     text-align: center;
-    background-color: $color_gray_darker;
+    background: $color_aqua;
+    background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
+    background: linear-gradient(to top, $color_aqua, $color_sky);
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+
+  &__button {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    color: white;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 300;
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-radius: 40px;
+    display: inline-block;
+
+      &:hover, &:focus {
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+        border: 1px solid white;
+      }
+    }
+
+    &__danger {
+    &:hover, &:active, &:focus {
+      background-color: darken($color_error_bkg,35%);
+    }
   }
 }
 .modal-close {
@@ -52,4 +92,25 @@
   top: 8px;
   right: 8px;
   cursor: pointer;
+
+  &--pg {
+    top: 4px;
+    right: 4px;
+  }
+}
+.modal-close-sm {
+  font-size: 1.5em;
+  top: 0;
+  right: 0;
+  opacity: .6;
+  padding: 0 12px 2px 12px;
+  border-radius: 100%;
+
+  &:hover, &:focus {
+    opacity: 1;
+  }
+}
+
+.ReactModal__Content .ReactModal__Content--after-open {
+  background: rgba(0,0,0,.7) !important;
 }

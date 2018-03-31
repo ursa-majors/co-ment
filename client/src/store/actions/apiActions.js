@@ -1,23 +1,19 @@
 import { CALL_API } from 'redux-api-middleware';
+import { BASE_URL } from './apiConfig.js';
 
-export const CONTACT_REQUEST = 'CONTACT_REQUEST';
-export const CONTACT_SUCCESS = 'CONTACT_SUCCESS';
-export const CONTACT_FAILURE = 'CONTACT_FAILURE';
+export const SEND_EMAIL_REQUEST = 'SEND_EMAIL_REQUEST';
+export const SEND_EMAIL_SUCCESS = 'SEND_EMAIL_SUCCESS';
+export const SEND_EMAIL_FAILURE = 'SEND_EMAIL_FAILURE';
 
-export function contact(token, msg, connectionId, recipient) {
-  const body = {
-    connectionId,
-    bodyText: msg,
-  };
-
+export function sendEmail(token, mailOptions) {
   return {
     [CALL_API]: {
-      endpoint: `https://co-ment.glitch.me/api/contact/${recipient}`,
+      endpoint: `${BASE_URL}/api/sendemail/`,
       method: 'POST',
-      types: [CONTACT_REQUEST, CONTACT_SUCCESS, CONTACT_FAILURE],
+      types: [SEND_EMAIL_REQUEST, SEND_EMAIL_SUCCESS, SEND_EMAIL_FAILURE],
       headers: { Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+      body: JSON.stringify(mailOptions),
     },
   };
 }
@@ -30,7 +26,7 @@ export const GET_PROFILE_FAILURE = 'GET_PROFILE_FAILURE';
 export function getProfile(token, profileId) {
   return {
     [CALL_API]: {
-      endpoint: `https://co-ment.glitch.me/api/profile/${profileId}`,
+      endpoint: `${BASE_URL}/api/profile/${profileId}`,
       method: 'GET',
       types: [GET_PROFILE_REQUEST, GET_PROFILE_SUCCESS, GET_PROFILE_FAILURE],
       headers: { Authorization: `Bearer ${token}` },
@@ -45,7 +41,7 @@ export const MODIFY_PROFILE_FAILURE = 'MODIFY_PROFILE_FAILURE';
 export function modifyProfile(token, profileId, body) {
   return {
     [CALL_API]: {
-      endpoint: `https://co-ment.glitch.me/api/profile/${profileId}`,
+      endpoint: `${BASE_URL}/api/profile/${profileId}`,
       method: 'PUT',
       types: [MODIFY_PROFILE_REQUEST, MODIFY_PROFILE_SUCCESS, MODIFY_PROFILE_FAILURE],
       headers: { Authorization: `Bearer ${token}`,
@@ -80,7 +76,7 @@ export const RESEND_ACCT_VALIDATION_FAILURE = 'RESEND_ACCT_VALIDATION_FAILURE';
 export function resendAcctValidation(token) {
   return {
     [CALL_API]: {
-      endpoint: 'https://co-ment.glitch.me/api/resendvalidation',
+      endpoint: `${BASE_URL}/api/resendvalidation`,
       method: 'GET',
       headers: { Authorization: `Bearer ${token}` },
       types: [

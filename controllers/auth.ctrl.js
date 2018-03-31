@@ -27,7 +27,7 @@ function sendValidationEmail(params) {
     const subject = 'co/ment - Email verification required';
     const body    = {
         type: 'html',
-        text: emailTpl.validationTemplate(url)
+        text: emailTpl.validationTemplate(url, params.to_uid)
     };
 
     // send mail using `mailer` util
@@ -46,6 +46,7 @@ function sendValidationEmail(params) {
  * @ params   [object]   params
  * @ params   [string]    * key      [randomly generated key]
  * @ params   [string]    * to_email [user/recipient email address]
+ * @ params   [string]    * recUsesrId [user/recipient _id]
 */
 function sendPWResetEmail(params) {
     console.log('pwreset', params);
@@ -53,7 +54,7 @@ function sendPWResetEmail(params) {
     const subject = 'co/ment - Password Reset Request';
     const body    = {
         type: 'html',
-        text: emailTpl.pwResetTemplate(url)
+        text: emailTpl.pwResetTemplate(url, params.recUserId)
     };
 
     // send mail using `mailer` util
@@ -90,11 +91,23 @@ function register(req, res) {
             .json({ 'message': 'Please complete all required fields.' });
     }
 
-    User.findOne({ username: req.body.username})
+   const target = {
+        $or: [{ username: req.body.username }, { email: req.body.email }]
+    };
+
+    User.findOne(target)
         .exec()
         .then( user => {
+
             // finding a user is bad - reject --> catch block
-            return user ? Promise.reject('Username already taken.') : undefined;
+            if (user && user.username === req.body.username) {
+                return Promise.reject('Username already taken.');
+            } else if (user && user.email === req.body.email) {
+                return Promise.reject('Email already registered.');
+            } else {
+                return undefined;
+            }
+
         })
         .then( () => {
 
@@ -245,7 +258,7 @@ function login(req, res, next) {
                 .json(info);
 
         } else {
-            
+
             // exclude sensitive info from field selection
             const proj  = { hash : 0, salt : 0, signupKey : 0 };
 
@@ -253,7 +266,7 @@ function login(req, res, next) {
             User.findById(user._id, proj)
                 .exec()
                 .then( (profile) => {
-                
+
                     // generate a token
                     const token = profile.generateJWT();
 
@@ -315,8 +328,9 @@ function sendReset(req, res) {
 
                 // build email parameter map
                 const emailParams = {
-                    key      : user.passwordResetKey.key,
-                    to_email : user.email
+                    key         : user.passwordResetKey.key,
+                    to_email    : user.email,
+                    recUserId   : user._id
                 };
 
                 // send validation email, passing email param map

@@ -56,8 +56,9 @@
   }
   &__subhead {
     font-family: 'Alegreya Sans SC', sans-serif;
+    text-transform: lowercase;
     text-shadow: 0 0 20px rgba(0, 0, 0, 0.63);
-    font-weight: 100;
+    font-weight: 300;
     font-size: 5vw;
     letter-spacing: 2px;
     margin: -3vw auto;
@@ -66,7 +67,8 @@
     }
     @include for-desktop-up {
       margin: -55px auto;
-      font-size: 75px;
+      font-size: 62px;
+      font-weight: 100;
     }
   }
   &__button-wrap {
@@ -99,21 +101,24 @@
     font-size: 16px;
     text-decoration: none;
     margin-right: 3vw;
-    font-weight: 100;
+    font-weight: 400;
     border-radius: 50px;
     padding: 10px;
     border: 1px solid white;
-    background: transparent;
+    background: $color_aqua;
+    background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
+    background: linear-gradient(to top, $color_aqua, $color_sky);
 
     @include for-tablet-portrait-up {
-      padding: 20px;
-      border: 2px solid white;
+      padding: 12px 20px;
       font-size: 20px;
     }
 
     &:hover, &:active, &:focus, &-done {
       text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
-      background: rgba(255, 255, 255, 0.2);
+      background: $color_aqua;
+      background: -webkit-linear-gradient(to top, $color_aqua_lighter, $color_sky_lighter);
+      background: linear-gradient(to top, $color_aqua_lighter, $color_sky_lighter);
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
       transition: all 300ms ease-in-out;
     }
@@ -136,7 +141,7 @@
     width: 150%;
     height: auto;
     margin: auto;
-    font-weight: 100;
+    font-weight: 300;
     &--spaced {
       letter-spacing: 2.5px;
     }
@@ -146,6 +151,7 @@
     }
     @include for-tablet-landscape-up {
       font-size: 2em;
+      font-weight: 100;
       width: 80%;
     }
     @include for-desktop-up {

@@ -6,17 +6,23 @@ import { connect } from 'react-redux';
 import Spinner from './Spinner';
 import * as apiActions from '../store/actions/apiLoginActions';
 import { setRedirectUrl } from '../store/actions';
+import { setFilter, runFilter } from '../store/actions/gridControlActions';
 
 class Home extends React.Component {
 
   componentDidMount() {
     // Check for hash-fragment and stash it in redux
-    // if the redirect is "resetpassword" then go immediately
+    // if the redirect is "resetpassword" or "/validate" then go immediately
     if (this.props.location.hash) {
       const hash = this.props.location.hash.slice(2);
       const url = `/${hash.split('=')[1]}`;
       if (url.startsWith('/resetpassword')) {
-        this.props.history.push(url)
+        this.props.history.push(url);
+        return;
+      } else if (url.startsWith('/validate')) {
+        // do this in case validate forces login
+        this.props.actions.setRedirectUrl(url);
+        this.props.history.push(url);
       } else {
         this.props.actions.setRedirectUrl(url);
       }
@@ -33,11 +39,13 @@ class Home extends React.Component {
           .then((result) => {
             if (result.type === 'VALIDATE_TOKEN_SUCCESS') {
               if (this.props.appState.redirectUrl) {
-                this.props.history.push(this.props.appState.redirectUrl)
+                this.props.history.push(this.props.appState.redirectUrl);
                 this.props.actions.setRedirectUrl('');
               }
             }
           })
+      } else if (this.props.location.hash) {
+        this.props.history.push('/login');
       }
     }
   }
@@ -47,7 +55,18 @@ class Home extends React.Component {
     if (this.props.appState.loggedIn) {
       links = (
         <div className="splash__button-wrap">
-          <Link to="/about"className="splash__button">Find a Mentor</Link>
+          <button
+            className="splash__button"
+            onClick={
+              () => {
+                this.props.actions.setFilter('role', 'Mentor');
+                this.props.actions.runFilter();
+                this.props.history.push('/posts');
+              }
+            }
+          >
+            Find a Mentor
+          </button>
           <Link to="/mentorpath" className="splash__button">Be a Mentor</Link>
         </div>
       );
@@ -62,7 +81,6 @@ class Home extends React.Component {
 
     return (
       <div className="splash">
-        <Spinner cssClass={this.props.appState.loginSpinnerClass}/>
         <div className="splash__image" />
         <div className="splash__wrapper">
           <div className="splash__text-wrap">
@@ -80,6 +98,7 @@ class Home extends React.Component {
               </p>
           <div className="splash__bracket--r" />
         </div>
+        <Spinner cssClass={this.props.appState.loginSpinnerClass}/>
       </div>
     );
   }
@@ -91,7 +110,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   api: bindActionCreators(apiActions, dispatch),
-  actions: bindActionCreators({ setRedirectUrl }, dispatch),
+  actions: bindActionCreators({
+    setRedirectUrl,
+    setFilter,
+    runFilter,
+  }, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

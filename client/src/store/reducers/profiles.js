@@ -1,5 +1,5 @@
 import update from 'immutability-helper';
-import { SET_EDIT_PROFILE, SET_FORM_FIELD, ADD_LANGUAGE, ADD_SKILL, REMOVE_LANGUAGE,
+import { SET_EDIT_PROFILE, SET_PROFILE_FORM_FIELD, ADD_LANGUAGE, ADD_SKILL, REMOVE_LANGUAGE,
   REMOVE_SKILL, DISMISS_VIEWPROFILE_MODAL, SET_PROFILE_MODAL_CLASS, SET_PROFILE_MODAL_TEXT,
   SET_UPD_PROFILE_MODAL } from '../actions/profileActions';
 import { GET_PROFILE_REQUEST, GET_PROFILE_SUCCESS, GET_PROFILE_FAILURE,
@@ -10,30 +10,9 @@ import { GET_PROFILE_REQUEST, GET_PROFILE_SUCCESS, GET_PROFILE_FAILURE,
 import { VALIDATE_TOKEN_SUCCESS, LOGIN_SUCCESS, REGISTRATION_SUCCESS } from '../actions/apiLoginActions';
 import { LIKE_POST_SUCCESS, UNLIKE_POST_SUCCESS } from '../actions/apiPostActions';
 
-const defaultForm = {
-  skill: '',
-  language: '',
-  skills: [],
-  gender: '',
-  languages: [],
-  time_zone: 'Choose your time zone',
-  name: '',
-  location: '',
-  about: '',
-  ghUserName: '',
-  avatarUrl: '',
-  twitter: '',
-  facebook: '',
-  link: '',
-  linkedin: '',
-  codepen: '',
-  hideErr: 'form__hidden',
-  errMsg: '',
-  update: false,
-};
-
 const INITIAL_STATE = {
   currentProfile: {
+    email: '',
     skill: '',
     language: '',
     skills: [],
@@ -41,7 +20,7 @@ const INITIAL_STATE = {
     languages: [],
     time_zone: 'Choose your time zone',
     name: '',
-    ghUserName: '',
+    github: '',
     avatarUrl: '',
     location: '',
     about: '',
@@ -50,6 +29,9 @@ const INITIAL_STATE = {
     link: '',
     linkedin: '',
     codepen: '',
+    contactMeta: {
+      unSubbed: false,
+    },
   },
   userProfile: {},
   profileSpinnerClass: 'spinner__hide',
@@ -60,7 +42,31 @@ const INITIAL_STATE = {
   getSuccess: null,
   getGHError: null,
   getGHSuccess: null,
-  editForm: defaultForm,
+  editForm: {
+    skill: '',
+    language: '',
+    skills: [],
+    gender: '',
+    languages: [],
+    time_zone: 'Choose your time zone',
+    name: '',
+    email: '',
+    location: '',
+    about: '',
+    avatarUrl: '',
+    github: '',
+    twitter: '',
+    facebook: '',
+    link: '',
+    linkedin: '',
+    codepen: '',
+    contactMeta: {
+      unSubbed: false,
+    },
+    hideErr: 'form__hidden',
+    errMsg: '',
+    update: false,
+  },
   addingProfile: false,
   addError: null,
   savingProfile: false,
@@ -76,9 +82,10 @@ const INITIAL_STATE = {
 
 function profiles(state = INITIAL_STATE, action) {
   let error;
-  let name;
-  let avatar_url;
-  let time_zone;
+  let unSubbed = false;
+  if (action.payload && action.payload.contactMeta) {
+    unSubbed = action.payload.contactMeta.unSubbed;
+  }
   switch (action.type) {
 
     /*
@@ -145,15 +152,19 @@ function profiles(state = INITIAL_STATE, action) {
             languages: { $set: action.payload.languages || [] },
             time_zone: { $set: action.payload.time_zone || 'Choose your time zone' },
             name: { $set: action.payload.name || '' },
+            email: { $set: action.payload.email || '' },
             location: { $set: action.payload.location || '' },
             about: { $set: action.payload.about || '' },
-            ghUserName: { $set: action.payload.ghUserName || '' },
+            github: { $set: action.payload.github || '' },
             avatarUrl: { $set: action.payload.avatarUrl || '' },
             twitter: { $set: action.payload.twitter || '' },
             facebook: { $set: action.payload.facebook || '' },
             link: { $set: action.payload.link || '' },
             linkedin: { $set: action.payload.linkedin || '' },
             codepen: { $set: action.payload.codepen || '' },
+            contactMeta: {
+              unSubbed: { $set: unSubbed },
+            },
             hideErr: { $set: 'form__hidden' },
             errMsg: { $set: '' },
             update: { $set: true },
@@ -165,9 +176,15 @@ function profiles(state = INITIAL_STATE, action) {
     * Called from: <Profile />
     * Payload: Form Field and Value
     * Purpose: Update the connected form field.
+    * Note modification to use $merge to handle nested contactMeta field
     */
-    case SET_FORM_FIELD:
+    case SET_PROFILE_FORM_FIELD:
+      if (typeof action.value === 'object') {
+        return update(state, { editForm: { [action.field]: { $merge: action.value } } });
+      }
+
       return update(state, { editForm: { [action.field]: { $set: action.value } } });
+
 
     /*
     * Called from: <Profile />
@@ -244,7 +261,31 @@ function profiles(state = INITIAL_STATE, action) {
         {
           getSuccess: { $set: true },
           currentProfile: { $set: action.payload },
-          editForm: { $set: action.payload },
+          editForm: {
+            skill: { $set: '' },
+            language: { $set: '' },
+            skills: { $set: action.payload.skills || [] },
+            gender: { $set: action.payload.gender || '' },
+            languages: { $set: action.payload.languages || [] },
+            time_zone: { $set: action.payload.time_zone || 'Choose your time zone' },
+            name: { $set: action.payload.name || '' },
+            email: { $set: action.payload.email || '' },
+            location: { $set: action.payload.location || '' },
+            about: { $set: action.payload.about || '' },
+            github: { $set: action.payload.github || '' },
+            avatarUrl: { $set: action.payload.avatarUrl || '' },
+            twitter: { $set: action.payload.twitter || '' },
+            facebook: { $set: action.payload.facebook || '' },
+            link: { $set: action.payload.link || '' },
+            linkedin: { $set: action.payload.linkedin || '' },
+            codepen: { $set: action.payload.codepen || '' },
+            contactMeta: {
+              unSubbed: { $set: unSubbed },
+            },
+            hideErr: { $set: 'form__hidden' },
+            errMsg: { $set: '' },
+            update: { $set: true },
+          },
           profileSpinnerClass: { $set: 'spinner__hide' },
         },
       );
@@ -255,7 +296,7 @@ function profiles(state = INITIAL_STATE, action) {
     * Purpose: Populate the ViewProfile modal with an error message
     */
     case GET_PROFILE_FAILURE:
-      error = action.payload.response.message || 'An error occurred while getting the profile';
+      error = 'An error occurred while getting the profile';
       return Object.assign(
         {},
         state,
@@ -294,7 +335,31 @@ function profiles(state = INITIAL_STATE, action) {
         {
           savingProfile: { $set: false },
           saveError: { $set: null },
-          editForm: { $set: action.payload.user },
+          editForm: {
+            skill: { $set: '' },
+            language: { $set: '' },
+            skills: { $set: action.payload.user.skills || [] },
+            gender: { $set: action.payload.user.gender || '' },
+            languages: { $set: action.payload.user.languages || [] },
+            time_zone: { $set: action.payload.user.time_zone || 'Choose your time zone' },
+            name: { $set: action.payload.user.name || '' },
+            email: { $set: action.payload.user.email || '' },
+            location: { $set: action.payload.user.location || '' },
+            about: { $set: action.payload.user.about || '' },
+            github: { $set: action.payload.user.github || '' },
+            avatarUrl: { $set: action.payload.user.avatarUrl || '' },
+            twitter: { $set: action.payload.user.twitter || '' },
+            facebook: { $set: action.payload.user.facebook || '' },
+            link: { $set: action.payload.user.link || '' },
+            linkedin: { $set: action.payload.user.linkedin || '' },
+            codepen: { $set: action.payload.user.codepen || '' },
+            contactMeta: {
+              unSubbed: { $set: unSubbed },
+            },
+            hideErr: { $set: 'form__hidden' },
+            errMsg: { $set: '' },
+            update: { $set: true },
+          },
           currentProfile: { $set: action.payload.user },
           userProfile: { $set: action.payload.user },
         },
@@ -306,8 +371,7 @@ function profiles(state = INITIAL_STATE, action) {
     * Purpose: Display an error message to the user.
     */
     case MODIFY_PROFILE_FAILURE:
-    console.log(action);
-      error = action.payload.response.message || 'An unknown error occurred while modifying profile';
+      error = 'An unknown error occurred while updating profile';
       return Object.assign(
         {},
         state,
@@ -364,7 +428,7 @@ function profiles(state = INITIAL_STATE, action) {
     * Purpose: Display an error message to the user.
     */
     case GITHUB_PROFILE_FAILURE:
-      error = action.payload.data || 'An unknown error occurred while getting Github Profile';
+      error = 'An unknown error occurred while getting Github Profile';
       return Object.assign(
         {},
         state,
@@ -396,7 +460,7 @@ function profiles(state = INITIAL_STATE, action) {
       );
 
     case RESEND_ACCT_VALIDATION_FAILURE:
-      error = action.payload.response.message || 'An unknown error occurred while sending message';
+      error = 'An unknown error occurred while sending message';
       return Object.assign(
         {},
         state,

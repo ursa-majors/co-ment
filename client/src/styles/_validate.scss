@@ -1,21 +1,38 @@
 .validate {
   display: flex;
   flex-direction: column;
-  font-family: 'Alegreya Sans SC', sans-serif;
+  background: url(./img/splash_pfl.svg) no-repeat top center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  min-height: 100vh;
+  height: 100%;
+  padding: 60px 0;
 
   h2 {
     margin: 25px auto;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    font-weight: 300;
+    text-transform: lowercase;
+    letter-spacing: 2px;
   }
   &__quote-wrap {
-    color: white;
+    color: $color_gray_text;
     align-self: center;
-    min-width: 275px;
-    margin: 0 10px;
+    min-width: 15em;
+    margin: 20px 10px;
     white-space: pre;
+    padding: 20px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.7);
   }
 
   &__quote {
     font-size: 14px;
+    font-family: 'Alegreya Sans', sans-serif;
+    font-weight: 300;
+    padding: 0 20px 0 0;
 
     @include for-phone-portrait-up {
       font-size: 16px;
@@ -24,27 +41,73 @@
 
   &__quote-author {
     text-align: right;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    font-weight: 300;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    padding-top: 8px;
+
+    & a {
+      color: $color_sky;
+      text-decoration: none;
+      border-bottom: 1px dotted $color_sky;
+
+      &:hover {
+        color: $color_aqua;
+        border-bottom: 1px dotted $color_aqua;
+        transition: all 300ms ease-in-out;
+      }
+    }
+
   }
 
   &__text-header {
     text-align: center;
     color: white;
     margin: 15px 40px;
-    font-size: 20px;
+    font-size: 36px;
+    font-family: 'Alegreya Sans', sans-serif;
+    font-weight: 300;
 
     @include for-phone-portrait-up {
       margin: 40px;
     }
   }
   &__text {
-    color: white;
-    line-height: 1.5em;
-    margin: 0 30px;
-    font-size: 14px;
+    color: $color_gray_text;
+    font-family: 'Alegreya Sans', sans-serif;
+    font-weight: 300;
+    align-self: center;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.7);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+
+    & a {
+      color: $color_sky;
+      text-decoration: none;
+      border-bottom: 1px dotted $color_sky;
+
+      &:hover {
+        color: $color_aqua;
+        border-bottom: 1px dotted $color_aqua;
+        transition: all 300ms ease-in-out;
+      }
+    }
+
+    & p {
+      margin-bottom: .8em;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
 
     @include for-phone-portrait-up {
-      margin: 0 40px;
-      font-size: 16px;
+          font-size: 1.2em;
     }
   }
 }

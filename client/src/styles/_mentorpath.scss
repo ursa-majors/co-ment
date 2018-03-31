@@ -1,79 +1,95 @@
-.mentor {
-  color: #FFFFFF;
-  text-align: center;
-  font-family: 'Alegreya Sans', sans-serif;
-  background: $color_purple_sky;
-  background: -webkit-linear-gradient(to top, $color_purple_sky, $color_purple_sky_dark);
-  background: linear-gradient(to top, $color_purple_sky, $color_purple_sky_dark);
+  .mentor {
+    color: #FFFFFF;
+    text-align: center;
+    font-family: 'Alegreya Sans', sans-serif;
+    background: $color_purple_sky;
+    background: -webkit-linear-gradient(to top, $color_purple_sky, $color_purple_sky_dark);
+    background: linear-gradient(to top, $color_purple_sky, $color_purple_sky_dark);
 
-  &__mentor-path {
+    &__mentor-path {
+      width: 100%;
+      position: absolute;
+      top: 35%;
+    }
+
+
+  &__button-wrap {
     width: 100%;
-    position: absolute;
-    top: 35%;
+    margin: 10vh auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    &--2 {
+      padding: 5vh auto;
+      margin-top: 5vh;
+      height: 10vh;
+    }
+    @include for-phone-landscape-up {
+      flex-direction: row;
+    }
+    @include for-tablet-portrait-up{
+      flex-wrap: nowrap;
+    }
+
+    @include for-desktop-up {
+      top: 72%;
+    }
+    @include for-big-desktop-up {
+      top: 65%;
+    }
+  }
+  &__button {
+    width: 33%;
+    color: white;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    text-decoration: none;
+    font-weight: 100;
+    border-radius: 50px;
+    border: 1px solid white;
+    background: transparent;
+
+    padding: 5px;
+    margin: 12px;
+    font-size: 13px;
+
+    @include for-phone-landscape-up {
+      width: auto;
+      font-size: 16px;
+      margin-right: 3vw;
+      padding: 10px;
+    }
+    @include for-tablet-portrait-up {
+      padding: 20px;
+      font-size: 20px;
+    }
+
+    &:hover, &:active, &:focus, &-done {
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+      transition: all 300ms ease-in-out;
+    }
   }
 
+  &-starting {
+      -webkit-animation: pls 1s linear 1s infinite alternate;
+      animation: pls 1s linear 1s infinite alternate;
+   }
 
-&__button-wrap {
-  width: 100%;
-  margin: 10vh auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  &--2 {
-    padding: 5vh auto;
-    margin-top: 5vh;
-    height: 10vh;
-  }
-  @include for-phone-landscape-up {
-    flex-direction: row;
-  }
-  @include for-tablet-portrait-up{
-    flex-wrap: nowrap;
-  }
+   @-webkit-keyframes pls {
+    0%   { color: rgba(255,255,255,1);}
+    50%  { color: rgba(255,255,255,.66);}
+    100% { color: rgba(255,255,255,.33);}
+   }
 
-  @include for-desktop-up {
-    top: 72%;
-  }
-  @include for-big-desktop-up {
-    top: 65%;
-  }
-}
-&__button {
-  width: 33%;
-  color: white;
-  font-family: 'Alegreya Sans SC', sans-serif;
-  text-transform: lowercase;
-  letter-spacing: 2px;
-  text-decoration: none;
-  font-weight: 100;
-  border-radius: 50px;
-  border: 1px solid white;
-  background: transparent;
-
-  padding: 5px;
-  margin: 12px;
-  font-size: 13px;
-
-  @include for-phone-landscape-up {
-    width: auto;
-    font-size: 16px;
-    margin-right: 3vw;
-    padding: 10px;
-  }
-  @include for-tablet-portrait-up {
-    padding: 20px;
-    border: 2px solid white;
-    font-size: 20px;
-  }
-
-  &:hover, &:active, &:focus, &-done {
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
-    background: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-    transition: all 300ms ease-in-out;
-  }
-}
+   @keyframes pls {
+     0%   { color: rgba(255,255,255,1);}
+     50%  { color: rgba(255,255,255,.66);}
+     100% { color: rgba(255,255,255,.33);}
+   }
 
 }

@@ -8,7 +8,23 @@
   color: white;
   background: rgba(255,255,255,.3);
   border-radius: 4px;
-  margin-bottom: 20px;
+
+  &__preview {
+    width: 100%;
+    margin: 0 auto;
+    font-family: 'Alegreya Sans', sans-serif;
+    color: white;
+    border-radius: 4px;
+
+    @include for-tablet-portrait-up {
+        width: 80%;
+        padding: 10px 10px 20px 10px;
+      }
+
+    @include for-desktop-up {
+      width: 60%;
+    }
+  }
 
   &__avatars {
     display: flex;
@@ -26,7 +42,7 @@
     text-transform: lowercase;
     letter-spacing: 2px;
     font-size: 1.2em;
-    font-weight: 100;
+    font-weight: 300;
     color: white;
     padding-top: 20px;
     border-top: 1px white dotted;
@@ -34,24 +50,46 @@
     text-align: center;
   }
 
-  &__image {
+   &__image-wrap {
+      width: 100%;
+      padding: 10px;
+      flex-basis: 40%;
+      text-align: center;
+      }
+
+  &__image-aspect{
+    width: 100%;
+    padding-bottom: 100%;
+    position: relative;
+    @include profile-card-breakpoint {
+      width: 50%;
+      padding-bottom: 50%;
+      margin: 0 auto;
+      }
+  }
+
+  &__image-crop {
+    width: 100%;
     border-radius: 100%;
-    width: 130px;
-    max-width: 100%;
     height: auto;
-    border: 1px solid rgba(255,255,255,.5);
-  }
-
-  &__icon {
-    height: 100%;
-    width: auto;
-    color: rgba(255,255,255,.4);
-  }
-
-  &__image-wrap {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 2px solid rgba(255,255,255,.9);
+    overflow: hidden;
     text-align: center;
-    width: 50%;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__image {
+    min-width: 100%;
+    min-height: 100%;
     height: auto;
+    margin: 0 auto;
+
   }
 
   &__text-wrap {
@@ -66,6 +104,82 @@
     padding: 10px;
   }
 
+  &__table {
+    background: rgba(255, 255, 255, 0.75);
+    margin: auto;
+    border-collapse: collapse;
+    @include for-phone-landscape-up {
+      border-radius: 10px;
+    }
+  }
+
+  &__thead{
+    border-bottom: 1px dotted $color_gray_darker;
+  }
+
+  &__tr {
+    border-bottom: 1px dotted $color_gray_darker;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    &:last-child > .conn-details__td {
+      padding-bottom:20px;
+    }
+  }
+
+  &__th {
+    color: $color_gray_darker;
+    font-weight: 400;
+    font-size: 1.2em;
+    padding-top:10px;
+    width: 50%;
+
+    @include for-phone-landscape-up {
+      padding: 15px;
+      padding-top:20px;
+    &:first-child {
+        padding-left:30px;
+      }
+    &:last-child {
+        padding-right:30px;
+      }
+    }
+  }
+
+  &__td {
+    font-family: 'Alegreya Sans', sans-serif;
+    color: $color_gray_darker;
+    font-weight: 400;
+    padding: 15px;
+    border: none;
+    &:first-child {
+      @include for-phone-landscape-up {
+        padding-left:30px;
+      }
+      font-family: 'Alegreya Sans SC', sans-serif;
+      text-transform: lowercase;
+      letter-spacing: 2px;
+    }
+    &:last-child {
+      @include for-phone-landscape-up {
+        padding-right:30px;
+      }
+    }
+  }
+
+  &__link  , &__link:visited {
+    cursor: pointer;
+    text-decoration: none;
+    border-bottom: 1px dotted $color_gray_darker;
+
+    &:hover, &:active, &:focus {
+      color: $color_aqua;
+      border-bottom: 1px dotted $color_aqua;
+      }
+  }
+
   &__title {
     width: 100%;
     color: white;
@@ -76,7 +190,6 @@
     font-size: 30px;
     font-weight: 100;
     margin: -10px 0 10px 0;
-    border-bottom: 1px dotted rgba(255,255,255,.6);
     @include for-tablet-portrait-up {
       font-size: 45px;
     }
@@ -85,15 +198,16 @@
   &__header {
     flex: 0 0  auto;
     font-size: 1.6em;
+    font-family: 'Alegreya Sans SC', sans-serif;
+    text-transform: lowercase;
+    letter-spacing: 2px;
     font-weight: 400;
-    padding-left: 3px;
   }
 
   &__text {
     flex: 0 0 auto;
-    font-size: 1.6em;
-    font-weight: 100;
-    padding-left: 3px;
+    font-size: 16px;
+    font-weight: 300;
 
     @include for-tablet-landscape-up {
       font-size: 1.4em;
@@ -111,4 +225,40 @@
     font-size: 1.5em;
   }
 
+  &__btn-wrap {
+  margin: 20px auto 0 auto;
+  z-index: 5;
+  width: 100%;
+  font-weight: 300;
+  letter-spacing: 2px;
+  display: flex;
+  justify-content: center;
+  list-style: none;
+}
+  &__item {
+    margin: 0 10px;
+  }
+
+  &__item-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-family: 'Alegreya Sans SC', sans-serif !important;
+    text-transform: lowercase !important;
+    font-weight: 700 !important;
+    font-size: 16px;
+    text-decoration: none;
+    margin-bottom: 5px;
+    padding: 7px 12px;
+    letter-spacing: 2px !important;
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    background: $color_sky !important;
+
+    &:hover, &:focus {
+      background: $color_aqua !important;
+      color: rgba(255, 2555, 255, 1) !important;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.8) !important;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
+      transition: box-shadow 300ms ease-in-out !important;
+    }
+  }
 }

@@ -2,11 +2,12 @@ import { SET_REG_ERROR, DISMISS_REG_MODAL } from '../actions/regActions';
 import { REGISTRATION_REQUEST, REGISTRATION_SUCCESS, REGISTRATION_FAILURE } from '../actions/apiLoginActions';
 
 const regSuccessTxt =
-`Thank you for registering with Co/Ment! You will soon receive an email to validate your account.\n
+`Thank you for registering with Co/Ment! Check your inbox for an account validation email.\n
 Next Steps:
-Explore the site!
-Create a post to advertise as a Mentor or Mentee
-Connect with other users`;
+You must validate your email before using other features.
+Complete your profile.
+Create a post to advertise as a Mentor or Mentee.
+Connect with other users.`;
 
 const INITIAL_STATE = {
   registrationSpinnerClass: 'spinner__hide',

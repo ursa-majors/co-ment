@@ -1,26 +1,56 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import { refreshToken, resetValidateModal } from '../store/actions/apiLoginActions';
+import { refreshToken, resetValidateModal, validateToken } from '../store/actions/apiLoginActions';
+import { setLoginError, setRedirectUrl } from '../store/actions';
 import Spinner from './Spinner';
 import ModalSm from './ModalSm';
 
 class Validate extends React.Component {
 
-  componentWillMount() {
-    this.props.api.refreshToken(this.props.appState.authToken);
+  /*
+  * If already logged in, refresh the token, then display the success message
+  * If not logged in, try to validate the localStorage token
+  * If localStorage fails, force login with a specific message
+  */
+  componentDidMount() {
+    if (this.props.appState.loggedIn) {
+      this.props.api.refreshToken(this.props.appState.authToken);
+      this.props.actions.setRedirectUrl('');
+    } else {
+      let token = window.localStorage.getItem('authToken');
+      if (token && token !== 'undefined') {
+        token = JSON.parse(token);
+        const user = JSON.parse(window.localStorage.getItem('userId'));
+        // If we validate successfully, look for redirect_url and follow it
+        this.props.api.refreshToken(token, user)
+          .then((result) => {
+            if (result.type === 'REFRESH_TOKEN_SUCCESS') {
+              this.props.actions.setRedirectUrl('');
+            }
+            if (result.type === 'REFRESH_TOKEN_FAILURE') {
+              this.props.actions.setLoginError('You must log in to validate account');
+              this.props.history.push('/login');
+            }
+          });
+      } else {
+        this.props.actions.setLoginError('You must log in to validate account');
+        this.props.history.push('/login');
+      }
+    }
   }
 
   render() {
     let valStatus;
     if (this.props.login.tokenRefreshComplete === undefined) {
-      valStatus = 'Validating';
+      valStatus = 'Validating...';
     } else if (!this.props.login.tokenRefreshComplete) {
       valStatus = 'Validation Failed';
     } else {
-      valStatus = 'Validation Successful';
+      valStatus = 'Welcome!';
     }
     return (
       <div className="container validate">
@@ -37,7 +67,7 @@ class Validate extends React.Component {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Robert Frost
+              &mdash;Robert Frost
             </a>
           </div>
         </div>
@@ -50,12 +80,11 @@ class Validate extends React.Component {
               {`Congratulations ${this.props.profile.userProfile.username}!`}
             </div>
             <div className="validate__text">
-              {`You have validated your account and started your Co/Ment journey.
-              The next step is to decide your path.  Are you looking for an adviser,
-              or are you ready to be a guiding star?
-
-              Whichever path you choose, get started by updating your profile,
-              then head over to the Posts page.`}
+              <p>This is the beginning of your Co/Ment journey. Next step: Choose your path. <br />
+              Are you <Link to="/posts" >looking for an adviser</Link>, or are you ready to <Link to="/mentorpath">be a guiding star</Link>?</p>
+              <p>Get started by <Link to="/profile">building your profile</Link>, then <Link to="/posts">browse posts made by other users</Link>, <br />or create one yourself.</p>
+              <p>Or <Link to="/about">take a tour of the site</Link> <br />
+              and then blaze your own trail.</p>
             </div>
           </div>
         }
@@ -84,6 +113,7 @@ class Validate extends React.Component {
 Validate.propTypes = {
   appState: PropTypes.shape({
     authToken: PropTypes.string,
+    loggedIn: PropTypes.boolean,
   }).isRequired,
   profile: PropTypes.shape({
     userProfile: PropTypes.shape({
@@ -103,6 +133,11 @@ Validate.propTypes = {
   api: PropTypes.shape({
     refreshToken: PropTypes.func,
     resetValidateModal: PropTypes.func,
+    validateToken: PropTypes.func,
+  }).isRequired,
+  actions: PropTypes.shape({
+    setLoginError: PropTypes.func,
+    setRedirectUrl: PropTypes.func,
   }).isRequired,
 };
 
@@ -113,7 +148,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  api: bindActionCreators({ refreshToken, resetValidateModal }, dispatch),
+  actions: bindActionCreators({ setLoginError, setRedirectUrl }, dispatch),
+  api: bindActionCreators({ refreshToken, resetValidateModal, validateToken }, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Validate);

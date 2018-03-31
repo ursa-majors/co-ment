@@ -2,26 +2,27 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import Spinner from './Spinner';
 import ModalSm from './ModalSm';
+import { formatDate } from '../utils/';
 
 import * as apiActions from '../store/actions/apiConnectionActions';
 import * as Actions from '../store/actions/connectionActions';
+import { setEmailOptions } from '../store/actions/emailActions';
 
 
 class ConnectionDetails extends React.Component {
 
   // Find the connection matching the URL param and set it in redux state.
   componentDidMount() {
-
-
     if (!this.props.connection.connections) {
       this.setCurrentConnection(this.props.match.params.id);
     } else {
       // reload connections and find the matching param
       const token = this.props.appState.authToken;
-      const userId = this.props.appState.userId;
+      const userId = this.props.appState.user._id;
       this.props.api.getConnections(token, userId)
         .then((result) => {
           if (result.type === 'GET_ALL_CONNECTIONS_SUCCESS') {
@@ -29,8 +30,8 @@ class ConnectionDetails extends React.Component {
           }
         })
         .catch((error) => {
-          console.log('an error has occurred');
-        })
+          console.log(`An error has occurred: ${error}`);
+        });
     }
   }
 
@@ -49,39 +50,51 @@ class ConnectionDetails extends React.Component {
     let actions;
     switch (this.props.connection.viewConnection.status) {
       case 'pending':
-        actions = (this.props.connection.viewConnection.initiator.id !== this.props.profiles.userProfile._id) ?
-          (<ul className="post-nav">
-            <li className="post-nav__item" >
-              <span
-                className="post-nav__item-link pointer"
-                onClick={() =>
-                  this.props.api.updateConnectionStatus(
-                    this.props.appState.authToken,
-                    {
-                      id: this.props.connection.viewConnection._id,
-                      type: 'ACCEPT',
-                    },
-                  )
+        actions = (this.props.connection.viewConnection.initiator.id !==
+          this.props.profiles.userProfile._id) ?
+          (<ul className="conn-details__btn-wrap">
+            <li className="conn-details__item" >
+              <button
+                className="aria-button conn-details__item-link pointer"
+                onClick={
+                  () => {
+                    this.props.actions.setEmailOptions({
+                      recipient: this.props.connection.viewConnection.initiator,
+                      sender: this.props.profiles.userProfile,
+                      type: 'accept',
+                      subject: 'co/ment - Great News: Connection Accepted!',
+                      body: '',
+                      role: '',
+                      connectionId: this.props.connection.viewConnection._id,
+                      conversationId: this.props.connection.viewConnection.conversationId,
+                    });
+                    this.props.history.push('/connectemail');
+                  }
                 }
               >
                 Accept
-              </span>
+              </button>
             </li>
-            <li className="post-nav__item" >
-              <span
-                className="post-nav__item-link pointer"
-                onClick={() =>
-                  this.props.api.updateConnectionStatus(
-                    this.props.appState.authToken,
-                    {
-                      id: this.props.connection.viewConnection._id,
-                      type: 'DECLINE',
-                    },
-                  )
+            <li className="conn-details__item" >
+              <button
+                className="aria-button conn-details__item-link pointer"
+                onClick={
+                  () => {
+                    this.props.actions.setEmailOptions({
+                      recipient: this.props.connection.viewConnection.initiator,
+                      sender: this.props.profiles.userProfile,
+                      type: 'decline',
+                      subject: `co/ment - Connection request to ${this.props.profiles.userProfile.username} declined`,
+                      body: '',
+                      role: '',
+                      connectionId: this.props.connection.viewConnection._id,
+                    });
+                    this.props.history.push('/connectemail');
+                  }
                 }
               >
                 Decline
-              </span>
+              </button>
             </li>
           </ul>
         ) :
@@ -89,22 +102,30 @@ class ConnectionDetails extends React.Component {
         break;
       case 'accepted':
         actions = (
-          <ul className="post-nav">
-            <li className="post-nav__item" >
-              <span
-                className="post-nav__item-link pointer"
-                onClick={() =>
-                  this.props.api.updateConnectionStatus(
-                    this.props.appState.authToken,
-                    {
-                      id: this.props.connection.viewConnection._id,
-                      type: 'EXPIRE',
-                    },
-                  )
+          <ul className="conn-details__btn-wrap">
+            <li className="conn-details__item" >
+              <button
+                className="aria-button conn-details__item-link pointer"
+                onClick={
+                  () => {
+                    this.props.actions.setEmailOptions({
+                      recipient: this.props.connection.viewConnection.mentor.id
+                       === this.props.profiles.userProfile._id ?
+                       this.props.connection.viewConnection.mentee :
+                       this.props.connection.viewConnection.mentor,
+                      sender: this.props.profiles.userProfile,
+                      type: 'deactivate',
+                      subject: 'co/ment - Your mentoring connection has ended',
+                      body: '',
+                      role: '',
+                      connectionId: this.props.connection.viewConnection._id,
+                    });
+                    this.props.history.push('/connectemail');
+                  }
                 }
               >
-                Finish
-              </span>
+                End Connection
+              </button>
             </li>
           </ul>
         );
@@ -118,9 +139,106 @@ class ConnectionDetails extends React.Component {
   }
 
   render() {
-    const conn = this.props.connection.viewConnection;
+    let mentorAvatar;
+    let menteeAvatar;
+    if (this.props.connection.viewConnection) {
+      if (!this.props.connection.viewConnection.mentor.avatar) {
+        mentorAvatar = 'https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/android-chrome-384x384.png';
+      } else {
+        mentorAvatar = this.props.connection.viewConnection.mentor.avatar;
+      }
+      if (!this.props.connection.viewConnection.mentee.avatar) {
+        menteeAvatar = 'https://raw.githubusercontent.com/ursa-majors/co-ment/master/design/android-chrome-384x384.png';
+      } else {
+        menteeAvatar = this.props.connection.viewConnection.mentee.avatar;
+      }
+    }
+    const backgroundStyleMentor = {
+      backgroundImage: `url(${mentorAvatar})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center center',
+    };
+    const backgroundStyleMentee = {
+      backgroundImage: `url(${menteeAvatar})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center center',
+    };
+
     return (
       <div className="container conn-details">
+        <div className="conn-details__preview">
+          <div className="conn-details__text-wrap">
+            <div className="conn-details__title">
+              Connection Details
+            </div>
+          </div>
+          {this.props.connection.viewConnection.mentor &&
+          <div>
+            <table className="conn-details__table">
+              <thead className="conn-details__thead">
+                <tr className="conn-details__tr">
+                  <th className="conn-details__th">
+                    <div className="conn-details__image-wrap">
+                      <div className="conn-details__header">Mentor</div>
+                      <div className="conn-details__image-aspect">
+                        <div className="conn-details__image-crop">
+                          <div
+                            className="conn-details__image"
+                            style={backgroundStyleMentor}
+                            role="img"
+                            aria-label={this.props.connection.viewConnection.mentor.name}
+                          />
+                        </div>
+                      </div>
+                      <div className="conn-details__text">{this.props.connection.viewConnection.mentor.name}</div>
+                    </div> {/* image-wrap */}
+                  </th>
+                  <th className="conn-details__th">
+                    <div className="conn-details__image-wrap">
+                      <div className="conn-details__header">Mentee</div>
+                      <div className="conn-details__image-aspect">
+                        <div className="conn-details__image-crop">
+                          <div
+                            className="conn-details__image"
+                            style={backgroundStyleMentee}
+                            role="img"
+                            aria-label={this.props.connection.viewConnection.mentee.name}
+                          />
+                        </div>
+                      </div>
+                      <div className="conn-details__text">{this.props.connection.viewConnection.mentee.name}</div>
+                    </div> {/* image-wrap */}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="conn-details__tbody">
+                <tr className="conn-details__tr">
+                  <td className="conn-details__td">Initiated By</td>
+                  <td className="conn-details__td">{this.props.connection.viewConnection.initiator.name}</td>
+                </tr>
+                <tr className="conn-details__tr">
+                  <td className="conn-details__td">Original Post</td>
+                  <td className="conn-details__td">
+                    <Link className="conn-details__link" to={`/viewpost/${this.props.connection.viewConnection.originalPost.id}`}>
+                      {this.props.connection.viewConnection.originalPost.title}
+                    </Link>
+                  </td>
+                </tr>
+                <tr className="conn-details__tr">
+                  <td className="conn-details__td">Status</td>
+                  <td className="conn-details__td">{this.props.connection.viewConnection.status}</td>
+                </tr>
+                <tr className="conn-details__tr">
+                  <td className="conn-details__td">Date Updated</td>
+                  <td className="conn-details__td">{formatDate(new Date(this.props.connection.viewConnection.dateStarted))}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div className="single-post__button-wrap">
+              { this.getActions() }
+            </div>
+          </div> }
+        </div>
         <Spinner cssClass={this.props.connection.connDetailsSpinnerClass} />
         <ModalSm
           modalClass={this.props.connection.connDetailsModal.class}
@@ -138,58 +256,88 @@ class ConnectionDetails extends React.Component {
             }
           }
         />
-        <div className="conn-preview">
-          <div className="conn-details__text-wrap">
-            <div className="conn-details__title">
-              Connection Details
-            </div>
-          </div>
-          <div className="conn-details__avatars">
-            <div className="conn-details__image-wrap">
-              <div  className="conn-details__header">Mentor</div>
-              {
-                this.props.connection.viewConnection.mentor.avatar ?
-                <img className="conn-details__image" src={this.props.connection.viewConnection.mentor.avatar} /> :
-                <i className="fa fa-user-circle fa-5x conn-details__default-avatar" aria-hidden="true" />
-              }
-              <div className="conn-details__text">{this.props.connection.viewConnection.mentor.name}</div>
-            </div>
-            <div className="conn-details__image-wrap">
-              <div className="conn-details__header">Mentee</div>
-                {
-                  this.props.connection.viewConnection.mentee.avatar ?
-                  <img className="conn-details__image" src={this.props.connection.viewConnection.mentee.avatar} /> :
-                  <i className="fa fa-user-circle fa-5x conn-details__default-avatar" aria-hidden="true" />
-                }
-              <div  className="conn-details__text">{this.props.connection.viewConnection.mentee.name}</div>
-            </div>
-          </div>
-          <div className="conn-details__header-wrap">
-            <div className="conn-details__header">Initiated By: </div>
-            <span className="conn-details__text">{this.props.connection.viewConnection.initiator.name} </span>
-          </div>
-          <div className="conn-details__header-wrap">
-            <div className="conn-details__header">Original Post:</div>
-            <Link className="conn-details__text" to={`/viewpost/${this.props.connection.viewConnection.originalPost.id}`}>
-              {this.props.connection.viewConnection.originalPost.title}
-            </Link>
-          </div>
-          <div className="conn-details__header-wrap">
-            <div className="conn-details__header">Status: </div>
-            <span className="conn-details__text">{this.props.connection.viewConnection.status}</span>
-          </div>
-          <div className="conn-details__header-wrap">
-            <div className="conn-details__header">Date Updated: </div>
-            <span className="conn-details__text">{this.props.connection.viewConnection.dateStarted}</span>
-          </div>
-          <div className="single-post__button-wrap">
-            { this.getActions() }
-          </div>
-        </div>
       </div>
     );
   }
 }
+
+ConnectionDetails.propTypes = {
+  appState: PropTypes.shape({
+    authToken: PropTypes.string,
+    user: PropTypes.shape({
+      _id: PropTypes.string,
+      validated: PropTypes.bool,
+    }).isRequired,
+    windowSize: PropTypes.shape({
+      mobile: PropTypes.bool,
+    }).isRequired,
+  }).isRequired,
+  connection: PropTypes.shape({
+    connDetailsSpinnerClass: PropTypes.string,
+    connDetailsModal: PropTypes.shape({
+      type: PropTypes.string,
+      title: PropTypes.string,
+      text: PropTypes.string,
+      class: PropTypes.string,
+    }),
+    viewConnection: PropTypes.shape({
+      dateStarted: PropTypes.string,
+      originalPost: PropTypes.shape({
+        id: PropTypes.string,
+        title: PropTypes.string,
+      }),
+      mentor: PropTypes.shape({
+        id: PropTypes.string,
+        avatar: PropTypes.string,
+        name: PropTypes.string,
+      }),
+      mentee: PropTypes.shape({
+        id: PropTypes.string,
+        avatar: PropTypes.string,
+        name: PropTypes.string,
+      }),
+      initiator: PropTypes.shape({
+        name: PropTypes.string,
+        id: PropTypes.string,
+      }),
+      status: PropTypes.string,
+      conversationId: PropTypes.string,
+      _id: PropTypes.string,
+    }),
+    connections: PropTypes.arrayOf(PropTypes.shape({
+      _id: PropTypes.string,
+    })),
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string,
+    }),
+  }),
+  profiles: PropTypes.shape({
+    userProfile: PropTypes.shape({
+      username: PropTypes.string,
+      name: PropTypes.string,
+      _id: PropTypes.string,
+      avatarUrl: PropTypes.string,
+    }).isRequired,
+  }).isRequired,
+  api: PropTypes.shape({
+    getConnections: PropTypes.func,
+  }).isRequired,
+  actions: PropTypes.shape({
+    clearViewConnection: PropTypes.func,
+    setViewConnection: PropTypes.func,
+    setEmailOptions: PropTypes.func,
+    setConnDetailsModal: PropTypes.func,
+  }).isRequired,
+};
+
+ConnectionDetails.defaultProps = {
+  match: null,
+};
 
 
 const mapStateToProps = state => ({
@@ -200,7 +348,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   api: bindActionCreators(apiActions, dispatch),
-  actions: bindActionCreators(Actions, dispatch),
+  actions: bindActionCreators({ ...Actions, setEmailOptions }, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConnectionDetails);

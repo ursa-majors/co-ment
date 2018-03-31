@@ -17,9 +17,8 @@ const Connection = require('../models/connection');
 //   Returns: array of connections on success
 //
 function getConnections(req, res) {
-    
     const target = req.token._id;
-    
+
     Connection.find({
         $or: [
             { "mentor.id": target },
@@ -50,12 +49,13 @@ function getConnections(req, res) {
 //   Secured: yes, valid JWT required
 //   Expects:
 //     1) request body properties : {
-//          mentor     : id
-//          mentee     : id
-//          mentorName : string
-//          menteeName : string
-//          initiator  : id
-//          status     : 'pending
+//          mentor          : id
+//          mentee          : id
+//          mentorName      : string
+//          menteeName      : string
+//          initiator       : id
+//          status          : 'pending'
+//          conversationID  : string
 //        }
 //   Returns: success message & connection _id on success
 //
@@ -115,9 +115,9 @@ function updateConnection(req, res) {
             };
             break;
 
-        case 'EXPIRE':
+        case 'DEACTIVATE':
             update = {
-                status: 'expired',
+                status: 'inactive',
                 dateExpired: Date.now()
             };
             break;

@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const SocMedia = (props) => (
+const SocMedia = props => (
   <div className="profile__pageTwo">
     <div className="profile__column-L">
       <div className="form__input-group">
@@ -78,5 +79,18 @@ const SocMedia = (props) => (
     </div>
   </div>
     );
+
+SocMedia.propTypes = {
+  handleInput: PropTypes.func.isRequired,
+  profiles: PropTypes.shape({
+    editForm: PropTypes.shape({
+      facebook: PropTypes.string,
+      twitter: PropTypes.string,
+      linkedin: PropTypes.string,
+      link: PropTypes.string,
+      codepen: PropTypes.string,
+    }),
+  }).isRequired,
+};
 
 export default SocMedia;

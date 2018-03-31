@@ -1,5 +1,19 @@
 .result {
   width: 80%;
   margin: 0 auto;
-  color: rgba(0,0,0,.75);
+  color: $color_gray_text;
+  background-color: rgba(255,255,255,.7);
+  padding: 20px 40px;
+  border-radius: 10px;
+  box-shadow: 0 10px 10px rgba(0,0,0,.4);
+  font-size: 1.2em;
+  line-height: 1.4em;
+
+  &__header {
+  	margin-bottom: 10px;
+  }
+
+  & li {
+  	margin-bottom: 10px;
+  }
 }

@@ -1,13 +1,44 @@
-import { LOGOUT, SET_REDIRECT_URL } from '../actions';
-import { VALIDATE_TOKEN_REQUEST, VALIDATE_TOKEN_SUCCESS, VALIDATE_TOKEN_FAILURE, LOGIN_SUCCESS,
-  REGISTRATION_SUCCESS, REFRESH_TOKEN_SUCCESS } from '../actions/apiLoginActions';
+import update from 'immutability-helper';
+
+import { LOGOUT, SET_REDIRECT_URL, SET_WINDOW_SIZE, SET_MENU_STATE,
+  SET_SCROLLED, SET_ADMIN_MENU_STATE,
+  SET_MENU_BACKGROUND, SET_CONTROLS_BACKGROUND } from '../actions';
+import { VALIDATE_TOKEN_REQUEST, VALIDATE_TOKEN_SUCCESS,
+  VALIDATE_TOKEN_FAILURE, LOGIN_SUCCESS, REFRESH_TOKEN_REQUEST,
+  REFRESH_TOKEN_SUCCESS, REFRESH_TOKEN_FAILURE,
+  REGISTRATION_SUCCESS, RESET_VALIDATE_MODAL } from '../actions/apiLoginActions';
 
 const INITIAL_STATE = {
   loggedIn: false,
-  authToken: {},
-  userId: '',
+  authToken: '',
+  // userId: '',
+  user: {
+    _id: '',
+    avatarUrl: '',
+    username: '',
+    validated: false,
+  },
   loginSpinnerClass: 'spinner__hide',
   redirectUrl: '',
+  windowSize: {
+    width: undefined,
+    height: undefined,
+    mobile: false,
+  },
+  adminMenuState: 'closed',
+  menuState: 'closed',
+  menuBackground: '',
+  controlsBackground: '',
+  windowScrolled: false,
+  scrollPosition: 0,
+  tokenRefreshComplete: undefined,
+  validateSpinnerClass: 'spinner__hide',
+  validateModal: {
+    class: 'modal__hide',
+    text: '',
+    title: '',
+    type: '',
+  },
 };
 
 /*
@@ -30,8 +61,15 @@ function appState(state = INITIAL_STATE, action) {
     case LOGOUT:
       window.localStorage.removeItem('authToken');
       window.localStorage.removeItem('userId');
-      return INITIAL_STATE;
-
+      return update(
+        state,
+        {
+          loggedIn: { $set: false },
+          windowSize: {
+            width: { $set: window.innerWidth },
+          },
+        },
+      );
     /*
     * This action is issued only from the <Home/> component.
     * On VALIDATE_TOKEN_REQUEST action, set the spinner class to show.
@@ -48,13 +86,20 @@ function appState(state = INITIAL_STATE, action) {
     * Save the userId and token in the redux store...set loggedIn to TRUE.
     */
     case VALIDATE_TOKEN_SUCCESS:
+    console.log('validate token success');
+    console.log(action.payload);
       return Object.assign(
         {},
         state,
         {
           loginSpinnerClass: 'spinner__hide',
           loggedIn: true,
-          userId: action.payload._id,
+          user: {
+            _id: action.payload._id,
+            avatarUrl: action.payload.avatarUrl,
+            username: action.payload.username,
+            validated: action.payload.validated,
+          },
           authToken: action.meta.token,
         },
        );
@@ -93,7 +138,13 @@ function appState(state = INITIAL_STATE, action) {
         {
           loginSpinnerClass: 'spinner__hide',
           loggedIn: true,
-          userId: action.payload.profile._id,
+          // userId: action.payload.profile._id,
+          user: {
+            _id: action.payload.profile._id,
+            avatarUrl: action.payload.profile.avatarUrl,
+            username: action.payload.profile.username,
+            validated: action.payload.profile.validated,
+          },
           authToken: action.payload.token,
         },
        );
@@ -111,7 +162,11 @@ function appState(state = INITIAL_STATE, action) {
         state,
         {
           loggedIn: true,
-          userId: action.payload.profile._id,
+          user: {
+            _id: action.payload.profile._id,
+            avatarUrl: action.payload.profile.avatarUrl || '',
+            username: action.payload.profile.username,
+          },
           authToken: action.payload.token,
         },
        );
@@ -127,9 +182,111 @@ function appState(state = INITIAL_STATE, action) {
       return Object.assign({}, state, { redirectUrl: action.payload });
 
 
+    /*
+    * This action is issued from <App/> component.
+    * When the client window is resized, this action will be dispatched.
+    * The action payload contains the window width, and a boolean to
+    * determine mobile status: windowWidth < 480 = true
+    */
+    case SET_WINDOW_SIZE:
+      return Object.assign({}, state, { windowSize: action.payload });
+
+    /*
+    * This action is issued from <HeaderNav/> component.
+    * Toggles the mobile menu between open/closed states
+    */
+    case SET_MENU_STATE:
+      return Object.assign({}, state, { menuState: action.payload });
+
+    /*
+    * This action is issued from <HeaderNav/> component.
+    * Toggles the admin menu between open/closed states
+    */
+    case SET_ADMIN_MENU_STATE:
+      return Object.assign({}, state, { adminMenuState: action.payload });
+
+    /*
+    * This action is issued from <HeaderNav/> and <App/> components.
+    * Sets the background CSS on the menu.  If it is scrolled, the background must be set
+    * If it is mobile and open, the background must be set
+    * If it's not scrolled and the background is set, it must be cleared.
+    */
+    case SET_MENU_BACKGROUND:
+      if (state.windowScrolled && state.menuBackground === '') {
+        return Object.assign({}, state, { menuBackground: 'h-nav__side-bkg-noscroll' });
+      } else if (state.windowSize.width < 650 && state.menuState === 'open') {
+        return Object.assign({}, state, { menuBackground: 'h-nav__side-bkg-noscroll' });
+      } else if (!state.windowScrolled && state.menuBackground) {
+        return Object.assign({}, state, { menuBackground: '' });
+      }
+      return state;
+
+    /*
+    * This action is issued from <PostGridControls/> and <App/> components.
+    * Sets the background CSS on the grid controls.  If it is scrolled, the background must be set
+    * If it's not scrolled and the background is set, it must be cleared.
+    */
+    case SET_CONTROLS_BACKGROUND:
+      if (state.windowScrolled && state.controlsBackground === '') {
+        return Object.assign({}, state, { controlsBackground: 'posts-grid__controls--bkg-noscroll' });
+      } else if (!state.windowScrolled && state.controlsBackground) {
+        return Object.assign({}, state, { controlsBackground: '' });
+      }
+      return state;
+
+    /* Called from <App/> component
+    * Used to set a boolean to indicate whether the screen is scrolled
+    * This value is used by the Nav menu to properly set the background
+    */
+    case SET_SCROLLED:
+      return Object.assign({}, state, {
+        windowScrolled: action.payload.windowScrolled,
+        scrollPosition: action.payload.scrollPosition,
+      });
+
+    case REFRESH_TOKEN_REQUEST:
+      return Object.assign(
+        {},
+        state,
+        {
+          validateSpinnerClass: 'spinner__show',
+          tokenRefreshComplete: undefined,
+        },
+      );
+
     case REFRESH_TOKEN_SUCCESS:
+      console.log(action.payload);
       window.localStorage.setItem('authToken', JSON.stringify(action.payload.token));
-      return Object.assign({}, state, { authToken: action.payload.token });
+      return update(
+        state,
+        {
+          validateSpinnerClass: { $set: 'spinner__hide' },
+          tokenRefreshComplete: { $set: true },
+          authToken: { $set: action.payload.token },
+          user: {
+            validated: { $set: true },
+          },
+        },
+      );
+
+    case REFRESH_TOKEN_FAILURE:
+      return Object.assign(
+        {},
+        state,
+        {
+          validateSpinnerClass: 'spinner__hide',
+          tokenRefreshComplete: false,
+          validateModal: {
+            type: 'modal__error',
+            text: 'An unknown error occurred while refreshing token',
+            title: 'ERROR',
+            class: 'modal__show',
+          },
+        },
+      );
+
+    case RESET_VALIDATE_MODAL:
+      return Object.assign({}, state, { validateModal: action.payload });
 
     default:
       return state;

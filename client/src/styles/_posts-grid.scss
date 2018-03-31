@@ -3,6 +3,14 @@
   overflow: hidden;
 }
 
+.posts {
+  padding-top: 80px;
+  height: 100vh;
+  background: $color_aqua;
+  background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
+  background: linear-gradient(to top, $color_aqua, $color_sky);
+}
+
 .posts-grid {
 	background: url(./img/splash_pfl.svg) no-repeat top center fixed;
   -webkit-background-size: cover;
@@ -11,7 +19,27 @@
   background-size: cover;
   min-height: 100vh;
   height: 100%;
-  padding: 60px 20px;
+  padding: 60px 0;
+
+  &__controls {
+
+  }
+
+  &__controls--bkg {
+    position: fixed;
+    width: 100vw;
+    z-index: 1000;
+  }
+
+  &__controls--bkg-noscroll {
+    background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
+    background: linear-gradient(to top, $color_aqua, $color_sky);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  }
+
+  @include profile-card-breakpoint {
+    padding: 60px 20px;
+  }
 
   &__wrap {
 
@@ -22,6 +50,27 @@
   }
   }
 
+  &__filters-applied {
+    padding: 10px 25px;
+    font-family: 'Alegreya Sans', sans-serif;
+    font-weight: 200;
+    letter-spacing: 1px;
+    font-size: 20px;
+    color: white;
+
+  }
+
+  &__filter-item {
+    text-transform: capitalize;
+    padding: 0 8px;
+    border-right: 1px solid white;
+
+    &:last-child {
+      border-right: none;
+    }
+
+  }
+
   &__cont {
   	overflow: hidden;
   }
@@ -29,6 +78,11 @@
     &__button-wrap {
     width: 100%;
     padding-right: 10px;
+    margin-top: 7px;
+    @include for-tablet-portrait-up {
+      margin-top: 0;
+    }
+
   }
 
   &__button {
@@ -37,15 +91,20 @@
     font-size: 20px;
     line-height: .5em;
     text-decoration: none;
-    font-weight: 100;
+    font-weight: 300;
     border-radius: 30px;
     border: 1px solid white;
     background: transparent;
-    margin-top: 4px;
 
     @include for-tablet-portrait-up {
-      margin-top: 0;
+      margin-top: 8px;
     }
+
+     @include for-tablet-landscape-up {
+    margin-top: 4px;
+    }
+
+
 
     &:hover, &:active, &:focus, &-done {
       text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
@@ -63,9 +122,14 @@
       font-family: 'Alegreya Sans SC', sans-serif;
       text-transform: lowercase;
       letter-spacing: 2px;
-      font-size: 15px;
-      line-height: 1.3em;
+      font-size: 13px;
+      line-height: 1.1em;
+      padding: 7px 8px 9px 8px;
+    }
+
+    @include for-tablet-landscape-up {
       padding: 10px 11px 12px 11px;
+      font-size: 15px;
     }
   }
 
@@ -96,13 +160,20 @@
 
 	&__modal {
     position: absolute;
-    top: 50%;
+    top: 0;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, 0);
     border: none;
-    padding: 25px;
+    padding: 0;
+    margin: -20px 0 0 -20px;
     background-color: transparent;
     z-index: 6;
+    width: 100%;
+
+    @include profile-card-breakpoint {
+
+      margin: 0 0 0 0;
+    }
 
     &__close--x {
   	margin-top: -2px;
@@ -131,9 +202,16 @@
 	}
 }
 
+.ReactModal__Overlay {
+  overflow-y: scroll !important;
+}
+
 .filters-group {
 	display: inline-block;
+  margin: 0 8px;
+  @include for-tablet-landscape-up {
 	margin: 0 20px;
+}
 }
 
 .filters-group--flush {
@@ -152,7 +230,22 @@
 }
 
 .filters-group--button {
+  padding-top: 25px;
+
+  @include for-tablet-landscape-up {
   padding-top: 19px;
+}
+}
+
+.filters-group--button-grid {
+  padding-top: 18px;
+
+  @include for-tablet-landscape-up {
+  padding-top: 19px;
+}
+@include for-big-desktop-up {
+  padding-top: 23px;
+}
 }
 
 .filters-group__btn {
@@ -160,6 +253,12 @@
     justify-content: flex-end;
     flex-direction: column;
     padding-bottom: 6px;
+    margin-top: 17px;
+
+    @include for-tablet-landscape-up {
+      margin-top: 0;
+    }
+
 	}
 
 .filters-group-wrap {
@@ -171,10 +270,16 @@
   border-radius: 3px;
   cursor: pointer;
   display: inline-block;
-  font-size: 1rem;
-  padding: .68em .8em;
   text-align: center;
   transition: .2s ease-out;
+  font-size: .8rem;
+  padding: 7px;
+
+  @include for-tablet-landscape-up {
+  font-size: 1rem;
+  padding: .68em .8em;
+}
+
 
   &:active, & .active {
     box-shadow: inset 0 1px 2px rgba(0,0,0,.3);
@@ -186,9 +291,13 @@
   border: 1px solid rgba(255,255,255,.8);
   color: rgba(255,255,255,.8);
   font-family: 'Alegreya Sans SC', sans-serif;
-  font-weight: 100;
+  font-weight: 300;
   text-transform: lowercase;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
+
+  @include for-tablet-landscape-up {
+    letter-spacing: 2px;
+  }
 
   &:hover, &:active, & .active {
   	background-color: rgba(255,255,255,.5);
@@ -207,7 +316,33 @@
 
 .btn--smaller {
   letter-spacing: 1px;
+}
 
+.btn--single {
+  border-top-right-radius: 3px !important;
+  border-top-left-radius: 3px !important;
+  border-bottom-left-radius: 3px !important;
+  border-bottom-right-radius: 3px !important;
+}
+
+.btn--grid {
+  @include for-tablet-landscape-up {
+  font-size: .8rem;
+  padding: 7px;
+}
+
+@include for-big-desktop-up {
+  font-size: 1rem;
+  padding: .68em .8em;
+}
+
+}
+
+.btn--sort {
+  padding: 7px 10px;
+  @include for-tablet-landscape-up {
+  padding: .68em .8em;
+}
 }
 
 .btn-group {
@@ -238,5 +373,69 @@
 	color: #fff !important;
   text-decoration: none;
   // box-shadow: inset 0 1px 2px rgba(0,0,0,.3);
+  }
+
+.container-icon {
+  position: relative;
+}
+
+.nested-icon {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  font-size: 200%;
+  color: rgba(255,255,255,.7);
+}
+
+.no-wrap {
+  flex-wrap: wrap;
+  padding: 0 20px;
+  justify-content: space-between;
+  @include for-tablet-portrait-up {
+  flex-wrap: nowrap !important;
+}
+@include for-tablet-landscape-up {
+  justify-content: flex-start;
+}
+}
+
+.no-wrap--open {
+  justify-content: flex-start;
+}
+
+.search__large, .sort__large, .filter__large, .newpost__large {
+    display: none;
+
+    @include grid-controls-breakpoint {
+      display: block;
+    }
+
+  }
+
+.filter__large, .newpost__large {
+    display: none;
+
+    @include grid-controls-breakpoint {
+      display: inline-block;
+      padding: 0 3px;
+    }
+
+  }
+
+  .filter__icon {
+
+  }
+
+  .edit__icon {
+
+  }
+
+.search__small, .sort__small, .filter__small, .newpost__small {
+    display: block;
+
+    @include grid-controls-breakpoint {
+      display: none;
+    }
+
   }
 

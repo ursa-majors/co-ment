@@ -12,9 +12,9 @@ const INITIAL_STATE = {
     language: '',
     keyword: '',
   },
-  filterGroup: ['all'],
+  filterGroup: 'all',
   sortBtn: {
-    title: '',
+    'popular': '',
     'date-updated': '',
   },
   sortOptions: {
@@ -28,14 +28,14 @@ const clearFilters = {
   timezone: 'Time zone',
   language: '',
   keyword: '',
-}
+};
 
 const sortByDate = (element) => {
   return element.getAttribute('data-updated');
 };
 
-const sortByTitle = (element) => {
-  return element.getAttribute('data-title').toLowerCase();
+const sortByPopularity = (element) => {
+  return Number(element.getAttribute('data-popular'));
 };
 
 function gridControls(state = INITIAL_STATE, action) {
@@ -65,15 +65,15 @@ function gridControls(state = INITIAL_STATE, action) {
     case SET_SORT:
       // set the sort options
       if (action.payload.value === 'date-updated') {
-        reverseSort = (state.sortOptions.by === sortByDate ? !state.sortOptions.reverse : true)
+        reverseSort = (state.sortOptions.by === sortByDate ? !state.sortOptions.reverse : false);
         options = {
           by: sortByDate,
           reverse: reverseSort,
         };
-      } else if (action.payload.value === 'title') {
-        reverseSort = (state.sortOptions.by === sortByTitle ? !state.sortOptions.reverse : false)
+      } else if (action.payload.value === 'popular') {
+        reverseSort = (state.sortOptions.by === sortByPopularity ? !state.sortOptions.reverse : false);
         options = {
-          by: sortByTitle,
+          by: sortByPopularity,
           reverse: reverseSort,
         };
       }
@@ -120,16 +120,12 @@ function gridControls(state = INITIAL_STATE, action) {
     case RUN_FILTER:
       // set state.filterGroup to array of object values of state.FilterBtn
       newFilter = Object.assign({}, state.filterBtn);
-      console.log('gridControls > 123 newFilter', newFilter );
       filtKeys = Object.keys(newFilter);
-      console.log('gridControls > 125 filtKeys', filtKeys );
       filtValues = Object.values(newFilter);
-      console.log('gridControls > 127 filtValues', filtValues );
       newFilterGroup = [];
       for (let i = 0; i < filtValues.length; i += 1) {
         // don't push placeholder or empty values
         if (filtValues[i] !== 'Time zone' && filtValues[i] !== 'Gender' && filtValues[i] !== 'Role' && filtValues[i] !== '') {
-          console.log('gridControls > 132 non-placeholder filter value:', filtValues[i] );
           if (filtKeys[i] === 'timezone') {
             // don't convert time zones to lowercase
               newFilterGroup.push(filtValues[i]);
@@ -139,7 +135,6 @@ function gridControls(state = INITIAL_STATE, action) {
             }
           }
         }
-      console.log('gridControls.js > 138', newFilterGroup);
       return update(
         state,
         {

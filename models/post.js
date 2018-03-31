@@ -2,7 +2,6 @@
 
 const mongoose  = require('mongoose');
 const Schema    = mongoose.Schema;
-const User      = require('./user');
 
 
 /* ================================ SCHEMA ================================= */
@@ -14,18 +13,9 @@ const postSchema = Schema({
         default  : true
     },
     
-//    author : {
-//        _id       : { type :  String,  required : true },
-//        username  : { type :  String,  required : true },
-//        realname  : { type :  String,  required : true },
-//        avatar    : { type :  String,  required : true },
-//        languages : { type : [String], required : true },
-//        gender    : { type :  String,  required : true },
-//        timezone  : { type :  String,  required : true }
-//    },
-    
     author : {
-        type: Schema.Types.ObjectId, ref: 'User'
+        type     : Schema.Types.ObjectId,
+        ref      : 'User'
     },
 
     availability : {
@@ -36,6 +26,11 @@ const postSchema = Schema({
     body : {
         type     : String,
         required : true,
+        trim     : true
+    },
+
+    excerpt : {
+        type     : String,
         trim     : true
     },
 
@@ -67,12 +62,9 @@ const postSchema = Schema({
         views    : { type : Number, default  : 0, min : 0 },
         likes    : { type : Number, default  : 0, min : 0 }
     }
-
-},
 {
     timestamps : true
 });
-
 
 /* ================================ EXPORT ================================= */
 

@@ -1,0 +1,55 @@
+.footer {
+	width:100%;
+	padding: 20px 30px;
+	display: flex;
+	justify-content: space-between;
+	color: rgba(255,255,255,.8);
+	background: $color_sky;
+  background: -webkit-linear-gradient(to top, $color_aqua, $color_sky);
+  background: linear-gradient(to top, $color_aqua, $color_sky);
+  font-family: 'Alegreya Sans SC', sans-serif;
+  text-transform: lowercase;
+  letter-spacing: 2px;
+
+  &__link {
+  	color: rgba(255,255,255,.8);
+		margin-right: 10px;
+    position: relative;
+    text-decoration: none;
+    @include for-phone-landscape-up {
+      top: -3px;
+      border-bottom: 1px dotted rgba(255,255,255,.8);
+    }
+
+
+    &:hover, &:focus, &:active {
+      color: rgba(255,255,255,1);
+      border-bottom: 1px dotted white;
+      transition: all 300ms ease-in-out;
+    }
+
+    &:last-child {
+      border-bottom: none;
+      margin-right: 0;
+      top: 0;
+    }
+
+
+  }
+
+  &__right {
+    display: flex;
+  }
+
+  &__icon {
+  	color: rgba(255,255,255,.8);
+  	font-size: 1.2em;
+    border-radius: 100%;
+
+  	&:hover, &:focus, &:active {
+  		color: rgba(255,255,255,1);
+  		box-shadow: 0 0 10px rgba(0,0,0,.4);
+  		transition: all 300ms ease-in-out;
+  	}
+  }
+}

@@ -7,67 +7,77 @@
 const User      = require('../models/user');
 const sanitize  = require('../utils/sanitizer');
 const mailer    = require('../utils/mailer');
-const mailUtils = require('../utils/mailutils');
 const emailTpl  = require('../utils/mailtemplates');
+const { makeSignupKey, makeValidationUrl, makeBoilerplate } = require('../utils/mailutils');
 
 
 /* ============================ ROUTE HANDLERS ============================= */
 
 // SEND EMAIL
-//   Example: POST >> /api/contact/597dd8665229970e99c6ab55
+//   Example: POST >> /api/sendemail
 //   Secured: yes, valid JWT required
 //   Expects:
-//     1) '_id' from JWT token
-//     2) 'id' from request params
+//     1) sender's username' from JWT token
+//     2) request body properties : {
+//          recipient    : String (username)
+//          sender       : String (username)
+//          copySender   : Boolean
+//          subject      : String
+//          body         : String
+//          type         : String
+//          connectionId : String
+//        }
 //   Returns: success message on success
 //
 function sendEmail(req, res) {
 
     // prohibit users from contacing themselves
-    if (req.token._id === req.params.id) {
+    if (req.token.username === req.body.recipient) {
         return res
             .status(400)
             .json({ message : 'You cannot contact yourself!'});
     }
 
-    const target = { _id: req.params.id };
-    const fromId = { _id: req.token._id };
+    const toUser   = { username: req.body.recipient };
+    const fromUser = { username: req.body.sender };
 
     // find the target recipient
-    User.findOne(target)
+    User.findOne(toUser)
         .exec()
         .then(recipient => {
 
             if (!recipient) {
-                return res
-                    .status(404)
-                    .json({ message : 'User not found!'});
-            } else {
-                return recipient;
+                throw new Error('User not found!');
             }
-        })
-        .then(recipient => {
 
             // find the sender (we need their email address)
-            User.findOne(fromId, (err, sender) => {
+            User.findOne(fromUser, (err, sender) => {
 
                 if (err) { throw err; }
-                             
+
+                const recipientList = req.body.copySender ? `${recipient.email};${sender.email}` : recipient.email;
+
+                const greeting = req.body.copySender ? `${recipient.username} and ${sender.username}` : recipient.username;
+
+                const boilerplate = makeBoilerplate(req.body.type, sender, recipient);
+
                 const params = {
-                    to      : recipient.email,
-                    subject : `co/ment - Contact Request from ${sender.username}`,
+                    to      : recipientList,
+                    subject : req.body.subject,
                     body    : {
                         type : 'html',
                         text : emailTpl.contactTemplate(
-                                recipient.username,          // toUser
+                                greeting,                    // toUser
                                 sender.username,             // fromUser
                                 sender.email,                // fromEmail
-                                sanitize(req.body.bodyText), // bodyText
-                                req.body.connectionId        // connectionId
+                                sanitize(req.body.body),     // bodyText
+                                req.body.connectionId,       // connectionId
+                                boilerplate.boilerplate,     // boilerplate
+                                boilerplate.recUserId        // recUserId
                                )
                     }
                 };
-                
+
                 // send mail using `mailer` util
                 try {
                     mailer(params.to, params.subject, params.body);
@@ -75,7 +85,7 @@ function sendEmail(req, res) {
                         .status(200)
                         .json({ message : 'Message sent successfully.'});
                 } catch (err) {
-                    console.log(`Error: $(err)`);
+                    console.log(`Error: ${err}`);
                     return res
                         .status(400)
                         .json({ message : 'Error: Message not sent.'});
@@ -83,6 +93,11 @@ function sendEmail(req, res) {
 
             });
 
+        })
+        .catch((err) => {
+            return res
+                .status(404)
+                .json({ message : err.toString()});
         });
 }
 
@@ -95,22 +110,22 @@ function sendEmail(req, res) {
 //   Returns: success message on success
 //
 function resendValidation(req, res) {
-    
+
     const target  = { _id : req.token._id };
-    const updates = { signupKey : mailUtils.makeSignupKey() };
+    const updates = { signupKey : makeSignupKey() };
     const options = { new : true };
-    
+
     User.findOneAndUpdate(target, updates, options)
         .exec()
         .then( user => {
 
-            const url = mailUtils.makeValidationUrl(user._id, user.signupKey.key);
+            const url = makeValidationUrl(user._id, user.signupKey.key);
             const subject = 'co/ment - Email verification required';
             const body    = {
                 type: 'html',
-                text: emailTpl.validationTemplate(url)
+                text: emailTpl.validationTemplate(url, user._id)
             };
-        
+
             // send mail using `mailer` util
             try {
                 mailer(user.email, subject, body);
@@ -128,7 +143,7 @@ function resendValidation(req, res) {
                 .status(400)
                 .json({ message: err});
         });
-    
+
 }
 
 
