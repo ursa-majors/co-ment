@@ -27,6 +27,9 @@ function getPosts(req, res) {
         active  : true,
         deleted : false
     };
+    
+    // post author projection
+    const authorProj = 'username name avatarUrl languages gender timezone';
 
     // iterate over req params, adding any params to the query
     Object.keys(req.query).forEach( key => {
@@ -40,6 +43,7 @@ function getPosts(req, res) {
     });
 
     Post.find(query)
+        .populate('author', authorProj)
         .exec()
         .then( posts => res.status(200).json(posts) )
         .catch( err => {
@@ -54,32 +58,26 @@ function getPosts(req, res) {
 //   Example: POST >> /api/posts
 //   Secured: yes, valid JWT required
 //   Expects:
-//     1) 'author_id' from JWT token
+//     1) author '_id' from JWT token
 //     2) request body properties : {
-//          author              : String
-//          author_id           : String
-//          author_name         : String
-//          author_avatar       : String
-//          author_timezone     : String
-//          author_languages    : Array
-//          author_gemder       : String
-//          role                : String
-//          title               : String
-//          body                : String
-//          keywords            : Array
-//          availability        : String
+//          active       : Boolean
+//          role         : String
+//          title        : String
+//          body         : String
+//          keywords     : Array
+//          availability : String
 //        }
 //   Returns: success message & new post object on success
 //
-function createPost(req, res) {
+function createPost(req, res, next) {
 
     // Check if exists non-deleted post with same author_id, role & title
     Post
         .findOne({
-            author_id : req.token._id,
-            role      : req.body.role,
-            title     : req.body.title,
-            deleted   : false
+            author  : req.token._id,
+            role    : req.body.role,
+            title   : req.body.title,
+            deleted : false
         })
         .exec()
         .then( post => {
@@ -93,26 +91,19 @@ function createPost(req, res) {
 
             } else {
 
-                // create new post
-                const myPost = new Post();
-
-                // build new post from request body and token
-                myPost.author           = req.body.author;
-                myPost.author_id        = req.token._id;
-                myPost.author_name      = req.body.author_name;
-                myPost.author_avatar    = req.body.author_avatar;
-                myPost.author_timezone  = req.body.author_timezone;
-                myPost.author_languages = req.body.author_languages;
-                myPost.author_gender    = req.body.author_gender;
-                myPost.role             = req.body.role;
-                myPost.title            = req.body.title;
-                myPost.body             = req.body.body;
-                myPost.keywords         = req.body.keywords;
-                myPost.availability     = req.body.availability;
+                // create new post from request body and token
+                const myPost = new Post({
+                    author       : req.token._id,
+                    role         : req.body.role,
+                    title        : req.body.title,
+                    body         : req.body.body,
+                    keywords     : req.body.keywords,
+                    availability : req.body.availability
+                });
 
                 // save new post to database
                 myPost.save( (err, newPost) => {
-                    if (err) { throw err; }
+                    if (err) { return next(err); }
 
                     return res
                         .status(200)
@@ -240,28 +231,34 @@ function deletePost(req, res) {
         active  : false
     };
 
-    Post.findOneAndUpdate(target, updates, (err, post) => {
+    Post.findOneAndUpdate(target, updates)
+        .exec()
+        .then( post => {
 
-        if (err) { throw err; }
+            if (!post) {
 
-        if (!post) {
+                return res
+                    .status(404)
+                    .json({message: 'Post not found!'});
 
-            return res
-                .status(404)
-                .json({message: 'Post not found!'});
+            } else {
 
-        } else {
+                return res
+                    .status(200)
+                    .json({
+                        message : 'Post deleted!',
+                        post    : post
+                    });
 
-            return res
-                .status(200)
-                .json({
-                    message : 'Post deleted!',
-                    post    : post
-                });
+            }
 
-        }
-
-    });
+        })
+        .catch( err => {
+            console.log('Error!!!', err);
+                return res
+                    .status(400)
+                    .json({ message: err });
+        });
 
 }
 
