@@ -81,7 +81,9 @@ const postSchema = Schema({
     createdAt : {
         type     : Date
     }
-
+},
+{
+    timestamps : true
 });
 
 
