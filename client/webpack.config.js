@@ -29,8 +29,6 @@ const UglifyJsPluginConfig = new webpack.optimize.UglifyJsPlugin({
   comments: false,
 });
 
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
 module.exports = {
   devServer: {
     host: 'localhost',
@@ -78,18 +76,17 @@ module.exports = {
     DefinePluginConfig,
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
-    new BundleAnalyzerPlugin(),
     new webpack.optimize.AggressiveMergingPlugin(),
     new CopyWebpackPlugin(
       [
         { from: './src/img', to: './img/', ignore: ['*.svg'] },
       ]),
     new CompressionPlugin({
-      asset: "[path].gz[query]",
-      algorithm: "gzip",
+      asset: '[path].gz[query]',
+      algorithm: 'gzip',
       test: /\.js$|\.css$|\.html$/,
       threshold: 10240,
-      minRatio: 0.8
+      minRatio: 0.8,
     }),
   ] :
   [
@@ -102,11 +99,11 @@ module.exports = {
         { from: './src/img', to: './img/', ignore: ['*.svg'] },
       ]),
     new CompressionPlugin({
-      asset: "[path].gz[query]",
-      algorithm: "gzip",
+      asset: '[path].gz[query]',
+      algorithm: 'gzip',
       test: /\.js$|\.css$|\.html$/,
       threshold: 10240,
-      minRatio: 0.8
+      minRatio: 0.8,
     }),
   ],
 };

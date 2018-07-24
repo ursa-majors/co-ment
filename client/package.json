@@ -29,14 +29,13 @@
     "file-loader": "^0.11.2",
     "font-awesome": "^4.7.0",
     "html-webpack-plugin": "^2.28.0",
-    "node-sass": "^4.5.3",
+    "node-sass": "^4.9.2",
     "redbox-react": "^1.5.0",
     "sass-loader": "^6.0.5",
     "style-loader": "^0.18.1",
     "url-loader": "^0.5.8",
     "webpack": "^2.6.1",
-    "webpack-bundle-analyzer": "^2.9.0",
-    "webpack-dev-server": "^2.4.5"
+    "webpack-dev-server": "^2.11.2"
   },
   "dependencies": {
     "autosuggest-highlight": "^3.1.0",
