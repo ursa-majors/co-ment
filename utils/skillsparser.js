@@ -5,9 +5,8 @@
 
 */
 
-const skills     = require('./skillsdictionary');
-const dictionary = flattenDictionary(skills);
-
+const skills = require('./skillsdictionary')
+const dictionary = flattenDictionary(skills)
 
 /* =============================== utilities =============================== */
 
@@ -16,18 +15,16 @@ const dictionary = flattenDictionary(skills);
  * @params   [object]   dict    [the 2d skills object]
  * @returns  [object]           [flattned & re-keyed skills map]
 */
-function flattenDictionary(dict) {
-
-    const result_obj = {};
-    const dict_keys = Object.keys(dict);
-    dict_keys.forEach( k => {
-        dict[k].forEach( skill => {
-            result_obj[skill] = k;
-        });
-    });
-    return result_obj;
+function flattenDictionary (dict) {
+  const result_obj = {}
+  const dict_keys = Object.keys(dict)
+  dict_keys.forEach(k => {
+    dict[k].forEach(skill => {
+      result_obj[skill] = k
+    })
+  })
+  return result_obj
 }
-
 
 /* ============================ public methods ============================= */
 
@@ -37,15 +34,14 @@ function flattenDictionary(dict) {
  * @params   [string]   request    [skill name]
  * @returns  [string]              [standard or original skill]
 */
-function parseSKill(request) {
-    let matchSkill = request;
-    if (dictionary.hasOwnProperty(request.toLowerCase())) {
-      matchSkill = dictionary[request.toLowerCase()];
-    }
-    return matchSkill;
+function parseSKill (request) {
+  let matchSkill = request
+  if (dictionary.hasOwnProperty(request.toLowerCase())) {
+    matchSkill = dictionary[request.toLowerCase()]
+  }
+  return matchSkill
 }
-
 
 /* ================================ exports ================================ */
 
-module.exports = parseSKill;
+module.exports = parseSKill

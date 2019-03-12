@@ -3,12 +3,10 @@
 */
 
 module.exports = function (req, res, next) {
+  if (req.headers['x-forwarded-proto'].match(/https/g)) {
+    // Secure protocol, continue as normal
+    return next()
+  }
 
-    if (req.headers['x-forwarded-proto'].match(/https/g)) {
-        // Secure protocol, continue as normal
-        return next();
-    }
-
-    res.redirect(302, `https://${req.hostname}${req.url}`);
-
-};
+  res.redirect(302, `https://${req.hostname}${req.url}`)
+}

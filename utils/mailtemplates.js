@@ -4,35 +4,31 @@
 
 */
 
-const baseUrl = "https://co-ment.glitch.me/";
-
+const baseUrl = 'https://co-ment.glitch.me/'
 
 const unreadsReminder = (url, to_name) => {
-    return `Hello @${to_name}, you have new unread messages in <a href="${url}">your co/ment Inbox</a>!
+  return `Hello @${to_name}, you have new unread messages in <a href="${url}">your co/ment Inbox</a>!
     <br><br>
-    ${url}`;
-};
-
+    ${url}`
+}
 
 const engagementTpl = (engageType) => {
-    
-    let url;
-    let inaction;
-    let blurb;
-    
-    if (engageType === 'profile') {
-        url = baseUrl + 'profile';
-        inaction = 'updated your profile';
-        blurb = 'updating your profile so others can get a better sense for your skills and compatibility';
-    } else if (engageType === 'post')  {
-        url = baseUrl + 'editpost';
-        inaction = 'created a post';
-        blurb = 'creating a post to help others based on your coding knowledge/insights';
-    }
-    
-    return `<p>Hi, thanks for participating in <strong>co/ment</strong>. We noticed that you haven't ${inaction} yet. Please consider ${blurb}.</p>`;
-};
+  let url
+  let inaction
+  let blurb
 
+  if (engageType === 'profile') {
+    url = baseUrl + 'profile'
+    inaction = 'updated your profile'
+    blurb = 'updating your profile so others can get a better sense for your skills and compatibility'
+  } else if (engageType === 'post') {
+    url = baseUrl + 'editpost'
+    inaction = 'created a post'
+    blurb = 'creating a post to help others based on your coding knowledge/insights'
+  }
+
+  return `<p>Hi, thanks for participating in <strong>co/ment</strong>. We noticed that you haven't ${inaction} yet. Please consider ${blurb}.</p>`
+}
 
 const longEmail = (title, url, toUser, subhead, bodyText, buttonText, recUserId) => {
   return `
@@ -278,9 +274,8 @@ const longEmail = (title, url, toUser, subhead, bodyText, buttonText, recUserId)
 </table>
 </body>
 </html>
-`;
-};
-
+`
+}
 
 const shortEmail = (title, url, headline, body, buttonText, recUserId) => {
   return `
@@ -497,16 +492,16 @@ const shortEmail = (title, url, headline, body, buttonText, recUserId) => {
           </tbody>
         </table>
         </body>
-    </html>`;
-};
+    </html>`
+}
 
 const pwResetTemplate = (url, recUserId) => {
-     return shortEmail('co/ment Password Reset Email', url,'Forgot your password?', 'No problem! Click below to reset it!', 'Reset Password', recUserId);
- };
+  return shortEmail('co/ment Password Reset Email', url, 'Forgot your password?', 'No problem! Click below to reset it!', 'Reset Password', recUserId)
+}
 
 const validationTemplate = (url, recUserId) => {
-  return shortEmail('co/ment Account Validation Email', url, 'Welcome!', 'Click below to validate your account:', 'Validate Email', recUserId);
-};
+  return shortEmail('co/ment Account Validation Email', url, 'Welcome!', 'Click below to validate your account:', 'Validate Email', recUserId)
+}
 
 // longEmail( title, url, toUser, subhead, bodyText, buttonText, recUserId )
 const contactTemplate = (toUser, fromUser, fromEmail, bodyText, connectionId, boilerplate, recUserId) => {
@@ -518,13 +513,13 @@ const contactTemplate = (toUser, fromUser, fromEmail, bodyText, connectionId, bo
     bodyText,
     'View Connection',
     recUserId
-    );
-};
+  )
+}
 
 module.exports = {
-    pwResetTemplate,
-    validationTemplate,
-    contactTemplate,
-    unreadsReminder,
-    engagementTpl
-};
+  pwResetTemplate,
+  validationTemplate,
+  contactTemplate,
+  unreadsReminder,
+  engagementTpl
+}

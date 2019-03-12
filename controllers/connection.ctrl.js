@@ -4,8 +4,7 @@
 
 /* ================================= SETUP ================================= */
 
-const Connection = require('../models/connection');
-
+const Connection = require('../models/connection')
 
 /* ============================ ROUTE HANDLERS ============================= */
 
@@ -16,33 +15,27 @@ const Connection = require('../models/connection');
 //     1) the user's _id from the JWT token
 //   Returns: array of connections on success
 //
-function getConnections(req, res) {
-    const target = req.token._id;
+function getConnections (req, res) {
+  const target = req.token._id
 
-    Connection.find({
-        $or: [
-            { "mentor.id": target },
-            { "mentee.id": target }
-        ]})
-        .exec()
-        .then( (conns) => {
-
-            return res
-                .status(200)
-                .json({ connections: conns });
-
-        })
-        .catch( (error) => {
-
-            console.log(`Error: $(error)`);
-            return res
-                .status(400)
-                .json({ message : 'Error: Cannot get connections' });
-
-    });
-
+  Connection.find({
+    $or: [
+      { 'mentor.id': target },
+      { 'mentee.id': target }
+    ] })
+    .exec()
+    .then((conns) => {
+      return res
+        .status(200)
+        .json({ connections: conns })
+    })
+    .catch((error) => {
+      console.log(`Error: $(error)`)
+      return res
+        .status(400)
+        .json({ message: 'Error: Cannot get connections' })
+    })
 }
-
 
 // CREATE CONNECTION
 //   Example: POST >> /api/connect
@@ -59,28 +52,25 @@ function getConnections(req, res) {
 //        }
 //   Returns: success message & connection _id on success
 //
-function createConnection(req, res) {
+function createConnection (req, res) {
+  let newConn = new Connection(req.body)
 
-    let newConn = new Connection(req.body);
+  newConn.dateStarted = Date.now()
 
-    newConn.dateStarted = Date.now();
+  newConn
+    .save((err, conn) => {
+      if (err) { throw err }
 
-    newConn
-        .save( (err, conn) => {
-            if (err) { throw err; }
-
-            return res
-                .status(200)
-                .json({ message: "Connection created", connectionId: conn._id});
-
-        })
-        .catch( (err) => {
-            console.log('Error!!!', err);
-            return res
-                .status(400)
-                .json({ message: err });
-        });
-
+      return res
+        .status(200)
+        .json({ message: 'Connection created', connectionId: conn._id })
+    })
+    .catch((err) => {
+      console.log('Error!!!', err)
+      return res
+        .status(400)
+        .json({ message: err })
+    })
 }
 
 // Update a connection record's status & status date
@@ -93,60 +83,56 @@ function createConnection(req, res) {
 //        }
 //   Returns: updated connection record on success
 //
-function updateConnection(req, res) {
+function updateConnection (req, res) {
+  const target = { _id: req.body.id }
 
-    const target = { _id: req.body.id };
+  let update
 
-    let update;
+  switch (req.body.type) {
+    case 'ACCEPT':
+      update = {
+        status: 'accepted',
+        dateAccepted: Date.now()
+      }
+      break
 
-    switch (req.body.type) {
+    case 'DECLINE':
+      update = {
+        status: 'declined',
+        dateDeclined: Date.now()
+      }
+      break
 
-        case 'ACCEPT':
-            update = {
-                status: 'accepted',
-                dateAccepted: Date.now()
-            };
-            break;
+    case 'DEACTIVATE':
+      update = {
+        status: 'inactive',
+        dateExpired: Date.now()
+      }
+      break
 
-        case 'DECLINE':
-            update = {
-                status: 'declined',
-                dateDeclined: Date.now()
-            };
-            break;
+    default:
+      update = {}
+  }
 
-        case 'DEACTIVATE':
-            update = {
-                status: 'inactive',
-                dateExpired: Date.now()
-            };
-            break;
+  const options = {
+    new: true // return updated document rather than original
+  }
 
-        default:
-            update = {};
-
-    }
-
-    const options = {
-        new: true  // return updated document rather than original
-    };
-
-    Connection.findOneAndUpdate(target, update, options)
-        .exec()
-        .then( (conn) => {
-            return res
-                .status(200)
-                .json({ conn });
-        })
-        .catch( (err) => {
-            console.log('Error!!!', err);
-            return res
-                .status(400)
-                .json({ message: err });
-        });
+  Connection.findOneAndUpdate(target, update, options)
+    .exec()
+    .then((conn) => {
+      return res
+        .status(200)
+        .json({ conn })
+    })
+    .catch((err) => {
+      console.log('Error!!!', err)
+      return res
+        .status(400)
+        .json({ message: err })
+    })
 }
-
 
 /* ============================== EXPORT API =============================== */
 
-module.exports = { getConnections, createConnection, updateConnection };
+module.exports = { getConnections, createConnection, updateConnection }
