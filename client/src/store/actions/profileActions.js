@@ -1,80 +1,80 @@
-export const SET_EDIT_PROFILE = 'SET_EDIT_PROFILE';
-export const SET_PROFILE_FORM_FIELD = 'SET_PROFILE_FORM_FIELD';
-export const ADD_SKILL = 'ADD_SKILL';
-export const ADD_LANGUAGE = 'ADD_LANGUAGE';
-export const REMOVE_SKILL = 'REMOVE_SKILL';
-export const REMOVE_LANGUAGE = 'REMOVE_LANGUAGE';
-export const DISMISS_VIEWPROFILE_MODAL = 'DISMISS_VIEWPROFILE_MODAL';
-export const SET_UPD_PROFILE_MODAL = 'SET_UPD_PROFILE_MODAL';
-export const SET_PROFILE_MODAL_CLASS = 'SET_PROFILE_MODAL_CLASS';
-export const SET_PROFILE_MODAL_TEXT = 'SET_PROFILE_MODAL_TEXT';
+export const SET_EDIT_PROFILE = 'SET_EDIT_PROFILE'
+export const SET_PROFILE_FORM_FIELD = 'SET_PROFILE_FORM_FIELD'
+export const ADD_SKILL = 'ADD_SKILL'
+export const ADD_LANGUAGE = 'ADD_LANGUAGE'
+export const REMOVE_SKILL = 'REMOVE_SKILL'
+export const REMOVE_LANGUAGE = 'REMOVE_LANGUAGE'
+export const DISMISS_VIEWPROFILE_MODAL = 'DISMISS_VIEWPROFILE_MODAL'
+export const SET_UPD_PROFILE_MODAL = 'SET_UPD_PROFILE_MODAL'
+export const SET_PROFILE_MODAL_CLASS = 'SET_PROFILE_MODAL_CLASS'
+export const SET_PROFILE_MODAL_TEXT = 'SET_PROFILE_MODAL_TEXT'
 
-export function setEditProfile(profile) {
+export function setEditProfile (profile) {
   return ({
     type: SET_EDIT_PROFILE,
-    payload: profile,
-  });
+    payload: profile
+  })
 }
 
-export function setFormField(field, value) {
+export function setFormField (field, value) {
   return ({
     type: SET_PROFILE_FORM_FIELD,
     field,
-    value,
-  });
+    value
+  })
 }
 
-export function addLanguage(word) {
+export function addLanguage (word) {
   return ({
     type: ADD_LANGUAGE,
-    payload: word,
-  });
+    payload: word
+  })
 }
 
-export function addSkill(word) {
+export function addSkill (word) {
   return ({
     type: ADD_SKILL,
-    payload: word,
-  });
+    payload: word
+  })
 }
 
-export function removeLanguage(word) {
+export function removeLanguage (word) {
   return ({
     type: REMOVE_LANGUAGE,
-    payload: word,
-  });
+    payload: word
+  })
 }
 
-export function removeSkill(word) {
+export function removeSkill (word) {
   return ({
     type: REMOVE_SKILL,
-    payload: word,
-  });
+    payload: word
+  })
 }
 
-export function dismissViewProfileModal() {
+export function dismissViewProfileModal () {
   return ({
-    type: DISMISS_VIEWPROFILE_MODAL,
-  });
+    type: DISMISS_VIEWPROFILE_MODAL
+  })
 }
 
-export function setProfileModalClass(modalClass) {
+export function setProfileModalClass (modalClass) {
   return ({
     type: SET_PROFILE_MODAL_CLASS,
-    payload: modalClass,
-  });
+    payload: modalClass
+  })
 }
 
-export function setProfileModalText(text) {
+export function setProfileModalText (text) {
   return ({
     type: SET_PROFILE_MODAL_TEXT,
-    payload: text,
-  });
+    payload: text
+  })
 }
 
-export function setUpdProfileModal(options) {
+export function setUpdProfileModal (options) {
   return ({
     type: SET_UPD_PROFILE_MODAL,
-    payload: options,
-  });
+    payload: options
+  })
 }

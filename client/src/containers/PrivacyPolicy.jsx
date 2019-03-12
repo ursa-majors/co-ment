@@ -5,12 +5,12 @@
 *  2. Removed language saying we would send an email if privacy policy Changed
 *  3. Made 'contact us' into a mailto: link
 */
-import React from 'react';
+import React from 'react'
 
 const PrivacyPolicy = () => (
 
-  <div className="privacy">
-    <div className="privacy__slide scrollable">
+  <div className='privacy'>
+    <div className='privacy__slide scrollable'>
       <h2>Co/Ment Privacy Policy</h2>
       <p>
         {'This Privacy Policy governs the manner in which Co/Ment collects, uses, maintains and discloses information collected from users (each, a "User") of the https://co-ment.glitch.me website ("Site").'}
@@ -85,18 +85,18 @@ const PrivacyPolicy = () => (
       <p>
         {'By using this Site, you signify your acceptance of this policy. If you do not agree to this policy, please do not use our Site. Your continued use of the Site following the posting of changes to this policy will be deemed your acceptance of those changes.'}
         This privacy policy was built
-          <a href="https://privacypolicies.com/" rel="noopener noreferrer" target="_blank">using the www.PrivacyPolicies.com generator</a>.
+        <a href='https://privacypolicies.com/' rel='noopener noreferrer' target='_blank'>using the www.PrivacyPolicies.com generator</a>.
       </p>
 
       <h3>Contacting us</h3>
       <p>
         {'If you have any questions about this Privacy Policy, the practices of this site, or your dealings with this site, please '}
-        <a href="mailto:guidingstar@gmail.com">contact us</a>.
+        <a href='mailto:guidingstar@gmail.com'>contact us</a>.
       </p>
 
       <p>This document was last updated on September 25, 2017</p>
     </div>
   </div>
-);
+)
 
-export default PrivacyPolicy;
+export default PrivacyPolicy

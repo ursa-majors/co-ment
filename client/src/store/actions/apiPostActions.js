@@ -1,56 +1,56 @@
-import { CALL_API } from 'redux-api-middleware';
-import { BASE_URL } from './apiConfig';
+import { CALL_API } from 'redux-api-middleware'
+import { BASE_URL } from './apiConfig'
 
-export const GET_POST_REQUEST = 'GET_POST_REQUEST';
-export const GET_POST_SUCCESS = 'GET_POST_SUCCESS';
-export const GET_POST_FAILURE = 'GET_POST_FAILURE';
+export const GET_POST_REQUEST = 'GET_POST_REQUEST'
+export const GET_POST_SUCCESS = 'GET_POST_SUCCESS'
+export const GET_POST_FAILURE = 'GET_POST_FAILURE'
 
-export function getPost(token, userId, role) {
+export function getPost (token, userId, role) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/posts?author=${userId}&role=${role}`,
       method: 'GET',
       types: [GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE],
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  };
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  }
 }
 
-export const GET_USERPOSTS_REQUEST = 'GET_USERPOSTS_REQUEST';
-export const GET_USERPOSTS_SUCCESS = 'GET_USERPOSTS_SUCCESS';
-export const GET_USERPOSTS_FAILURE = 'GET_USERPOSTS_FAILURE';
+export const GET_USERPOSTS_REQUEST = 'GET_USERPOSTS_REQUEST'
+export const GET_USERPOSTS_SUCCESS = 'GET_USERPOSTS_SUCCESS'
+export const GET_USERPOSTS_FAILURE = 'GET_USERPOSTS_FAILURE'
 
-export function getUserPosts(token, userId) {
+export function getUserPosts (token, userId) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/posts?author=${userId}&active=all`,
       method: 'GET',
       types: [GET_USERPOSTS_REQUEST, GET_USERPOSTS_SUCCESS, GET_USERPOSTS_FAILURE],
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  };
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  }
 }
 
-export const GET_ALL_POSTS_REQUEST = 'GET_ALL_POSTS_REQUEST';
-export const GET_ALL_POSTS_SUCCESS = 'GET_ALL_POSTS_SUCCESS';
-export const GET_ALL_POSTS_FAILURE = 'GET_ALL_POSTS_FAILURE';
+export const GET_ALL_POSTS_REQUEST = 'GET_ALL_POSTS_REQUEST'
+export const GET_ALL_POSTS_SUCCESS = 'GET_ALL_POSTS_SUCCESS'
+export const GET_ALL_POSTS_FAILURE = 'GET_ALL_POSTS_FAILURE'
 
-export function getAllPosts(token) {
+export function getAllPosts (token) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/posts/`,
       method: 'GET',
       types: [GET_ALL_POSTS_REQUEST, GET_ALL_POSTS_SUCCESS, GET_ALL_POSTS_FAILURE],
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  };
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  }
 }
 
-export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
-export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
-export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
+export const ADD_POST_REQUEST = 'ADD_POST_REQUEST'
+export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS'
+export const ADD_POST_FAILURE = 'ADD_POST_FAILURE'
 
-export function addPost(token, body) {
+export function addPost (token, body) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/posts`,
@@ -58,16 +58,16 @@ export function addPost(token, body) {
       types: [ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE],
       headers: { Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    },
-  };
+      body: JSON.stringify(body)
+    }
+  }
 }
 
-export const MODIFY_POST_REQUEST = 'MODIFY_POST_REQUEST';
-export const MODIFY_POST_SUCCESS = 'MODIFY_POST_SUCCESS';
-export const MODIFY_POST_FAILURE = 'MODIFY_POST_FAILURE';
+export const MODIFY_POST_REQUEST = 'MODIFY_POST_REQUEST'
+export const MODIFY_POST_SUCCESS = 'MODIFY_POST_SUCCESS'
+export const MODIFY_POST_FAILURE = 'MODIFY_POST_FAILURE'
 
-export function modifyPost(token, postId, body) {
+export function modifyPost (token, postId, body) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/posts/${postId}`,
@@ -75,39 +75,39 @@ export function modifyPost(token, postId, body) {
       types: [MODIFY_POST_REQUEST, MODIFY_POST_SUCCESS, MODIFY_POST_FAILURE],
       headers: { Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    },
-  };
+      body: JSON.stringify(body)
+    }
+  }
 }
 
-export const VIEW_POST_REQUEST = 'VIEW_POST_REQUEST';
-export const VIEW_POST_SUCCESS = 'VIEW_POST_SUCCESS';
-export const VIEW_POST_FAILURE = 'VIEW_POST_FAILURE';
+export const VIEW_POST_REQUEST = 'VIEW_POST_REQUEST'
+export const VIEW_POST_SUCCESS = 'VIEW_POST_SUCCESS'
+export const VIEW_POST_FAILURE = 'VIEW_POST_FAILURE'
 
-export function viewPost(token, postId) {
+export function viewPost (token, postId) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/posts?id=${postId}`,
       method: 'GET',
       types: [VIEW_POST_REQUEST, VIEW_POST_SUCCESS, VIEW_POST_FAILURE],
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  };
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  }
 }
 
-export const DELETE_POST_REQUEST = 'DELETE_POST_REQUEST';
-export const DELETE_POST_SUCCESS = 'DELETE_POST_SUCCESS';
-export const DELETE_POST_FAILURE = 'DELETE_POST_FAILURE';
+export const DELETE_POST_REQUEST = 'DELETE_POST_REQUEST'
+export const DELETE_POST_SUCCESS = 'DELETE_POST_SUCCESS'
+export const DELETE_POST_FAILURE = 'DELETE_POST_FAILURE'
 
-export function deletePost(token, postId) {
+export function deletePost (token, postId) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/posts/${postId}`,
       method: 'DELETE',
       types: [DELETE_POST_REQUEST, DELETE_POST_SUCCESS, DELETE_POST_FAILURE],
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  };
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  }
 }
 
 /*
@@ -122,11 +122,11 @@ export function deletePost(token, postId) {
 *    the success action, it will increment its local viewcounter for the post.
 *   INCREMENT_POSTVIEW_FAILURE: Initial implementation: ignore failures.
 */
-export const INCREMENT_POSTVIEW_REQUEST = 'INCREMENT_POSTVIEW_REQUEST';
-export const INCREMENT_POSTVIEW_SUCCESS = 'INCREMENT_POSTVIEW_SUCCESS';
-export const INCREMENT_POSTVIEW_FAILURE = 'INCREMENT_POSTVIEW_FAILURE';
+export const INCREMENT_POSTVIEW_REQUEST = 'INCREMENT_POSTVIEW_REQUEST'
+export const INCREMENT_POSTVIEW_SUCCESS = 'INCREMENT_POSTVIEW_SUCCESS'
+export const INCREMENT_POSTVIEW_FAILURE = 'INCREMENT_POSTVIEW_FAILURE'
 
-export function incrementPostView(token, postId) {
+export function incrementPostView (token, postId) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/posts/${postId}/viewsplusplus`,
@@ -135,13 +135,13 @@ export function incrementPostView(token, postId) {
         INCREMENT_POSTVIEW_REQUEST,
         {
           type: INCREMENT_POSTVIEW_SUCCESS,
-          meta: { postId },
+          meta: { postId }
         },
-        INCREMENT_POSTVIEW_FAILURE,
+        INCREMENT_POSTVIEW_FAILURE
       ],
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  };
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  }
 }
 
 /*
@@ -156,11 +156,11 @@ export function incrementPostView(token, postId) {
 *    profiles reducer adds this post to the user's array of liked posts.
 *   LIKE_POST_FAILURE: Initial implementation: ignore failures.
 */
-export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
-export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
-export const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE';
+export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST'
+export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS'
+export const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE'
 
-export function likePost(token, postId) {
+export function likePost (token, postId) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/posts/${postId}/likes?action=plusplus`,
@@ -169,13 +169,13 @@ export function likePost(token, postId) {
         LIKE_POST_REQUEST,
         {
           type: LIKE_POST_SUCCESS,
-          meta: { postId },
+          meta: { postId }
         },
-        LIKE_POST_FAILURE,
+        LIKE_POST_FAILURE
       ],
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  };
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  }
 }
 
 /*
@@ -190,11 +190,11 @@ export function likePost(token, postId) {
 *    profiles reducer removes this post from the user's array of liked posts.
 *   UNLIKE_POST_FAILURE: Initial implementation: ignore failures.
 */
-export const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST';
-export const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS';
-export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
+export const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST'
+export const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS'
+export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE'
 
-export function unlikePost(token, postId) {
+export function unlikePost (token, postId) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/posts/${postId}/likes?action=minusminus`,
@@ -203,11 +203,11 @@ export function unlikePost(token, postId) {
         UNLIKE_POST_REQUEST,
         {
           type: UNLIKE_POST_SUCCESS,
-          meta: { postId },
+          meta: { postId }
         },
-        UNLIKE_POST_FAILURE,
+        UNLIKE_POST_FAILURE
       ],
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  };
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  }
 }

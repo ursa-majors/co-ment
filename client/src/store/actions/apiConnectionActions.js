@@ -1,9 +1,9 @@
-import { CALL_API } from 'redux-api-middleware';
-import { BASE_URL } from './apiConfig.js';
+import { CALL_API } from 'redux-api-middleware'
+import { BASE_URL } from './apiConfig.js'
 
-export const CONNECTION_REQUEST = 'CONNECTION_REQUEST';
-export const CONNECTION_SUCCESS = 'CONNECTION_SUCCESS';
-export const CONNECTION_FAILURE = 'CONNECTION_FAILURE';
+export const CONNECTION_REQUEST = 'CONNECTION_REQUEST'
+export const CONNECTION_SUCCESS = 'CONNECTION_SUCCESS'
+export const CONNECTION_FAILURE = 'CONNECTION_FAILURE'
 
 /*
 * Function connect - Save a connection object to the mongo DB.  This action is dispatched
@@ -18,7 +18,7 @@ export const CONNECTION_FAILURE = 'CONNECTION_FAILURE';
 *   status: '',
 * }
 */
-export function connect(token, details) {
+export function connect (token, details) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/connections`,
@@ -26,9 +26,9 @@ export function connect(token, details) {
       types: [CONNECTION_REQUEST, CONNECTION_SUCCESS, CONNECTION_FAILURE],
       headers: { Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json' },
-      body: JSON.stringify(details),
-    },
-  };
+      body: JSON.stringify(details)
+    }
+  }
 }
 
 /*
@@ -36,20 +36,20 @@ export function connect(token, details) {
 * We just pass the token; backend extracts user `_id` from the JWT token after authentication.
 * @param {string} token - the authToken that allows API actions
 */
-export const GET_ALL_CONNECTIONS_REQUEST = 'GET_ALL_CONNECTIONS_REQUEST';
-export const GET_ALL_CONNECTIONS_SUCCESS = 'GET_ALL_CONNECTIONS_SUCCESS';
-export const GET_ALL_CONNECTIONS_FAILURE = 'GET_ALL_CONNECTIONS_FAILURE';
+export const GET_ALL_CONNECTIONS_REQUEST = 'GET_ALL_CONNECTIONS_REQUEST'
+export const GET_ALL_CONNECTIONS_SUCCESS = 'GET_ALL_CONNECTIONS_SUCCESS'
+export const GET_ALL_CONNECTIONS_FAILURE = 'GET_ALL_CONNECTIONS_FAILURE'
 
-export function getConnections(token) {
+export function getConnections (token) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/connections`,
       method: 'GET',
       types:
         [GET_ALL_CONNECTIONS_REQUEST, GET_ALL_CONNECTIONS_SUCCESS, GET_ALL_CONNECTIONS_FAILURE],
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  };
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  }
 }
 
 /*
@@ -57,11 +57,11 @@ export function getConnections(token) {
 * @param {string} token - the authToken that allows API actions
 * @param {string} update - a string representing the new status
 */
-export const UPDATE_CONNECTION_STATUS_REQUEST = 'UPDATE_CONNECTION_STATUS_REQUEST';
-export const UPDATE_CONNECTION_STATUS_SUCCESS = 'UPDATE_CONNECTION_STATUS_SUCCESS';
-export const UPDATE_CONNECTION_STATUS_FAILURE = 'UPDATE_CONNECTION_STATUS_FAILURE';
+export const UPDATE_CONNECTION_STATUS_REQUEST = 'UPDATE_CONNECTION_STATUS_REQUEST'
+export const UPDATE_CONNECTION_STATUS_SUCCESS = 'UPDATE_CONNECTION_STATUS_SUCCESS'
+export const UPDATE_CONNECTION_STATUS_FAILURE = 'UPDATE_CONNECTION_STATUS_FAILURE'
 
-export function updateConnectionStatus(token, update) {
+export function updateConnectionStatus (token, update) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/connections/`,
@@ -69,11 +69,11 @@ export function updateConnectionStatus(token, update) {
       types: [
         UPDATE_CONNECTION_STATUS_REQUEST,
         UPDATE_CONNECTION_STATUS_SUCCESS,
-        UPDATE_CONNECTION_STATUS_FAILURE,
+        UPDATE_CONNECTION_STATUS_FAILURE
       ],
       headers: { Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json' },
-      body: JSON.stringify(update),
-    },
-  };
+      body: JSON.stringify(update)
+    }
+  }
 }

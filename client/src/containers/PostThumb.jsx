@@ -1,150 +1,149 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import React from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
-import * as Actions from '../store/actions/postActions';
-import * as apiActions from '../store/actions/apiPostActions';
-import { formatDate } from '../utils/';
+import * as Actions from '../store/actions/postActions'
+import * as apiActions from '../store/actions/apiPostActions'
+import { formatDate } from '../utils/'
 
 class PostThumb extends React.Component {
-
-  handleKeyDown(e, post) {
+  handleKeyDown (e, post) {
     // enter key opens modal when focused
-    const action = e.target.className.split('')[0];
+    const action = e.target.className.split('')[0]
     if (e.keyCode === 13 || e.which === 13) {
       switch (action) {
         case 'expand':
-          this.props.openModal(post);
-          break;
+          this.props.openModal(post)
+          break
         default:
-          return null;
+          return null
       }
-    } return null;
+    } return null
   }
 
-  render() {
-    const roleText = (this.props.post.role === 'mentor' ? 'mentor' : 'mentee');
-    let keywordsDisp;
-    let keywordsFirstThree;
-    let keywordsRest = null;
+  render () {
+    const roleText = (this.props.post.role === 'mentor' ? 'mentor' : 'mentee')
+    let keywordsDisp
+    let keywordsFirstThree
+    let keywordsRest = null
     // need to render the whole list to make them searchable,
     // but display only first 3 tags in thumb view
     if (this.props.post.keywords) {
-      keywordsFirstThree = this.props.post.keywords.slice(0, 3);
+      keywordsFirstThree = this.props.post.keywords.slice(0, 3)
       if (this.props.post.keywords.length > 3) {
         keywordsRest = this.props.post.keywords.slice(3,
-          this.props.post.keywords.length);
+          this.props.post.keywords.length)
       }
       keywordsDisp = (<div>
         {keywordsFirstThree.map(word => (
-          <span className="tag-value tag-value--thumb" key={word}>
-            <span className="tag-value__label tag-value__label--thumb">
+          <span className='tag-value tag-value--thumb' key={word}>
+            <span className='tag-value__label tag-value__label--thumb'>
               {word}
             </span>
           </span>
-         ))}{keywordsRest && keywordsRest.map(word => (<span className="tag-value__label sr-only" key={word}>{word}</span>))}</div>
-        );
+        ))}{keywordsRest && keywordsRest.map(word => (<span className='tag-value__label sr-only' key={word}>{word}</span>))}</div>
+      )
     }
-    const avatarUrl = this.props.post.author ?
-      this.props.post.author.avatarUrl :
-      'https://cdn.glitch.com/4965fcd8-26e0-4a69-a667-bb075062e086%2Fandroid-chrome-384x384.png?1504907183396';
+    const avatarUrl = this.props.post.author
+      ? this.props.post.author.avatarUrl
+      : 'https://cdn.glitch.com/4965fcd8-26e0-4a69-a667-bb075062e086%2Fandroid-chrome-384x384.png?1504907183396'
     const backgroundStyle = {
       backgroundImage: `url(${avatarUrl})`,
       backgroundSize: 'cover',
-      backgroundPosition: 'center center',
-    };
+      backgroundPosition: 'center center'
+    }
 
     return (
       <div>
         {this.props.post.author &&
-          <div className="post-thumb">
+          <div className='post-thumb'>
             <div className={this.props.post.role === 'mentor' ? 'post-thumb__ribbon' : 'post-thumb__ribbon--green'}>
               <span className={this.props.post.role === 'mentor' ? 'post-thumb__ribbon-span' : 'post-thumb__ribbon-span--green'}>{roleText}</span>
             </div>
-            <div className="side front" id="front">
-              <div className="post-thumb__metadata">
-                <span className="post-thumb__views">
-                  <i className="fa fa-eye" /> &nbsp;{this.props.post.meta.views}
+            <div className='side front' id='front'>
+              <div className='post-thumb__metadata'>
+                <span className='post-thumb__views'>
+                  <i className='fa fa-eye' /> &nbsp;{this.props.post.meta.views}
                 </span>
-                <span className="post-thumb__likes">
-                  <i className="fa fa-heart" />&nbsp;{this.props.post.meta.likes}
+                <span className='post-thumb__likes'>
+                  <i className='fa fa-heart' />&nbsp;{this.props.post.meta.likes}
                 </span>
                 {this.props.post.updatedAt &&
-                <div className="post-thumb__date">
-                  <span className="tag-value">
-                    <span className="tag-value__label">
+                <div className='post-thumb__date'>
+                  <span className='tag-value'>
+                    <span className='tag-value__label'>
                       {formatDate(new Date(this.props.post.updatedAt))}
                     </span>
                   </span>
                 </div> }
               </div>
-              <div className="post-thumb__card-body">
-                <div className="post-thumb__text-wrap">
+              <div className='post-thumb__card-body'>
+                <div className='post-thumb__text-wrap'>
                   <button
-                    className="aria-button aria-button__link"
-                    aria-label="expand"
-                    name="expand"
-                    data-taborder="visual"
+                    className='aria-button aria-button__link'
+                    aria-label='expand'
+                    name='expand'
+                    data-taborder='visual'
                     onKeyDown={e => this.handleKeyDown(e, this.props.post)}
                     onClick={
                       () => {
                         if (this.props.appState.user._id !== this.props.post.author._id) {
                           this.props.api.incrementPostView(
-                            this.props.appState.authToken, this.props.post._id);
+                            this.props.appState.authToken, this.props.post._id)
                         }
-                        this.props.openModal(this.props.post);
+                        this.props.openModal(this.props.post)
                       }
-                      }
+                    }
                   >
                     <div className={'post-thumb__title'}>
                       {this.props.post.title}
                     </div>
                   </button>
-                  {this.props.post.excerpt ?
-                    <div className={'post-thumb__body post-thumb__excerpt'}>
+                  {this.props.post.excerpt
+                    ? <div className={'post-thumb__body post-thumb__excerpt'}>
                       {`${this.props.post.excerpt}...`}
-                    </div> :
-                    <div className={'post-thumb__body'}>
+                    </div>
+                    : <div className={'post-thumb__body'}>
                       {this.props.post.body}
                     </div>
-                    }
-                  <div className="tag-value__wrapper">
+                  }
+                  <div className='tag-value__wrapper'>
                     {keywordsDisp || ''}
                   </div>
                 </div>
-                <div className="post-thumb__image-wrap">
-                  <div className="post-thumb__link-wrap">
-                    <div className="post-thumb__image-aspect">
+                <div className='post-thumb__image-wrap'>
+                  <div className='post-thumb__link-wrap'>
+                    <div className='post-thumb__image-aspect'>
                       <Link
-                        className="unstyled-link post-thumb__img-link"
+                        className='unstyled-link post-thumb__img-link'
                         to={`/viewprofile/${this.props.post.author._id}`}
-                        data-taborder="visual"
+                        data-taborder='visual'
                       >
-                        <div className="post-thumb__image-crop">
-                          {this.props.post.author.avatarUrl ?
-                            <div
-                              className="post-thumb__image"
+                        <div className='post-thumb__image-crop'>
+                          {this.props.post.author.avatarUrl
+                            ? <div
+                              className='post-thumb__image'
                               style={backgroundStyle}
-                              role="img"
+                              role='img'
                               aria-label={this.props.post.author.username}
-                            /> :
-                            <i
-                              className="fa fa-user-circle fa-5x post-thumb__icon--avatar"
-                              aria-hidden="true"
+                            />
+                            : <i
+                              className='fa fa-user-circle fa-5x post-thumb__icon--avatar'
+                              aria-hidden='true'
                             />
                           }
                         </div>
                       </Link>
                     </div>
-                    <div className="post-thumb__name-wrap">
+                    <div className='post-thumb__name-wrap'>
                       <Link
-                        className="unstyled-link post-thumb__img-link"
+                        className='unstyled-link post-thumb__img-link'
                         to={`/viewprofile/${this.props.post.author._id}`}
-                        data-taborder="visual"
+                        data-taborder='visual'
                       >
-                        <span className="post-thumb__username">
+                        <span className='post-thumb__username'>
                           @{this.props.post.author.username}
                         </span>
                       </Link>
@@ -152,27 +151,27 @@ class PostThumb extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="post-thumb__button-wrap">
+              <div className='post-thumb__button-wrap'>
                 <button
-                  className="expand post-thumb__expand"
-                  aria-label="expand"
-                  name="expand"
-                  data-taborder="visual"
+                  className='expand post-thumb__expand'
+                  aria-label='expand'
+                  name='expand'
+                  data-taborder='visual'
                   onKeyDown={e => this.handleKeyDown(e, this.props.post)}
                   onClick={
                     () => {
                       if (this.props.appState.user._id !==
                         this.props.post.author._id) {
                         this.props.api.incrementPostView(
-                          this.props.appState.authToken, this.props.post._id);
+                          this.props.appState.authToken, this.props.post._id)
                       }
-                      this.props.openModal(this.props.post);
+                      this.props.openModal(this.props.post)
                     }
                   }
                 >
                   <i
-                    className="fa fa-expand post-thumb__icon--expand"
-                    aria-label="expand"
+                    className='fa fa-expand post-thumb__icon--expand'
+                    aria-label='expand'
                   />
                 </button>
               </div>
@@ -180,7 +179,7 @@ class PostThumb extends React.Component {
           </div>
         }
       </div>
-    );
+    )
   }
 }
 
@@ -190,7 +189,7 @@ PostThumb.propTypes = {
     viewPost: PropTypes.func,
     likePost: PropTypes.func,
     unlikePost: PropTypes.func,
-    incrementPostView: PropTypes.func,
+    incrementPostView: PropTypes.func
   }).isRequired,
   appState: PropTypes.shape({
     loggedIn: PropTypes.bool,
@@ -198,8 +197,8 @@ PostThumb.propTypes = {
     user: PropTypes.shape({
       _id: PropTypes.string,
       avatarUrl: PropTypes.string,
-      username: PropTypes.string,
-    }).isRequired,
+      username: PropTypes.string
+    }).isRequired
   }).isRequired,
   post: PropTypes.shape({
     _id: PropTypes.string.isRequired,
@@ -211,25 +210,25 @@ PostThumb.propTypes = {
     author: PropTypes.shape({
       _id: PropTypes.string.isRequired,
       avatarUrl: PropTypes.string.isRequired,
-      username: PropTypes.string.isRequired,
+      username: PropTypes.string.isRequired
     }),
     meta: PropTypes.shape({
       views: PropTypes.number,
-      likes: PropTypes.number,
+      likes: PropTypes.number
     }),
-    updatedAt: PropTypes.string,
-  }).isRequired,
-};
+    updatedAt: PropTypes.string
+  }).isRequired
+}
 
 const mapStateToProps = state => ({
   appState: state.appState,
   posts: state.posts,
-  connection: state.connection,
-});
+  connection: state.connection
+})
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(Actions, dispatch),
-  api: bindActionCreators(apiActions, dispatch),
-});
+  api: bindActionCreators(apiActions, dispatch)
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostThumb);
+export default connect(mapStateToProps, mapDispatchToProps)(PostThumb)

@@ -1,7 +1,7 @@
-import update from 'immutability-helper';
+import update from 'immutability-helper'
 import { SET_POSTS, SAVE_POST, CLEAR_CURRENT_POST, SET_EDIT_POST, SET_FORM_FIELD, ADD_KEYWORD,
   REMOVE_KEYWORD, SET_SEARCH_CRITERIA, CLEAR_SEARCH_CRITERIA, SET_VIEWPOST_MODAL, RESET_FORM,
-  SET_LOADPOSTS_MODAL, SET_CURRENT_POST } from '../actions/postActions';
+  SET_LOADPOSTS_MODAL, SET_CURRENT_POST } from '../actions/postActions'
 import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE, ADD_POST_REQUEST, ADD_POST_SUCCESS,
   ADD_POST_FAILURE, MODIFY_POST_REQUEST, MODIFY_POST_SUCCESS, MODIFY_POST_FAILURE,
   GET_ALL_POSTS_REQUEST, GET_ALL_POSTS_SUCCESS, GET_ALL_POSTS_FAILURE, GET_USERPOSTS_REQUEST,
@@ -9,8 +9,8 @@ import { GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE, ADD_POST_REQUEST,
   VIEW_POST_FAILURE, DELETE_POST_REQUEST, DELETE_POST_SUCCESS, DELETE_POST_FAILURE,
   INCREMENT_POSTVIEW_REQUEST, INCREMENT_POSTVIEW_SUCCESS, INCREMENT_POSTVIEW_FAILURE,
   LIKE_POST_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE, UNLIKE_POST_REQUEST, UNLIKE_POST_SUCCESS,
-  UNLIKE_POST_FAILURE,
-} from '../actions/apiPostActions';
+  UNLIKE_POST_FAILURE
+} from '../actions/apiPostActions'
 
 const defaultForm = {
   active: true,
@@ -21,8 +21,8 @@ const defaultForm = {
   content: '',
   hideErr: 'hidden',
   errMsg: '',
-  update: false,
-};
+  update: false
+}
 const defaultPost = {
   active: true,
   author: {
@@ -32,15 +32,15 @@ const defaultPost = {
     avatarUrl: '',
     time_zone: '',
     languages: [],
-    gender: '',
+    gender: ''
   },
   availability: '',
   keywords: [],
   body: '',
   excerpt: '',
   role: 'mentor',
-  updated: Date.now(),
-};
+  updated: Date.now()
+}
 const INITIAL_STATE = {
   entries: [],
   postErrorMsg: '',
@@ -49,7 +49,7 @@ const INITIAL_STATE = {
     role: '',
     title: '',
     author: '',
-    keywords: '',
+    keywords: ''
   },
   gettingPost: false,
   getError: null,
@@ -64,7 +64,7 @@ const INITIAL_STATE = {
     class: 'modal__hide',
     text: '',
     title: '',
-    type: '',
+    type: ''
   },
   loadPostsError: '',
   viewPostSpinnerClass: 'spinner__hide',
@@ -72,38 +72,37 @@ const INITIAL_STATE = {
     class: 'modal__hide',
     text: '',
     type: '',
-    title: '',
+    title: ''
   },
   deletePostSpinnerClass: 'spinner__hide',
   deletePostModalClass: 'modal__hide',
-  deletePostModalText: '',
-};
+  deletePostModalText: ''
+}
 
-function posts(state = INITIAL_STATE, action) {
-  let error;
-  let index;
+function posts (state = INITIAL_STATE, action) {
+  let error
+  let index
   switch (action.type) {
-
     case SET_VIEWPOST_MODAL:
       return Object.assign(
         {},
         state,
         {
-          viewPostModal: action.payload,
-        },
-      );
+          viewPostModal: action.payload
+        }
+      )
 
     case SET_POSTS:
-      return Object.assign({}, state, { entries: action.payload });
+      return Object.assign({}, state, { entries: action.payload })
 
     case SAVE_POST:
-      return update(state, { entries: { $push: action.payload } });
+      return update(state, { entries: { $push: action.payload } })
 
     case SET_CURRENT_POST:
-      return Object.assign({}, state, { currentPost: action.payload });
+      return Object.assign({}, state, { currentPost: action.payload })
 
     case CLEAR_CURRENT_POST:
-      return Object.assign({}, state, { currentPost: defaultPost, editForm: defaultForm });
+      return Object.assign({}, state, { currentPost: defaultPost, editForm: defaultForm })
 
     case SET_EDIT_POST:
       return update(
@@ -118,16 +117,16 @@ function posts(state = INITIAL_STATE, action) {
             content: { $set: action.payload.body },
             hideErr: { $set: 'hidden' },
             errMsg: { $set: '' },
-            update: { $set: true },
-          },
-        },
-      );
+            update: { $set: true }
+          }
+        }
+      )
 
     case RESET_FORM:
-      return Object.assign({}, state, { editForm: defaultForm });
+      return Object.assign({}, state, { editForm: defaultForm })
 
     case SET_FORM_FIELD:
-      return update(state, { editForm: { [action.field]: { $set: action.value } } });
+      return update(state, { editForm: { [action.field]: { $set: action.value } } })
 
     case ADD_KEYWORD:
       return update(
@@ -135,19 +134,19 @@ function posts(state = INITIAL_STATE, action) {
         {
           editForm: {
             keywords: { $push: [action.payload] },
-            keyword: { $set: '' },
-          },
-        });
+            keyword: { $set: '' }
+          }
+        })
 
     case REMOVE_KEYWORD:
-      return update(state, { editForm: { keywords: { $splice: [[action.payload, 1]] } } });
+      return update(state, { editForm: { keywords: { $splice: [[action.payload, 1]] } } })
 
     case GET_POST_REQUEST:
       return Object.assign(
         {},
         state,
-        { gettingPost: true, postError: null, searchPost: null },
-      );
+        { gettingPost: true, postError: null, searchPost: null }
+      )
 
     case GET_POST_SUCCESS:
       return update(
@@ -155,13 +154,13 @@ function posts(state = INITIAL_STATE, action) {
         {
           gettingPost: { $set: false },
           getError: { $set: null },
-          searchPost: { $set: action.payload[0] },
-        },
-      );
+          searchPost: { $set: action.payload[0] }
+        }
+      )
 
     case GET_POST_FAILURE:
-      error = action.payload.data || 'An unknown error occurred while fetching posts';
-      return Object.assign({}, state, { gettingPost: false, getError: error, searchPost: null });
+      error = action.payload.data || 'An unknown error occurred while fetching posts'
+      return Object.assign({}, state, { gettingPost: false, getError: error, searchPost: null })
 
     case GET_ALL_POSTS_REQUEST:
       return Object.assign(
@@ -173,10 +172,10 @@ function posts(state = INITIAL_STATE, action) {
             text: '',
             class: 'modal__hide',
             type: '',
-            title: '',
-          },
-        },
-      );
+            title: ''
+          }
+        }
+      )
 
     case GET_ALL_POSTS_SUCCESS:
       return update(
@@ -184,12 +183,12 @@ function posts(state = INITIAL_STATE, action) {
         {
           loadPostsSpinnerClass: { $set: 'spinner__hide' },
           loadPostsError: { $set: null },
-          entries: { $set: action.payload },
-        },
-      );
+          entries: { $set: action.payload }
+        }
+      )
 
     case GET_ALL_POSTS_FAILURE:
-      error = 'An unknown error occurred while loading posts';
+      error = 'An unknown error occurred while loading posts'
       return Object.assign(
         {},
         state,
@@ -199,10 +198,10 @@ function posts(state = INITIAL_STATE, action) {
             text: error,
             class: 'modal__show',
             type: 'modal__error',
-            title: 'ERROR',
-          },
-        },
-      );
+            title: 'ERROR'
+          }
+        }
+      )
 
     case GET_USERPOSTS_REQUEST:
       return Object.assign(
@@ -214,10 +213,10 @@ function posts(state = INITIAL_STATE, action) {
             text: '',
             class: 'modal__hide',
             type: '',
-            title: '',
-          },
-        },
-      );
+            title: ''
+          }
+        }
+      )
 
     case GET_USERPOSTS_SUCCESS:
       return update(
@@ -225,9 +224,9 @@ function posts(state = INITIAL_STATE, action) {
         {
           loadPostsSpinnerClass: { $set: 'spinner__hide' },
           loadPostsError: { $set: null },
-          entries: { $set: action.payload },
-        },
-      );
+          entries: { $set: action.payload }
+        }
+      )
 
     case GET_USERPOSTS_FAILURE:
       return Object.assign(
@@ -239,22 +238,22 @@ function posts(state = INITIAL_STATE, action) {
             text: 'An unknown error occurred while loading posts',
             class: 'modal__show',
             type: 'modal__error',
-            title: 'ERROR',
-          },
-        },
-      );
+            title: 'ERROR'
+          }
+        }
+      )
 
     case SET_LOADPOSTS_MODAL:
       return Object.assign(
         {},
         state,
         {
-          loadPostsModal: action.payload,
-        },
-      );
+          loadPostsModal: action.payload
+        }
+      )
 
     case ADD_POST_REQUEST:
-      return Object.assign({}, state, { addingPost: true, addError: null });
+      return Object.assign({}, state, { addingPost: true, addError: null })
 
     case ADD_POST_SUCCESS:
       return update(
@@ -264,16 +263,16 @@ function posts(state = INITIAL_STATE, action) {
           addError: { $set: null },
           editForm: { $set: defaultForm },
           currentPost: { $set: defaultPost },
-          entries: { $push: [action.payload.post] },
-        },
-      );
+          entries: { $push: [action.payload.post] }
+        }
+      )
 
     case ADD_POST_FAILURE:
-      error = 'An unknown error occurred while attempting to add this post';
-      return Object.assign({}, state, { addingPost: false, addError: error });
+      error = 'An unknown error occurred while attempting to add this post'
+      return Object.assign({}, state, { addingPost: false, addError: error })
 
     case MODIFY_POST_REQUEST:
-      return Object.assign({}, state, { savingPost: true, saveError: null });
+      return Object.assign({}, state, { savingPost: true, saveError: null })
 
     case MODIFY_POST_SUCCESS:
       for (let i = 0; i < state.entries.length; i += 1) {
@@ -285,19 +284,19 @@ function posts(state = INITIAL_STATE, action) {
               saveError: { $set: null },
               editForm: { $set: defaultForm },
               currentPost: { $set: defaultPost },
-              entries: { $splice: [[i, 1, action.payload.post]] },
-            },
-          );
+              entries: { $splice: [[i, 1, action.payload.post]] }
+            }
+          )
         }
       }
-      return state;
+      return state
 
     case MODIFY_POST_FAILURE:
-      error = 'An unknown error occurred while attempting to edit this post';
-      return Object.assign({}, state, { savingPost: false, saveError: error });
+      error = 'An unknown error occurred while attempting to edit this post'
+      return Object.assign({}, state, { savingPost: false, saveError: error })
 
     case VIEW_POST_REQUEST:
-      return Object.assign({}, state, { viewPostSpinnerClass: 'spinner__show' });
+      return Object.assign({}, state, { viewPostSpinnerClass: 'spinner__show' })
 
     case VIEW_POST_SUCCESS:
       return Object.assign(
@@ -305,12 +304,12 @@ function posts(state = INITIAL_STATE, action) {
         state,
         {
           viewPostSpinnerClass: 'spinner__hide',
-          currentPost: action.payload[0],
-        },
-      );
+          currentPost: action.payload[0]
+        }
+      )
 
     case VIEW_POST_FAILURE:
-      error = 'An error occurred while trying to view this post';
+      error = 'An error occurred while trying to view this post'
       return Object.assign(
         {},
         state,
@@ -318,12 +317,12 @@ function posts(state = INITIAL_STATE, action) {
           viewPostSpinnerClass: 'spinner__hide',
           viewPostModalClass: 'modal__show',
           viewPostModalType: 'modal__error',
-          viewPostModalText: error,
-        },
-      );
+          viewPostModalText: error
+        }
+      )
 
     case DELETE_POST_REQUEST:
-      return Object.assign({}, state, { deletePostSpinnerClass: 'spinner__show' });
+      return Object.assign({}, state, { deletePostSpinnerClass: 'spinner__show' })
 
     case DELETE_POST_SUCCESS:
       for (let i = 0; i < state.entries.length; i += 1) {
@@ -334,27 +333,27 @@ function posts(state = INITIAL_STATE, action) {
               deletePostSpinnerClass: { $set: 'spinner__hide' },
               deletePostModalClass: { $set: 'modal__show' },
               deletePostModalText: { $set: 'Post Deleted!' },
-              entries: { $splice: [[i, 1]] },
-            },
-          );
+              entries: { $splice: [[i, 1]] }
+            }
+          )
         }
       }
-      break;
+      break
 
     case DELETE_POST_FAILURE:
-      error = 'An unknown error occurred while attempting to delete this post';
+      error = 'An unknown error occurred while attempting to delete this post'
       return Object.assign(
         {},
         state,
         {
           deletePostSpinnerClass: 'spinner__hide',
           deletePostModalClass: 'modal__show',
-          deletePostModalText: error,
-        },
-      );
+          deletePostModalText: error
+        }
+      )
 
     case SET_SEARCH_CRITERIA:
-      return update(state, { searchCriteria: { $set: action.payload } });
+      return update(state, { searchCriteria: { $set: action.payload } })
 
     case CLEAR_SEARCH_CRITERIA:
       return update(
@@ -364,10 +363,10 @@ function posts(state = INITIAL_STATE, action) {
             role: { $set: '' },
             title: { $set: '' },
             author: { $set: '' },
-            keywords: { $set: [] },
-          },
-        },
-      );
+            keywords: { $set: [] }
+          }
+        }
+      )
 
     /*
     *  Called From: <PostFull />
@@ -376,7 +375,7 @@ function posts(state = INITIAL_STATE, action) {
     *  nothing because we do not block operations when this request is dispatched.
     */
     case INCREMENT_POSTVIEW_REQUEST:
-      return state;
+      return state
 
     /*
     *  Called From: <PostFull />
@@ -387,8 +386,8 @@ function posts(state = INITIAL_STATE, action) {
     case INCREMENT_POSTVIEW_SUCCESS:
       for (let i = 0; i < state.entries.length; i += 1) {
         if (state.entries[i]._id === action.meta.postId) {
-          index = i;
-          break;
+          index = i
+          break
         }
       }
       return update(
@@ -398,16 +397,16 @@ function posts(state = INITIAL_STATE, action) {
             [index]: {
               meta: {
                 views: {
-                  $apply: x => x + 1,
-                },
-              },
-            },
-          },
-        },
-      );
+                  $apply: x => x + 1
+                }
+              }
+            }
+          }
+        }
+      )
 
     case INCREMENT_POSTVIEW_FAILURE:
-      return state;
+      return state
 
     /*
     *  Called From: <PostFull />
@@ -416,7 +415,7 @@ function posts(state = INITIAL_STATE, action) {
     *  nothing because we do not block operations when this request is dispatched.
     */
     case LIKE_POST_REQUEST:
-      return state;
+      return state
 
     /*
     *  Called From: <PostFull />
@@ -427,7 +426,7 @@ function posts(state = INITIAL_STATE, action) {
     case LIKE_POST_SUCCESS:
       for (let i = 0; i < state.entries.length; i += 1) {
         if (action.meta.postId === state.entries[i]._id) {
-          index = i;
+          index = i
           return update(
             state,
             {
@@ -435,20 +434,20 @@ function posts(state = INITIAL_STATE, action) {
                 [index]: {
                   meta: {
                     likes: {
-                      $apply: x => x + 1,
-                    },
-                  },
-                },
-              },
-            },
-          );
+                      $apply: x => x + 1
+                    }
+                  }
+                }
+              }
+            }
+          )
         }
       }
-      return state;
+      return state
 
     case LIKE_POST_FAILURE:
-      error = 'An unknown error occurred';
-      return Object.assign({}, state);
+      error = 'An unknown error occurred'
+      return Object.assign({}, state)
 
     /*
     *  Called From: <PostFull />
@@ -457,7 +456,7 @@ function posts(state = INITIAL_STATE, action) {
     *  nothing because we do not block operations when this request is dispatched.
     */
     case UNLIKE_POST_REQUEST:
-      return state;
+      return state
 
     /*
     *  Called From: <PostFull />
@@ -468,7 +467,7 @@ function posts(state = INITIAL_STATE, action) {
     case UNLIKE_POST_SUCCESS:
       for (let i = 0; i < state.entries.length; i += 1) {
         if (action.meta.postId === state.entries[i]._id) {
-          index = i;
+          index = i
           return update(
             state,
             {
@@ -476,24 +475,24 @@ function posts(state = INITIAL_STATE, action) {
                 [index]: {
                   meta: {
                     likes: {
-                      $apply: x => x - 1,
-                    },
-                  },
-                },
-              },
-            },
-          );
+                      $apply: x => x - 1
+                    }
+                  }
+                }
+              }
+            }
+          )
         }
       }
-      return state;
+      return state
 
     case UNLIKE_POST_FAILURE:
-      return state;
+      return state
 
     default:
-      return state;
+      return state
   }
-  return null;
+  return null
 }
 
-export default posts;
+export default posts

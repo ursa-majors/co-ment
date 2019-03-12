@@ -1,9 +1,9 @@
-import update from 'immutability-helper';
+import update from 'immutability-helper'
 import { SET_EMAIL_OPTIONS, SET_EMAIL_FORM_FIELD, CLEAR_FORM_ERROR, SET_FORM_ERROR,
-  SET_EMAIL_MODAL } from '../actions/emailActions';
-import { SEND_EMAIL_REQUEST, SEND_EMAIL_SUCCESS, SEND_EMAIL_FAILURE } from '../actions/apiActions';
+  SET_EMAIL_MODAL } from '../actions/emailActions'
+import { SEND_EMAIL_REQUEST, SEND_EMAIL_SUCCESS, SEND_EMAIL_FAILURE } from '../actions/apiActions'
 import { UPDATE_CONNECTION_STATUS_REQUEST, UPDATE_CONNECTION_STATUS_SUCCESS,
-  UPDATE_CONNECTION_STATUS_FAILURE } from '../actions/apiConnectionActions';
+  UPDATE_CONNECTION_STATUS_FAILURE } from '../actions/apiConnectionActions'
 
 const INITIAL_STATE = {
   recipient: '',
@@ -22,12 +22,12 @@ const INITIAL_STATE = {
     text: '',
     title: '',
     type: '',
-    action: null,
-  },
-};
+    action: null
+  }
+}
 
-function connectionEmail(state = INITIAL_STATE, action) {
-  let error;
+function connectionEmail (state = INITIAL_STATE, action) {
+  let error
   switch (action.type) {
     case SET_EMAIL_OPTIONS:
       return update(
@@ -40,12 +40,12 @@ function connectionEmail(state = INITIAL_STATE, action) {
           role: { $set: action.payload.role },
           type: { $set: action.payload.type },
           connectionId: { $set: action.payload.connectionId },
-          conversationId: { $set: action.payload.conversationId },
-        },
-      );
+          conversationId: { $set: action.payload.conversationId }
+        }
+      )
 
     case SET_EMAIL_FORM_FIELD:
-      return update(state, { [action.payload.id]: { $set: action.payload.value } });
+      return update(state, { [action.payload.id]: { $set: action.payload.value } })
 
     case CLEAR_FORM_ERROR:
       return Object.assign(
@@ -53,21 +53,21 @@ function connectionEmail(state = INITIAL_STATE, action) {
         state,
         {
           formError: '',
-          formErrorClass: 'form__hidden',
-        },
-      );
+          formErrorClass: 'form__hidden'
+        }
+      )
 
     case SET_FORM_ERROR:
-      return Object.assign({}, state, { formError: action.payload, formErrorClass: 'form__error' });
+      return Object.assign({}, state, { formError: action.payload, formErrorClass: 'form__error' })
 
     case SEND_EMAIL_REQUEST:
-      return Object.assign({}, state, { emailSpinnerClass: 'spinner__show' });
+      return Object.assign({}, state, { emailSpinnerClass: 'spinner__show' })
 
     case SEND_EMAIL_SUCCESS:
-      return Object.assign({}, state, { emailSpinnerClass: 'spinner__hide' });
+      return Object.assign({}, state, { emailSpinnerClass: 'spinner__hide' })
 
     case SEND_EMAIL_FAILURE:
-      error = action.payload.response.message || 'An unknown error occurred while sending connection email';
+      error = action.payload.response.message || 'An unknown error occurred while sending connection email'
       return Object.assign(
         {},
         state,
@@ -77,13 +77,13 @@ function connectionEmail(state = INITIAL_STATE, action) {
             class: 'modal__show',
             text: error,
             title: 'ERROR',
-            type: 'modal__error',
-          },
-        },
-      );
+            type: 'modal__error'
+          }
+        }
+      )
 
     case SET_EMAIL_MODAL:
-      return Object.assign({}, state, { emailModal: action.payload });
+      return Object.assign({}, state, { emailModal: action.payload })
 
     /*
     *  Called From: <ConnectionDetails />
@@ -95,9 +95,9 @@ function connectionEmail(state = INITIAL_STATE, action) {
         {},
         state,
         {
-          emailSpinnerClass: 'spinner__show',
-        },
-      );
+          emailSpinnerClass: 'spinner__show'
+        }
+      )
 
     /*
     *  Called From: <ConnectionDetails />
@@ -107,7 +107,7 @@ function connectionEmail(state = INITIAL_STATE, action) {
     *   in the connections array.
     */
     case UPDATE_CONNECTION_STATUS_SUCCESS:
-      return Object.assign({}, state, { emailSpinnerClass: 'spinner__hide' });
+      return Object.assign({}, state, { emailSpinnerClass: 'spinner__hide' })
 
     /*
     *  Called From: <ConnectionDetails />
@@ -115,7 +115,7 @@ function connectionEmail(state = INITIAL_STATE, action) {
     *  Purpose: Provide user a description of why the API call fialed.
     */
     case UPDATE_CONNECTION_STATUS_FAILURE:
-      error = 'An error occurred while updating connection status';
+      error = 'An error occurred while updating connection status'
       return Object.assign(
         {},
         state,
@@ -125,14 +125,14 @@ function connectionEmail(state = INITIAL_STATE, action) {
             class: { $set: 'modal__show' },
             type: { $set: 'modal__error' },
             text: { $set: error },
-            title: { $set: 'ERROR' },
-          },
-        },
-      );
+            title: { $set: 'ERROR' }
+          }
+        }
+      )
 
     default:
-      return state;
+      return state
   }
 }
 
-export default connectionEmail;
+export default connectionEmail

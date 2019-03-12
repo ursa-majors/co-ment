@@ -1,12 +1,12 @@
-import update from 'immutability-helper';
+import update from 'immutability-helper'
 
 import { LOGOUT, SET_REDIRECT_URL, SET_WINDOW_SIZE, SET_MENU_STATE,
   SET_SCROLLED, SET_ADMIN_MENU_STATE,
-  SET_MENU_BACKGROUND, SET_CONTROLS_BACKGROUND } from '../actions';
+  SET_MENU_BACKGROUND, SET_CONTROLS_BACKGROUND } from '../actions'
 import { VALIDATE_TOKEN_REQUEST, VALIDATE_TOKEN_SUCCESS,
   VALIDATE_TOKEN_FAILURE, LOGIN_SUCCESS, REFRESH_TOKEN_REQUEST,
   REFRESH_TOKEN_SUCCESS, REFRESH_TOKEN_FAILURE,
-  REGISTRATION_SUCCESS, RESET_VALIDATE_MODAL } from '../actions/apiLoginActions';
+  REGISTRATION_SUCCESS, RESET_VALIDATE_MODAL } from '../actions/apiLoginActions'
 
 const INITIAL_STATE = {
   loggedIn: false,
@@ -16,14 +16,14 @@ const INITIAL_STATE = {
     _id: '',
     avatarUrl: '',
     username: '',
-    validated: false,
+    validated: false
   },
   loginSpinnerClass: 'spinner__hide',
   redirectUrl: '',
   windowSize: {
     width: undefined,
     height: undefined,
-    mobile: false,
+    mobile: false
   },
   adminMenuState: 'closed',
   menuState: 'closed',
@@ -37,9 +37,9 @@ const INITIAL_STATE = {
     class: 'modal__hide',
     text: '',
     title: '',
-    type: '',
-  },
-};
+    type: ''
+  }
+}
 
 /*
 *  This is the appState reducer.  It is meant to hold global settings
@@ -50,33 +50,32 @@ const INITIAL_STATE = {
 *  redirectUrl: string - passed by the server when a user access an Express route that is not '/'.
 *    Client will attempt to load the expected page for the user.
 */
-function appState(state = INITIAL_STATE, action) {
+function appState (state = INITIAL_STATE, action) {
   switch (action.type) {
-
     /*
     * This action is issued only from the <Logout/> component.
     * On LOGOUT action, remove the userId and token from localStorage.
     * Reset to initial state.
     */
     case LOGOUT:
-      window.localStorage.removeItem('authToken');
-      window.localStorage.removeItem('userId');
+      window.localStorage.removeItem('authToken')
+      window.localStorage.removeItem('userId')
       return update(
         state,
         {
           loggedIn: { $set: false },
           windowSize: {
-            width: { $set: window.innerWidth },
-          },
-        },
-      );
+            width: { $set: window.innerWidth }
+          }
+        }
+      )
     /*
     * This action is issued only from the <Home/> component.
     * On VALIDATE_TOKEN_REQUEST action, set the spinner class to show.
     * This activates the spinner component on the home page so user knows the action is running
     */
     case VALIDATE_TOKEN_REQUEST:
-      return Object.assign({}, state, { loginSpinnerClass: 'spinner__show' });
+      return Object.assign({}, state, { loginSpinnerClass: 'spinner__show' })
 
     /*
     * This action is issued only from the <Home/> component, when the localStorage token
@@ -86,8 +85,8 @@ function appState(state = INITIAL_STATE, action) {
     * Save the userId and token in the redux store...set loggedIn to TRUE.
     */
     case VALIDATE_TOKEN_SUCCESS:
-    console.log('validate token success');
-    console.log(action.payload);
+      console.log('validate token success')
+      console.log(action.payload)
       return Object.assign(
         {},
         state,
@@ -98,13 +97,13 @@ function appState(state = INITIAL_STATE, action) {
             _id: action.payload._id,
             avatarUrl: action.payload.avatarUrl,
             username: action.payload.username,
-            validated: action.payload.validated,
+            validated: action.payload.validated
           },
-          authToken: action.meta.token,
-        },
-       );
+          authToken: action.meta.token
+        }
+      )
 
-     /*
+      /*
      * This action is issued only from the <Home/> component, when the localStorage token
      * is not validated by the server.
      * On VALIDATE_TOKEN_FAILURE action, set the spinner class to hide.
@@ -112,16 +111,16 @@ function appState(state = INITIAL_STATE, action) {
      * Set loggedIn to False - displays different menu items on Home page.
      */
     case VALIDATE_TOKEN_FAILURE:
-      window.localStorage.removeItem('authToken');
-      window.localStorage.removeItem('userId');
+      window.localStorage.removeItem('authToken')
+      window.localStorage.removeItem('userId')
       return Object.assign(
         {},
         state,
         {
           loginSpinnerClass: 'spinner__hide',
-          loggedIn: false,
-        },
-      );
+          loggedIn: false
+        }
+      )
 
     /*
     * This action is issued only from the <Login/> component.
@@ -130,8 +129,8 @@ function appState(state = INITIAL_STATE, action) {
     * Populate the store with userId and token, set logged in to true.
     */
     case LOGIN_SUCCESS:
-      window.localStorage.setItem('authToken', JSON.stringify(action.payload.token));
-      window.localStorage.setItem('userId', JSON.stringify(action.payload.profile._id));
+      window.localStorage.setItem('authToken', JSON.stringify(action.payload.token))
+      window.localStorage.setItem('userId', JSON.stringify(action.payload.profile._id))
       return Object.assign(
         {},
         state,
@@ -143,11 +142,11 @@ function appState(state = INITIAL_STATE, action) {
             _id: action.payload.profile._id,
             avatarUrl: action.payload.profile.avatarUrl,
             username: action.payload.profile.username,
-            validated: action.payload.profile.validated,
+            validated: action.payload.profile.validated
           },
-          authToken: action.payload.token,
-        },
-       );
+          authToken: action.payload.token
+        }
+      )
 
     /*
     * This action is issued only from the <Registration/> component.
@@ -155,8 +154,8 @@ function appState(state = INITIAL_STATE, action) {
     * Populate the store with userId and token, set logged in to true.
     */
     case REGISTRATION_SUCCESS:
-      window.localStorage.setItem('authToken', JSON.stringify(action.payload.token));
-      window.localStorage.setItem('userId', JSON.stringify(action.payload.profile._id));
+      window.localStorage.setItem('authToken', JSON.stringify(action.payload.token))
+      window.localStorage.setItem('userId', JSON.stringify(action.payload.profile._id))
       return Object.assign(
         {},
         state,
@@ -165,11 +164,11 @@ function appState(state = INITIAL_STATE, action) {
           user: {
             _id: action.payload.profile._id,
             avatarUrl: action.payload.profile.avatarUrl || '',
-            username: action.payload.profile.username,
+            username: action.payload.profile.username
           },
-          authToken: action.payload.token,
-        },
-       );
+          authToken: action.payload.token
+        }
+      )
 
     /*
     * This action is issued <Login/> and <Home/> components.
@@ -179,8 +178,7 @@ function appState(state = INITIAL_STATE, action) {
     * This function may be called to clear the redirectUrl after client routing occurs.
     */
     case SET_REDIRECT_URL:
-      return Object.assign({}, state, { redirectUrl: action.payload });
-
+      return Object.assign({}, state, { redirectUrl: action.payload })
 
     /*
     * This action is issued from <App/> component.
@@ -189,21 +187,21 @@ function appState(state = INITIAL_STATE, action) {
     * determine mobile status: windowWidth < 480 = true
     */
     case SET_WINDOW_SIZE:
-      return Object.assign({}, state, { windowSize: action.payload });
+      return Object.assign({}, state, { windowSize: action.payload })
 
     /*
     * This action is issued from <HeaderNav/> component.
     * Toggles the mobile menu between open/closed states
     */
     case SET_MENU_STATE:
-      return Object.assign({}, state, { menuState: action.payload });
+      return Object.assign({}, state, { menuState: action.payload })
 
     /*
     * This action is issued from <HeaderNav/> component.
     * Toggles the admin menu between open/closed states
     */
     case SET_ADMIN_MENU_STATE:
-      return Object.assign({}, state, { adminMenuState: action.payload });
+      return Object.assign({}, state, { adminMenuState: action.payload })
 
     /*
     * This action is issued from <HeaderNav/> and <App/> components.
@@ -213,13 +211,13 @@ function appState(state = INITIAL_STATE, action) {
     */
     case SET_MENU_BACKGROUND:
       if (state.windowScrolled && state.menuBackground === '') {
-        return Object.assign({}, state, { menuBackground: 'h-nav__side-bkg-noscroll' });
+        return Object.assign({}, state, { menuBackground: 'h-nav__side-bkg-noscroll' })
       } else if (state.windowSize.width < 650 && state.menuState === 'open') {
-        return Object.assign({}, state, { menuBackground: 'h-nav__side-bkg-noscroll' });
+        return Object.assign({}, state, { menuBackground: 'h-nav__side-bkg-noscroll' })
       } else if (!state.windowScrolled && state.menuBackground) {
-        return Object.assign({}, state, { menuBackground: '' });
+        return Object.assign({}, state, { menuBackground: '' })
       }
-      return state;
+      return state
 
     /*
     * This action is issued from <PostGridControls/> and <App/> components.
@@ -228,11 +226,11 @@ function appState(state = INITIAL_STATE, action) {
     */
     case SET_CONTROLS_BACKGROUND:
       if (state.windowScrolled && state.controlsBackground === '') {
-        return Object.assign({}, state, { controlsBackground: 'posts-grid__controls--bkg-noscroll' });
+        return Object.assign({}, state, { controlsBackground: 'posts-grid__controls--bkg-noscroll' })
       } else if (!state.windowScrolled && state.controlsBackground) {
-        return Object.assign({}, state, { controlsBackground: '' });
+        return Object.assign({}, state, { controlsBackground: '' })
       }
-      return state;
+      return state
 
     /* Called from <App/> component
     * Used to set a boolean to indicate whether the screen is scrolled
@@ -241,8 +239,8 @@ function appState(state = INITIAL_STATE, action) {
     case SET_SCROLLED:
       return Object.assign({}, state, {
         windowScrolled: action.payload.windowScrolled,
-        scrollPosition: action.payload.scrollPosition,
-      });
+        scrollPosition: action.payload.scrollPosition
+      })
 
     case REFRESH_TOKEN_REQUEST:
       return Object.assign(
@@ -250,13 +248,13 @@ function appState(state = INITIAL_STATE, action) {
         state,
         {
           validateSpinnerClass: 'spinner__show',
-          tokenRefreshComplete: undefined,
-        },
-      );
+          tokenRefreshComplete: undefined
+        }
+      )
 
     case REFRESH_TOKEN_SUCCESS:
-      console.log(action.payload);
-      window.localStorage.setItem('authToken', JSON.stringify(action.payload.token));
+      console.log(action.payload)
+      window.localStorage.setItem('authToken', JSON.stringify(action.payload.token))
       return update(
         state,
         {
@@ -264,10 +262,10 @@ function appState(state = INITIAL_STATE, action) {
           tokenRefreshComplete: { $set: true },
           authToken: { $set: action.payload.token },
           user: {
-            validated: { $set: true },
-          },
-        },
-      );
+            validated: { $set: true }
+          }
+        }
+      )
 
     case REFRESH_TOKEN_FAILURE:
       return Object.assign(
@@ -280,17 +278,17 @@ function appState(state = INITIAL_STATE, action) {
             type: 'modal__error',
             text: 'An unknown error occurred while refreshing token',
             title: 'ERROR',
-            class: 'modal__show',
-          },
-        },
-      );
+            class: 'modal__show'
+          }
+        }
+      )
 
     case RESET_VALIDATE_MODAL:
-      return Object.assign({}, state, { validateModal: action.payload });
+      return Object.assign({}, state, { validateModal: action.payload })
 
     default:
-      return state;
+      return state
   }
 }
 
-export default appState;
+export default appState

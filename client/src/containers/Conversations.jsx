@@ -1,58 +1,57 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import React from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
-import * as apiActions from '../store/actions/apiConversationActions';
-import * as Actions from '../store/actions/conversationActions';
-import Spinner from './Spinner';
-import ModalSm from './ModalSm';
-import Conversation from './Conversation';
-import NewMessage from './NewMessage';
-import { formatDateInbox, scrollToBottom } from '../utils';
+import * as apiActions from '../store/actions/apiConversationActions'
+import * as Actions from '../store/actions/conversationActions'
+import Spinner from './Spinner'
+import ModalSm from './ModalSm'
+import Conversation from './Conversation'
+import NewMessage from './NewMessage'
+import { formatDateInbox, scrollToBottom } from '../utils'
 
 class Conversations extends React.Component {
-
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
-      single: false,
-    };
+      single: false
+    }
   }
 
-  componentDidMount() {
-    const token = this.props.appState.authToken;
+  componentDidMount () {
+    const token = this.props.appState.authToken
     this.props.api.getConversations(token)
-    .then((result) => {
-      if (result.type === 'GET_ALL_CONVERSATIONS_SUCCESS') {
-        const sortedConvs = this.props.conversation.conversations
-        .sort((a, b) => new Date(b.latestMessage.createdAt) -
-          new Date(a.latestMessage.createdAt));
-        const newestConv = sortedConvs[0];
-        if (newestConv) {
-          this.props.api.viewConv(token, newestConv._id);
+      .then((result) => {
+        if (result.type === 'GET_ALL_CONVERSATIONS_SUCCESS') {
+          const sortedConvs = this.props.conversation.conversations
+            .sort((a, b) => new Date(b.latestMessage.createdAt) -
+          new Date(a.latestMessage.createdAt))
+          const newestConv = sortedConvs[0]
+          if (newestConv) {
+            this.props.api.viewConv(token, newestConv._id)
+          }
         }
-      }
-    });
+      })
   }
 
-  setSingle() {
+  setSingle () {
     this.setState({
-      single: true,
-    });
+      single: true
+    })
   }
 
-  back() {
+  back () {
     this.setState({
-      single: false,
-    });
+      single: false
+    })
   }
 
-  render() {
-    const token = this.props.appState.authToken;
+  render () {
+    const token = this.props.appState.authToken
     return (
-      <div className="connections">
+      <div className='connections'>
         <Spinner cssClass={this.props.conversation.getConversationsSpinnerClass} />
         <ModalSm
           modalClass={this.props.conversation.getConversationsModal.class}
@@ -65,115 +64,115 @@ class Conversations extends React.Component {
                 class: 'modal__hide',
                 text: '',
                 type: '',
-                title: '',
-              });
+                title: ''
+              })
             }
           }
         />
-        <div className="conn-details__preview">
+        <div className='conn-details__preview'>
           {this.props.appState.windowSize.width <= 600 && this.state.single &&
-            <div className="inbox__btn-wrap">
+            <div className='inbox__btn-wrap'>
               <button
-                className="inbox__btn-back aria-button"
-                aria-label="back to inbox"
+                className='inbox__btn-back aria-button'
+                aria-label='back to inbox'
                 onClick={() => this.back()}
               >
-                <i className="fa fa-chevron-left" />
+                <i className='fa fa-chevron-left' />
               </button>
             </div>
           }
-          <div className="conn-details__text-wrap">
-            <div className="conn-details__title">Messages</div>
+          <div className='conn-details__text-wrap'>
+            <div className='conn-details__title'>Messages</div>
           </div>
           <div>
-            {this.props.conversation.conversations.length ?
-              <div className="inbox__wrap">
-                <div className="inbox__sidebar">
+            {this.props.conversation.conversations.length
+              ? <div className='inbox__wrap'>
+                <div className='inbox__sidebar'>
                   { (this.props.appState.windowSize.width > 600 || !this.state.single) &&
-                    <div className="inbox__messagelist">
+                    <div className='inbox__messagelist'>
                       {this.props.conversation.conversations
                         .filter(conversation => conversation.participants.length === 2)
                         .sort((a, b) => new Date(b.latestMessage.createdAt) -
                           new Date(a.latestMessage.createdAt)).map((item) => {
-                            const sender = item.participants.find(participant => participant._id !==
-                              this.props.appState.user._id);
-                            const avatarUrl = sender && sender.avatarUrl ?
-                              sender.avatarUrl :
-                              'https://cdn.glitch.com/4965fcd8-26e0-4a69-a667-bb075062e086%2Fandroid-chrome-384x384.png?1504907183396';
-                            const name = sender && sender.name ? sender.name : sender.username;
-                            const backgroundStyle = {
-                              backgroundImage: `url(${avatarUrl})`,
-                              backgroundSize: 'cover',
-                              backgroundPosition: 'center center',
-                            };
-                            const conv2view = { ...item };
-                            const formattedDate = formatDateInbox(
-                              item.latestMessage.createdAt);
-                            let dateOnly;
-                            let amPm;
-                            let smallCaps = false;
-                            // format am/pm in small caps because OCD
-                            if (formattedDate.substr(formattedDate.length - 1, formattedDate.length) === 'm') {
-                              dateOnly = formattedDate.substr(0, formattedDate.length - 2);
-                              amPm = formattedDate.slice(-2);
-                              smallCaps = true;
-                            }
-                            return (
-                              <button
-                                key={item._id}
-                                className={this.props.conversation.currentConv._id === item._id ? 'aria-button inbox__message inbox__message--active' : 'aria-button inbox__message'}
-                                onClick={() => {
-                                  this.props.api.viewConv(token, conv2view._id)
-                                    .then((result) => {
-                                      if (result.type === 'VIEW_CONV_SUCCESS') {
-                                        this.props.api.getConversations(token)
-                                          .then(() => {
-                                            this.setSingle();
-                                          });
-                                        scrollToBottom();
-                                      }
-                                    });
-                                }
-                                  }
-                              >
-                                {item.latestMessage.unread &&
+                          const sender = item.participants.find(participant => participant._id !==
+                              this.props.appState.user._id)
+                          const avatarUrl = sender && sender.avatarUrl
+                            ? sender.avatarUrl
+                            : 'https://cdn.glitch.com/4965fcd8-26e0-4a69-a667-bb075062e086%2Fandroid-chrome-384x384.png?1504907183396'
+                          const name = sender && sender.name ? sender.name : sender.username
+                          const backgroundStyle = {
+                            backgroundImage: `url(${avatarUrl})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center center'
+                          }
+                          const conv2view = { ...item }
+                          const formattedDate = formatDateInbox(
+                            item.latestMessage.createdAt)
+                          let dateOnly
+                          let amPm
+                          let smallCaps = false
+                          // format am/pm in small caps because OCD
+                          if (formattedDate.substr(formattedDate.length - 1, formattedDate.length) === 'm') {
+                            dateOnly = formattedDate.substr(0, formattedDate.length - 2)
+                            amPm = formattedDate.slice(-2)
+                            smallCaps = true
+                          }
+                          return (
+                            <button
+                              key={item._id}
+                              className={this.props.conversation.currentConv._id === item._id ? 'aria-button inbox__message inbox__message--active' : 'aria-button inbox__message'}
+                              onClick={() => {
+                                this.props.api.viewConv(token, conv2view._id)
+                                  .then((result) => {
+                                    if (result.type === 'VIEW_CONV_SUCCESS') {
+                                      this.props.api.getConversations(token)
+                                        .then(() => {
+                                          this.setSingle()
+                                        })
+                                      scrollToBottom()
+                                    }
+                                  })
+                              }
+                              }
+                            >
+                              {item.latestMessage.unread &&
                                   item.latestMessage.recipient ===
                                   this.props.appState.user._id &&
-                                  <span className="inbox__new" />
-                                }
-                                <div className="inbox__avatar">
-                                  <div className="inbox__image-aspect">
-                                    <div className="h-nav__image-crop">
-                                      <div
-                                        className="h-nav__image"
-                                        style={backgroundStyle}
-                                        role="img"
-                                        aria-label={name}
-                                      />
+                                  <span className='inbox__new' />
+                              }
+                              <div className='inbox__avatar'>
+                                <div className='inbox__image-aspect'>
+                                  <div className='h-nav__image-crop'>
+                                    <div
+                                      className='h-nav__image'
+                                      style={backgroundStyle}
+                                      role='img'
+                                      aria-label={name}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                              <div className='inbox__message-wrap'>
+                                <div className='inbox__name'>{name}</div>
+                                <div className='inbox__subject'>{item.subject}</div>
+                                <div className='inbox__date'>
+                                  {!smallCaps
+                                    ? <div>{formattedDate}</div>
+                                    : <div>
+                                      <span className='inbox__dateOnly'>{dateOnly}</span>
+                                      <span className='inbox__am_pm'>{amPm}</span>
                                     </div>
-                                  </div>
+                                  }
                                 </div>
-                                <div className="inbox__message-wrap">
-                                  <div className="inbox__name">{name}</div>
-                                  <div className="inbox__subject">{item.subject}</div>
-                                  <div className="inbox__date">
-                                    {!smallCaps ?
-                                      <div>{formattedDate}</div> :
-                                      <div>
-                                        <span className="inbox__dateOnly">{dateOnly}</span>
-                                        <span className="inbox__am_pm">{amPm}</span>
-                                      </div>
-                                    }
-                                  </div>
-                                </div>
-                              </button>
-                            );
-                          })}
+                              </div>
+                            </button>
+                          )
+                        })}
                     </div>
                   }
                 </div>
                 { (this.props.appState.windowSize.width > 600 || this.state.single) &&
-                  <div className="inbox__messagepane">
+                  <div className='inbox__messagepane'>
                     <Spinner cssClass={this.props.conversation.viewConvSpinnerClass} />
                     <ModalSm
                       modalClass={this.props.conversation.viewConvModal.class}
@@ -186,62 +185,62 @@ class Conversations extends React.Component {
                             class: 'modal__hide',
                             text: '',
                             type: '',
-                            title: '',
-                          });
+                            title: ''
+                          })
                         }
                       }
                     />
                     {this.props.conversation.currentConv._id &&
                       this.props.conversation.currentConv.messages &&
-                      this.props.conversation.currentConv.messages.length ?
-                        <div>
-                          <Conversation
-                            convId={this.props.conversation.currentConv._id}
-                          />
-                          <NewMessage />
-                        </div> :
-                        <div className="inbox__empty--wrap">
-                          <strong> No messages! </strong><br />
+                      this.props.conversation.currentConv.messages.length
+                      ? <div>
+                        <Conversation
+                          convId={this.props.conversation.currentConv._id}
+                        />
+                        <NewMessage />
+                      </div>
+                      : <div className='inbox__empty--wrap'>
+                        <strong> No messages! </strong><br />
                           To start using co/ment messaging,<br />respond to a&nbsp;
-                          <Link to="/posts" className="inbox__link">post</Link>
-                        </div>
+                        <Link to='/posts' className='inbox__link'>post</Link>
+                      </div>
                     }
                   </div>
                 }
-              </div> :
-              <div className="inbox__empty">
-                <div className="inbox__empty--wrap">
+              </div>
+              : <div className='inbox__empty'>
+                <div className='inbox__empty--wrap'>
                   <strong> No messages! </strong><br />
                   To start using co/ment messaging,<br />respond to a&nbsp;
-                  <Link to="/posts" className="inbox__link">post</Link>
+                  <Link to='/posts' className='inbox__link'>post</Link>
                 </div>
               </div>
             }
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
 Conversations.propTypes = {
   appState: PropTypes.shape({
     windowSize: PropTypes.shape({
-      width: PropTypes.number,
+      width: PropTypes.number
     }),
     authToken: PropTypes.string,
     user: PropTypes.shape({
-      _id: PropTypes.string,
-    }).isRequired,
+      _id: PropTypes.string
+    }).isRequired
   }).isRequired,
   api: PropTypes.shape({
     getConversations: PropTypes.func,
-    viewConv: PropTypes.func,
+    viewConv: PropTypes.func
   }).isRequired,
   actions: PropTypes.shape({
     setConversationModal: PropTypes.func,
     setConversationsModal: PropTypes.func,
-    viewConv: PropTypes.func,
+    viewConv: PropTypes.func
   }).isRequired,
   conversation: PropTypes.shape({
     conversations: PropTypes.array,
@@ -251,31 +250,31 @@ Conversations.propTypes = {
       class: PropTypes.string,
       text: PropTypes.string,
       title: PropTypes.string,
-      type: PropTypes.string,
+      type: PropTypes.string
     }).isRequired,
     getConversationsModal: PropTypes.shape({
       class: PropTypes.string,
       text: PropTypes.string,
       title: PropTypes.string,
-      type: PropTypes.string,
+      type: PropTypes.string
     }).isRequired,
     currentConv: PropTypes.shape({
       _id: PropTypes.string,
       subject: PropTypes.string,
       messages: PropTypes.array,
-      participants: PropTypes.array,
-    }).isRequired,
-  }).isRequired,
-};
+      participants: PropTypes.array
+    }).isRequired
+  }).isRequired
+}
 
 const mapStateToProps = state => ({
   appState: state.appState,
-  conversation: state.conversation,
-});
+  conversation: state.conversation
+})
 
 const mapDispatchToProps = dispatch => ({
   api: bindActionCreators(apiActions, dispatch),
-  actions: bindActionCreators(Actions, dispatch),
-});
+  actions: bindActionCreators(Actions, dispatch)
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(Conversations);
+export default connect(mapStateToProps, mapDispatchToProps)(Conversations)

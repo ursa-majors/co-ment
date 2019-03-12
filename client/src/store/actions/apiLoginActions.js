@@ -1,9 +1,9 @@
-import { CALL_API } from 'redux-api-middleware';
-import { BASE_URL } from './apiConfig';
+import { CALL_API } from 'redux-api-middleware'
+import { BASE_URL } from './apiConfig'
 
-export const VALIDATE_TOKEN_REQUEST = 'VALIDATE_TOKEN_REQUEST';
-export const VALIDATE_TOKEN_SUCCESS = 'VALIDATE_TOKEN_SUCCESS';
-export const VALIDATE_TOKEN_FAILURE = 'VALIDATE_TOKEN_FAILURE';
+export const VALIDATE_TOKEN_REQUEST = 'VALIDATE_TOKEN_REQUEST'
+export const VALIDATE_TOKEN_SUCCESS = 'VALIDATE_TOKEN_SUCCESS'
+export const VALIDATE_TOKEN_FAILURE = 'VALIDATE_TOKEN_FAILURE'
 
 /*
 * Function: validateToken - validates a token pulled from user's localStorage
@@ -18,7 +18,7 @@ export const VALIDATE_TOKEN_FAILURE = 'VALIDATE_TOKEN_FAILURE';
 *   VALIDATE_TOKEN_FAILURE: Dispatched if the token was invalid.  Logs the user out,
 *     and deletes the values saved in localStorage.
 */
-export function validateToken(token, profileId) {
+export function validateToken (token, profileId) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/profile/${profileId}`,
@@ -27,17 +27,17 @@ export function validateToken(token, profileId) {
         VALIDATE_TOKEN_REQUEST,
         {
           type: VALIDATE_TOKEN_SUCCESS,
-          meta: { token },
+          meta: { token }
         },
         VALIDATE_TOKEN_FAILURE],
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  };
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  }
 }
 
-export const LOGIN_REQUEST = 'LOGIN_REQUEST';
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+export const LOGIN_REQUEST = 'LOGIN_REQUEST'
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
+export const LOGIN_FAILURE = 'LOGIN_FAILURE'
 
 /*
 * Function: login - Attempts to loign in with supplied ID/password.
@@ -51,21 +51,21 @@ export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 *   LOGIN_FAILURE: Dispatched if the credentials are invalid.
 *     Displays error to user, prompt to try again or register.
 */
-export function login(body) {
+export function login (body) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/login`,
       method: 'POST',
       types: [LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE],
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    },
-  };
+      body: JSON.stringify(body)
+    }
+  }
 }
 
-export const REGISTRATION_REQUEST = 'REGISTRATION_REQUEST';
-export const REGISTRATION_SUCCESS = 'REGISTRATION_SUCCESS';
-export const REGISTRATION_FAILURE = 'REGISTRATION_FAILURE';
+export const REGISTRATION_REQUEST = 'REGISTRATION_REQUEST'
+export const REGISTRATION_SUCCESS = 'REGISTRATION_SUCCESS'
+export const REGISTRATION_FAILURE = 'REGISTRATION_FAILURE'
 
 /*
 * Function: login - Attempts to loign in with supplied ID/password.
@@ -79,46 +79,46 @@ export const REGISTRATION_FAILURE = 'REGISTRATION_FAILURE';
 *   REGISTRATION_FAILURE: Dispatched if the credentials are invalid.
 *     Displays error to user, prompt to try again or register.
 */
-export function register(body) {
+export function register (body) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/register`,
       method: 'POST',
       types: [REGISTRATION_REQUEST, REGISTRATION_SUCCESS, REGISTRATION_FAILURE],
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    },
-  };
+      body: JSON.stringify(body)
+    }
+  }
 }
 
-export const RESET_PW_REQUEST = 'RESET_PW_REQUEST';
-export const RESET_PW_SUCCESS = 'RESET_PW_SUCCESS';
-export const RESET_PW_FAILURE = 'RESET_PW_FAILURE';
+export const RESET_PW_REQUEST = 'RESET_PW_REQUEST'
+export const RESET_PW_SUCCESS = 'RESET_PW_SUCCESS'
+export const RESET_PW_FAILURE = 'RESET_PW_FAILURE'
 
 /*
 * Function: resetPassword
 */
-export function resetPassword(body) {
+export function resetPassword (body) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/resetpassword`,
       method: 'POST',
       types: [RESET_PW_REQUEST, RESET_PW_SUCCESS, RESET_PW_FAILURE],
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    },
-  };
+      body: JSON.stringify(body)
+    }
+  }
 }
 
-export const SEND_RESET_EMAIL_REQUEST = 'SEND_RESET_EMAIL_REQUEST';
-export const SEND_RESET_EMAIL_SUCCESS = 'SEND_RESET_EMAIL_SUCCESS';
-export const SEND_RESET_EMAIL_FAILURE = 'SEND_RESET_EMAIL_FAILURE';
+export const SEND_RESET_EMAIL_REQUEST = 'SEND_RESET_EMAIL_REQUEST'
+export const SEND_RESET_EMAIL_SUCCESS = 'SEND_RESET_EMAIL_SUCCESS'
+export const SEND_RESET_EMAIL_FAILURE = 'SEND_RESET_EMAIL_FAILURE'
 
 /*
 * Function: sendResetEmail
 * @param {String} - the username to send the reset email to
 */
-export function sendResetEmail(username) {
+export function sendResetEmail (username) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/sendresetemail`,
@@ -127,19 +127,19 @@ export function sendResetEmail(username) {
         SEND_RESET_EMAIL_REQUEST,
         {
           type: SEND_RESET_EMAIL_SUCCESS,
-          meta: username,
+          meta: username
         },
-        SEND_RESET_EMAIL_FAILURE,
+        SEND_RESET_EMAIL_FAILURE
       ],
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(username),
-    },
-  };
+      body: JSON.stringify(username)
+    }
+  }
 }
 
-export const REFRESH_TOKEN_REQUEST = 'REFRESH_TOKEN_REQUEST';
-export const REFRESH_TOKEN_SUCCESS = 'REFRESH_TOKEN_SUCCESS';
-export const REFRESH_TOKEN_FAILURE = 'REFRESH_TOKEN_FAILURE';
+export const REFRESH_TOKEN_REQUEST = 'REFRESH_TOKEN_REQUEST'
+export const REFRESH_TOKEN_SUCCESS = 'REFRESH_TOKEN_SUCCESS'
+export const REFRESH_TOKEN_FAILURE = 'REFRESH_TOKEN_FAILURE'
 /*
 * Function: refreshToken
 * @param {token} - This function gets a new token from the server after Validation
@@ -147,21 +147,21 @@ export const REFRESH_TOKEN_FAILURE = 'REFRESH_TOKEN_FAILURE';
 *  We are passing the old token, which is valid, but has user_validated=false
 *  And we will receive a new valid token with user_validated=true
 */
-export function refreshToken(token) {
+export function refreshToken (token) {
   return {
     [CALL_API]: {
       endpoint: `${BASE_URL}/api/refresh_token`,
       method: 'GET',
       types: [REFRESH_TOKEN_REQUEST, REFRESH_TOKEN_SUCCESS, REFRESH_TOKEN_FAILURE],
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  };
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  }
 }
 
-export const RESET_VALIDATE_MODAL = 'RESET_VALIDATE_MODAL';
-export function resetValidateModal(options) {
+export const RESET_VALIDATE_MODAL = 'RESET_VALIDATE_MODAL'
+export function resetValidateModal (options) {
   return ({
     type: RESET_VALIDATE_MODAL,
-    payload: options,
-  });
+    payload: options
+  })
 }

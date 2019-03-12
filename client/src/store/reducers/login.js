@@ -1,7 +1,7 @@
 import { SET_LOGIN_USER, SET_LOGIN_PWD, CLEAR_LOGIN_PWD, SET_LOGIN_ERROR,
-  DISMISS_PWRESET_MODAL, DISMISS_LOGIN_MODAL } from '../actions';
+  DISMISS_PWRESET_MODAL, DISMISS_LOGIN_MODAL } from '../actions'
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, RESET_PW_REQUEST, RESET_PW_SUCCESS,
-  RESET_PW_FAILURE, SEND_RESET_EMAIL_REQUEST, SEND_RESET_EMAIL_SUCCESS, SEND_RESET_EMAIL_FAILURE } from '../actions/apiLoginActions';
+  RESET_PW_FAILURE, SEND_RESET_EMAIL_REQUEST, SEND_RESET_EMAIL_SUCCESS, SEND_RESET_EMAIL_FAILURE } from '../actions/apiLoginActions'
 
 const INITIAL_STATE = {
   authToken: '',
@@ -14,20 +14,19 @@ const INITIAL_STATE = {
   pwResetSpinnerClass: 'spinner__hide',
   pwResetModalClass: 'modal__hide',
   pwResetModalType: '',
-  pwResetModalText: '',
-};
+  pwResetModalText: ''
+}
 
-function login(state = INITIAL_STATE, action) {
-  let error;
+function login (state = INITIAL_STATE, action) {
+  let error
   switch (action.type) {
-
     /*
     *  Called From: <Login />
     *  Payload: Username value from form
     *  Purpose: Connected component handler
     */
     case SET_LOGIN_USER:
-      return Object.assign({}, state, { loginUsername: action.payload });
+      return Object.assign({}, state, { loginUsername: action.payload })
 
     /*
     *  Called From: <Login />
@@ -35,7 +34,7 @@ function login(state = INITIAL_STATE, action) {
     *  Purpose: Connected component handler
     */
     case SET_LOGIN_PWD:
-      return Object.assign({}, state, { loginPassword: action.payload });
+      return Object.assign({}, state, { loginPassword: action.payload })
 
     /*
     *  Called From: <Login />
@@ -43,7 +42,7 @@ function login(state = INITIAL_STATE, action) {
     *  Purpose: Clear password from redux after form submission
     */
     case CLEAR_LOGIN_PWD:
-      return Object.assign({}, state, { loginPassword: '' });
+      return Object.assign({}, state, { loginPassword: '' })
 
     /*
     *  Called From: <Login />
@@ -51,7 +50,7 @@ function login(state = INITIAL_STATE, action) {
     *  Purpose: Show error message on form
     */
     case SET_LOGIN_ERROR:
-      return Object.assign({}, state, { errorMsg: action.payload });
+      return Object.assign({}, state, { errorMsg: action.payload })
 
     /*
     *  Called From: <Login />
@@ -59,7 +58,7 @@ function login(state = INITIAL_STATE, action) {
     *  Purpose: Activate spinner so user knows API request is in progress
     */
     case LOGIN_REQUEST:
-      return Object.assign({}, state, { loginSpinnerClass: 'spinner__show' });
+      return Object.assign({}, state, { loginSpinnerClass: 'spinner__show' })
 
     /*
     *  Called From: <Login />
@@ -73,9 +72,9 @@ function login(state = INITIAL_STATE, action) {
         state,
         {
           loginSpinnerClass: 'spinner__hide',
-          loginPassword: '',
-        },
-      );
+          loginPassword: ''
+        }
+      )
 
     /*
     *  Called From: <Login />
@@ -83,15 +82,15 @@ function login(state = INITIAL_STATE, action) {
     *  Purpose: Display API login error to user
     */
     case LOGIN_FAILURE:
-      error = 'An unknown login error occurred';
+      error = 'An unknown login error occurred'
       return Object.assign(
         {},
         state,
         {
           loginSpinnerClass: 'spinner__hide',
-          errorMsg: error,
-        },
-      );
+          errorMsg: error
+        }
+      )
 
     /*
     *  Called from: <ResetPassword />
@@ -105,9 +104,9 @@ function login(state = INITIAL_STATE, action) {
         {
           pwResetSpinnerClass: 'spinner__show',
           pwResetModalClass: 'modal__hide',
-          pwResetModalText: '',
-        },
-      );
+          pwResetModalText: ''
+        }
+      )
 
     /*
     *  Called from: <ResetPassword />
@@ -122,9 +121,9 @@ function login(state = INITIAL_STATE, action) {
           pwResetSpinnerClass: 'spinner__hide',
           pwResetModalClass: 'modal__show',
           pwResetModalType: 'modal__success',
-          pwResetModalText: 'Your password has been reset. Click Sign In to continue',
-        },
-      );
+          pwResetModalText: 'Your password has been reset. Click Sign In to continue'
+        }
+      )
 
     /*
     *  Called from: <ResetPassword />
@@ -132,7 +131,7 @@ function login(state = INITIAL_STATE, action) {
     *  Purpose: Display an error message to the user.
     */
     case RESET_PW_FAILURE:
-      error = 'An unknown error occurred while resetting password';
+      error = 'An unknown error occurred while resetting password'
       return Object.assign(
         {},
         state,
@@ -140,9 +139,9 @@ function login(state = INITIAL_STATE, action) {
           pwResetSpinnerClass: 'spinner__hide',
           pwResetModalClass: 'modal__show',
           pwResetModalType: 'modal__error',
-          pwResetModalText: error,
-        },
-      );
+          pwResetModalText: error
+        }
+      )
 
     /*
     *  Called from: <Login />
@@ -156,9 +155,9 @@ function login(state = INITIAL_STATE, action) {
         {
           loginSpinnerClass: 'spinner__show',
           loginModalClass: 'modal__hide',
-          errorMsg: '',
-        },
-      );
+          errorMsg: ''
+        }
+      )
 
     /*
     *  Called from: <Login />
@@ -173,9 +172,9 @@ function login(state = INITIAL_STATE, action) {
           loginSpinnerClass: 'spinner__hide',
           loginModalClass: 'modal__show',
           loginModalText: `A password reset link has been sent to the email registered to ${action.meta.username}.
-          Follow the instructions to complete the password reset`,
-        },
-      );
+          Follow the instructions to complete the password reset`
+        }
+      )
 
     /*
     *  Called from: <Login />
@@ -183,15 +182,15 @@ function login(state = INITIAL_STATE, action) {
     *  Purpose: Display a spinner to indicate API call in progress
     */
     case SEND_RESET_EMAIL_FAILURE:
-      error = 'An unknown error occurred while sending reset email';
+      error = 'An unknown error occurred while sending reset email'
       return Object.assign(
         {},
         state,
         {
           loginSpinnerClass: 'spinner__hide',
-          errorMsg: error,
-        },
-      );
+          errorMsg: error
+        }
+      )
 
     /*
     *  Called from: <ResetPassword />
@@ -205,9 +204,9 @@ function login(state = INITIAL_STATE, action) {
         {
           pwResetModalText: '',
           pwResetModalClass: 'modal__hide',
-          pwResetModalType: '',
-        },
-      );
+          pwResetModalType: ''
+        }
+      )
 
     /*
     *  Called from: <Login />
@@ -220,14 +219,13 @@ function login(state = INITIAL_STATE, action) {
         state,
         {
           loginModalText: '',
-          loginModalClass: 'modal__hide',
-        },
-      );
-
+          loginModalClass: 'modal__hide'
+        }
+      )
 
     default:
-      return state;
+      return state
   }
 }
 
-export default login;
+export default login

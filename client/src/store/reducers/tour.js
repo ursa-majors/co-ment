@@ -1,24 +1,24 @@
-import { SET_INDEX } from '../actions/tourActions';
-import { slides, faq } from '../../utils/slides';
-import { scrollIt } from '../../utils';
+import { SET_INDEX } from '../actions/tourActions'
+import { slides, faq } from '../../utils/slides'
+import { scrollIt } from '../../utils'
 
 const INITIAL_STATE = {
   imageIndex: 0,
   slides,
-  faq,
-};
+  faq
+}
 
-function tour(state = INITIAL_STATE, action) {
+function tour (state = INITIAL_STATE, action) {
   switch (action.type) {
     case SET_INDEX:
       // scroll to top when slide changes
       // (for shorter viewports with slide footer nav)
-      scrollIt(document.querySelector('.tour'), 300, 'easeOutQuad');
-      return Object.assign({}, state, { imageIndex: action.payload });
+      scrollIt(document.querySelector('.tour'), 300, 'easeOutQuad')
+      return Object.assign({}, state, { imageIndex: action.payload })
 
     default:
-      return state;
+      return state
   }
 }
 
-export default tour;
+export default tour

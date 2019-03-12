@@ -1,5 +1,5 @@
-import { SET_REG_ERROR, DISMISS_REG_MODAL } from '../actions/regActions';
-import { REGISTRATION_REQUEST, REGISTRATION_SUCCESS, REGISTRATION_FAILURE } from '../actions/apiLoginActions';
+import { SET_REG_ERROR, DISMISS_REG_MODAL } from '../actions/regActions'
+import { REGISTRATION_REQUEST, REGISTRATION_SUCCESS, REGISTRATION_FAILURE } from '../actions/apiLoginActions'
 
 const regSuccessTxt =
 `Thank you for registering with Co/Ment! Check your inbox for an account validation email.\n
@@ -7,25 +7,24 @@ Next Steps:
 You must validate your email before using other features.
 Complete your profile.
 Create a post to advertise as a Mentor or Mentee.
-Connect with other users.`;
+Connect with other users.`
 
 const INITIAL_STATE = {
   registrationSpinnerClass: 'spinner__hide',
   registrationModalClass: 'modal__hide',
   registrationModalText: '',
-  regErrorMsg: '',
-};
-function register(state = INITIAL_STATE, action) {
-  let error;
+  regErrorMsg: ''
+}
+function register (state = INITIAL_STATE, action) {
+  let error
   switch (action.type) {
-
     /*
     *  Called From: <Registration />
     *  Payload: Error message
     *  Purpose: Display error message from registration form validation
     */
     case SET_REG_ERROR:
-      return Object.assign({}, state, { regErrorMsg: action.payload });
+      return Object.assign({}, state, { regErrorMsg: action.payload })
 
     /*
     *  Called From: <Registration />
@@ -39,10 +38,9 @@ function register(state = INITIAL_STATE, action) {
         {
           registrationSpinnerClass: 'spinner__show',
           registrationModalClass: 'modal__hide',
-          registrationModalText: '',
-        },
-      );
-
+          registrationModalText: ''
+        }
+      )
 
     /*
     *  Called From: <Registration />
@@ -57,9 +55,9 @@ function register(state = INITIAL_STATE, action) {
         {
           registrationSpinnerClass: 'spinner__hide',
           registrationModalClass: 'modal__show',
-          registrationModalText: regSuccessTxt,
-        },
-      );
+          registrationModalText: regSuccessTxt
+        }
+      )
 
     /*
     *  Called From: <Registration />
@@ -67,16 +65,16 @@ function register(state = INITIAL_STATE, action) {
     *  Purpose: Hide spinner and display error message to user in the form.
     */
     case REGISTRATION_FAILURE:
-      error = action.payload.response.message || 'An unknown error occurred during registration';
+      error = action.payload.response.message || 'An unknown error occurred during registration'
       return Object.assign(
         {},
         state,
         {
           registrationSpinnerClass: 'spinner__hide',
           registrationModalClass: 'modal__hide',
-          regErrorMsg: error,
-        },
-      );
+          regErrorMsg: error
+        }
+      )
 
     /*
     *  Called From: <Registration />
@@ -89,13 +87,13 @@ function register(state = INITIAL_STATE, action) {
         state,
         {
           registrationModalClass: 'modal__hide',
-          registrationModalText: '',
-        },
-      );
+          registrationModalText: ''
+        }
+      )
 
     default:
-      return state;
+      return state
   }
 }
 
-export default register;
+export default register

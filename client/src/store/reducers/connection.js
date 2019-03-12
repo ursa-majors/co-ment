@@ -1,11 +1,11 @@
-import update from 'immutability-helper';
+import update from 'immutability-helper'
 
 import { SET_VIEW_CONNECTION, CLEAR_VIEW_CONNECTION, SET_CONNECTIONS_MODAL, SET_CONN_DETAILS_MODAL,
-  SET_CONN_MODAL } from '../actions/connectionActions';
-import { SEND_EMAIL_REQUEST, SEND_EMAIL_SUCCESS, SEND_EMAIL_FAILURE } from '../actions/apiActions';
+  SET_CONN_MODAL } from '../actions/connectionActions'
+import { SEND_EMAIL_REQUEST, SEND_EMAIL_SUCCESS, SEND_EMAIL_FAILURE } from '../actions/apiActions'
 import { CONNECTION_REQUEST, CONNECTION_SUCCESS, CONNECTION_FAILURE, GET_ALL_CONNECTIONS_REQUEST,
-  GET_ALL_CONNECTIONS_SUCCESS, GET_ALL_CONNECTIONS_FAILURE, UPDATE_CONNECTION_STATUS_SUCCESS,
-  } from '../actions/apiConnectionActions';
+  GET_ALL_CONNECTIONS_SUCCESS, GET_ALL_CONNECTIONS_FAILURE, UPDATE_CONNECTION_STATUS_SUCCESS
+} from '../actions/apiConnectionActions'
 
 const defaultConn = {
   _id: '',
@@ -13,27 +13,27 @@ const defaultConn = {
   mentor: {
     id: '',
     name: '',
-    avatar: '',
+    avatar: ''
   },
   mentee: {
     id: '',
     name: '',
-    avatar: '',
+    avatar: ''
   },
   initiator: {
     id: '',
-    name: '',
+    name: ''
   },
   originalPost: {
     id: '',
-    title: '',
+    title: ''
   },
   dateStarted: '',
   dateEnded: '',
   dateAccepted: '',
   dateDeclined: '',
-  status: '',
-};
+  status: ''
+}
 
 const INITIAL_STATE = {
   connectionId: null,
@@ -48,7 +48,7 @@ const INITIAL_STATE = {
     title: '',
     text: '',
     type: '',
-    class: 'modal__hide',
+    class: 'modal__hide'
   },
   // Connections state
   getConnectionsSpinnerClass: 'spinner__hide',
@@ -56,7 +56,7 @@ const INITIAL_STATE = {
     class: 'modal__hide',
     text: '',
     type: '',
-    title: '',
+    title: ''
   },
   connections: [],
   // Connection Request state
@@ -65,15 +65,14 @@ const INITIAL_STATE = {
     type: '',
     text: '',
     class: 'modal__hide',
-    title: '',
-  },
-};
+    title: ''
+  }
+}
 
-function connection(state = INITIAL_STATE, action) {
-  let error;
-  let index;
+function connection (state = INITIAL_STATE, action) {
+  let error
+  let index
   switch (action.type) {
-
     /*
     *  Called From: <ConnectionDetails />
     *  Payload: A connection object
@@ -84,14 +83,14 @@ function connection(state = INITIAL_STATE, action) {
     *   url param once connections have been loaded from server
     */
     case SET_VIEW_CONNECTION:
-      return Object.assign({}, state, { viewConnection: action.payload });
+      return Object.assign({}, state, { viewConnection: action.payload })
 
     /*
     *  Called From: <ConnectionDetails />
     *  Purpose: Prevent flash of old content when user loads component
     */
     case CLEAR_VIEW_CONNECTION:
-      return Object.assign({}, state, { viewConnection: defaultConn });
+      return Object.assign({}, state, { viewConnection: defaultConn })
 
     /*
     *  Called From: <ConnectionDetails />
@@ -103,11 +102,11 @@ function connection(state = INITIAL_STATE, action) {
         {},
         state,
         {
-          connDetailsModal: action.payload,
-        },
-      );
+          connDetailsModal: action.payload
+        }
+      )
 
-/*---------------------------------------------------------------------------------*/
+      /* --------------------------------------------------------------------------------- */
 
     /*
     *  Called From: <Connections /> and <ConnectionDetails />
@@ -120,9 +119,9 @@ function connection(state = INITIAL_STATE, action) {
         {},
         state,
         {
-          getConnectionsSpinnerClass: 'spinner__show',
-        },
-      );
+          getConnectionsSpinnerClass: 'spinner__show'
+        }
+      )
 
     /*
     *  Called From: <Connections /> and <ConnectionDetails />
@@ -138,9 +137,9 @@ function connection(state = INITIAL_STATE, action) {
           state,
           {
             connections: action.payload.connections,
-            getConnectionsSpinnerClass: 'spinner__hide',
-          },
-        );
+            getConnectionsSpinnerClass: 'spinner__hide'
+          }
+        )
       }
       return Object.assign(
         {},
@@ -151,10 +150,10 @@ function connection(state = INITIAL_STATE, action) {
             class: 'modal__show',
             text: 'You haven\'t made any connections yet. Search our posts to find a Mentor or Mentee connection.',
             type: 'modal__info',
-            title: 'CONNECTIONS',
-          },
-        },
-      );
+            title: 'CONNECTIONS'
+          }
+        }
+      )
 
     /*
     *  Called From: <Connections /> and <ConnectionDetails />
@@ -162,7 +161,7 @@ function connection(state = INITIAL_STATE, action) {
     *  Purpose: Called when the API call fails. Set the state to display a message to user.
     */
     case GET_ALL_CONNECTIONS_FAILURE:
-      error = 'An error occurred while fetching connections';
+      error = 'An error occurred while fetching connections'
       return Object.assign(
         {},
         state,
@@ -172,10 +171,10 @@ function connection(state = INITIAL_STATE, action) {
             class: 'modal__show',
             text: error,
             type: 'modal__error',
-            title: 'ERROR',
-          },
-        },
-      );
+            title: 'ERROR'
+          }
+        }
+      )
 
     /*
     *  Called From: <Connections />
@@ -183,9 +182,9 @@ function connection(state = INITIAL_STATE, action) {
     *  Purpose: Called from the modal to dismiss the modal
     */
     case SET_CONNECTIONS_MODAL:
-      return Object.assign({}, state, { getConnectionsModal: action.payload });
+      return Object.assign({}, state, { getConnectionsModal: action.payload })
 
-/*---------------------------------------------------------------------------------*/
+      /* --------------------------------------------------------------------------------- */
     /*
     *  Called From: <ConnectionDetails />
     *  Payload: The updated connection object
@@ -194,26 +193,26 @@ function connection(state = INITIAL_STATE, action) {
     *   in the connections array.
     */
     case UPDATE_CONNECTION_STATUS_SUCCESS:
-      index = -1;
+      index = -1
       for (index = 0; index < state.connections.length; index += 1) {
         if (state.connections[index]._id === action.payload.conn._id) {
-          break;
+          break
         }
       }
       return update(
         state,
         {
           connections: { $splice: [[index, 1, action.payload.conn]] },
-          viewConnection: { $set: action.payload.conn },
-        },
-      );
+          viewConnection: { $set: action.payload.conn }
+        }
+      )
     /*
     *  Called From: <ConnectionEmail />
     *  Payload: None.
     *  Purpose: Set the connection spinner to indicate an API call is in progress.
     */
     case CONNECTION_REQUEST:
-      return Object.assign({}, state, { connectionSpinnerClass: 'spinner__show' });
+      return Object.assign({}, state, { connectionSpinnerClass: 'spinner__show' })
 
     /*
     *  Called From: <ConnectionEmail />
@@ -227,9 +226,9 @@ function connection(state = INITIAL_STATE, action) {
         state,
         {
           connectionSpinnerClass: 'spinner__hide',
-          connectionId: action.payload.connectionId,
-        },
-      );
+          connectionId: action.payload.connectionId
+        }
+      )
 
     /*
     *  Called From: <ConnectionEmail />
@@ -237,7 +236,7 @@ function connection(state = INITIAL_STATE, action) {
     *  Purpose: Display modal with email error message
     */
     case CONNECTION_FAILURE:
-      error = `An error occurred while attempting to save connection:`;
+      error = `An error occurred while attempting to save connection:`
       return Object.assign(
         {},
         state,
@@ -247,10 +246,10 @@ function connection(state = INITIAL_STATE, action) {
             type: 'modal__error',
             title: 'ERROR',
             text: error,
-            class: 'modal__show',
-          },
-        },
-      );
+            class: 'modal__show'
+          }
+        }
+      )
 
     /*
     *  Called From: <Connection />
@@ -266,14 +265,14 @@ function connection(state = INITIAL_STATE, action) {
             type: 'modal__error',
             title: 'ERROR',
             text: error,
-            class: 'modal__show',
-          },
-        },
-      );
+            class: 'modal__show'
+          }
+        }
+      )
 
     default:
-      return state;
+      return state
   }
 }
 
-export default connection;
+export default connection
