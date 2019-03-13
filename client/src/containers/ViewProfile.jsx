@@ -43,7 +43,7 @@ class ViewProfile extends React.Component {
   onClick(e) {
     // handle tab navigation in bottom half of profile card
     const newState = { ...this.state };
-    newState.tab = e.target.className.split('')[0];
+    newState.tab = e.target.className.split(' ')[0];
     this.setState({
       ...newState,
     });
