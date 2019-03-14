@@ -1,17 +1,9 @@
 'use strict'
 
-require('dotenv').config()
-const dbUname = process.env.DB_UNAME
-const dbPwd = process.env.DB_PWD
+const environment = process.env.NODE_ENV || 'development'
+const config = require('./config')[environment]
 
-/* ================================ EXPORTS ================================ */
-
-module.exports = {
-  getDbConnectionString: function () {
-    // live database
-    return `mongodb://${dbUname}:${dbPwd}@ds127983.mlab.com:27983/co-ment`
-
-    // test database
-    // return `mongodb://${dbUname}:${dbPwd}@ds161503.mlab.com:61503/co-ment-test`;
-  }
-}
+exports = module.exports = Object.freeze({
+  getConnectionString: () => `${config.url}/${config.dbName}`,
+  getConnectionOptions: () => config.options
+})
