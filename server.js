@@ -8,33 +8,32 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const mongoose = require('mongoose')
 
-const corsConfig = require('./config/cors')
-const forceHttps = require('./config/force-https')
-const strategy = require('./config/strategy')
-const db = require('./db')
+const { getConnectionString, getConnectionOptions } = require('./db')
 const User = require('./models/user')
 
-const { requestMiddleware, loggerMiddleware, errorMiddleware } = require('./middleware')
+const {
+  requestMiddleware,
+  loggerMiddleware,
+  errorMiddleware,
+  corsMiddleware,
+  forceHttpsMiddleware,
+  passportLocalStrategy
+} = require('./middleware')
 
 const app = express()
 const PORT = process.env.PORT || 3001
 
-// email functions
-// const engagement = require('./utils/engagement')
-
 // middleware
-if (process.env.NODE_ENV === 'production') {
-  app.use(forceHttps)
-}
+app.use(forceHttpsMiddleware(process.env.NODE_ENV === 'production'))
 app.use(loggerMiddleware())
 app.use(requestMiddleware())
 app.use(compression())
-app.use(corsConfig)
+app.use(corsMiddleware())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, '/client/build/')))
 app.use(passport.initialize())
-passport.use(strategy(LocalStrategy, User))
+passport.use(passportLocalStrategy(LocalStrategy, User))
 
 // routes
 app.use('/auth', require('./routes/authroutes'))
@@ -45,9 +44,9 @@ app.use('/', require('./routes/staticroutes'))
 app.use(errorMiddleware())
 
 // connect to db and startup
-mongoose.connect(db.getDbConnectionString(), { useNewUrlParser: true })
+mongoose.connect(getConnectionString(), getConnectionOptions())
   .then(() => {
-    console.log(`Connected to ${db.getDbConnectionString()}`)
+    console.log(`Connected to ${getConnectionString()}`)
     app.listen(PORT, () => console.log('Server listening on port:', PORT))
   })
   .catch((err) => {
