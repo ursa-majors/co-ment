@@ -6,7 +6,7 @@ const { maskAuthHeader } = require('../utils')
 
 exports = module.exports = () => (req, res, next) => {
   req.log = bunyan.createLogger({
-    name: 'Note App',
+    name: 'co/ment API',
     requestId: uuidV4(),
     serializers: {
       req: _reqSerializer,

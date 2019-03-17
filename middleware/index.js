@@ -7,5 +7,6 @@ exports = module.exports = Object.freeze({
   checkValidated: require('./check-account-validated'),
   passportLocalStrategy: require('./passport-local-strategy'),
   corsMiddleware: require('./cors'),
-  forceHttpsMiddleware: require('./force-https')
+  forceHttpsMiddleware: require('./force-https'),
+  authMiddleware: require('./verify-auth')
 })
