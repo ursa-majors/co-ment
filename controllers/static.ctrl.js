@@ -18,20 +18,20 @@ const path = require('path')
 //
 function redirectHash (req, res) {
   // keep only keys with `truthy` values (not undefined)
-  const params_keys = Object.keys(req.params).filter(el => req.params[el])
+  const paramsKeys = Object.keys(req.params).filter(el => req.params[el])
 
-  let hash_string = '#/redirect='
+  let hashString = '#/redirect='
 
   // build hash from request parameters
-  params_keys.forEach((key, index) => {
+  paramsKeys.forEach((key, index) => {
     // only prepend with slash if the key is not the first key
-    if (index !== 0) { hash_string += '/' }
+    if (index !== 0) { hashString += '/' }
     // append the request parameter
-    hash_string += `${req.params[key]}`
+    hashString += `${req.params[key]}`
   })
 
   // send the redirect
-  res.redirect(302, `/${hash_string}`)
+  res.redirect(302, `/${hashString}`)
 }
 
 // SERVE CLIENT SPA
