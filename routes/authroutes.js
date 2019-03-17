@@ -2,6 +2,12 @@
 
 const router = require('express').Router()
 const authCtrl = require('../controllers/auth.ctrl')
+const { authMiddleware } = require('../middleware')
+
+// Refresh a user's JWT token
+// Used after a user validates their account
+// Returns JSON user profile + new JWT on success
+router.get('/refreshtoken', [authMiddleware], authCtrl.refreshToken)
 
 // Register new users
 // Dispatches new user validation email

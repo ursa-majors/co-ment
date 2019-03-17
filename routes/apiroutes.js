@@ -1,8 +1,6 @@
 'use strict'
 
 const router = require('express').Router()
-const jwt = require('express-jwt')
-const secret = process.env.JWT_SECRET
 
 const profileCtrl = require('../controllers/profile.ctrl')
 const postCtrl = require('../controllers/post.ctrl')
@@ -10,18 +8,12 @@ const contactCtrl = require('../controllers/contact.ctrl')
 const connectionCtrl = require('../controllers/connection.ctrl')
 const conversationCtrl = require('../controllers/conversation.ctrl')
 
-const { checkValidated } = require('../middleware')
-const authMiddleware = jwt({ secret: secret, requestProperty: 'token' })
+const { authMiddleware, checkValidated } = require('../middleware')
 
-// Checks existence and validity of JWT token
+// Check and validate JWT token -- applies to all API routes
 router.use(authMiddleware)
 
 /* ================================ ROUTES ================================= */
-
-// Refresh a user's JWT token
-// Used after a user validates their account
-// Returns JSON user profile + new JWT on success
-router.get('/refresh_token', profileCtrl.refreshToken)
 
 // Get a user's profile
 // Returns JSON user profile object on success
