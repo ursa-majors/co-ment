@@ -1,40 +1,34 @@
-/* Skills parsing utility module
+'use strict'
 
-   (c) 2017 Whobot team - Jay Schwane and Peter Martinson
-   https://github.com/belcurv/whobot
+const skillsDictionary = require('./skillsdictionary')
 
-*/
-
-const skills = require('./skillsdictionary')
-const dictionary = flattenDictionary(skills)
-
-/* =============================== utilities =============================== */
-
-/* flattens the 2d skills dictionary
- *
- * @params   [object]   dict    [the 2d skills object]
- * @returns  [object]           [flattned & re-keyed skills map]
-*/
-function flattenDictionary (dict) {
-  const result_obj = {}
-  const dict_keys = Object.keys(dict)
-  dict_keys.forEach(k => {
+/**
+ * Flattens the 2D skills dictionary
+ * @param    {Object}  dict  the 2d skills object
+ * @returns  {Object}        flattned & re-keyed skills map
+ * @private
+ */
+function _flattenDictionary (dict) {
+  const resultObj = {}
+  const dictKeys = Object.keys(dict)
+  dictKeys.forEach(k => {
     dict[k].forEach(skill => {
-      result_obj[skill] = k
+      resultObj[skill] = k
     })
   })
-  return result_obj
+  return resultObj
 }
 
-/* ============================ public methods ============================= */
+// main
 
-/* return a standard skill if it exists
- * otherwise return the argument
- *
- * @params   [string]   request    [skill name]
- * @returns  [string]              [standard or original skill]
-*/
-function parseSKill (request) {
+const dictionary = _flattenDictionary(skillsDictionary)
+
+/**
+ * return a standard skill if it exists, otherwise return the argument
+ * @param    {String}  request  skill name
+ * @returns  {String}           standard or original skill
+ */
+function parseSkill (request) {
   let matchSkill = request
   if (dictionary.hasOwnProperty(request.toLowerCase())) {
     matchSkill = dictionary[request.toLowerCase()]
@@ -42,6 +36,6 @@ function parseSKill (request) {
   return matchSkill
 }
 
-/* ================================ exports ================================ */
+// exports
 
-module.exports = parseSKill
+exports = module.exports = parseSkill
