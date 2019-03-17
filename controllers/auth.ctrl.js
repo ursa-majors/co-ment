@@ -1,60 +1,53 @@
-/*
-   functions to handle user signup, login and password reset
-*/
-
-/* ================================= SETUP ================================= */
+'use strict'
 
 const passport = require('passport')
+const User = require('../models/user')
+const { errorWithStatus } = require('../utils')
 const mailer = require('../utils/mailer')
 const emailTpl = require('../utils/mailtemplates')
 const mailUtils = require('../utils/mailutils')
-const User = require('../models/user')
 
 /* =============================== UTILITIES =============================== */
 
-/* Dispatch new user validation email
- *
- * @ params   [object]   params
- * @ params   [string]    * key      [randomly generated key]
- * @ params   [string]    * to_email [user/recipient email address]
- * @ params   [string]    * to_uid   [new user's _id ]
-*/
-function sendValidationEmail (params) {
-  const url = mailUtils.makeValidationUrl(params.to_uid, params.key)
+/**
+ * Dispatch new user validation email
+ * @param   {string}  key       randomly generated key
+ * @param   {string}  toEmail   user/recipient email address
+ * @param   {string}  toUserId  new user's _id
+ */
+function sendValidationEmail ({ key, toEmail, toUserId }) {
+  const url = mailUtils.makeValidationUrl(toUserId, key)
   const subject = 'co/ment - Email verification required'
   const body = {
     type: 'html',
-    text: emailTpl.validationTemplate(url, params.to_uid)
+    text: emailTpl.validationTemplate(url, toUserId)
   }
 
-  // send mail using `mailer` util
   try {
-    mailer(params.to_email, subject, body)
+    mailer(toEmail, subject, body)
     console.log('Email validation sent successfully.')
   } catch (err) {
     console.log(`Error: $(err)`)
   }
 }
 
-/* Dispatch new password reset email
- *
- * @ params   [object]   params
- * @ params   [string]    * key      [randomly generated key]
- * @ params   [string]    * to_email [user/recipient email address]
- * @ params   [string]    * recUsesrId [user/recipient _id]
-*/
-function sendPWResetEmail (params) {
-  console.log('pwreset', params)
-  const url = `https://co-ment.glitch.me/resetpassword/${params.key}`
+/**
+ * Dispatch new password reset email
+ * @param   {string}   key         randomly generated key
+ * @param   {string}   toEmail    user/recipient email address
+ * @param   {string}   recUserId  user/recipient _id
+ */
+function sendPWResetEmail ({ key, toEmail, recUserId }) {
+  console.log('pwreset', { key, toEmail, recUserId })
+  const url = `https://co-ment.glitch.me/resetpassword/${key}`
   const subject = 'co/ment - Password Reset Request'
   const body = {
     type: 'html',
-    text: emailTpl.pwResetTemplate(url, params.recUserId)
+    text: emailTpl.pwResetTemplate(url, recUserId)
   }
 
-  // send mail using `mailer` util
   try {
-    mailer(params.to_email, subject, body)
+    mailer(toEmail, subject, body)
     console.log('Email validation sent successfully.')
   } catch (err) {
     console.log(`Error: $(err)`)
@@ -62,6 +55,25 @@ function sendPWResetEmail (params) {
 }
 
 /* ============================ ROUTE HANDLERS ============================= */
+
+// REFRESH USER TOKEN
+//   Example: GET >> /api/refresh_token
+//   Secured: yes, valid JWT required
+//   Expects:
+//     1) '_id' from JWT
+//   Returns: user profile and new JWT on success
+async function refreshToken (req, res, next) {
+  try {
+    const user = await User.findUserById({ userId: req.token._id })
+    if (!user) {
+      return next(errorWithStatus(new Error('User not found'), 404))
+    }
+    const token = user.generateJWT()
+    return res.status(200).json({ profile: user, token })
+  } catch (err) {
+    return next(err)
+  }
+}
 
 // NEW_USER REGISTRATION
 // Dispatches new user validation email
@@ -74,84 +86,64 @@ function sendPWResetEmail (params) {
 //          email    : String
 //        }
 //   Returns: user profile object & JWT on success
-//
-function register (req, res) {
-  // fail if missing required inputs
+async function register (req, res, next) {
+  // ensure required inputs exist
   if (!req.body.username || !req.body.password || !req.body.email) {
-    return res
-      .status(400)
-      .json({ 'message': 'Please complete all required fields.' })
+    return res.status(400).json({ 'message': 'Please complete all required fields.' })
   }
 
   const target = {
     $or: [{ username: req.body.username }, { email: req.body.email }]
   }
 
-  User.findOne(target)
-    .exec()
-    .then(user => {
-      // finding a user is bad - reject --> catch block
-      if (user && user.username === req.body.username) {
-        return Promise.reject(new Error('Username already taken.'))
-      } else if (user && user.email === req.body.email) {
-        return Promise.reject(new Error('Email already registered.'))
-      } else {
-        return undefined
-      }
+  try {
+    const user = await User.findOne(target).exec()
+    // finding a user means user already exists
+    if (user && user.username === req.body.username) {
+      throw errorWithStatus(new Error('Username already taken'), 400)
+    }
+    if (user && user.email === req.body.email) {
+      throw errorWithStatus(new Error('Email already registered'), 400)
+    }
+    // no user found; make a new one
+    const newUser = new User({
+      username: req.body.username,
+      email: req.body.email,
+      validated: false,
+      signupKey: mailUtils.makeSignupKey()
     })
-    .then(() => {
-      // no user found, let's build a new one
-      const newUser = new User()
 
-      newUser.username = req.body.username
-      newUser.email = req.body.email
-      newUser.validated = false
-      newUser.signupKey = mailUtils.makeSignupKey()
-      newUser.hashPassword(req.body.password)
+    newUser.hashPassword(req.body.password)
 
-      return newUser
-    })
-    .then(newUser => {
-      // save new user to database
-      newUser.save((err, savedUser) => {
-        if (err) { throw err }
+    // save new user to database
+    const savedUser = await newUser.save()
 
-        // build filtered user profile for later response
-        const profile = {
-          username: savedUser.username,
-          email: savedUser.email,
-          validated: savedUser.validated,
-          _id: savedUser._id
-        }
+    // build filtered user profile for later response
+    const profile = {
+      username: savedUser.username,
+      email: savedUser.email,
+      validated: savedUser.validated,
+      _id: savedUser._id
+    }
 
-        // build email parameter map
-        const emailParams = {
-          key: savedUser.signupKey.key,
-          to_email: savedUser.email,
-          to_uid: savedUser._id
-        }
+    // build email parameter map
+    const emailParams = {
+      key: savedUser.signupKey.key,
+      toEmail: savedUser.email,
+      toUserId: savedUser._id
+    }
 
-        // send validation email, passing email param map
-        sendValidationEmail(emailParams)
+    // send validation email, passing email param map
+    sendValidationEmail(emailParams)
 
-        // generate auth token
-        const token = savedUser.generateJWT()
+    // generate auth token
+    const token = savedUser.generateJWT()
 
-        // respond with profile & JWT
-        return res
-          .status(200)
-          .json({
-            'profile': profile,
-            'token': token
-          })
-      })
-    })
-    .catch(err => {
-      console.log('Error!!!', err)
-      return res
-        .status(400)
-        .json({ message: err })
-    })
+    // respond with profile & JWT
+    return res.status(200).json({ profile, token })
+  } catch (err) {
+    return next(err)
+  }
 }
 
 // HANDLE EMAIL VALIDATION LINKS
@@ -163,44 +155,26 @@ function register (req, res) {
 //        * uid : String
 //        * key : String
 //   Returns: redirect to client-side validation landing page
-//
-function validate (req, res) {
-  const userId = req.query.uid
-  const testKey = req.query.key
+async function validate (req, res, next) {
+  const { uid, key } = req.query
+  const target = { _id: uid }
+  const updates = { validated: true }
 
-  const target = {
-    _id: userId
+  try {
+    const updatedUser = await User.updateUser({ target, updates })
+    if (!updatedUser) {
+      throw errorWithStatus(new Error('No user with that ID found'), 404)
+    }
+
+    if (updatedUser.signupKey.key !== key) {
+      throw errorWithStatus(new Error('Registration key mismatch'), 400)
+    }
+
+    // redirect to client-side validation landing page
+    return res.redirect(302, '/#/redirect=validate')
+  } catch (err) {
+    return next(err)
   }
-
-  const updates = {
-    validated: true
-  }
-
-  User.findOneAndUpdate(target, updates)
-    .exec()
-    .then(user => {
-      if (!user) {
-        return res
-          .status(404)
-          .json({ message: 'No user with that ID found.' })
-      } else if (user.signupKey.key !== testKey) {
-        return res
-          .status(400)
-          .json({ message: 'Registration key mismatch.' })
-      } else {
-        // build hash fragment for client-side routing
-        const hash = '#/redirect=validate'
-        return res
-        // redirect to client-side validation landing page
-          .redirect(302, `/${hash}`)
-      }
-    })
-    .catch(err => {
-      console.log('Error!!!', err)
-      return res
-        .status(400)
-        .json({ message: err })
-    })
 }
 
 // LOGIN
@@ -213,44 +187,29 @@ function validate (req, res) {
 //        }
 //   Returns: success status, user profile & JWT on success
 //
-function login (req, res, next) {
-  // fail if missing required inputs
-  if (!req.body.username) return next(new Error('Missing required username'))
-  if (!req.body.password) return next(new Error('Missing required password'))
+async function login (req, res, next) {
+  // ensure required inputs exist
+  const { username, password } = req.body
+  if (!username) return next(errorWithStatus(new Error('Missing required username')), 400)
+  if (!password) return next(errorWithStatus(new Error('Missing required password')), 400)
 
-  passport.authenticate('local', (err, user, info) => {
+  passport.authenticate('local', async (err, user, info) => {
     if (err) { return next(err) }
 
     // if auth failed, there will be no user - fail
     if (!user) {
-      return res
-        .status(401)
-        .json(info)
-    } else {
-      // exclude sensitive info from field selection
-      const proj = { hash: 0, salt: 0, signupKey: 0 }
+      return res.status(401).json(info)
+    }
 
-      // find the authenticated user
-      User.findById(user._id, proj)
-        .exec()
-        .then((profile) => {
-          // generate a token
-          const token = profile.generateJWT()
-
-          // return the user profile & JWT
-          return res
-            .status(200)
-            .json({
-              'profile': profile,
-              'token': token
-            })
-        })
-        .catch(err => {
-          console.log('Error!!!', err)
-          return res
-            .status(400)
-            .json({ message: err })
-        })
+    try {
+      const projection = { hash: 0, salt: 0, signupKey: 0 }
+      const profile = await User.findUserById({ userId: user._id, projection })
+      if (!profile) throw errorWithStatus(new Error('User not found'), 404)
+      // generate JWT and respond
+      const token = profile.generateJWT()
+      return res.status(200).json({ profile, token })
+    } catch (err) {
+      return next(err)
     }
   })(req, res, next)
 }
@@ -264,48 +223,32 @@ function login (req, res, next) {
 //          username : String
 //        }
 //   Returns: success status & message on success
-//
-function sendReset (req, res) {
+async function sendReset (req, res, next) {
   // generate reset key
+  const { username } = req.body
+  if (!username) return next(errorWithStatus(new Error('Missing required username')), 400)
   const resetKey = mailUtils.makeSignupKey()
 
-  // find user by username
-  User.findOne({ username: req.body.username })
-    .exec()
-    .then(user => {
-      if (!user) {
-        return res
-          .status(400)
-          .json({ message: 'No user with that username' })
-      }
+  try {
+    const user = await User.findOne({ username }).exec()
+    if (!user) throw errorWithStatus(new Error('No user with that username'), 404)
+    // store password reset key on user
+    user.passwordResetKey = resetKey
+    await user.save()
 
-      // store key on user
-      user.passwordResetKey = resetKey
+    const emailParams = {
+      key: user.passwordResetKey.key,
+      toEmail: user.email,
+      recUserId: user._id
+    }
 
-      user.save((err, user) => {
-        if (err) { throw err }
+    // send password reset email
+    sendPWResetEmail(emailParams)
 
-        // build email parameter map
-        const emailParams = {
-          key: user.passwordResetKey.key,
-          to_email: user.email,
-          recUserId: user._id
-        }
-
-        // send validation email, passing email param map
-        sendPWResetEmail(emailParams)
-
-        return res
-          .status(200)
-          .json({ message: 'Password Reset email sent!' })
-      })
-    })
-    .catch(err => {
-      console.log('Error!!!', err)
-      return res
-        .status(400)
-        .json({ message: err })
-    })
+    return res.status(200).json({ message: 'Password Reset email sent' })
+  } catch (err) {
+    return next(err)
+  }
 }
 
 // RESET PASSWORD
@@ -318,44 +261,39 @@ function sendReset (req, res) {
 //          key      : String
 //        }
 //   Returns: success status & message on success
-//
-function resetPass (req, res) {
-  const target = { username: req.body.username }
+async function resetPass (req, res, next) {
+  const { username, password, key } = req.body
+  if (!username) return next(errorWithStatus(new Error('Missing required username')), 400)
+  if (!password) return next(errorWithStatus(new Error('Missing required password')), 400)
+  if (!key) return next(errorWithStatus(new Error('Missing required key')), 400)
 
-  User.findOne(target)
-    .exec()
-    .then(user => {
-      if (!user) {
-        return res
-          .status(400)
-          .json({ message: 'No user with that username' })
-      }
+  try {
+    const user = await User.findOne({ username }).exec()
+    if (!user) {
+      throw errorWithStatus(new Error('No user with that username'), 404)
+    }
+    if (user.passwordResetKey.key !== key) {
+      throw errorWithStatus(new Error('Invalid password reset key'), 400)
+    }
 
-      if (user.passwordResetKey.key !== req.body.key) {
-        return res
-          .status(400)
-          .json({ message: 'Invalid password reset key' })
-      }
+    // reset password, clear the key, save the user
+    user.hashPassword(password)
+    user.passwordResetKey = {}
+    await user.save()
 
-      // reset password, clear the key, save the user
-      user.hashPassword(req.body.password)
-      user.passwordResetKey = {}
-      user.save((err, user) => {
-        if (err) { throw err }
-
-        return res
-          .status(200)
-          .json({ message: 'Password reset successful' })
-      })
-    })
-    .catch(err => {
-      console.log('Error!!!', err)
-      return res
-        .status(400)
-        .json({ message: err })
-    })
+    return res.status(200).json({ message: 'Password reset successful' })
+  } catch (err) {
+    return next(err)
+  }
 }
 
-/* ============================== EXPORT API =============================== */
+/* ================================ EXPORTS ================================ */
 
-module.exports = { register, validate, login, sendReset, resetPass }
+exports = module.exports = {
+  refreshToken,
+  register,
+  validate,
+  login,
+  sendReset,
+  resetPass
+}

@@ -1,13 +1,8 @@
-/*
-   functions to handle user profile retrieval, creation, update, and deletion
-*/
-
-/* ================================= SETUP ================================= */
+'use strict'
 
 const User = require('../models/user')
 const Post = require('../models/post')
-const parseSKill = require('../utils/skillsparser')
-const projection = { signupKey: 0, passwordResetKey: 0, hash: 0, salt: 0 }
+const { parseSkill, errorWithStatus } = require('../utils')
 
 /* ============================ ROUTE HANDLERS ============================= */
 
@@ -15,16 +10,14 @@ const projection = { signupKey: 0, passwordResetKey: 0, hash: 0, salt: 0 }
 //   Example: GET >> /api/profiles
 //   Secured: yes, valid JWT required.
 //   Returns: an array of user profile objects on success
-//
-function getProfiles (req, res) {
-  User.find({}, projection)
-    .exec()
-    .then(profiles => res.status(200).json(profiles))
-    .catch(err => {
-      return res
-        .status(400)
-        .json({ message: err })
-    })
+async function getProfiles (req, res, next) {
+  const projection = { signupKey: 0, passwordResetKey: 0, hash: 0, salt: 0 }
+  try {
+    const profiles = await User.findAllUsers({ projection })
+    return res.status(200).json(profiles)
+  } catch (err) {
+    return next(err)
+  }
 }
 
 // GET ONE PROFILE
@@ -33,21 +26,19 @@ function getProfiles (req, res) {
 //   Expects:
 //     1) '_id' from request params
 //   Returns: user profile object on success
-//
-function getOneProfile (req, res) {
-  const target = req.params.id
+async function getOneProfile (req, res, next) {
+  const projection = { signupKey: 0, passwordResetKey: 0, hash: 0, salt: 0 }
+  const userId = req.params.id
 
-  User.findOne({ _id: target }, projection, (err, profile) => {
+  try {
+    const profile = await User.findUserById({ userId, projection })
     if (!profile) {
-      return res
-        .status(404)
-        .json({ message: 'User profile not found!' })
+      return res.status(404).json({ userId, message: `User profile not found` })
     }
-
-    return res
-      .status(200)
-      .json(profile)
-  })
+    return res.status(200).json(profile)
+  } catch (err) {
+    return next(err)
+  }
 }
 
 // UPDATE PROFILE
@@ -74,58 +65,30 @@ function getOneProfile (req, res) {
 //          codepen    : String
 //        }
 //   Returns: success message & updated profile object on success
-//
-function updateProfile (req, res) {
-  const target = {
-    _id: req.params.id,
-    username: req.token.username
+async function updateProfile (req, res, next) {
+  // ensure user is allowed to update target user profile
+  if (req.params.id !== req.token._id) {
+    return next(errorWithStatus(new Error('Update profile not permitted'), 403))
   }
 
-  // kick off promise chain
-  new Promise((resolve, reject) => {
-    // make sure the requesting user ID and target user ID match
-    if (target._id === req.token._id) {
-      resolve(target)
-    } else {
-      reject('Error: user ID mismatch.')
+  const target = { _id: req.params.id, username: req.token.username }
+  const updates = { ...req.body } // map only enumerable req.body properties
+  const options = { new: true } // return updated document from mongodb
+
+  // parse any skills
+  if (updates.skills) {
+    updates.skills = updates.skills.map(parseSkill)
+  }
+
+  try {
+    const updatedProfile = await User.updateUser({ target, updates, options })
+    if (!updatedProfile) {
+      return next(errorWithStatus(new Error('Update error: user not found'), 404))
     }
-  })
-    .then(() => {
-      // map enumerable req body properties to updates object
-      const updates = Object.assign({}, req.body)
-
-      // parse skills array if update includes skills
-      if (updates.skills) {
-        updates.skills = (updates.skills).map(skill => parseSKill(skill))
-      }
-
-      const options = {
-        new: true // return updated document rather than the original
-      }
-
-      User.findOneAndUpdate(target, updates, options)
-        .exec()
-        .then(user => {
-          if (!user) {
-            return res
-              .status(404)
-              .json({ message: 'User not found!' })
-          } else {
-            return res
-              .status(200)
-              .json({
-                message: 'User updated!',
-                user: user
-              })
-          }
-        })
-    })
-    .catch(err => {
-      console.log('Error!!!', err)
-      return res
-        .status(400)
-        .json({ message: err })
-    })
+    return res.status(200).json({ message: 'User updated!', user: updatedProfile })
+  } catch (err) {
+    return next(err)
+  }
 }
 
 // DELETE A PROFILE
@@ -136,104 +99,40 @@ function updateProfile (req, res) {
 //     2) '_id' from JWT
 //     3) 'username' from JWT
 //   Returns: success message & deleted user profile on success
-//
-function deleteProfile (req, res) {
-  const targetUser = {
-    _id: req.params.id,
-    username: req.token.username
+async function deleteProfile (req, res, next) {
+  // ensure user is allowed to update target user profile
+  if (req.params.id !== req.token._id) {
+    return next(errorWithStatus(new Error('Delete profile not permitted'), 403))
   }
 
-  // make sure the requesting user ID and target user ID match
-  if (targetUser._id !== req.token._id) {
-    return res
-      .status(400)
-      .json({ message: 'Error: user ID mismatch.' })
+  const targetUser = { _id: req.params.id, username: req.token.username }
+
+  try {
+    // first delete user's profile ...
+    const deletedProfile = await User.deleteUser({ targetUser })
+    if (!deletedProfile) {
+      return next(errorWithStatus(new Error('Delete error: user not found'), 404))
+    }
+    // ... then set user's posts to 'deleted ...
+    const didDeletePosts = await Post.deletePostsByAuthor({ authorId: targetUser._id })
+    if (!didDeletePosts) {
+      return next(errorWithStatus(new Error('Failed to delete posts'), 500))
+    }
+    // ... finally, handle delete success
+    return res.status(200).json({
+      message: 'User profile deleted!',
+      user: deletedProfile
+    })
+  } catch (err) {
+    return next(err)
   }
-
-  User.findOneAndRemove(targetUser)
-    .exec()
-    .then(user => {
-      if (!user) {
-        return res
-          .status(404)
-          .json({ message: 'User not found!' })
-      } else {
-        const postAuthor = {
-          author_id: targetUser._id,
-          author: targetUser.username
-        }
-
-        const updates = {
-          deleted: true,
-          active: false
-        }
-
-        const options = {
-          multi: true
-        }
-
-        // "delete" all posts from same author. Sets "deleted" to true,
-        // and "active" to false
-        Post.update(postAuthor, updates, options, (err, raw) => {
-          if (err) { throw err } else {
-            console.log('The raw response from Mongo was ', raw)
-
-            return res
-              .status(200)
-              .json({
-                message: 'User profile deleted!',
-                user: user
-              })
-          }
-        })
-      }
-    })
-    .catch(err => {
-      console.log('Error!!!', err)
-      return res
-        .status(400)
-        .json({ message: err })
-    })
 }
 
-// REFRESH USER TOKEN
-//   Example: GET >> /api/refresh_token
-//   Secured: yes, valid JWT required
-//   Expects:
-//     1) '_id' from JWT
-//   Returns: user profile and new JWT on success
-//
-function refreshToken (req, res) {
-  const userId = req.token._id
-
-  User.findById(userId)
-    .exec()
-    .then(user => {
-      // generate a token
-      const token = user.generateJWT()
-
-      // return the user profile & JWT
-      return res
-        .status(200)
-        .json({
-          profile: user,
-          token: token
-        })
-    })
-    .catch(err => {
-      console.log('Error!!!', err)
-      return res
-        .status(400)
-        .json({ message: err })
-    })
-}
-
-/* ============================== EXPORT API =============================== */
+/* ================================ EXPORTS ================================ */
 
 module.exports = {
   getProfiles,
   getOneProfile,
   updateProfile,
-  deleteProfile,
-  refreshToken
+  deleteProfile
 }
