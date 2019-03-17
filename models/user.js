@@ -3,131 +3,42 @@
 require('dotenv').config()
 const mongoose = require('mongoose')
 const passportLocalMongoose = require('passport-local-mongoose')
-const jwt = require('jsonwebtoken')
-const crypto = require('crypto')
-const secret = process.env.JWT_SECRET
-
-/* ================================ SCHEMA ================================= */
+const { statics, methods } = require('./plugins/user-plugins')
 
 const userSchema = new mongoose.Schema({
-
-  username: {
-    type: String,
-    unique: true
-  },
-
-  email: {
-    type: String,
-    unique: true,
-    required: true
-  },
-
-  name: {
-    type: String,
-    trim: true
-  },
-
-  ghUserName: {
-    type: String,
-    trim: true
-  },
-
+  username: { type: String, unique: true },
+  email: { type: String, unique: true, required: true },
+  name: { type: String, trim: true },
+  ghUserName: { type: String, trim: true },
   ghProfile: Object,
-
-  avatarUrl: {
-    type: String,
-    trim: true
-  },
-
-  location: {
-    type: String,
-    trim: true
-  },
-
-  about: {
-    type: String,
-    trim: true
-  },
-
-  gender: {
-    type: String,
-    trim: true
-  },
-
-  github: {
-    type: String,
-    trim: true
-  },
-
-  twitter: {
-    type: String,
-    trim: true
-  },
-
-  facebook: {
-    type: String,
-    trim: true
-  },
-
-  link: {
-    type: String,
-    trim: true
-  },
-
-  linkedin: {
-    type: String,
-    trim: true
-  },
-
-  codepen: {
-    type: String,
-    trim: true
-  },
-
-  signupKey: {
-    key: String,
-    ts: String,
-    exp: String
-  },
-
-  passwordResetKey: {
-    key: String,
-    ts: String,
-    exp: String
-  },
-
-  validated: {
-    type: Boolean,
-    default: false
-  },
-
+  avatarUrl: { type: String, trim: true },
+  location: { type: String, trim: true },
+  about: { type: String, trim: true },
+  gender: { type: String, trim: true },
+  github: { type: String, trim: true },
+  twitter: { type: String, trim: true },
+  facebook: { type: String, trim: true },
+  link: { type: String, trim: true },
+  linkedin: { type: String, trim: true },
+  codepen: { type: String, trim: true },
+  signupKey: { key: String, ts: String, exp: String },
+  passwordResetKey: { key: String, ts: String, exp: String },
+  validated: { type: Boolean, default: false },
   languages: [String],
-
   certs: [String],
-
   skills: [String],
-
-  time_zone: {
-    type: String,
-    trim: true
-  },
-
+  time_zone: { type: String, trim: true },
   likedPosts: [String],
-
   contactMeta: {
     unSubbed: { type: Boolean, default: false },
     alreadyContacted: { type: Boolean, default: false }
   },
-
   engagementMeta: {
     addPostReminder: { type: Date },
     addProfileReminder: { type: Date }
   },
-
   hash: String,
-
   salt: String
-
 },
 {
   timestamps: true
@@ -135,35 +46,19 @@ const userSchema = new mongoose.Schema({
 
 userSchema.plugin(passportLocalMongoose)
 
-/* ================================ METHODS ================================ */
+// plug in instance methods
 
-// salt and hash passwords based on 'this' user object
-userSchema.methods.hashPassword = function (pwd) {
-  this.salt = crypto.randomBytes(16).toString('hex')
-  this.hash = crypto.pbkdf2Sync(pwd, this.salt, 10000, 512, 'sha512').toString('hex')
-}
+userSchema.plugin(methods.hashPassword)
+userSchema.plugin(methods.validatePassword)
+userSchema.plugin(methods.generateJwt)
 
-// hash and compare submitted passwords to stored hashes in db.
-// return 'true' if match
-userSchema.methods.validatePassword = function (pwd) {
-  const hash = crypto.pbkdf2Sync(pwd, this.salt, 10000, 512, 'sha512').toString('hex')
-  return this.hash === hash
-}
+// plug in static class methods
 
-// Generate and return signed JWT based on 'this' user object
-userSchema.methods.generateJWT = function () {
-  const payload = {
-    _id: this._id,
-    username: this.username,
-    validated: this.validated
-  }
-  const options = {
-    expiresIn: '7d'
-  }
+userSchema.plugin(statics.findAllUsers)
+userSchema.plugin(statics.findUserById)
+userSchema.plugin(statics.updateUser)
+userSchema.plugin(statics.deleteUser)
 
-  return jwt.sign(payload, secret, options)
-}
+// exports
 
-/* ================================ EXPORT ================================= */
-
-module.exports = mongoose.model('User', userSchema)
+exports = module.exports = mongoose.model('User', userSchema)
