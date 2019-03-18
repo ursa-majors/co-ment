@@ -1,8 +1,4 @@
-/*
-   route controllers to handle in-app messaging CRUD
-*/
-
-/* ================================= SETUP ================================= */
+'use strict'
 
 const Conversation = require('../models/conversation')
 const Message = require('../models/message')
@@ -12,181 +8,91 @@ const { unreadsReminder } = require('../utils/mailtemplates')
 
 /* =============================== UTILITIES =============================== */
 
-/* Count unread messages where the user = 'recipient'
- * @param     [array]    collection   [array of elements we want to filter]
- * @param     [string]   user         [user's _id]
- * @returns   [number]                [number of unread messages]
-*/
-function countUnreads (collection, user) {
-  return collection.filter(el => {
-    return el.unread && el.recipient.toString() === user
-  }).length
+/**
+ * Calculate number of unread messages where the user = 'recipient'
+ * @param    {array}    messages  array of elements we want to filter
+ * @param    {string}   userId    user's _id
+ * @returns  {number}             number of unread messages
+ */
+function countUnreads (messages, userId) {
+  return messages.filter(m => m.unread && m.recipient.toString() === userId).length
 }
 
-/* Build 'getConversations' response object from conversations array
- * @params    [array]   convs   [array of conversation objects]
- * @returns   [object]          [formatted response]
- *
- *   {
- *      totalMessages : Number,
- *      totalUnreads  : Number,
- *      conversations : [
- *          {
- *              _id         : String,
- *              subject     : String,
- *              startDate   : String,
- *              qtyMessages : Number,
- *              qtyUnreads  : Number,
- *              latestMessage : {
- *                  _id       : String,
- *                  updatedAt : String,
- *                  createdAt : String,
- *                  body      : String,
- *                  author    : String,
- *                  recipient : String,
- *                  unread    : Boolean
- *              },
- *              participants : [
- *                  {
- *                      _id       : String,
- *                      username  : String,
- *                      name      : String,
- *                      avatarUrl : String
- *                  }...
- *              ]
- *          }
- *      ]
- *   }
+/**
+ * Build 'getConversations' response object from conversations array
+ * @param    {Array}   convs  array of conversation objects
+ * @returns  {Object}         formatted response
 */
-function formatConvData (convs, user) {
+const addConversationMetadata = (user) => (convs) => {
   // count all messages
   const totalMessages = convs.reduce((sum, conv) => {
     return sum + conv.messages.length
   }, 0)
 
-  // count unread messages where user is the recipient
+  // count user's unread messages over all conversations
   const totalUnreads = convs.reduce((sum, conv) => {
     return sum + countUnreads(conv.messages, user)
   }, 0)
 
   // remap conversations to include metadata
-  const conversations = convs.map(c => {
-    return {
-      _id: c._id,
-      subject: c.subject,
-      qtyMessages: c.messages.length,
-      qtyUnreads: countUnreads(c.messages, user),
-      startDate: c.startDate,
-      participants: c.participants,
-      latestMessage: c.messages[c.messages.length - 1]
-    }
-  })
+  const conversations = convs.map(c => ({
+    _id: c._id,
+    subject: c.subject,
+    qtyMessages: c.messages.length,
+    qtyUnreads: countUnreads(c.messages, user),
+    startDate: c.startDate,
+    participants: c.participants,
+    latestMessage: c.messages[c.messages.length - 1]
+  }))
 
   return { totalMessages, totalUnreads, conversations }
 }
 
-/* Add array of messages to conversations
- * If 'convos' is an array, return summary list of conversations.
- * If 'convos' is an object, return conversation with messages and
- * set message 'unread' to false
- *
- * @params    [object]   convos   [array of conv objects or single conv object]
- * @params    [string]   user     [user's '_id']
- * @returns   [object]            [populated conversation(s)]
-*/
-function populateMessages (convos, user) {
-  let convIsArray = Array.isArray(convos)
+/**
+ * Add array of messages to conversations. Happens when a user gets a
+ * conversation. Like a "read" event, so we also set message 'unread' to false.
+ * @param    {object}  convo   conversation object
+ * @param    {string}  user    user's '_id'
+ * @returns  {object}          conversation with its messages
+ */
+async function populateMessages (convo) {
+  // get all messages for a conversation, updating their 'unread' status = false
+  const messages = await Message.findByConversationAndRead({ conversationId: convo._id })
 
-  if (convIsArray) {
-    return Message.find({ $or: [ { author: user }, { recipient: user } ] })
-      .sort({ createdAt: -1 })
-      .exec()
-      .then(msgs => {
-        return convos.map(c => {
-          let messages = msgs.filter(m => {
-            return m.conversation.toString() === c._id.toString()
-          })
-          return {
-            _id: c._id,
-            subject: c.subject,
-            participants: c.participants,
-            startDate: c.startDate,
-            messages: messages
-          }
-        })
-      })
-  } else {
-    return Message.find({ conversation: convos._id })
-      .exec()
-      .then(msgs => {
-        // Update message unread fields to 'false'.
-        // Targets only messages where 'user' = 'recipient'
-        // We build an 'udates' array of 'findOneAndUpdate'
-        // queries using '.map()' on the 'msgs' array:
-        const updates = msgs.map(msg => {
-          return Message.findOneAndUpdate(
-            { '_id': msg._id, 'recipient': user }, // filter
-            { '$set': { 'unread': false } }, // updates
-            { new: true } // options
-          )
-        })
-
-        // Then execute each query in the array at once
-        // and return all messages
-        return Promise.all(updates)
-          .then(() => msgs)
-      })
-      .then(msgs => {
-        return {
-          _id: convos._id,
-          subject: convos.subject,
-          participants: convos.participants,
-          startDate: convos.startDate,
-          messages: msgs
-        }
-      })
+  return {
+    _id: convo._id,
+    subject: convo.subject,
+    participants: convo.participants,
+    startDate: convo.startDate,
+    messages
   }
 }
 
-/* Dispatch reminder email to user if OK to do so
- * First, gets recipient's user document and check contactMeta.
- *   if   :  `contactMeta.alreadyContacted` = true, fail
- *   else : dispatch reminder email.
- *
- * @params    [string]   recipient   [recipient's user _id]
-*/
-function duckDuckSpam (recipient) {
+/**
+ * Dispatch reminder email if user's alreadyContacted = false
+ * @param    {String}   recipient  recipient's user _id
+ * @returns  {Boolean}             True if recipient was emailed
+ */
+async function duckDuckSpam (recipient) {
   const projection = {
     username: 1,
     email: 1,
     'contactMeta.alreadyContacted': 1
   }
 
-  User.findById(recipient, projection)
-    .exec()
-    .then(user => {
-      if (user.contactMeta.alreadyContacted) {
-        // not ok to contact
-        return false
-      } else {
-        // OK to contact - dispatch email
-        sendReminderEmail({
-          to_name: user.username,
-          to_email: user.email
-        })
+  try {
+    const user = await User.findById(recipient, projection).exec()
+    if (!user || user.contactMeta.alreadyContacted) return false
 
-        // update user's `contactMeta.alreadyContacted` field
-        user.contactMeta.alreadyContacted = true
-        user.save(err => {
-          if (err) { throw new Error(err) }
-        })
+    sendReminderEmail({ to_name: user.username, to_email: user.email })
 
-        return true
-      }
-    })
-    .catch(err => {
-      throw new Error(err)
-    })
+    // update user's `contactMeta.alreadyContacted` field
+    user.contactMeta.alreadyContacted = true
+    await user.save()
+    return true
+  } catch (err) {
+    throw new Error(err)
+  }
 }
 
 function sendReminderEmail (params) {
@@ -208,72 +114,45 @@ function sendReminderEmail (params) {
 
 /* ============================ ROUTE HANDLERS ============================= */
 
-// GET CONVERSATIONS - with projection!
+// GET ALL USERS CONVERSATIONS WITH MESSAGES & EXTRA METADATA
 //   Example: GET >> /api/conversations
 //   Secured: yes, valid JWT required
 //   Expects:
 //     1) user '_id' from JWT token
 //   Returns: array of user's conversations with most recent messages.
-//
-function getConversations (req, res) {
-  Conversation.find({ participants: req.token._id })
-    .select('subject startDate messages participants')
+async function getConversations (req, res, next) {
+  const userId = req.token._id
+  try {
+    const conversations = await Conversation.findAllWithParticipants({ userId })
+      .then(populateMessages)
+      .then(addConversationMetadata(userId))
 
-  // add conversation participant details
-    .populate({
-      path: 'participants',
-      select: 'username name avatarUrl'
-    })
-    .exec()
+    // set user's alreadyContacted flag to false so they rec
+    // reminders of new messages
+    const updates = { $set: { 'contactMeta.alreadyContacted': false } }
+    await User.findByIdAndUpdate(userId, updates).exec()
 
-  // add messages to each conversation in the results array
-    .then(convos => populateMessages(convos, req.token._id))
-
-  // get unreads and filter messages
-    .then(convos => formatConvData(convos, req.token._id))
-
-    .then(data => {
-      // set user's alreadyContacted flag to false so they rec
-      // reminders of new messages
-      User.findByIdAndUpdate(
-        req.token._id,
-        { $set: { 'contactMeta.alreadyContacted': false } }
-      ).exec()
-
-      return res.status(200).json(data)
-    })
-    .catch(err => {
-      return res
-        .status(400)
-        .json({ message: err })
-    })
+    return res.status(200).json(conversations)
+  } catch (err) {
+    return next(err)
+  }
 }
 
-// GET ALL MESSAGES IN A CONVERSATION
+// GET A CONVERSATION WITH MESSAGES
 //   Example: GET >> /api/conversations/:id
 //   Secured: yes, valid JWT required
 //   Expects:
 //     1) conversation '_id' from the request params
-//   Returns: array of messages from single conversation.
-//
-function getConversation (req, res) {
-  Conversation.findById(req.params.id)
-    .select('subject startDate messages participants')
-    .populate({
-      path: 'participants',
-      select: 'username name avatarUrl'
-    })
-    .exec()
-
-  // add messages array to the conversation
-    .then(convo => populateMessages(convo, req.token._id))
-
-    .then(data => res.status(200).json(data))
-    .catch(err => {
-      return res
-        .status(400)
-        .json({ message: err })
-    })
+//   Returns: conversation object with nested array of messages
+async function getConversation (req, res, next) {
+  const conversationId = req.params.id
+  try {
+    const [conversation] = await Conversation.findOneWithParticipants({ conversationId })
+      .then(populateMessages)
+    res.status(200).json(conversation)
+  } catch (err) {
+    return next(err)
+  }
 }
 
 // CREATE NEW CONVERSATION
@@ -287,24 +166,17 @@ function getConversation (req, res) {
 //          subject     : String
 //        }
 //   Returns: success message on success
-//
-function createConversation (req, res, next) {
+async function createConversation (req, res, next) {
   if (!req.body.recipientId) {
-    return res
-      .status(422)
-      .json({ message: 'Missing recipient ID.' })
+    return res.status(400).json({ message: 'Missing recipient ID.' })
   }
 
   if (!req.body.message) {
-    return res
-      .status(422)
-      .json({ message: 'Missing message.' })
+    return res.status(400).json({ message: 'Missing message.' })
   }
 
   if (!req.body.subject) {
-    return res
-      .status(422)
-      .json({ message: 'Missing subject.' })
+    return res.status(400).json({ message: 'Missing subject.' })
   }
 
   const conversation = new Conversation({
@@ -322,26 +194,13 @@ function createConversation (req, res, next) {
 
   conversation.messages.push(message._id)
 
-  conversation.save((err, newConversation) => {
-    if (err) {
-      console.log('Error!', err)
-      return next(err)
-    }
-
-    message.save((error, newMessage) => {
-      if (error) {
-        console.log('Error!', error)
-        return next(error)
-      }
-
-      return res
-        .status(200)
-        .json({
-          message: 'Conversation started!',
-          conversation: conversation
-        })
-    })
-  })
+  try {
+    await message.save()
+    await conversation.save()
+    return res.status(200).json({ message: 'Conversation started!', conversation })
+  } catch (err) {
+    return next(err)
+  }
 }
 
 // CREATE NEW MESSAGE
@@ -356,8 +215,7 @@ function createConversation (req, res, next) {
 //        }
 //   Returns: new message object
 //   Triggers check for & send 'unreads available' email to recipient
-//
-function postMessage (req, res) {
+async function createMessage (req, res, next) {
   const message = new Message({
     conversation: req.body.conversation,
     body: req.body.messageBody,
@@ -366,19 +224,16 @@ function postMessage (req, res) {
     originatedFrom: 'conversation'
   })
 
-  message.save((err, sentMessage) => {
-    if (err) {
-      console.log('Error!', err)
-      return res.send({ error: err })
-    }
-
+  try {
+    await message.save()
     // call utility to check for and send unreads waiting email
-    duckDuckSpam(message.recipient)
+    const didEmail = duckDuckSpam(message.recipient)
+    req.log.info(`${didEmail ? 'Did' : 'Did not'} email ${message.recipient}`)
 
-    return res
-      .status(200)
-      .json({ message: message })
-  })
+    return res.status(200).json({ message: message })
+  } catch (err) {
+    return next(err)
+  }
 }
 
 /* ============================== EXPORT API =============================== */
@@ -387,5 +242,5 @@ module.exports = {
   getConversations,
   getConversation,
   createConversation,
-  postMessage
+  createMessage
 }
