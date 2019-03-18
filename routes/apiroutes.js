@@ -92,7 +92,7 @@ router.post('/conversations', conversationCtrl.createConversation)
 
 // Create a new message
 // Returns success message on success.
-router.post('/messages', conversationCtrl.postMessage)
+router.post('/messages', conversationCtrl.createMessage)
 
 /* ================================ EXPORT ================================= */
 
