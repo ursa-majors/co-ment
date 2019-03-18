@@ -8,8 +8,8 @@
     "dev": "NODE_ENV=development nodemon server.js | bunyan",
     "lint": "standard",
     "lint:fix": "standard --fix",
-    "test": "mocha",
-    "test:watch": "mocha --recursive --watch --reporter min"
+    "test": "jest --coverage",
+    "test:watch": "jest --watch"
   },
   "author": "The Ursa Majors",
   "license": "MIT",
@@ -30,11 +30,8 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^6.0.2",
+    "jest": "^24.5.0",
     "nodemon": "^1.18.10",
-    "sinon": "^7.2.7",
-    "sinon-chai": "^3.3.0",
     "standard": "^12.0.1"
   },
   "repository": {
@@ -43,8 +40,24 @@
   },
   "standard": {
     "env": [
-      "mocha"
+      "jest"
     ]
+  },
+  "jest": {
+    "collectCoverage": false,
+    "collectCoverageFrom": ["**/*.{js,jsx}", "!**/node_modules/**"],
+    "coverageDirectory": "./coverage",
+    "coverageThreshold": {
+      "global": {
+        "branches": 75,
+        "functions": 75,
+        "lines": 75,
+        "statements": 75
+      }
+    },
+    "roots": ["./spec"],
+    "testEnvironment": "node",
+    "verbose": true
   },
   "bugs": {
     "url": "https://github.com/ursa-majors/co-ment/issues"

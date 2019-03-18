@@ -1,6 +1,5 @@
 'use strict'
 
-const expect = require('chai').expect
 const maskAuthHeader = require('../../utils/mask-auth-header')
 
 const sanitized = '<MASKED>'
@@ -19,7 +18,7 @@ const headers = {
 describe('authorization header masking utility', () => {
   it('should mask top-level authorization strings', () => {
     const actual = maskAuthHeader(headers)
-    expect(actual).to.deep.equal({
+    expect(actual).toEqual({
       ...headers,
       authorization: sanitized
     })
@@ -33,7 +32,7 @@ describe('authorization header masking utility', () => {
     delete reqHeaders.authorization
 
     const actual = maskAuthHeader(reqHeaders)
-    expect(actual).to.deep.equal({
+    expect(actual).toEqual({
       ...reqHeaders,
       Authorization: sanitized
     })
@@ -45,7 +44,7 @@ describe('authorization header masking utility', () => {
       nested: { authorization }
     }
     const actual = maskAuthHeader(moreHeaders)
-    expect(actual).to.deep.equal({
+    expect(actual).toEqual({
       ...headers,
       authorization: sanitized,
       nested: {
@@ -60,7 +59,7 @@ describe('authorization header masking utility', () => {
       nested: { nested: { authorization } }
     }
     const actual = maskAuthHeader(moreHeaders)
-    expect(actual).to.deep.equal({
+    expect(actual).toEqual({
       ...headers,
       authorization: sanitized,
       nested: { nested: { authorization: sanitized } }
