@@ -76,7 +76,7 @@ router.post('/connections', connectionCtrl.createConnection)
 
 // Update a connection record's status & status date
 // Returns success message on success.
-router.put('/connections', connectionCtrl.updateConnection)
+router.put('/connections/:id', connectionCtrl.updateConnection)
 
 // Get a list of a user's conversations
 // Returns array of conversations on success
