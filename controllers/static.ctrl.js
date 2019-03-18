@@ -1,8 +1,4 @@
-/*
-   functions to serve static client files and handle route redirection
-*/
-
-/* ================================= SETUP ================================= */
+'use strict'
 
 const path = require('path')
 
@@ -15,27 +11,22 @@ const path = require('path')
 //   For ex. /viewpost/bc37599dd92b8a2007161fc3
 //   Is redirected to: /#/redirect=viewpost/bc37599dd92b8a2007161fc3
 //   Client picks off the hash fragment and executes the route.
-//
 function redirectHash (req, res) {
   // keep only keys with `truthy` values (not undefined)
   const paramsKeys = Object.keys(req.params).filter(el => req.params[el])
-
-  let hashString = '#/redirect='
-
-  // build hash from request parameters
-  paramsKeys.forEach((key, index) => {
+  const baseHash = '#/redirect='
+  const fullHash = paramsKeys.reduce((str, key, index) => {
     // only prepend with slash if the key is not the first key
-    if (index !== 0) { hashString += '/' }
+    if (index !== 0) { str += '/' }
     // append the request parameter
-    hashString += `${req.params[key]}`
-  })
+    return str + `${req.params[key]}`
+  }, baseHash)
 
   // send the redirect
-  res.redirect(302, `/${hashString}`)
+  res.redirect(302, `/${fullHash}`)
 }
 
 // SERVE CLIENT SPA
-//
 function serveClient (req, res) {
   res.status(200)
     .sendFile(path.join(__dirname, '../client/build/index.html'))
