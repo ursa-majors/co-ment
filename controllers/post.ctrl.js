@@ -1,11 +1,8 @@
-/*
-   functions to handle post retrieval, creation, update, and deletion
-*/
-
-/* ================================= SETUP ================================= */
+'use strict'
 
 const Post = require('../models/post')
 const User = require('../models/user')
+const { errorWithStatus } = require('../utils')
 
 /* ============================ ROUTE HANDLERS ============================= */
 
@@ -18,16 +15,15 @@ const User = require('../models/user')
 //     author       Return only posts by a specific author
 //     active=all   Return all posts, active and inactive
 //   Returns: JSON array of 'post' objects on success.
-//
-function getPosts (req, res) {
+async function getPosts (req, res, next) {
   // request only active, non-deleted posts
   const query = {
     active: true,
     deleted: false
   }
 
-  // iterate over req params, adding any params to the query
-  Object.keys(req.query).forEach(key => {
+  // iterate over req params, conditionally adding params to the query
+  for (let key in req.query) {
     if (key === 'id') {
       query._id = req.query.id
     } else if (key === 'active' && req.query.active === 'all') {
@@ -35,17 +31,14 @@ function getPosts (req, res) {
     } else {
       query[key] = req.query[key]
     }
-  })
+  }
 
-  Post.find(query)
-    .populate('author', 'username name avatarUrl time_zone languages gender')
-    .exec()
-    .then(posts => res.status(200).json(posts))
-    .catch(err => {
-      return res
-        .status(400)
-        .json({ message: err })
-    })
+  try {
+    const posts = await Post.findPosts({ query })
+    return res.status(200).json(posts)
+  } catch (err) {
+    return next(err)
+  }
 }
 
 // CREATE NEW POST
@@ -62,68 +55,48 @@ function getPosts (req, res) {
 //          availability        : String
 //        }
 //   Returns: success message & new post object on success
-//
-function createPost (req, res) {
-  // Check if exists non-deleted post with same author_id, role & title
-  Post
-    .findOne({
+async function createPost (req, res, next) {
+  const { title, role } = req.body
+  if (!title) return res.status(400).json({ message: 'Missing required title' })
+  if (!role) return res.status(400).json({ message: 'Missing required role' })
+
+  try {
+    const target = { author: req.token._id, role, title, deleted: false }
+    const existingPost = await Post.findOne(target).exec()
+
+    // Error if non-deleted post w/ same author_id, role & title found
+    if (existingPost) {
+      throw errorWithStatus(new Error('same/similar post already exists'), 400)
+    }
+
+    const now = new Date().toISOString()
+
+    // create new post
+    const newPost = new Post({
       author: req.token._id,
       role: req.body.role,
       title: req.body.title,
-      deleted: false
+      body: req.body.body,
+      excerpt: req.body.excerpt,
+      keywords: req.body.keywords,
+      availability: req.body.availability,
+      createdAt: now,
+      updatedAt: now
     })
-    .exec()
-    .then(post => {
-      if (post) {
-        // post already exists, fail
-        return res
-          .status(400)
-          .json({ message: 'Error - same/similar post already exists!' })
-      } else {
-        // get a datestamp
-        const now = new Date().toISOString()
 
-        // create new post
-        const myPost = new Post()
+    // save new post to database
+    await newPost.save()
 
-        // build new post from request body and token
-        myPost.author = req.token._id
-        myPost.role = req.body.role
-        myPost.title = req.body.title
-        myPost.body = req.body.body
-        myPost.excerpt = req.body.excerpt
-        myPost.keywords = req.body.keywords
-        myPost.availability = req.body.availability
-        myPost.createdAt = now
-        myPost.updatedAt = now
-
-        // save new post to database
-        myPost.save((err, newPost) => {
-          if (err) { throw new Error(err) }
-
-          newPost
-            .populate({
-              path: 'author',
-              select: 'username name avatarUrl time_zone languages gender'
-            }, (err, populatedPost) => {
-              if (err) { throw new Error(err) }
-
-              return res
-                .status(200)
-                .json({
-                  message: 'New post saved!',
-                  post: populatedPost
-                })
-            })
-        })
-      }
+    // hydrate author info
+    const post = await newPost.populate({
+      path: 'author',
+      select: 'username name avatarUrl time_zone languages gender'
     })
-    .catch(err => {
-      console.log('Error!!!', err)
-      return res
-        .status(400)
-        .json({ message: err })
-    })
+
+    return res.status(200).json({ message: 'New post saved!', post })
+  } catch (err) {
+    return next(err)
+  }
 }
 
 // UPDATE A POST
@@ -142,59 +115,25 @@ function createPost (req, res) {
 //          availability        : String
 //        }
 //   Returns: success message & updated post on success
-//
-function updatePost (req, res) {
-  // Target post by post '_id' and 'author_id'.
-  // This way, users can only update posts they authored.
-  const target = {
-    _id: req.params.id,
-    author: req.token._id
-  }
-
-  // build new post object from request body and parsed token
-  const updates = {
-    active: req.body.active,
-    author: req.token._id,
-    role: req.body.role,
-    title: req.body.title,
-    body: req.body.body,
-    excerpt: req.body.excerpt,
-    keywords: req.body.keywords,
-    availability: req.body.availability,
-    updatedAt: new Date().toISOString()
-  }
-
+async function updatePost (req, res, next) {
+  const target = { _id: req.params.id, author: req.token._id }
+  const updates = { ...req.body, updatedAt: new Date().toISOString() }
   const options = { new: true }
 
-  Post.findOneAndUpdate(target, updates, options)
-    .exec()
-    .then(post => {
-      if (!post) {
-        return res
-          .status(404)
-          .json({ message: 'Post not found!' })
-      } else {
-        post.populate({
-          path: 'author',
-          select: 'username name avatarUrl time_zone languages gender'
-        }, (err, populatedPost) => {
-          if (err) { throw new Error(err) }
+  try {
+    const updatedPost = await Post.updatePost({ target, updates, options })
+    if (!updatedPost) throw errorWithStatus(new Error('Post not found!'), 404)
 
-          return res
-            .status(200)
-            .json({
-              message: 'Post updated!',
-              post: populatedPost
-            })
-        })
-      }
+    // hydrate post with author info
+    const post = await updatedPost.populate({
+      path: 'author',
+      select: 'username name avatarUrl time_zone languages gender'
     })
-    .catch(err => {
-      console.log('Error!!!', err)
-      return res
-        .status(400)
-        .json({ message: err })
-    })
+
+    return res.status(200).json({ message: 'Post updated', post })
+  } catch (err) {
+    return next(err)
+  }
 }
 
 // DELETE A POST
@@ -204,46 +143,25 @@ function updatePost (req, res) {
 //     1) user '_id' from JWT token
 //     2) post 'id' from request params
 //   Returns: success message & deleted post on success
-//
-function deletePost (req, res) {
-  // Target post by post '_id' and post 'author_id'.
-  // This way, users can only delete their own posts.
-  const target = {
-    _id: req.params.id,
-    author: req.token._id
-  }
+async function deletePost (req, res, next) {
+  const target = { _id: req.params.id, author: req.token._id }
 
-  const updates = {
-    deleted: true,
-    active: false,
-    updatedAt: new Date().toISOString()
-  }
-
-  const options = { new: true }
-
-  Post.findOneAndUpdate(target, updates, options, (err, post) => {
-    if (err) { throw err }
-
-    if (!post) {
-      return res
-        .status(404)
-        .json({ message: 'Post not found!' })
-    } else {
-      post.populate({
-        path: 'author',
-        select: 'username name avatarUrl time_zone languages gender'
-      }, (err, populatedPost) => {
-        if (err) { throw new Error(err) }
-
-        return res
-          .status(200)
-          .json({
-            message: 'Post deleted!',
-            post: populatedPost
-          })
-      })
+  try {
+    const deletedPost = await Post.deletePost({ target })
+    if (!deletedPost) {
+      throw errorWithStatus(new Error('Post not found'), 404)
     }
-  })
+
+    // hydrate post with author info
+    const post = await deletedPost.populate({
+      path: 'author',
+      select: 'username name avatarUrl time_zone languages gender'
+    })
+
+    return res.status(200).json({ message: 'Post deleted!', post })
+  } catch (err) {
+    return next(err)
+  }
 }
 
 // INCREMENT A POST'S VIEW COUNT
@@ -253,31 +171,22 @@ function deletePost (req, res) {
 //     1) post 'id' from request params
 //     2) user '_id' from JWT
 //   Returns: success status only
-//
-function incPostViews (req, res) {
-  const conditions = {
-
-    // the post _id
+async function incPostViews (req, res, next) {
+  // match only if post author NOT EQUAL to requesting user
+  const target = {
     _id: req.params.id,
-
-    // match only if post author NOT EQUAL to requesting user
     author: { $ne: req.token._id }
   }
 
-  const updates = { $inc: { 'meta.views': 1 } }
-
-  Post.findOneAndUpdate(conditions, updates)
-    .exec()
-    .then(() => {
-      return res.status(200).end()
-    })
-    .catch(err => {
-      console.log(err)
-      return res.status(400).end()
-    })
+  try {
+    await Post.incrementViews({ target })
+    return res.status(200).end()
+  } catch (err) {
+    return next(err)
+  }
 }
 
-// INCREMENT A POST'S LIKE COUNT
+// INCREMENT / DECREMENT A POST'S LIKE COUNT
 //   Example: PUT >> /api/posts/597dd8665229970e99c6ab55/likes?action=plusplus
 //   Secured: yes, valid JWT required
 //   Expects:
@@ -285,59 +194,54 @@ function incPostViews (req, res) {
 //     2) user '_id' from JWT
 //     3) action from request query param (either 'plusplus' or 'minusminus')
 //   Returns: success status only
-//
-function updatePostLikes (req, res) {
+async function updatePostLikes (req, res, next) {
   const postId = req.params.id
   const userId = req.token._id
   const action = req.query.action
 
-  User.findById(userId)
-    .exec()
-    .then(user => {
-      const likedPosts = user.likedPosts
+  try {
+    const [user, post] = await Promise.all([
+      User.findUserById({ userId }),
+      Post.findById(postId).exec()
+    ])
 
-      // fail on already liked post
-      if (action === 'plusplus' && likedPosts.indexOf(postId) > -1) {
-        return res.end()
-      }
+    // do nothing when trying to like an already liked post
+    if (action === 'plusplus' && user.likedPosts.includes(postId)) {
+      return res.end()
+    }
 
-      // fail on unlike a post the user doesn't already like
-      if (action === 'minusminus' && likedPosts.indexOf(postId) === -1) {
-        return res.end()
-      }
+    // do nothing when trying to unlike a post the user doesn't already like
+    if (action === 'minusminus' && !user.likedPosts.includes(postId)) {
+      return res.end()
+    }
 
-      // add/remove post _id from array depending on action
-      if (action === 'plusplus' && likedPosts.indexOf(postId) === -1) {
-        user.likedPosts.push(postId)
-      } else if (action === 'minusminus' && likedPosts.indexOf(postId) > -1) {
-        let postIdx = user.likedPosts.indexOf(postId)
-        user.likedPosts.splice(postIdx, 1)
-      }
+    // do nothing if author is trying to like their own post
+    if (post.author === userId) {
+      return res.end()
+    }
 
-      Post.findById(postId)
-        .exec()
-        .then(post => {
-          // fail if author tries to like their own post
-          if (post.author === userId) {
-            return res.end()
-          } else if (action === 'plusplus') {
-            post.meta.likes += 1
-          } else if (action === 'minusminus') {
-            post.meta.likes -= 1
-          }
+    // update user's likedPosts array
+    if (action === 'plusplus' && !user.likedPosts.includes(postId)) {
+      user.likedPosts.push(postId)
+    } else if (action === 'minusminus' && user.likedPosts.includes(postId)) {
+      user.likedPosts = user.likedPosts.filter(p => p !== postId)
+    }
 
-          // save user and post documents
-          user.save()
-          post.save()
+    // update post's likes counter
+    if (action === 'plusplus') {
+      post.meta.likes += 1
+    } else if (action === 'minusminus') {
+      post.meta.likes -= 1
+    }
 
-          // send success status and terminate
-          return res.status(200).end()
-        })
-    })
-    .catch(err => {
-      console.log(err)
-      return res.status(400).end()
-    })
+    // save user and post
+    await user.save()
+    await post.save()
+
+    return res.status(200).end()
+  } catch (err) {
+    return next(err)
+  }
 }
 
 /* ============================== EXPORT API =============================== */
