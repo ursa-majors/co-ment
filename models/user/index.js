@@ -3,7 +3,7 @@
 require('dotenv').config()
 const mongoose = require('mongoose')
 const passportLocalMongoose = require('passport-local-mongoose')
-const { statics, methods } = require('./plugins/user-plugins')
+const { statics, methods } = require('./plugins')
 
 const userSchema = new mongoose.Schema({
   username: { type: String, unique: true },
