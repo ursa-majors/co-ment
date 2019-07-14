@@ -1,5 +1,5 @@
 import { CALL_API } from 'redux-api-middleware';
-import { BASE_URL } from './apiConfig';
+import BASE_URL from './apiConfig';
 
 /*
 * Function getConversations - retrieve all conversations where the user is
