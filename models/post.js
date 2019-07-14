@@ -1,20 +1,21 @@
 /* ================================= SETUP ================================= */
 
-const mongoose  = require('mongoose');
+const mongoose = require('mongoose');
+const Schema   = mongoose.Schema;
 
 
 /* ================================ SCHEMA ================================= */
 
-const postSchema = new mongoose.Schema({
+const postSchema = Schema({
 
     active : {
         type     : Boolean,
         default  : true
-    },
 
+    },
     author : {
-        type     : mongoose.Schema.Types.ObjectId,
-		ref      : 'User'
+        type     : Schema.Types.ObjectId,
+        ref      : 'User'
     },
 
     availability : {
@@ -60,18 +61,11 @@ const postSchema = new mongoose.Schema({
     meta : {
         views    : { type : Number, default  : 0, min : 0 },
         likes    : { type : Number, default  : 0, min : 0 }
-    },
-    
-    updatedAt : {
-        type     : Date
-    },
-    
-    createdAt : {
-        type     : Date
     }
-
+},
+{
+    timestamps : true
 });
-
 
 /* ================================ EXPORT ================================= */
 
