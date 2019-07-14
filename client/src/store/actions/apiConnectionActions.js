@@ -1,5 +1,5 @@
 import { CALL_API } from 'redux-api-middleware';
-import { BASE_URL } from './apiConfig.js';
+import BASE_URL from './apiConfig';
 
 export const CONNECTION_REQUEST = 'CONNECTION_REQUEST';
 export const CONNECTION_SUCCESS = 'CONNECTION_SUCCESS';

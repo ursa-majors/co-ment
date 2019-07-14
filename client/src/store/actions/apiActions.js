@@ -1,5 +1,5 @@
 import { CALL_API } from 'redux-api-middleware';
-import { BASE_URL } from './apiConfig.js';
+import BASE_URL from './apiConfig';
 
 export const SEND_EMAIL_REQUEST = 'SEND_EMAIL_REQUEST';
 export const SEND_EMAIL_SUCCESS = 'SEND_EMAIL_SUCCESS';

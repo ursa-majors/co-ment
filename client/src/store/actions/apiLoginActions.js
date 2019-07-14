@@ -1,5 +1,5 @@
 import { CALL_API } from 'redux-api-middleware';
-import { BASE_URL } from './apiConfig';
+import BASE_URL from './apiConfig';
 
 export const VALIDATE_TOKEN_REQUEST = 'VALIDATE_TOKEN_REQUEST';
 export const VALIDATE_TOKEN_SUCCESS = 'VALIDATE_TOKEN_SUCCESS';
