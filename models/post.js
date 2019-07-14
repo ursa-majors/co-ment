@@ -1,8 +1,7 @@
 /* ================================= SETUP ================================= */
 
-const mongoose  = require('mongoose');
-const Schema    = mongoose.Schema;
-const User      = require('./user');
+const mongoose = require('mongoose');
+const Schema   = mongoose.Schema;
 
 
 /* ================================ SCHEMA ================================= */
@@ -12,18 +11,8 @@ const postSchema = Schema({
     active : {
         type     : Boolean,
         default  : true
+
     },
-    
-//    author : {
-//        _id       : { type :  String,  required : true },
-//        username  : { type :  String,  required : true },
-//        realname  : { type :  String,  required : true },
-//        avatar    : { type :  String,  required : true },
-//        languages : { type : [String], required : true },
-//        gender    : { type :  String,  required : true },
-//        timezone  : { type :  String,  required : true }
-//    },
-    
     author : {
         type     : Schema.Types.ObjectId,
         ref      : 'User'
