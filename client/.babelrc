@@ -1,3 +1,16 @@
-{ "presets": [ "react", ["env", {"modules": false}], "stage-2" ],
-  "plugins": [ "react-hot-loader/babel", "babel-plugin-transform-object-rest-spread" ]
+{
+  "presets": [
+    "@babel/preset-react",
+    [
+      "@babel/preset-env",
+      {
+        "targets": "> 0.25%, not dead"
+      }
+    ]
+  ],
+  "plugins": [
+    "react-hot-loader/babel",
+    "@babel/plugin-proposal-object-rest-spread",
+    "@babel/plugin-proposal-class-properties"
+  ]
 }
