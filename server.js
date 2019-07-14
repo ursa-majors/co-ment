@@ -10,14 +10,14 @@ const app           = express();
 const morgan        = require('morgan');
 const bodyParser    = require('body-parser');
 const path          = require('path');
-const comentCors    = require('./config/cors');
 const compression   = require('compression');
-const forceHttps    = require('./config/force-https');
+const comentCors    = require('./middleware/cors');
+const forceHttps    = require('./middleware/force-https');
 
 // passport auth
 const passport      = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const strategy      = require('./config/strategy');
+const strategy      = require('./middleware/strategy');
 
 // db
 const db            = require('./db');
@@ -44,8 +44,8 @@ const port          = process.env.PORT || 3001;
 
 /* ============================= CONFIGURATION ============================= */
 
-// force https
-app.use(forceHttps);
+// redirect to https in prod env
+app.use(forceHttps(process.env.NODE_ENV));
 
 // gzip responses
 app.use(compression());
@@ -86,7 +86,7 @@ app.use(errorHandler);
 
 // new Mongo ( >= 4.11.0 ) connection logic:
 mongoose.connect(db.getDbConnectionString(), {
-    useMongoClient: true
+    useNewUrlParser: true
 });
 
 // old Mongo connection logic (may be needed for Heroku):
