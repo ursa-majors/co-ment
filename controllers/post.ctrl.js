@@ -27,6 +27,9 @@ function getPosts(req, res) {
         active  : true,
         deleted : false
     };
+    
+    // post author projection
+    const authorProj = 'username name avatarUrl languages gender timezone';
 
     // iterate over req params, adding any params to the query
     Object.keys(req.query).forEach( key => {
@@ -40,7 +43,7 @@ function getPosts(req, res) {
     });
 
     Post.find(query)
-        .populate('author', 'username name avatarUrl time_zone languages gender')
+        .populate('author', authorProj)
         .exec()
         .then( posts => res.status(200).json(posts) )
         .catch( err => {
@@ -57,16 +60,16 @@ function getPosts(req, res) {
 //   Expects:
 //     1) author '_id' from JWT token
 //     2) request body properties : {
-//          role                : String
-//          title               : String
-//          body                : String
-//          excerpt             : String
-//          keywords            : Array
-//          availability        : String
+//          active       : Boolean
+//          role         : String
+//          title        : String
+//          body         : String
+//          keywords     : Array
+//          availability : String
 //        }
 //   Returns: success message & new post object on success
 //
-function createPost(req, res) {
+function createPost(req, res, next) {
 
     // Check if exists non-deleted post with same author_id, role & title
     Post
@@ -87,42 +90,26 @@ function createPost(req, res) {
                     .json({ message: 'Error - same/similar post already exists!'});
 
             } else {
-                
-                // get a datestamp
-                const now = new Date().toISOString();
 
-                // create new post
-                const myPost = new Post();
-
-                // build new post from request body and token
-                myPost.author           = req.token._id;
-                myPost.role             = req.body.role;
-                myPost.title            = req.body.title;
-                myPost.body             = req.body.body;
-                myPost.excerpt          = req.body.excerpt;
-                myPost.keywords         = req.body.keywords;
-                myPost.availability     = req.body.availability;
-                myPost.createdAt        = now;
-                myPost.updatedAt        = now;
+                // create new post from request body and token
+                const myPost = new Post({
+                    author       : req.token._id,
+                    role         : req.body.role,
+                    title        : req.body.title,
+                    body         : req.body.body,
+                    keywords     : req.body.keywords,
+                    availability : req.body.availability
+                });
 
                 // save new post to database
                 myPost.save( (err, newPost) => {
-                    if (err) { throw new Error(err); }
+                    if (err) { return next(err); }
 
-                    newPost
-                        .populate({
-                            path   : 'author',
-                            select : 'username name avatarUrl time_zone languages gender'
-                        }, (err, populatedPost) => {
-
-                            if (err) { throw new Error(err); }
-
-                            return res
-                                .status(200)
-                                .json({
-                                    message : 'New post saved!',
-                                    post    : populatedPost
-                                });
+                    return res
+                        .status(200)
+                        .json({
+                            message : 'New post saved!',
+                            post    : newPost
                         });
                 });
 
@@ -238,42 +225,37 @@ function deletePost(req, res) {
 
     const updates = {
         deleted   : true,
-        active    : false,
-        updatedAt : new Date().toISOString()
+        active    : false
     };
-    
-    const options = { new : true };
 
-    Post.findOneAndUpdate(target, updates, options, (err, post) => {
+    Post.findOneAndUpdate(target, updates)
+        .exec()
+        .then( post => {
 
-        if (err) { throw err; }
+            if (!post) {
 
-        if (!post) {
+                return res
+                    .status(404)
+                    .json({message: 'Post not found!'});
 
-            return res
-                .status(404)
-                .json({message: 'Post not found!'});
+            } else {
 
-        } else {
+                return res
+                    .status(200)
+                    .json({
+                        message : 'Post deleted!',
+                        post    : post
+                    });
 
-            post.populate({
-                    path   : 'author',
-                    select : 'username name avatarUrl time_zone languages gender'
-                }, (err, populatedPost) => {
+            }
 
-                    if (err) { throw new Error(err); }
-
-                    return res
-                        .status(200)
-                        .json({
-                            message : 'Post deleted!',
-                            post    : populatedPost
-                        });
-                });
-
-        }
-
-    });
+        })
+        .catch( err => {
+            console.log('Error!!!', err);
+                return res
+                    .status(400)
+                    .json({ message: err });
+        });
 
 }
 
